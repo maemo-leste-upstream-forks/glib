@@ -2,3 +2,4 @@
 02_usr_share_gnome_applications.patch
 03_blacklist-directories.patch
 60_wait-longer-for-threads-to-die.patch
+12_base64-overflow-CVE-2008-4316.patch

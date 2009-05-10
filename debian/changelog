@@ -1,3 +1,11 @@
+glib2.0 (2.16.6-1+lenny1) stable-security; urgency=low
+
+  * SECURITY: 12_base64-overflow-CVE-2008-4316.patch:
+    + Possible arbitrary code execution when processing large Base64 strings.
+      Patch from upstream SVN, fixes CVS-2008-4316 (Closes: #520046).
+
+ -- Sebastian Dröge <slomo@debian.org>  Tue, 17 Mar 2009 13:40:17 +0100
+
 glib2.0 (2.16.6-1) unstable; urgency=low
 
   * New upstream stable release; bug fixes; no API changes, except you'll get
