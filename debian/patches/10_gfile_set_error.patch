@@ -1,0 +1,15 @@
+Debian #517752
+GNOME #545203
+Upstream commit r7269
+
+--- trunk/gio/gfile.c	2008/07/20 00:34:58	7208
++++ trunk/gio/gfile.c	2008/07/28 19:12:19	7269
+@@ -4201,7 +4201,7 @@
+ 
+   if (iface->read_fn == NULL)
+     {
+-      g_set_error_literal (error, G_IO_ERROR,
++      g_set_error_literal (&error, G_IO_ERROR,
+                            G_IO_ERROR_NOT_SUPPORTED,
+                            _("Operation not supported"));
+ 

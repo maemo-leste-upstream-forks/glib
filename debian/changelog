@@ -1,3 +1,10 @@
+glib2.0 (2.16.6-2) stable; urgency=low
+
+  * 10_gfile_set_error.patch: new patch. Fix crashes in gvfs caused by 
+    wrong passing of a GError. Closes: #517752.
+
+ -- Josselin Mouette <joss@debian.org>  Sun, 10 May 2009 08:54:35 +0200
+
 glib2.0 (2.16.6-1+lenny1) stable-security; urgency=low
 
   * SECURITY: 12_base64-overflow-CVE-2008-4316.patch:
