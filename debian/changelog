@@ -1,3 +1,15 @@
+glib2.0 (2.16.6-3) stable; urgency=low
+
+  * SECURITY: 13_permissions_CVE-2009-3289.patch:
+    + The g_file_copy function in glib 2.0 sets the permissions of a 
+      target file to the permissions of a symbolic link (777), which 
+      allows user-assisted local users to modify files of other users, 
+      as demonstrated by using Nautilus to modify the permissions of the 
+      user home directory.
+    + Concatenation of 3 upstream patches, fixes CVE-2009-3289.
+
+ -- Josselin Mouette <joss@debian.org>  Sat, 14 Nov 2009 16:19:20 +0100
+
 glib2.0 (2.16.6-2) stable; urgency=low
 
   * 10_gfile_set_error.patch: new patch. Fix crashes in gvfs caused by 

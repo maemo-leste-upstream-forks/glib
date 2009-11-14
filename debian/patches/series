@@ -3,4 +3,5 @@
 03_blacklist-directories.patch
 10_gfile_set_error.patch
 12_base64-overflow-CVE-2008-4316.patch
+13_permissions_CVE-2009-3289.patch
 60_wait-longer-for-threads-to-die.patch
