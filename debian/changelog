@@ -1,3 +1,10 @@
+glib2.0 (2.27.4-2) experimental; urgency=low
+
+  * debian/rules: Change --disable-visibility to --disable-Bsymbolic for
+    the refdbg package.
+
+ -- Jonny Lamb <jonny@debian.org>  Wed, 15 Dec 2010 21:52:29 +0000
+
 glib2.0 (2.27.4-1) experimental; urgency=low
 
   * New upstream release.
