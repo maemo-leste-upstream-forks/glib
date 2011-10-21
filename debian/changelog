@@ -1,4 +1,4 @@
-glib2.0 (2.30.1-2) UNRELEASED; urgency=low
+glib2.0 (2.30.1-2) experimental; urgency=low
 
   [ Martin Pitt ]
   * debian/patches/01_gettext-desktopfiles.patch:
@@ -8,7 +8,17 @@ glib2.0 (2.30.1-2) UNRELEASED; urgency=low
   * debian/patches/80_gtk_doc_out_of_tree.patch:
     - Added. Fix documentation generation when build out of tree
 
- -- Sjoerd Simons <sjoerd@debian.org>  Fri, 21 Oct 2011 16:57:26 +0200
+  [ Michael Biebl ]
+  * Transition to multiarch, thanks Steve. Closes: #634099
+    The following modifications were made to the original patch:
+    - Drop the libtool .la files, since we break existing references anyway.
+    - Don't mark libglib2.0-0-dbg as Multi-Arch: same and install into
+      /usr/lib/debug, not /usr/lib/<triplet>/debug.
+    - Guard the for loops in debian/rules with "set -e".
+  * debian/libglib2.0-dev.install.in:
+    - Install gdb auto-load files.
+
+ -- Michael Biebl <biebl@debian.org>  Fri, 21 Oct 2011 21:26:48 +0200
 
 glib2.0 (2.30.1-1) experimental; urgency=low
 
