@@ -1,3 +1,37 @@
+glib2.0 (2.38.2-4) experimental; urgency=medium
+
+  * Team upload
+  * DEP-3: tag patch for Debian#737501 as sent upstream to GNOME#723653
+  * d/p/gdbus-Let-the-pending-read-finish-before-closing-the.patch:
+    add patch from Mikhail Zabaluev fixing a test failure on mips,
+    also reproduced on mipsel (Closes: #738290)
+  * d/p/Fix-races-in-unix-signal-dispatch.patch: add patch from upstream
+    to fix what appears to be the root cause of #737380
+  * d/p/gdbus-tests-wait-up-to-60s-for-gdbus-testserver-to-t.patch,
+    d/p/gdbus-connection-wait-up-to-10s-to-actually-send-a-m.patch:
+    improve arbitrary timeouts in regression tests, fixing an unreported
+    FTBFS on armhf
+
+ -- Simon McVittie <smcv@debian.org>  Tue, 11 Feb 2014 17:43:08 +0000
+
+glib2.0 (2.38.2-3) experimental; urgency=medium
+
+  * Team upload
+  * d/p/Don-t-use-a-parallel-build-for-the-documentation.patch:
+    Disable parallel build for the documentation, hopefully fixing an
+    intermittent FTBFS in which gtk-doc tries to scan Windows-specific
+    objects (Closes: #737501)
+  * d/p/Do-not-attempt-to-autolaunch-a-session-dbus-daemon-w.patch:
+    Refuse to perform D-Bus "autolaunch" if $DISPLAY is unset, in which
+    case it isn't going to work anyway. This works around a process-launching
+    issue in the GApplication test on mipsel (Closes: #737380)
+  * Bump debhelper compat level to 9, resulting in co-installable
+    multiarch debug symbols and ~ 50% smaller installed size
+    for libglib2.0-0-dbg (at the cost of ~ 30% larger .deb size)
+    - mark libglib2.0-0-dbg Multi-Arch: same
+
+ -- Simon McVittie <smcv@debian.org>  Thu, 06 Feb 2014 09:53:27 +0000
+
 glib2.0 (2.38.2-2) experimental; urgency=medium
 
   * Team upload.
