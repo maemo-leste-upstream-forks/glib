@@ -1,4 +1,6 @@
-glib2.0 (2.40.0-4) UNRELEASED; urgency=medium
+glib2.0 (2.40.0-4) unstable; urgency=medium
+
+  * Team upload
 
   [ Emilio Pozuelo Monfort ]
   * debian/libglib2.0-doc.links:
@@ -25,8 +27,17 @@ glib2.0 (2.40.0-4) UNRELEASED; urgency=medium
     known to be turned off in the built binaries
   * Add patch from upstream to fix mis-optimization in gvariant test
     with gcc 4.9 (Closes: #756272)
+  * Avoid using dbus-launch for regression tests (Closes: #737488):
+    - run installed-tests under dbus-run-session from dbus (>= 1.8)
+    - do not run build-time tests under dbus-launch: those that use D-Bus
+      all create their own session bus instances now
+      (i.e. remove 05_run-gio-tests-with-a-dbus-session.patch)
+    - set a deliberately invalid DBUS_SESSION_BUS_ADDRESS to make sure
+      nothing in the build is still inheriting it from the environment
+  * Override Lintian false positive #733733: we build-depend on python:any
+    but Lintian doesn't yet understand :any syntax
 
- -- Emilio Pozuelo Monfort <pochu@debian.org>  Mon, 05 May 2014 11:50:10 +0200
+ -- Simon McVittie <smcv@debian.org>  Sun, 10 Aug 2014 22:58:33 +0100
 
 glib2.0 (2.40.0-3) unstable; urgency=medium
 
