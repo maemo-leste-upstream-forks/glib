@@ -1,3 +1,19 @@
+glib2.0 (2.47.1-1) experimental; urgency=medium
+
+  * New upstream release.
+    + The Unicode support has been updated to version 8.0 of the Unicode standard
+    + GDesktopAppInfo no longer sets the DISPLAY environment variable when
+      launching apps. This is now done in the GAppLaunchContext
+      implementations when appropriate.
+  * debian/watch: Look for development versions too.
+  * debian/patches/90_gio-modules-multiarch-compat.patch: Refresh to apply on
+    this version.
+  * debian/patches/0001-GDateTime-test-fix-occasional-failures.patch: Drop,
+    upstream in this release.
+  * debian/libglib2.0-0.symbols: Update with new symbols for this release.
+
+ -- Iain Lane <laney@debian.org>  Wed, 04 Nov 2015 17:28:23 +0000
+
 glib2.0 (2.46.1-2) unstable; urgency=medium
 
   * Team upload.
