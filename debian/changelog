@@ -1,9 +1,14 @@
-glib2.0 (2.54.0-2) UNRELEASED; urgency=medium
+glib2.0 (2.54.1-1) unstable; urgency=medium
 
+  [ Jeremy Bicha ]
+  * New upstream release
+  * Bump Standards-Version to 4.1.1
+
+  [ Michael Biebl ]
   * Drop uploaders.mk include as it breaks the clean target.
     Updating the Uploaders list is already handled by the gnome dh addon.
 
- -- Michael Biebl <biebl@debian.org>  Fri, 29 Sep 2017 16:04:51 +0200
+ -- Jeremy Bicha <jbicha@debian.org>  Mon, 02 Oct 2017 12:13:25 -0400
 
 glib2.0 (2.54.0-1) unstable; urgency=medium
 
