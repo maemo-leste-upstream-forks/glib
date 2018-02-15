@@ -1,0 +1,39 @@
+From 3b384e207785e731f1cd31722f081df75ba66fd1 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Alberts=20Muktup=C4=81vels?= <alberts.muktupavels@gmail.com>
+Date: Tue, 26 Sep 2017 18:23:41 +0300
+Subject: [PATCH 4/4] gsettings: use per-desktop default in
+ g_settings_binding_key_changed
+
+https://bugzilla.gnome.org/show_bug.cgi?id=746592
+---
+ gio/gsettings.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/gio/gsettings.c b/gio/gsettings.c
+index e3f48f3f1..527e78ff2 100644
+--- a/gio/gsettings.c
++++ b/gio/gsettings.c
+@@ -2654,6 +2654,20 @@ g_settings_binding_key_changed (GSettings   *settings,
+         }
+     }
+ 
++  if (variant == NULL)
++    {
++      variant = g_settings_schema_key_get_per_desktop_default (&binding->key);
++      if (variant &&
++          !binding->get_mapping (&value, variant, binding->user_data))
++        {
++          g_error ("Per-desktop default value for key '%s' in schema '%s' "
++                   "was rejected by the binding mapping function.",
++                   binding->key.name, g_settings_schema_get_id (binding->key.schema));
++          g_variant_unref (variant);
++          variant = NULL;
++        }
++    }
++
+   if (variant == NULL)
+     {
+       variant = g_variant_ref (binding->key.default_value);
+-- 
+2.14.1
+

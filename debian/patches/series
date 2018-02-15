@@ -12,3 +12,7 @@ debian/06_thread_test_ignore_prctl_fail.patch
 debian/61_glib-compile-binaries-path.patch
 debian/90_gio-modules-multiarch-compat.patch
 debian/closures-test-Run-fewer-iterations-on-ARM64.patch
+exp_git_default_per_desktop1.patch
+exp_git_default_per_desktop2.patch
+exp_git_default_per_desktop3.patch
+exp_git_default_per_desktop4.patch

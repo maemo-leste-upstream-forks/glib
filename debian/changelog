@@ -1,3 +1,12 @@
+glib2.0 (2.55.2-1ubuntu1) bionic; urgency=medium
+
+  * Merge with debian, remaining changes:
+    - exp_git_default_per_desktop*.patch:
+      + cherry-pick per-desktop overrides from GNOME #786496
+        Allison confirmed the patches will be committed to glib soon
+
+ -- Jeremy Bicha <jbicha@ubuntu.com>  Thu, 15 Feb 2018 15:40:46 -0500
+
 glib2.0 (2.55.2-1) experimental; urgency=medium
 
   * debian/control{,.in}: Update Vcs-* to specify debian/experimental branch.
