@@ -1,8 +1,27 @@
-glib2.0 (2.55.2-1ubuntu2) UNRELEASED; urgency=medium
+glib2.0 (2.55.2-2ubuntu1) UNRELEASED; urgency=medium
 
+  * Merge with Debian. Remaining changes:
+    - exp_git_default_per_desktop*.patch:
+      + cherry-pick per-desktop overrides from GNOME #786496
+        Allison confirmed the patches will be committed to glib soon
   * debian/gbp.conf: Update for Ubuntu
 
- -- Iain Lane <laney@debian.org>  Thu, 22 Feb 2018 10:28:24 +0000
+ -- Iain Lane <laney@debian.org>  Thu, 22 Feb 2018 11:18:50 +0000
+
+glib2.0 (2.55.2-2) experimental; urgency=medium
+
+  * Merge changes from unstable, in particular:
+    + d/libglib2.0-dev.prerm: Add an empty prerm to make sure that we have a
+      way to recover from #887629 in stretch (Closes: #887863)
+  * d/p/0001-gdbus-tool-Ignore-unknown-options-for-the-emit-subco.patch,
+    d/p/0002-gdbus-tool-Make-dest-optional-for-emit-again.patch,
+    d/p/0003-gdbus-tool-Don-t-repeatedly-complete-signal.patch,
+    d/p/0004-gdbus-tool-Factor-out-common-GOptionContext-construc.patch:
+    Cherry-pick from upstream. Fix `gdbus emit' to not require `--dest', and
+    improve its bash completion. Should fix the dbus-test-runner autopkgtest,
+    which relied on this behaviour.
+
+ -- Iain Lane <laney@debian.org>  Thu, 22 Feb 2018 10:02:17 +0000
 
 glib2.0 (2.55.2-1ubuntu1) bionic; urgency=medium
 
@@ -37,6 +56,20 @@ glib2.0 (2.55.1-1) experimental; urgency=medium
     in some cases resulted in incorrect answers on i386.
 
  -- Iain Lane <laney@debian.org>  Mon, 15 Jan 2018 12:26:35 +0000
+
+glib2.0 (2.54.3-2) unstable; urgency=medium
+
+  * Team upload
+  * d/libglib2.0-dev.prerm: Add an empty prerm to make sure that we have
+    a way to recover from #887629 in stretch (Closes: #887863)
+  * d/p/gdbus-threading-test-Allow-even-longer-for-test_method_ca.patch:
+    Mark as applied upstream
+  * d/p/gmain-Partial-revert-of-recent-wakeup-changes-to-gmain.c.patch:
+    Apply patch from upstream glib-2-54 branch to revert GWakeup changes
+    that appear to have broken WebKit and/or LibreOffice
+    (Closes: #887492)
+
+ -- Simon McVittie <smcv@debian.org>  Mon, 22 Jan 2018 12:39:58 +0000
 
 glib2.0 (2.54.3-1) unstable; urgency=medium
 
