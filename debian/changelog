@@ -1,4 +1,4 @@
-glib2.0 (2.56.0-2ubuntu1) UNRELEASED; urgency=medium
+glib2.0 (2.56.0-2ubuntu1) bionic; urgency=medium
 
   * Merge with Debian. Remaining changes:
     - exp_git_default_per_desktop*.patch:
@@ -7,7 +7,7 @@ glib2.0 (2.56.0-2ubuntu1) UNRELEASED; urgency=medium
     - debian/gbp.conf: Update for Ubuntu
     - debian/control{,.in}: Update Vcs-* to point at LP git
 
- -- Jeremy Bicha <jbicha@ubuntu.com>  Sat, 17 Mar 2018 13:30:02 -0400
+ -- Jeremy Bicha <jbicha@ubuntu.com>  Sat, 17 Mar 2018 13:51:22 -0400
 
 glib2.0 (2.56.0-2) unstable; urgency=medium
 
