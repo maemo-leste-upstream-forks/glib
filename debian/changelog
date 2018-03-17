@@ -1,3 +1,39 @@
+glib2.0 (2.56.0-2ubuntu1) UNRELEASED; urgency=medium
+
+  * Merge with Debian. Remaining changes:
+    - exp_git_default_per_desktop*.patch:
+      + cherry-pick per-desktop overrides from GNOME #786496
+        Allison confirmed the patches will be committed to glib soon
+    - debian/gbp.conf: Update for Ubuntu
+    - debian/control{,.in}: Update Vcs-* to point at LP git
+
+ -- Jeremy Bicha <jbicha@ubuntu.com>  Sat, 17 Mar 2018 13:30:02 -0400
+
+glib2.0 (2.56.0-2) unstable; urgency=medium
+
+  [ Simon McVittie ]
+  * Merge from experimental to unstable
+  * d/tests/build: Don't rely on having unmerged /usr
+  * d/watch: Only watch for stable releases
+  * d/gbp.conf: Use debian/master, upstream/2.56.x branches
+  * d/control: Update Vcs-* for default branch
+
+ -- Jeremy Bicha <jbicha@debian.org>  Sat, 17 Mar 2018 08:49:26 -0400
+
+glib2.0 (2.56.0-1) experimental; urgency=medium
+
+  * Team upload
+  * New upstream stable release 2.56.0
+  * d/p/000?-gdbus-tool-*.patch:
+    Drop patches that came from upstream
+  * Refresh remaining patches
+  * d/p/0001-tests-Use-modern-test-assertions-in-GApplication-tes.patch,
+    d/p/0002-gapplication-Tighten-up-application-ID-validation.patch:
+    Cherry-pick GApplication ID fixes from upstream 2.56 branch
+    (GNOME #793400)
+
+ -- Simon McVittie <smcv@debian.org>  Tue, 13 Mar 2018 18:53:02 +0000
+
 glib2.0 (2.55.2-2ubuntu1) bionic; urgency=medium
 
   * Merge with Debian. Remaining changes:
