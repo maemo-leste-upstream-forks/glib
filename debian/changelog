@@ -1,3 +1,34 @@
+glib2.0 (2.56.0-4ubuntu1) bionic; urgency=low
+
+  * Merge from Debian unstable.  Remaining changes:
+    - exp_git_default_per_desktop*.patch:
+      + cherry-pick per-desktop overrides from GNOME #786496
+        Allison confirmed the patches will be committed to glib soon
+    - debian/gbp.conf: Update for Ubuntu
+    - debian/control{,.in}: Update Vcs-* to point at LP git
+
+ -- Gianfranco Costamagna <locutusofborg@debian.org>  Sat, 24 Mar 2018 19:28:55 +0100
+
+glib2.0 (2.56.0-4) unstable; urgency=medium
+
+  * Fix typo: libglib2.0-dev-bin Depends on python3-distutils, not
+    distuils (Closes: #893773)
+  * Restore `set -x` in debian/tests/build
+
+ -- Simon McVittie <smcv@debian.org>  Thu, 22 Mar 2018 09:08:05 +0000
+
+glib2.0 (2.56.0-3) unstable; urgency=medium
+
+  [ Iain Lane ]
+  * debian/tests/build: Add Restrictions: allow-stderr. We run this test with
+    `set -x', which outputs to stderr, and would like to continue doing so.
+
+  [ Jeremy Bicha ]
+  * Depend and Build-Depend on python3-distutils to fix build failures
+    since python3 no longer depends on python3-distutils (Closes: #893736)
+
+ -- Jeremy Bicha <jbicha@debian.org>  Thu, 22 Mar 2018 00:27:02 -0400
+
 glib2.0 (2.56.0-2ubuntu1) bionic; urgency=medium
 
   * Merge with Debian. Remaining changes:
