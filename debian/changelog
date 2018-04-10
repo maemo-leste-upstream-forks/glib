@@ -1,3 +1,61 @@
+glib2.0 (2.56.1-2) unstable; urgency=medium
+
+  [ Tim Lunn ]
+  * libglib2.0-0.triggers:use interest-await trigger for schemas
+
+  [ Iain Lane ]
+  * debian/patches/tests-network-monitor-Always-use-the-dummy-proxy-res.patch:
+    Take patch from upstream to ignore the system's proxy settings for the
+    network-monitor test - it's testing an "abstract" network unrelated to the
+    system's network, and these settings interfere with that. This fixes a
+    failure in the Ubuntu autopkgtest machines, which have a proxy set.
+
+ -- Iain Lane <laney@debian.org>  Tue, 10 Apr 2018 18:12:27 +0100
+
+glib2.0 (2.56.1-1) unstable; urgency=medium
+
+  [ Tim Lunn ]
+  * New upstream release 
+  * Drop patches included in new release
+  * libglib2.0-0.triggers: Use interest-noawait triggers, generating caches
+    doesn't need to block configuration. flagged by lintian
+    uses-implicit-await-trigger warning.
+
+  [ Simon McVittie ]
+  * Explicitly use autoconf build system, even with debhelper 11.2
+    (see #895174)
+
+ -- Tim Lunn <tim@feathertop.org>  Mon, 09 Apr 2018 19:03:24 +1000
+
+glib2.0 (2.56.0-6) unstable; urgency=medium
+
+  * Team upload
+  * d/p/0002-gapplication-Tighten-up-application-ID-validation.patch:
+    Transliterate commit message into ASCII so git-buildpackage doesn't
+    export it as a blob of base64
+  * d/p/g_test_dbus_down-Ensure-next-test-does-not-use-old-c.patch:
+    Add patch to address a race condition that sometimes makes D-Bus-based
+    tests fail (Closes: #894677)
+  * d/patches: Improve metadata on various patches
+
+ -- Simon McVittie <smcv@debian.org>  Thu, 05 Apr 2018 09:24:45 +0100
+
+glib2.0 (2.56.0-5) unstable; urgency=medium
+
+  [ Simon McVittie ]
+  * Use `set -e` in the (empty) prerm to avoid a Lintian warning
+  * Add Lintian override for the empty prerm used to work around
+    #887629
+
+  [ Michael Biebl ]
+  * Stop installing libglib to /lib.
+    Late mounting of /usr is no longer supported, so this is not necessary
+    anymore.
+  * Drop maintscript migration code from pre-jessie.
+  * Drop obsolete Breaks.
+
+ -- Michael Biebl <biebl@debian.org>  Sun, 01 Apr 2018 17:59:50 +0200
+
 glib2.0 (2.56.0-4ubuntu1) bionic; urgency=low
 
   * Merge from Debian unstable.  Remaining changes:
