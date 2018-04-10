@@ -1,11 +1,11 @@
-glib2.0 (2.56.1-2ubuntu1) UNRELEASED; urgency=medium
+glib2.0 (2.56.1-2ubuntu1) bionic; urgency=medium
 
   * Merge with debian, remaining changes:
     - exp_git_default_per_desktop*.patch:
       + cherry-pick per-desktop overrides from GNOME #786496
         Allison confirmed the patches will be committed to glib soon
 
- -- Iain Lane <iain.lane@canonical.com>  Tue, 10 Apr 2018 18:25:25 +0100
+ -- Iain Lane <iain.lane@canonical.com>  Tue, 10 Apr 2018 19:03:42 +0100
 
 glib2.0 (2.56.1-2) unstable; urgency=medium
 
