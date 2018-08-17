@@ -1,5 +1,5 @@
 project('glib', 'c', 'cpp',
-  version : '2.56.0',
+  version : '2.56.2',
   meson_version : '>= 0.44.0',
   default_options : [
     'warning_level=1',
@@ -353,6 +353,7 @@ functions = [
   'endservent',
   'sendmmsg',
   'recvmmsg',
+  'link',
 ]
 
 if glib_conf.has('HAVE_SYS_STATVFS_H')
@@ -1400,6 +1401,11 @@ if host_system == 'windows'
   glibconfig_conf.set('g_threads_impl_def', 'WIN32')
   glib_conf.set('THREADS_WIN32', 1)
 else
+  pthread_prefix = '''
+      #ifndef _GNU_SOURCE
+      # define _GNU_SOURCE
+      #endif
+      #include <pthread.h>'''
   glibconfig_conf.set('g_threads_impl_def', 'POSIX')
   glib_conf.set('THREADS_POSIX', 1)
   if cc.has_header_symbol('pthread.h', 'pthread_attr_setstacksize')
@@ -1411,11 +1417,11 @@ else
   if cc.has_header_symbol('pthread.h', 'pthread_cond_timedwait_relative_np')
     glib_conf.set('HAVE_PTHREAD_COND_TIMEDWAIT_RELATIVE_NP', 1)
   endif
+  if cc.has_header_symbol('pthread.h', 'pthread_getname_np', prefix : pthread_prefix)
+    glib_conf.set('HAVE_PTHREAD_GETNAME_NP', 1)
+  endif
   # Assume that pthread_setname_np is available in some form; same as configure
-  if cc.links('''#ifndef _GNU_SOURCE
-              # define _GNU_SOURCE
-              #endif
-              #include <pthread.h>
+  if cc.links(pthread_prefix + '''
               int main() {
                 pthread_setname_np("example");
               }''',
@@ -1423,10 +1429,7 @@ else
               dependencies : thread_dep)
     # macOS and iOS
     glib_conf.set('HAVE_PTHREAD_SETNAME_NP_WITHOUT_TID', 1)
-  elif cc.links('''#ifndef _GNU_SOURCE
-                # define _GNU_SOURCE
-                #endif
-                #include <pthread.h>
+  elif cc.links(pthread_prefix + '''
                 int main() {
                   pthread_setname_np(pthread_self(), "example");
                 }''',

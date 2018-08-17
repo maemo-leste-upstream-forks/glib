@@ -199,7 +199,8 @@ _g_win32_stat_utf16_no_trailing_slashes (const gunichar2    *filename,
 
   if (!succeeded_so_far)
     {
-      CloseHandle (file_handle);
+      if (fd < 0)
+        CloseHandle (file_handle);
       errno = w32_error_to_errno (error_code);
       return -1;
     }
@@ -209,18 +210,23 @@ _g_win32_stat_utf16_no_trailing_slashes (const gunichar2    *filename,
    */
   if (fd < 0)
     {
-      HANDLE tmp = FindFirstFileW (filename,
-                                   &finddata);
+      memset (&finddata, 0, sizeof (finddata));
 
-      if (tmp == INVALID_HANDLE_VALUE)
+      if (handle_info.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT)
         {
-          error_code = GetLastError ();
-          errno = w32_error_to_errno (error_code);
-          CloseHandle (file_handle);
-          return -1;
-        }
+          HANDLE tmp = FindFirstFileW (filename,
+                                       &finddata);
 
-      FindClose (tmp);
+          if (tmp == INVALID_HANDLE_VALUE)
+            {
+              error_code = GetLastError ();
+              errno = w32_error_to_errno (error_code);
+              CloseHandle (file_handle);
+              return -1;
+            }
+
+          FindClose (tmp);
+        }
 
       if (is_symlink && !for_symlink)
         {
@@ -358,6 +364,12 @@ _g_win32_stat_utf8 (const gchar       *filename,
   wchar_t *wfilename;
   int result;
   gsize len;
+
+  if (filename == NULL)
+    {
+      errno = EINVAL;
+      return -1;
+    }
 
   len = strlen (filename);
 

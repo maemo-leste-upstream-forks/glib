@@ -12,6 +12,9 @@
 /* The normal alignment of `unsigned long', in bytes. */
 #undef ALIGNOF_UNSIGNED_LONG
 
+/* struct ip_mreq_source definition is broken on Android NDK <= r16 */
+#undef BROKEN_IP_MREQ_SOURCE_STRUCT
+
 /* poll doesn't work on devices */
 #undef BROKEN_POLL
 
@@ -262,6 +265,9 @@
 /* Define if libmount is available */
 #undef HAVE_LIBMOUNT
 
+/* Define to 1 if you have the `link' function. */
+#undef HAVE_LINK
+
 /* Define to 1 if you have the <linux/magic.h> header file. */
 #undef HAVE_LINUX_MAGIC_H
 
@@ -339,6 +345,9 @@
 
 /* Have function pthread_cond_timedwait_relative_np */
 #undef HAVE_PTHREAD_COND_TIMEDWAIT_RELATIVE_NP
+
+/* Have function pthread_getname_np(pthread_t, name, len) */
+#undef HAVE_PTHREAD_GETNAME_NP
 
 /* Have function pthread_setname_np(const char*) */
 #undef HAVE_PTHREAD_SETNAME_NP_WITHOUT_TID

@@ -31,8 +31,8 @@ m4_define(glib_configure_ac)
 
 m4_define([glib_major_version], [2])
 m4_define([glib_minor_version], [56])
-m4_define([glib_micro_version], [1])
-m4_define([glib_interface_age], [1])
+m4_define([glib_micro_version], [2])
+m4_define([glib_interface_age], [2])
 m4_define([glib_binary_age],
           [m4_eval(100 * glib_minor_version + glib_micro_version)])
 m4_define([glib_version],
@@ -874,7 +874,7 @@ int main ()
 AC_MSG_RESULT($glib_ssize_type)
 
 # Check for some functions
-AC_CHECK_FUNCS(lstat strsignal vsnprintf stpcpy strcasecmp strncasecmp poll vasprintf setenv unsetenv getc_unlocked readlink symlink fdwalk mkostemp)
+AC_CHECK_FUNCS(lstat strsignal vsnprintf stpcpy strcasecmp strncasecmp poll vasprintf setenv unsetenv getc_unlocked readlink symlink fdwalk mkostemp link)
 AC_CHECK_FUNCS(lchmod lchown fchmod fchown utimes getresuid)
 AC_CHECK_FUNCS(getmntent_r setmntent endmntent hasmntopt getfsstat getvfsstat fallocate)
 case $host_os in aix*) ac_cv_func_splice=no ;; esac # AIX splice() is something else
@@ -959,6 +959,21 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
         AC_DEFINE(HAVE_SIOCGIFADDR, 1, [SIOCGIFADDR is available])
     ], [
         AC_MSG_RESULT(no)
+])
+
+AC_MSG_CHECKING([if ip_mreq_source.imr_interface has s_addr member])
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
+    [[
+        #include <netinet/in.h>
+    ]],
+    [[
+        struct ip_mreq_source mc_req_src;
+        mc_req_src.imr_interface.s_addr = 0;
+    ]])], [
+        AC_MSG_RESULT(yes)
+    ], [
+        AC_MSG_RESULT(no)
+        AC_DEFINE(BROKEN_IP_MREQ_SOURCE_STRUCT, 1, [struct ip_mreq_source definition is broken on Android NDK <= r16])
 ])
 
 AS_IF([test $glib_native_win32 = yes], [
@@ -2229,6 +2244,15 @@ AS_IF([ test x"$have_threads" = xposix], [
             [AC_MSG_RESULT(yes)
              AC_DEFINE(HAVE_PTHREAD_SETNAME_NP_WITH_TID,1,
                 [Have function pthread_setname_np(pthread_t, const char*)])],
+            [AC_MSG_RESULT(no)])
+        AC_MSG_CHECKING(for pthread_getname_np(pthread_t, name, len))
+        AC_LINK_IFELSE(
+            [AC_LANG_PROGRAM(
+                [#include <pthread.h>],
+                [[char name[16]; pthread_getname_np(pthread_self(), name, 16);]])],
+            [AC_MSG_RESULT(yes)
+             AC_DEFINE(HAVE_PTHREAD_GETNAME_NP,1,
+                [Have function pthread_getname_np(pthread_t, name, len)])],
             [AC_MSG_RESULT(no)])
         CPPFLAGS="$glib_save_CPPFLAGS"
 ])

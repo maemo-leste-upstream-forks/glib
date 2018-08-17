@@ -1,8 +1,10 @@
-common_gio_tests_deps = [libglib_dep, libgmodule_dep, libgobject_dep, libgio_dep]
-
-if host_system == 'darwin'
-common_gio_tests_deps += [libintl]
-endif
+common_gio_tests_deps = [
+  libglib_dep,
+  libgmodule_dep,
+  libgobject_dep,
+  libgio_dep,
+  libintl
+]
 
 subdir('gdbus-object-manager-example')
 
@@ -44,6 +46,7 @@ gio_tests = [
   'monitor',
   'network-address',
   'network-monitor',
+  'network-monitor-race',
   'permission',
   'pollable',
   'proxy-test',

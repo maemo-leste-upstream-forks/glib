@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=glib&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2018-04-07 09:25+0000\n"
+"POT-Creation-Date: 2018-08-17 01:03+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -375,128 +375,128 @@ msgstr ""
 msgid "Error in address “%s” — the family attribute is malformed"
 msgstr ""
 
-#: ../gio/gdbusaddress.c:463
+#: ../gio/gdbusaddress.c:423 ../gio/gdbusaddress.c:673
+#, c-format
+msgid "Unknown or unsupported transport “%s” for address “%s”"
+msgstr ""
+
+#: ../gio/gdbusaddress.c:467
 #, c-format
 msgid "Address element “%s” does not contain a colon (:)"
 msgstr ""
 
-#: ../gio/gdbusaddress.c:484
+#: ../gio/gdbusaddress.c:488
 #, c-format
 msgid ""
 "Key/Value pair %d, “%s”, in address element “%s” does not contain an equal "
 "sign"
 msgstr ""
 
-#: ../gio/gdbusaddress.c:498
+#: ../gio/gdbusaddress.c:502
 #, c-format
 msgid ""
 "Error unescaping key or value in Key/Value pair %d, “%s”, in address element "
 "“%s”"
 msgstr ""
 
-#: ../gio/gdbusaddress.c:576
+#: ../gio/gdbusaddress.c:580
 #, c-format
 msgid ""
 "Error in address “%s” — the unix transport requires exactly one of the keys "
 "“path” or “abstract” to be set"
 msgstr ""
 
-#: ../gio/gdbusaddress.c:612
+#: ../gio/gdbusaddress.c:616
 #, c-format
 msgid "Error in address “%s” — the host attribute is missing or malformed"
 msgstr ""
 
-#: ../gio/gdbusaddress.c:626
+#: ../gio/gdbusaddress.c:630
 #, c-format
 msgid "Error in address “%s” — the port attribute is missing or malformed"
 msgstr ""
 
-#: ../gio/gdbusaddress.c:640
+#: ../gio/gdbusaddress.c:644
 #, c-format
 msgid "Error in address “%s” — the noncefile attribute is missing or malformed"
 msgstr ""
 
-#: ../gio/gdbusaddress.c:661
+#: ../gio/gdbusaddress.c:665
 msgid "Error auto-launching: "
 msgstr ""
 
-#: ../gio/gdbusaddress.c:669
-#, c-format
-msgid "Unknown or unsupported transport “%s” for address “%s”"
-msgstr ""
-
-#: ../gio/gdbusaddress.c:714
+#: ../gio/gdbusaddress.c:718
 #, c-format
 msgid "Error opening nonce file “%s”: %s"
 msgstr ""
 
-#: ../gio/gdbusaddress.c:733
+#: ../gio/gdbusaddress.c:737
 #, c-format
 msgid "Error reading from nonce file “%s”: %s"
 msgstr ""
 
-#: ../gio/gdbusaddress.c:742
+#: ../gio/gdbusaddress.c:746
 #, c-format
 msgid "Error reading from nonce file “%s”, expected 16 bytes, got %d"
 msgstr ""
 
-#: ../gio/gdbusaddress.c:760
+#: ../gio/gdbusaddress.c:764
 #, c-format
 msgid "Error writing contents of nonce file “%s” to stream:"
 msgstr ""
 
-#: ../gio/gdbusaddress.c:969
+#: ../gio/gdbusaddress.c:973
 msgid "The given address is empty"
 msgstr ""
 
-#: ../gio/gdbusaddress.c:1082
+#: ../gio/gdbusaddress.c:1086
 #, c-format
 msgid "Cannot spawn a message bus when setuid"
 msgstr ""
 
-#: ../gio/gdbusaddress.c:1089
+#: ../gio/gdbusaddress.c:1093
 msgid "Cannot spawn a message bus without a machine-id: "
 msgstr ""
 
-#: ../gio/gdbusaddress.c:1096
+#: ../gio/gdbusaddress.c:1100
 #, c-format
 msgid "Cannot autolaunch D-Bus without X11 $DISPLAY"
 msgstr ""
 
-#: ../gio/gdbusaddress.c:1138
+#: ../gio/gdbusaddress.c:1142
 #, c-format
 msgid "Error spawning command line “%s”: "
 msgstr ""
 
-#: ../gio/gdbusaddress.c:1355
+#: ../gio/gdbusaddress.c:1359
 #, c-format
 msgid "(Type any character to close this window)\n"
 msgstr ""
 
-#: ../gio/gdbusaddress.c:1509
+#: ../gio/gdbusaddress.c:1513
 #, c-format
 msgid "Session dbus not running, and autolaunch failed"
 msgstr ""
 
-#: ../gio/gdbusaddress.c:1520
+#: ../gio/gdbusaddress.c:1524
 #, c-format
 msgid "Cannot determine session bus address (not implemented for this OS)"
 msgstr ""
 
-#: ../gio/gdbusaddress.c:1658
+#: ../gio/gdbusaddress.c:1662
 #, c-format
 msgid ""
 "Cannot determine bus address from DBUS_STARTER_BUS_TYPE environment variable "
 "— unknown value “%s”"
 msgstr ""
 
-#: ../gio/gdbusaddress.c:1667 ../gio/gdbusconnection.c:7160
+#: ../gio/gdbusaddress.c:1671 ../gio/gdbusconnection.c:7160
 msgid ""
 "Cannot determine bus address because the DBUS_STARTER_BUS_TYPE environment "
 "variable is not set"
 msgstr ""
 
-#: ../gio/gdbusaddress.c:1677
+#: ../gio/gdbusaddress.c:1681
 #, c-format
 msgid "Unknown bus type %d"
 msgstr ""
@@ -1262,11 +1262,11 @@ msgstr ""
 #: ../gio/gfile.c:1071 ../gio/gfile.c:1309 ../gio/gfile.c:1447
 #: ../gio/gfile.c:1685 ../gio/gfile.c:1740 ../gio/gfile.c:1798
 #: ../gio/gfile.c:1882 ../gio/gfile.c:1939 ../gio/gfile.c:2003
-#: ../gio/gfile.c:2058 ../gio/gfile.c:3725 ../gio/gfile.c:3780
-#: ../gio/gfile.c:4016 ../gio/gfile.c:4058 ../gio/gfile.c:4526
-#: ../gio/gfile.c:4937 ../gio/gfile.c:5022 ../gio/gfile.c:5112
-#: ../gio/gfile.c:5209 ../gio/gfile.c:5296 ../gio/gfile.c:5397
-#: ../gio/gfile.c:7975 ../gio/gfile.c:8065 ../gio/gfile.c:8149
+#: ../gio/gfile.c:2058 ../gio/gfile.c:3733 ../gio/gfile.c:3788
+#: ../gio/gfile.c:4024 ../gio/gfile.c:4066 ../gio/gfile.c:4534
+#: ../gio/gfile.c:4945 ../gio/gfile.c:5030 ../gio/gfile.c:5120
+#: ../gio/gfile.c:5217 ../gio/gfile.c:5304 ../gio/gfile.c:5405
+#: ../gio/gfile.c:7983 ../gio/gfile.c:8073 ../gio/gfile.c:8157
 #: ../gio/win32/gwinhttpfile.c:437
 msgid "Operation not supported"
 msgstr ""
@@ -1299,45 +1299,45 @@ msgstr ""
 msgid "Splice not supported"
 msgstr ""
 
-#: ../gio/gfile.c:2983 ../gio/gfile.c:3027
+#: ../gio/gfile.c:2983 ../gio/gfile.c:3028
 #, c-format
 msgid "Error splicing file: %s"
 msgstr ""
 
-#: ../gio/gfile.c:3136
+#: ../gio/gfile.c:3144
 msgid "Copy (reflink/clone) between mounts is not supported"
 msgstr ""
 
-#: ../gio/gfile.c:3140
+#: ../gio/gfile.c:3148
 msgid "Copy (reflink/clone) is not supported or invalid"
 msgstr ""
 
-#: ../gio/gfile.c:3145
+#: ../gio/gfile.c:3153
 msgid "Copy (reflink/clone) is not supported or didn’t work"
 msgstr ""
 
-#: ../gio/gfile.c:3208
+#: ../gio/gfile.c:3216
 msgid "Can’t copy special file"
 msgstr ""
 
-#: ../gio/gfile.c:4006
+#: ../gio/gfile.c:4014
 msgid "Invalid symlink value given"
 msgstr ""
 
-#: ../gio/gfile.c:4167
+#: ../gio/gfile.c:4175
 msgid "Trash not supported"
 msgstr ""
 
-#: ../gio/gfile.c:4279
+#: ../gio/gfile.c:4287
 #, c-format
 msgid "File names cannot contain “%c”"
 msgstr ""
 
-#: ../gio/gfile.c:6760 ../gio/gvolume.c:363
+#: ../gio/gfile.c:6768 ../gio/gvolume.c:363
 msgid "volume doesn’t implement mount"
 msgstr ""
 
-#: ../gio/gfile.c:6869
+#: ../gio/gfile.c:6877
 msgid "No application is registered as handling this file"
 msgstr ""
 
@@ -1594,7 +1594,7 @@ msgstr ""
 #: ../gio/gio-tool-list.c:165 ../gio/gio-tool-mkdir.c:48
 #: ../gio/gio-tool-monitor.c:37 ../gio/gio-tool-monitor.c:39
 #: ../gio/gio-tool-monitor.c:41 ../gio/gio-tool-monitor.c:43
-#: ../gio/gio-tool-monitor.c:203 ../gio/gio-tool-mount.c:1141
+#: ../gio/gio-tool-monitor.c:203 ../gio/gio-tool-mount.c:1123
 #: ../gio/gio-tool-open.c:113 ../gio/gio-tool-remove.c:48
 #: ../gio/gio-tool-rename.c:45 ../gio/gio-tool-set.c:89
 #: ../gio/gio-tool-trash.c:81 ../gio/gio-tool-tree.c:239
@@ -1896,69 +1896,69 @@ msgstr ""
 msgid "Monitor files or directories for changes."
 msgstr ""
 
-#: ../gio/gio-tool-mount.c:58
+#: ../gio/gio-tool-mount.c:59
 msgid "Mount as mountable"
 msgstr ""
 
-#: ../gio/gio-tool-mount.c:59
+#: ../gio/gio-tool-mount.c:60
 msgid "Mount volume with device file"
 msgstr ""
 
-#: ../gio/gio-tool-mount.c:59
+#: ../gio/gio-tool-mount.c:60
 msgid "DEVICE"
 msgstr ""
 
-#: ../gio/gio-tool-mount.c:60
+#: ../gio/gio-tool-mount.c:61
 msgid "Unmount"
 msgstr ""
 
-#: ../gio/gio-tool-mount.c:61
+#: ../gio/gio-tool-mount.c:62
 msgid "Eject"
 msgstr ""
 
-#: ../gio/gio-tool-mount.c:62
+#: ../gio/gio-tool-mount.c:63
 msgid "Unmount all mounts with the given scheme"
 msgstr ""
 
-#: ../gio/gio-tool-mount.c:62
+#: ../gio/gio-tool-mount.c:63
 msgid "SCHEME"
 msgstr ""
 
-#: ../gio/gio-tool-mount.c:63
+#: ../gio/gio-tool-mount.c:64
 msgid "Ignore outstanding file operations when unmounting or ejecting"
 msgstr ""
 
-#: ../gio/gio-tool-mount.c:64
+#: ../gio/gio-tool-mount.c:65
 msgid "Use an anonymous user when authenticating"
 msgstr ""
 
 #. Translator: List here is a verb as in 'List all mounts'
-#: ../gio/gio-tool-mount.c:66
+#: ../gio/gio-tool-mount.c:67
 msgid "List"
 msgstr ""
 
-#: ../gio/gio-tool-mount.c:67
+#: ../gio/gio-tool-mount.c:68
 msgid "Monitor events"
 msgstr ""
 
-#: ../gio/gio-tool-mount.c:68
+#: ../gio/gio-tool-mount.c:69
 msgid "Show extra information"
 msgstr ""
 
-#: ../gio/gio-tool-mount.c:246 ../gio/gio-tool-mount.c:276
+#: ../gio/gio-tool-mount.c:247 ../gio/gio-tool-mount.c:277
 msgid "Anonymous access denied"
 msgstr ""
 
-#: ../gio/gio-tool-mount.c:897
+#: ../gio/gio-tool-mount.c:888
 #, c-format
 msgid "Mounted %s at %s\n"
 msgstr ""
 
-#: ../gio/gio-tool-mount.c:950
+#: ../gio/gio-tool-mount.c:938
 msgid "No volume for device file"
 msgstr ""
 
-#: ../gio/gio-tool-mount.c:1145
+#: ../gio/gio-tool-mount.c:1127
 msgid "Mount or unmount the locations."
 msgstr ""
 
@@ -2806,79 +2806,79 @@ msgstr ""
 msgid "Error setting extended attribute “%s”: %s"
 msgstr ""
 
-#: ../gio/glocalfileinfo.c:1607
+#: ../gio/glocalfileinfo.c:1617
 msgid " (invalid encoding)"
 msgstr ""
 
-#: ../gio/glocalfileinfo.c:1776 ../gio/glocalfileoutputstream.c:813
+#: ../gio/glocalfileinfo.c:1786 ../gio/glocalfileoutputstream.c:813
 #, c-format
 msgid "Error when getting information for file “%s”: %s"
 msgstr ""
 
-#: ../gio/glocalfileinfo.c:2038
+#: ../gio/glocalfileinfo.c:2050
 #, c-format
 msgid "Error when getting information for file descriptor: %s"
 msgstr ""
 
-#: ../gio/glocalfileinfo.c:2083
+#: ../gio/glocalfileinfo.c:2095
 msgid "Invalid attribute type (uint32 expected)"
 msgstr ""
 
-#: ../gio/glocalfileinfo.c:2101
+#: ../gio/glocalfileinfo.c:2113
 msgid "Invalid attribute type (uint64 expected)"
 msgstr ""
 
-#: ../gio/glocalfileinfo.c:2120 ../gio/glocalfileinfo.c:2139
+#: ../gio/glocalfileinfo.c:2132 ../gio/glocalfileinfo.c:2151
 msgid "Invalid attribute type (byte string expected)"
 msgstr ""
 
-#: ../gio/glocalfileinfo.c:2184
+#: ../gio/glocalfileinfo.c:2198
 msgid "Cannot set permissions on symlinks"
 msgstr ""
 
-#: ../gio/glocalfileinfo.c:2200
+#: ../gio/glocalfileinfo.c:2214
 #, c-format
 msgid "Error setting permissions: %s"
 msgstr ""
 
-#: ../gio/glocalfileinfo.c:2251
+#: ../gio/glocalfileinfo.c:2265
 #, c-format
 msgid "Error setting owner: %s"
 msgstr ""
 
-#: ../gio/glocalfileinfo.c:2274
+#: ../gio/glocalfileinfo.c:2288
 msgid "symlink must be non-NULL"
 msgstr ""
 
-#: ../gio/glocalfileinfo.c:2284 ../gio/glocalfileinfo.c:2303
-#: ../gio/glocalfileinfo.c:2314
+#: ../gio/glocalfileinfo.c:2298 ../gio/glocalfileinfo.c:2317
+#: ../gio/glocalfileinfo.c:2328
 #, c-format
 msgid "Error setting symlink: %s"
 msgstr ""
 
-#: ../gio/glocalfileinfo.c:2293
+#: ../gio/glocalfileinfo.c:2307
 msgid "Error setting symlink: file is not a symlink"
 msgstr ""
 
-#: ../gio/glocalfileinfo.c:2419
+#: ../gio/glocalfileinfo.c:2433
 #, c-format
 msgid "Error setting modification or access time: %s"
 msgstr ""
 
-#: ../gio/glocalfileinfo.c:2442
+#: ../gio/glocalfileinfo.c:2456
 msgid "SELinux context must be non-NULL"
 msgstr ""
 
-#: ../gio/glocalfileinfo.c:2457
+#: ../gio/glocalfileinfo.c:2471
 #, c-format
 msgid "Error setting SELinux context: %s"
 msgstr ""
 
-#: ../gio/glocalfileinfo.c:2464
+#: ../gio/glocalfileinfo.c:2478
 msgid "SELinux is not enabled on this system"
 msgstr ""
 
-#: ../gio/glocalfileinfo.c:2556
+#: ../gio/glocalfileinfo.c:2570
 #, c-format
 msgid "Setting attribute %s not supported"
 msgstr ""
@@ -2901,7 +2901,7 @@ msgstr ""
 msgid "Error closing file: %s"
 msgstr ""
 
-#: ../gio/glocalfilemonitor.c:840
+#: ../gio/glocalfilemonitor.c:852
 msgid "Unable to find default local file monitor type"
 msgstr ""
 
@@ -3042,25 +3042,25 @@ msgstr ""
 msgid "Hostname “%s” contains “[” but not “]”"
 msgstr ""
 
-#: ../gio/gnetworkmonitorbase.c:212 ../gio/gnetworkmonitorbase.c:316
+#: ../gio/gnetworkmonitorbase.c:211 ../gio/gnetworkmonitorbase.c:315
 msgid "Network unreachable"
 msgstr ""
 
-#: ../gio/gnetworkmonitorbase.c:250 ../gio/gnetworkmonitorbase.c:280
+#: ../gio/gnetworkmonitorbase.c:249 ../gio/gnetworkmonitorbase.c:279
 msgid "Host unreachable"
 msgstr ""
 
-#: ../gio/gnetworkmonitornetlink.c:96 ../gio/gnetworkmonitornetlink.c:108
-#: ../gio/gnetworkmonitornetlink.c:127
+#: ../gio/gnetworkmonitornetlink.c:97 ../gio/gnetworkmonitornetlink.c:109
+#: ../gio/gnetworkmonitornetlink.c:128
 #, c-format
 msgid "Could not create network monitor: %s"
 msgstr ""
 
-#: ../gio/gnetworkmonitornetlink.c:117
+#: ../gio/gnetworkmonitornetlink.c:118
 msgid "Could not create network monitor: "
 msgstr ""
 
-#: ../gio/gnetworkmonitornetlink.c:175
+#: ../gio/gnetworkmonitornetlink.c:176
 msgid "Could not get network status: "
 msgstr ""
 
@@ -3422,8 +3422,8 @@ msgstr ""
 msgid "Socket is already closed"
 msgstr ""
 
-#: ../gio/gsocket.c:414 ../gio/gsocket.c:3010 ../gio/gsocket.c:4220
-#: ../gio/gsocket.c:4278
+#: ../gio/gsocket.c:414 ../gio/gsocket.c:3020 ../gio/gsocket.c:4230
+#: ../gio/gsocket.c:4288
 msgid "Socket I/O timed out"
 msgstr ""
 
@@ -3476,15 +3476,15 @@ msgid "Error binding to address: %s"
 msgstr ""
 
 #: ../gio/gsocket.c:2226 ../gio/gsocket.c:2263 ../gio/gsocket.c:2373
-#: ../gio/gsocket.c:2391 ../gio/gsocket.c:2461 ../gio/gsocket.c:2519
-#: ../gio/gsocket.c:2537
+#: ../gio/gsocket.c:2398 ../gio/gsocket.c:2471 ../gio/gsocket.c:2529
+#: ../gio/gsocket.c:2547
 #, c-format
 msgid "Error joining multicast group: %s"
 msgstr ""
 
 #: ../gio/gsocket.c:2227 ../gio/gsocket.c:2264 ../gio/gsocket.c:2374
-#: ../gio/gsocket.c:2392 ../gio/gsocket.c:2462 ../gio/gsocket.c:2520
-#: ../gio/gsocket.c:2538
+#: ../gio/gsocket.c:2399 ../gio/gsocket.c:2472 ../gio/gsocket.c:2530
+#: ../gio/gsocket.c:2548
 #, c-format
 msgid "Error leaving multicast group: %s"
 msgstr ""
@@ -3497,86 +3497,86 @@ msgstr ""
 msgid "Unsupported socket family"
 msgstr ""
 
-#: ../gio/gsocket.c:2393
+#: ../gio/gsocket.c:2400
 msgid "source-specific not an IPv4 address"
 msgstr ""
 
-#: ../gio/gsocket.c:2411 ../gio/gsocket.c:2440 ../gio/gsocket.c:2487
+#: ../gio/gsocket.c:2418 ../gio/gsocket.c:2447 ../gio/gsocket.c:2497
 #, c-format
 msgid "Interface not found: %s"
 msgstr ""
 
-#: ../gio/gsocket.c:2427
+#: ../gio/gsocket.c:2434
 #, c-format
 msgid "Interface name too long"
 msgstr ""
 
-#: ../gio/gsocket.c:2463
+#: ../gio/gsocket.c:2473
 msgid "No support for IPv4 source-specific multicast"
 msgstr ""
 
-#: ../gio/gsocket.c:2521
+#: ../gio/gsocket.c:2531
 msgid "No support for IPv6 source-specific multicast"
 msgstr ""
 
-#: ../gio/gsocket.c:2730
+#: ../gio/gsocket.c:2740
 #, c-format
 msgid "Error accepting connection: %s"
 msgstr ""
 
-#: ../gio/gsocket.c:2854
+#: ../gio/gsocket.c:2864
 msgid "Connection in progress"
 msgstr ""
 
-#: ../gio/gsocket.c:2903
+#: ../gio/gsocket.c:2913
 msgid "Unable to get pending error: "
 msgstr ""
 
-#: ../gio/gsocket.c:3073
+#: ../gio/gsocket.c:3083
 #, c-format
 msgid "Error receiving data: %s"
 msgstr ""
 
-#: ../gio/gsocket.c:3268
+#: ../gio/gsocket.c:3278
 #, c-format
 msgid "Error sending data: %s"
 msgstr ""
 
-#: ../gio/gsocket.c:3455
+#: ../gio/gsocket.c:3465
 #, c-format
 msgid "Unable to shutdown socket: %s"
 msgstr ""
 
-#: ../gio/gsocket.c:3536
+#: ../gio/gsocket.c:3546
 #, c-format
 msgid "Error closing socket: %s"
 msgstr ""
 
-#: ../gio/gsocket.c:4213
+#: ../gio/gsocket.c:4223
 #, c-format
 msgid "Waiting for socket condition: %s"
 msgstr ""
 
-#: ../gio/gsocket.c:4687 ../gio/gsocket.c:4767 ../gio/gsocket.c:4945
+#: ../gio/gsocket.c:4697 ../gio/gsocket.c:4777 ../gio/gsocket.c:4955
 #, c-format
 msgid "Error sending message: %s"
 msgstr ""
 
-#: ../gio/gsocket.c:4711
+#: ../gio/gsocket.c:4721
 msgid "GSocketControlMessage not supported on Windows"
 msgstr ""
 
-#: ../gio/gsocket.c:5164 ../gio/gsocket.c:5237 ../gio/gsocket.c:5463
+#: ../gio/gsocket.c:5174 ../gio/gsocket.c:5247 ../gio/gsocket.c:5473
 #, c-format
 msgid "Error receiving message: %s"
 msgstr ""
 
-#: ../gio/gsocket.c:5735
+#: ../gio/gsocket.c:5745
 #, c-format
 msgid "Unable to read socket credentials: %s"
 msgstr ""
 
-#: ../gio/gsocket.c:5744
+#: ../gio/gsocket.c:5754
 msgid "g_socket_get_credentials not implemented for this OS"
 msgstr ""
 
@@ -3832,7 +3832,7 @@ msgstr ""
 msgid "Error closing file descriptor: %s"
 msgstr ""
 
-#: ../gio/gunixmounts.c:2556 ../gio/gunixmounts.c:2609
+#: ../gio/gunixmounts.c:2552 ../gio/gunixmounts.c:2605
 msgid "Filesystem root"
 msgstr ""
 
@@ -5442,134 +5442,134 @@ msgstr ""
 msgid "Character out of range for UTF-16"
 msgstr ""
 
-#: ../glib/gutils.c:2229
+#: ../glib/gutils.c:2241
 #, c-format
 msgid "%.1f kB"
 msgstr ""
 
-#: ../glib/gutils.c:2230 ../glib/gutils.c:2436
+#: ../glib/gutils.c:2242 ../glib/gutils.c:2448
 #, c-format
 msgid "%.1f MB"
 msgstr ""
 
-#: ../glib/gutils.c:2231 ../glib/gutils.c:2441
+#: ../glib/gutils.c:2243 ../glib/gutils.c:2453
 #, c-format
 msgid "%.1f GB"
 msgstr ""
 
-#: ../glib/gutils.c:2232 ../glib/gutils.c:2446
+#: ../glib/gutils.c:2244 ../glib/gutils.c:2458
 #, c-format
 msgid "%.1f TB"
 msgstr ""
 
-#: ../glib/gutils.c:2233 ../glib/gutils.c:2451
+#: ../glib/gutils.c:2245 ../glib/gutils.c:2463
 #, c-format
 msgid "%.1f PB"
 msgstr ""
 
-#: ../glib/gutils.c:2234 ../glib/gutils.c:2456
+#: ../glib/gutils.c:2246 ../glib/gutils.c:2468
 #, c-format
 msgid "%.1f EB"
 msgstr ""
 
-#: ../glib/gutils.c:2237
+#: ../glib/gutils.c:2249
 #, c-format
 msgid "%.1f KiB"
 msgstr ""
 
-#: ../glib/gutils.c:2238
+#: ../glib/gutils.c:2250
 #, c-format
 msgid "%.1f MiB"
 msgstr ""
 
-#: ../glib/gutils.c:2239
+#: ../glib/gutils.c:2251
 #, c-format
 msgid "%.1f GiB"
 msgstr ""
 
-#: ../glib/gutils.c:2240
+#: ../glib/gutils.c:2252
 #, c-format
 msgid "%.1f TiB"
 msgstr ""
 
-#: ../glib/gutils.c:2241
+#: ../glib/gutils.c:2253
 #, c-format
 msgid "%.1f PiB"
 msgstr ""
 
-#: ../glib/gutils.c:2242
+#: ../glib/gutils.c:2254
 #, c-format
 msgid "%.1f EiB"
 msgstr ""
 
-#: ../glib/gutils.c:2245
+#: ../glib/gutils.c:2257
 #, c-format
 msgid "%.1f kb"
 msgstr ""
 
-#: ../glib/gutils.c:2246
+#: ../glib/gutils.c:2258
 #, c-format
 msgid "%.1f Mb"
 msgstr ""
 
-#: ../glib/gutils.c:2247
+#: ../glib/gutils.c:2259
 #, c-format
 msgid "%.1f Gb"
 msgstr ""
 
-#: ../glib/gutils.c:2248
+#: ../glib/gutils.c:2260
 #, c-format
 msgid "%.1f Tb"
 msgstr ""
 
-#: ../glib/gutils.c:2249
+#: ../glib/gutils.c:2261
 #, c-format
 msgid "%.1f Pb"
 msgstr ""
 
-#: ../glib/gutils.c:2250
+#: ../glib/gutils.c:2262
 #, c-format
 msgid "%.1f Eb"
 msgstr ""
 
-#: ../glib/gutils.c:2253
+#: ../glib/gutils.c:2265
 #, c-format
 msgid "%.1f Kib"
 msgstr ""
 
-#: ../glib/gutils.c:2254
+#: ../glib/gutils.c:2266
 #, c-format
 msgid "%.1f Mib"
 msgstr ""
 
-#: ../glib/gutils.c:2255
+#: ../glib/gutils.c:2267
 #, c-format
 msgid "%.1f Gib"
 msgstr ""
 
-#: ../glib/gutils.c:2256
+#: ../glib/gutils.c:2268
 #, c-format
 msgid "%.1f Tib"
 msgstr ""
 
-#: ../glib/gutils.c:2257
+#: ../glib/gutils.c:2269
 #, c-format
 msgid "%.1f Pib"
 msgstr ""
 
-#: ../glib/gutils.c:2258
+#: ../glib/gutils.c:2270
 #, c-format
 msgid "%.1f Eib"
 msgstr ""
 
-#: ../glib/gutils.c:2292 ../glib/gutils.c:2418
+#: ../glib/gutils.c:2304 ../glib/gutils.c:2430
 #, c-format
 msgid "%u byte"
 msgid_plural "%u bytes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../glib/gutils.c:2296
+#: ../glib/gutils.c:2308
 #, c-format
 msgid "%u bit"
 msgid_plural "%u bits"
@@ -5577,7 +5577,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. Translators: the %s in "%s bytes" will always be replaced by a number.
-#: ../glib/gutils.c:2363
+#: ../glib/gutils.c:2375
 #, c-format
 msgid "%s byte"
 msgid_plural "%s bytes"
@@ -5585,7 +5585,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. Translators: the %s in "%s bits" will always be replaced by a number.
-#: ../glib/gutils.c:2368
+#: ../glib/gutils.c:2380
 #, c-format
 msgid "%s bit"
 msgid_plural "%s bits"
@@ -5597,7 +5597,7 @@ msgstr[1] ""
 #. * compatibility.  Users will not see this string unless a program is using this deprecated function.
 #. * Please translate as literally as possible.
 #.
-#: ../glib/gutils.c:2431
+#: ../glib/gutils.c:2443
 #, c-format
 msgid "%.1f KB"
 msgstr ""

@@ -15,6 +15,9 @@
 /* poll doesn't work on devices */
 #mesondefine BROKEN_POLL
 
+/* struct ip_mreq_source definition is broken on Android NDK <= r16 */
+#mesondefine BROKEN_IP_MREQ_SOURCE_STRUCT
+
 /* Whether we're building a DLL and hence need symbols exported for a DLL */
 #mesondefine DLL_EXPORT
 
@@ -250,6 +253,9 @@
 /* Define if libmount is available */
 #mesondefine HAVE_LIBMOUNT
 
+/* Define to 1 if you have the `link' function. */
+#mesondefine HAVE_LINK
+
 /* Define to 1 if you have the <linux/magic.h> header file. */
 #mesondefine HAVE_LINUX_MAGIC_H
 
@@ -333,6 +339,9 @@
 
 /* Have function pthread_setname_np with TID as argument */
 #mesondefine HAVE_PTHREAD_SETNAME_NP_WITH_TID
+
+/* Have function pthread_getname_np */
+#mesondefine HAVE_PTHREAD_GETNAME_NP
 
 /* Define to 1 if the system has the type `ptrdiff_t'. */
 #mesondefine HAVE_PTRDIFF_T
