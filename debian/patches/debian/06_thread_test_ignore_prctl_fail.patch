@@ -10,7 +10,7 @@ Forwarded: no, Debian buildd specific
  1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/glib/tests/thread.c b/glib/tests/thread.c
-index 5447836..734ca9b 100644
+index a79b951..b7a3527 100644
 --- a/glib/tests/thread.c
 +++ b/glib/tests/thread.c
 @@ -145,9 +145,11 @@ test_thread4 (void)

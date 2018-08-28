@@ -1,6 +1,9 @@
 glib2.0 (2.56.2-0ubuntu0.18.04.1) UNRELEASED; urgency=medium
 
   * New upstream release (LP: #1789472, LP: #1764779)
+  * Refreshed patches
+  * d/p/tests-network-monitor-Always-use-the-dummy-proxy-res.patch:
+    - Removed (aplied upstream)
 
  -- Marco Trevisan (Treviño) <marco@ubuntu.com>  Tue, 28 Aug 2018 13:04:40 -0500
 

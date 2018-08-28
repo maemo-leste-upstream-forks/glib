@@ -1,9 +1,8 @@
-From 1202fc32cfb2643517a266081ad27574e3770954 Mon Sep 17 00:00:00 2001
 From: Allison Lortie <desrt@desrt.ca>
 Date: Wed, 2 Aug 2017 11:08:17 +0100
 Subject: [PATCH 2/4] gsettingsschema: Allow per-desktop overrides
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 Recognise a new 'd' option in schema keys which gives a dictionary of
@@ -22,7 +21,7 @@ https://bugzilla.gnome.org/show_bug.cgi?id=746592
  3 files changed, 50 insertions(+)
 
 diff --git a/gio/gsettings.c b/gio/gsettings.c
-index 9d336a36a..e3f48f3f1 100644
+index 5e5816d..4fbc1f2 100644
 --- a/gio/gsettings.c
 +++ b/gio/gsettings.c
 @@ -1739,6 +1739,13 @@ g_settings_get_mapped (GSettings           *settings,
@@ -40,7 +39,7 @@ index 9d336a36a..e3f48f3f1 100644
      goto okay;
  
 diff --git a/gio/gsettingsschema-internal.h b/gio/gsettingsschema-internal.h
-index f54de3b34..5f996b4bc 100644
+index f54de3b..5f996b4 100644
 --- a/gio/gsettingsschema-internal.h
 +++ b/gio/gsettingsschema-internal.h
 @@ -37,6 +37,7 @@ struct _GSettingsSchemaKey
@@ -60,7 +59,7 @@ index f54de3b34..5f996b4bc 100644
  gint                    g_settings_schema_key_to_enum                   (GSettingsSchemaKey *key,
                                                                           GVariant           *value);
 diff --git a/gio/gsettingsschema.c b/gio/gsettingsschema.c
-index bc7a4ac84..8d1cbc687 100644
+index f1274a3..9827fa0 100644
 --- a/gio/gsettingsschema.c
 +++ b/gio/gsettingsschema.c
 @@ -27,6 +27,7 @@
@@ -71,7 +70,7 @@ index bc7a4ac84..8d1cbc687 100644
  
  /**
   * SECTION:gsettingsschema
-@@ -1280,6 +1281,11 @@ g_settings_schema_key_init (GSettingsSchemaKey *key,
+@@ -1283,6 +1284,11 @@ g_settings_schema_key_init (GSettingsSchemaKey *key,
            endian_fixup (&key->maximum);
            break;
  
@@ -83,7 +82,7 @@ index bc7a4ac84..8d1cbc687 100644
          default:
            g_warning ("unknown schema extension '%c'", code);
            break;
-@@ -1300,6 +1306,9 @@ g_settings_schema_key_clear (GSettingsSchemaKey *key)
+@@ -1303,6 +1309,9 @@ g_settings_schema_key_clear (GSettingsSchemaKey *key)
    if (key->maximum)
      g_variant_unref (key->maximum);
  
@@ -93,7 +92,7 @@ index bc7a4ac84..8d1cbc687 100644
    g_variant_unref (key->default_value);
  
    g_settings_schema_unref (key->schema);
-@@ -1407,6 +1416,35 @@ g_settings_schema_key_get_translated_default (GSettingsSchemaKey *key)
+@@ -1410,6 +1419,35 @@ g_settings_schema_key_get_translated_default (GSettingsSchemaKey *key)
    return value;
  }
  
@@ -129,7 +128,7 @@ index bc7a4ac84..8d1cbc687 100644
  gint
  g_settings_schema_key_to_enum (GSettingsSchemaKey *key,
                                 GVariant           *value)
-@@ -1695,6 +1733,9 @@ g_settings_schema_key_get_default_value (GSettingsSchemaKey *key)
+@@ -1698,6 +1736,9 @@ g_settings_schema_key_get_default_value (GSettingsSchemaKey *key)
  
    value = g_settings_schema_key_get_translated_default (key);
  
@@ -139,6 +138,3 @@ index bc7a4ac84..8d1cbc687 100644
    if (!value)
      value = g_variant_ref (key->default_value);
  
--- 
-2.14.1
-
