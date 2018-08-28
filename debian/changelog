@@ -1,3 +1,9 @@
+glib2.0 (2.56.2-0ubuntu0.18.04.1) UNRELEASED; urgency=medium
+
+  * New upstream release (LP: #1789472, LP: #1764779)
+
+ -- Marco Trevisan (Treviño) <marco@ubuntu.com>  Tue, 28 Aug 2018 13:04:40 -0500
+
 glib2.0 (2.56.1-2ubuntu1) bionic; urgency=medium
 
   * Merge with debian, remaining changes:
