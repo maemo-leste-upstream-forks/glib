@@ -1,3 +1,20 @@
+glib2.0 (2.56.2-0ubuntu0.18.04.2) bionic-security; urgency=medium
+
+  * SECURITY UPDATE: NULL pointer deference
+    - debian/patches/CVE-2018-16428.patch: fix in glib/gmarkup.c,
+      glib/tests/Makefile.am,
+      glib/tests/markups/fail-51.expected,
+      glib/tests/markups/fail-51.gmarkup.
+    - CVE-2018-16428
+  * SECURITY UPDATE: Read out-of-bounds
+    - debian/patches/CVE-2018-16429.patch: fix in glib/gmarkup.c and
+      glib/tests/Makefile.am,
+      glib/tests/markups/fail-50.expected,
+      glib/tests/markups/fail-50.gmarkup.
+    - CVE-2018-16429
+
+ -- Leonidas S. Barbosa <leo.barbosa@canonical.com>  Mon, 17 Sep 2018 09:52:54 -0300
+
 glib2.0 (2.56.2-0ubuntu0.18.04.1) bionic; urgency=medium
 
   * New upstream release (LP: #1789472, LP: #1764779)
