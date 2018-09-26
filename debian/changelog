@@ -15,8 +15,9 @@ glib2.0 (2.56.3-0ubuntu0.18.04.1) UNRELEASED; urgency=medium
       + Test for BROKEN_IP_MREQ_SOURCE_STRUCT is broken on Windows / Mingw
       + Fix persistent CI failure on glib-2-56
   * debian/watch: Only find 2.56 versions.
+  * Drop CVE-2018-16428.patch and CVE-2018-16429.patch: applied in this release
 
- -- Iain Lane <laney@debian.org>  Wed, 26 Sep 2018 15:35:36 +0100
+ -- Iain Lane <iain.lane@canonical.com>  Wed, 26 Sep 2018 16:18:18 +0100
 
 glib2.0 (2.56.2-0ubuntu0.18.04.2) bionic-security; urgency=medium
 
