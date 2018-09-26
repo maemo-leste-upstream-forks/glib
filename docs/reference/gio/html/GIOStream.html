@@ -8,7 +8,7 @@
 <link rel="up" href="streaming.html" title="Streaming I/O">
 <link rel="prev" href="GOutputStream.html" title="GOutputStream">
 <link rel="next" href="GSimpleIOStream.html" title="GSimpleIOStream">
-<meta name="generator" content="GTK-Doc V1.28 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.26.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -67,7 +67,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="../glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<span class="returnvalue">gboolean</span>
 </td>
 <td class="function_name">
 <a class="link" href="GIOStream.html#g-io-stream-splice-finish" title="g_io_stream_splice_finish ()">g_io_stream_splice_finish</a> <span class="c_punctuation">()</span>
@@ -75,7 +75,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="../glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<span class="returnvalue">gboolean</span>
 </td>
 <td class="function_name">
 <a class="link" href="GIOStream.html#g-io-stream-close" title="g_io_stream_close ()">g_io_stream_close</a> <span class="c_punctuation">()</span>
@@ -91,7 +91,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="../glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<span class="returnvalue">gboolean</span>
 </td>
 <td class="function_name">
 <a class="link" href="GIOStream.html#g-io-stream-close-finish" title="g_io_stream_close_finish ()">g_io_stream_close_finish</a> <span class="c_punctuation">()</span>
@@ -99,7 +99,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="../glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<span class="returnvalue">gboolean</span>
 </td>
 <td class="function_name">
 <a class="link" href="GIOStream.html#g-io-stream-is-closed" title="g_io_stream_is_closed ()">g_io_stream_is_closed</a> <span class="c_punctuation">()</span>
@@ -107,7 +107,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="../glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<span class="returnvalue">gboolean</span>
 </td>
 <td class="function_name">
 <a class="link" href="GIOStream.html#g-io-stream-has-pending" title="g_io_stream_has_pending ()">g_io_stream_has_pending</a> <span class="c_punctuation">()</span>
@@ -115,7 +115,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="../glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<span class="returnvalue">gboolean</span>
 </td>
 <td class="function_name">
 <a class="link" href="GIOStream.html#g-io-stream-set-pending" title="g_io_stream_set_pending ()">g_io_stream_set_pending</a> <span class="c_punctuation">()</span>
@@ -142,7 +142,7 @@
 </colgroup>
 <tbody>
 <tr>
-<td class="property_type"><a href="../glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_type"><span class="type">gboolean</span></td>
 <td class="property_name"><a class="link" href="GIOStream.html#GIOStream--closed" title="The “closed” property">closed</a></td>
 <td class="property_flags">Read</td>
 </tr>
@@ -182,7 +182,7 @@
 </div>
 <div class="refsect1">
 <a name="GIOStream.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="../gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+<pre class="screen">    GObject
     <span class="lineart">╰──</span> GIOStream
         <span class="lineart">├──</span> <a class="link" href="GFileIOStream.html" title="GFileIOStream">GFileIOStream</a>
         <span class="lineart">├──</span> <a class="link" href="GSimpleIOStream.html" title="GSimpleIOStream">GSimpleIOStream</a>
@@ -226,9 +226,9 @@ is a <a class="link" href="GIOStream.html" title="GIOStream"><span class="type">
 an application can’t start any <a class="link" href="GInputStream.html" title="GInputStream"><span class="type">GInputStream</span></a> or <a class="link" href="GOutputStream.html" title="GOutputStream"><span class="type">GOutputStream</span></a> operation
 while there is a <a class="link" href="GIOStream.html" title="GIOStream"><span class="type">GIOStream</span></a> operation in progress.</p>
 <p>This is a product of individual stream operations being associated with a
-given <a href="../glib-The-Main-Event-Loop.html#GMainContext"><span class="type">GMainContext</span></a> (the thread-default context at the time the operation was
+given <span class="type">GMainContext</span> (the thread-default context at the time the operation was
 started), rather than entire streams being associated with a single
-<a href="../glib-The-Main-Event-Loop.html#GMainContext"><span class="type">GMainContext</span></a>.</p>
+<span class="type">GMainContext</span>.</p>
 <p>GIO may run operations on <a href="GIOStream.html#GIOStream-struct"><span class="type">GIOStreams</span></a> from other (worker) threads, and this
 may be exposed to application code in the behaviour of wrapper streams, such
 as <a class="link" href="GBufferedInputStream.html" title="GBufferedInputStream"><span class="type">GBufferedInputStream</span></a> or <a class="link" href="GTlsConnection.html" title="GTlsConnection"><span class="type">GTlsConnection</span></a>. With such wrapper APIs,
@@ -308,7 +308,7 @@ g_io_stream_splice_async (<em class="parameter"><code><a class="link" href="GIOS
                           <em class="parameter"><code><span class="type">int</span> io_priority</code></em>,
                           <em class="parameter"><code><a class="link" href="GCancellable.html" title="GCancellable"><span class="type">GCancellable</span></a> *cancellable</code></em>,
                           <em class="parameter"><code><a class="link" href="GAsyncResult.html#GAsyncReadyCallback" title="GAsyncReadyCallback ()"><span class="type">GAsyncReadyCallback</span></a> callback</code></em>,
-                          <em class="parameter"><code><a href="../glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+                          <em class="parameter"><code><span class="type">gpointer</span> user_data</code></em>);</pre>
 <p>Asyncronously splice the output stream of <em class="parameter"><code>stream1</code></em>
  to the input stream of
 <em class="parameter"><code>stream2</code></em>
@@ -351,7 +351,7 @@ result of the operation.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>cancellable</p></td>
-<td class="parameter_description"><p>optional <a class="link" href="GCancellable.html" title="GCancellable"><span class="type">GCancellable</span></a> object, <a href="../glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to ignore. </p></td>
+<td class="parameter_description"><p>optional <a class="link" href="GCancellable.html" title="GCancellable"><span class="type">GCancellable</span></a> object, <code class="literal">NULL</code> to ignore. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr>
 <tr>
@@ -373,9 +373,9 @@ result of the operation.</p>
 <hr>
 <div class="refsect2">
 <a name="g-io-stream-splice-finish"></a><h3>g_io_stream_splice_finish ()</h3>
-<pre class="programlisting"><a href="../glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><span class="returnvalue">gboolean</span>
 g_io_stream_splice_finish (<em class="parameter"><code><a class="link" href="GAsyncResult.html" title="GAsyncResult"><span class="type">GAsyncResult</span></a> *result</code></em>,
-                           <em class="parameter"><code><a href="../glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
+                           <em class="parameter"><code><span class="type">GError</span> **error</code></em>);</pre>
 <p>Finishes an asynchronous io stream splice operation.</p>
 <div class="refsect3">
 <a name="g-io-stream-splice-finish.parameters"></a><h4>Parameters</h4>
@@ -393,7 +393,7 @@ g_io_stream_splice_finish (<em class="parameter"><code><a class="link" href="GAs
 </tr>
 <tr>
 <td class="parameter_name"><p>error</p></td>
-<td class="parameter_description"><p>a <a href="../glib-Error-Reporting.html#GError"><span class="type">GError</span></a> location to store the error occurring, or <a href="../glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to
+<td class="parameter_description"><p>a <span class="type">GError</span> location to store the error occurring, or <code class="literal">NULL</code> to
 ignore.</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
@@ -402,17 +402,17 @@ ignore.</p></td>
 </div>
 <div class="refsect3">
 <a name="g-io-stream-splice-finish.returns"></a><h4>Returns</h4>
-<p> <a href="../glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success, <a href="../glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
+<p> <code class="literal">TRUE</code> on success, <code class="literal">FALSE</code> otherwise.</p>
 </div>
 <p class="since">Since: <a class="link" href="api-index-2-28.html#api-index-2.28">2.28</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="g-io-stream-close"></a><h3>g_io_stream_close ()</h3>
-<pre class="programlisting"><a href="../glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><span class="returnvalue">gboolean</span>
 g_io_stream_close (<em class="parameter"><code><a class="link" href="GIOStream.html" title="GIOStream"><span class="type">GIOStream</span></a> *stream</code></em>,
                    <em class="parameter"><code><a class="link" href="GCancellable.html" title="GCancellable"><span class="type">GCancellable</span></a> *cancellable</code></em>,
-                   <em class="parameter"><code><a href="../glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
+                   <em class="parameter"><code><span class="type">GError</span> **error</code></em>);</pre>
 <p>Closes the stream, releasing resources related to it. This will also
 close the individual input and output streams, if they are not already
 closed.</p>
@@ -456,12 +456,12 @@ individual input/output streams.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>cancellable</p></td>
-<td class="parameter_description"><p>optional <a class="link" href="GCancellable.html" title="GCancellable"><span class="type">GCancellable</span></a> object, <a href="../glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to ignore. </p></td>
+<td class="parameter_description"><p>optional <a class="link" href="GCancellable.html" title="GCancellable"><span class="type">GCancellable</span></a> object, <code class="literal">NULL</code> to ignore. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>error</p></td>
-<td class="parameter_description"><p>location to store the error occurring, or <a href="../glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to ignore</p></td>
+<td class="parameter_description"><p>location to store the error occurring, or <code class="literal">NULL</code> to ignore</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -469,7 +469,7 @@ individual input/output streams.</p>
 </div>
 <div class="refsect3">
 <a name="g-io-stream-close.returns"></a><h4>Returns</h4>
-<p> <a href="../glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success, <a href="../glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> on failure</p>
+<p> <code class="literal">TRUE</code> on success, <code class="literal">FALSE</code> on failure</p>
 </div>
 <p class="since">Since: <a class="link" href="api-index-2-22.html#api-index-2.22">2.22</a></p>
 </div>
@@ -481,7 +481,7 @@ g_io_stream_close_async (<em class="parameter"><code><a class="link" href="GIOSt
                          <em class="parameter"><code><span class="type">int</span> io_priority</code></em>,
                          <em class="parameter"><code><a class="link" href="GCancellable.html" title="GCancellable"><span class="type">GCancellable</span></a> *cancellable</code></em>,
                          <em class="parameter"><code><a class="link" href="GAsyncResult.html#GAsyncReadyCallback" title="GAsyncReadyCallback ()"><span class="type">GAsyncReadyCallback</span></a> callback</code></em>,
-                         <em class="parameter"><code><a href="../glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+                         <em class="parameter"><code><span class="type">gpointer</span> user_data</code></em>);</pre>
 <p>Requests an asynchronous close of the stream, releasing resources
 related to it. When the operation is finished <em class="parameter"><code>callback</code></em>
  will be
@@ -533,10 +533,10 @@ classes. However, if you override one you must override all.</p>
 <hr>
 <div class="refsect2">
 <a name="g-io-stream-close-finish"></a><h3>g_io_stream_close_finish ()</h3>
-<pre class="programlisting"><a href="../glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><span class="returnvalue">gboolean</span>
 g_io_stream_close_finish (<em class="parameter"><code><a class="link" href="GIOStream.html" title="GIOStream"><span class="type">GIOStream</span></a> *stream</code></em>,
                           <em class="parameter"><code><a class="link" href="GAsyncResult.html" title="GAsyncResult"><span class="type">GAsyncResult</span></a> *result</code></em>,
-                          <em class="parameter"><code><a href="../glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
+                          <em class="parameter"><code><span class="type">GError</span> **error</code></em>);</pre>
 <p>Closes a stream.</p>
 <div class="refsect3">
 <a name="g-io-stream-close-finish.parameters"></a><h4>Parameters</h4>
@@ -559,7 +559,7 @@ g_io_stream_close_finish (<em class="parameter"><code><a class="link" href="GIOS
 </tr>
 <tr>
 <td class="parameter_name"><p>error</p></td>
-<td class="parameter_description"><p>a <a href="../glib-Error-Reporting.html#GError"><span class="type">GError</span></a> location to store the error occurring, or <a href="../glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to
+<td class="parameter_description"><p>a <span class="type">GError</span> location to store the error occurring, or <code class="literal">NULL</code> to
 ignore</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
@@ -568,14 +568,14 @@ ignore</p></td>
 </div>
 <div class="refsect3">
 <a name="g-io-stream-close-finish.returns"></a><h4>Returns</h4>
-<p> <a href="../glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if stream was successfully closed, <a href="../glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
+<p> <code class="literal">TRUE</code> if stream was successfully closed, <code class="literal">FALSE</code> otherwise.</p>
 </div>
 <p class="since">Since: <a class="link" href="api-index-2-22.html#api-index-2.22">2.22</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="g-io-stream-is-closed"></a><h3>g_io_stream_is_closed ()</h3>
-<pre class="programlisting"><a href="../glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><span class="returnvalue">gboolean</span>
 g_io_stream_is_closed (<em class="parameter"><code><a class="link" href="GIOStream.html" title="GIOStream"><span class="type">GIOStream</span></a> *stream</code></em>);</pre>
 <p>Checks if a stream is closed.</p>
 <div class="refsect3">
@@ -595,14 +595,14 @@ g_io_stream_is_closed (<em class="parameter"><code><a class="link" href="GIOStre
 </div>
 <div class="refsect3">
 <a name="g-io-stream-is-closed.returns"></a><h4>Returns</h4>
-<p> <a href="../glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the stream is closed.</p>
+<p> <code class="literal">TRUE</code> if the stream is closed.</p>
 </div>
 <p class="since">Since: <a class="link" href="api-index-2-22.html#api-index-2.22">2.22</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="g-io-stream-has-pending"></a><h3>g_io_stream_has_pending ()</h3>
-<pre class="programlisting"><a href="../glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><span class="returnvalue">gboolean</span>
 g_io_stream_has_pending (<em class="parameter"><code><a class="link" href="GIOStream.html" title="GIOStream"><span class="type">GIOStream</span></a> *stream</code></em>);</pre>
 <p>Checks if a stream has pending actions.</p>
 <div class="refsect3">
@@ -622,7 +622,7 @@ g_io_stream_has_pending (<em class="parameter"><code><a class="link" href="GIOSt
 </div>
 <div class="refsect3">
 <a name="g-io-stream-has-pending.returns"></a><h4>Returns</h4>
-<p> <a href="../glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>stream</code></em>
+<p> <code class="literal">TRUE</code> if <em class="parameter"><code>stream</code></em>
 has pending actions.</p>
 </div>
 <p class="since">Since: <a class="link" href="api-index-2-22.html#api-index-2.22">2.22</a></p>
@@ -630,13 +630,13 @@ has pending actions.</p>
 <hr>
 <div class="refsect2">
 <a name="g-io-stream-set-pending"></a><h3>g_io_stream_set_pending ()</h3>
-<pre class="programlisting"><a href="../glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><span class="returnvalue">gboolean</span>
 g_io_stream_set_pending (<em class="parameter"><code><a class="link" href="GIOStream.html" title="GIOStream"><span class="type">GIOStream</span></a> *stream</code></em>,
-                         <em class="parameter"><code><a href="../glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
+                         <em class="parameter"><code><span class="type">GError</span> **error</code></em>);</pre>
 <p>Sets <em class="parameter"><code>stream</code></em>
  to have actions pending. If the pending flag is
 already set or <em class="parameter"><code>stream</code></em>
- is closed, it will return <a href="../glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> and set
+ is closed, it will return <code class="literal">FALSE</code> and set
 <em class="parameter"><code>error</code></em>
 .</p>
 <div class="refsect3">
@@ -655,7 +655,7 @@ already set or <em class="parameter"><code>stream</code></em>
 </tr>
 <tr>
 <td class="parameter_name"><p>error</p></td>
-<td class="parameter_description"><p>a <a href="../glib-Error-Reporting.html#GError"><span class="type">GError</span></a> location to store the error occurring, or <a href="../glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to
+<td class="parameter_description"><p>a <span class="type">GError</span> location to store the error occurring, or <code class="literal">NULL</code> to
 ignore</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
@@ -664,7 +664,7 @@ ignore</p></td>
 </div>
 <div class="refsect3">
 <a name="g-io-stream-set-pending.returns"></a><h4>Returns</h4>
-<p> <a href="../glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if pending was previously unset and is now set.</p>
+<p> <code class="literal">TRUE</code> if pending was previously unset and is now set.</p>
 </div>
 <p class="since">Since: <a class="link" href="api-index-2-22.html#api-index-2.22">2.22</a></p>
 </div>
@@ -754,7 +754,7 @@ g_io_stream_clear_pending (<em class="parameter"><code><a class="link" href="GIO
 <a name="GIOStream.property-details"></a><h2>Property Details</h2>
 <div class="refsect2">
 <a name="GIOStream--closed"></a><h3>The <code class="literal">“closed”</code> property</h3>
-<pre class="programlisting">  “closed”                   <a href="../glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<pre class="programlisting">  “closed”                   <span class="type">gboolean</span></pre>
 <p>Is the stream closed.</p>
 <p>Flags: Read</p>
 <p>Default value: FALSE</p>
@@ -780,6 +780,6 @@ g_io_stream_clear_pending (<em class="parameter"><code><a class="link" href="GIO
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.28</div>
+<hr>Generated by GTK-Doc V1.26.1</div>
 </body>
 </html>

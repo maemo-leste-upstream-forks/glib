@@ -8,7 +8,7 @@
 <link rel="up" href="chapter-gtype.html" title="The GLib Dynamic Type System">
 <link rel="prev" href="gtype-instantiable-classed.html" title="Instantiable classed types: objects">
 <link rel="next" href="chapter-gobject.html" title="The GObject base class">
-<meta name="generator" content="GTK-Doc V1.28 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.26.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -97,11 +97,11 @@
 <span class="cbracket">{</span>
 <span class="normal">  </span><span class="usertype">ViewerEditableinterface</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">iface</span><span class="symbol">;</span>
 
-<span class="normal">  </span><span class="function"><a href="../glib-Warnings-and-Assertions.html#g-return-if-fail">g_return_if_fail</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">VIEWER_IS_EDITABLE</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">self</span><span class="symbol">));</span>
-<span class="normal">  </span><span class="function"><a href="../glib-Warnings-and-Assertions.html#g-return-if-fail">g_return_if_fail</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">error </span><span class="symbol">==</span><span class="normal"> <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a> </span><span class="symbol">||</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">error </span><span class="symbol">==</span><span class="normal"> <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function">g_return_if_fail</span><span class="normal"> </span><span class="symbol">(</span><span class="function">VIEWER_IS_EDITABLE</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">self</span><span class="symbol">));</span>
+<span class="normal">  </span><span class="function">g_return_if_fail</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">error </span><span class="symbol">==</span><span class="normal"> NULL </span><span class="symbol">||</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">error </span><span class="symbol">==</span><span class="normal"> NULL</span><span class="symbol">);</span>
 
 <span class="normal">  iface </span><span class="symbol">=</span><span class="normal"> </span><span class="function">VIEWER_EDITABLE_GET_IFACE</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">self</span><span class="symbol">);</span>
-<span class="normal">  </span><span class="function"><a href="../glib-Warnings-and-Assertions.html#g-return-if-fail">g_return_if_fail</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">iface</span><span class="symbol">-&gt;</span><span class="normal">save </span><span class="symbol">!=</span><span class="normal"> <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function">g_return_if_fail</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">iface</span><span class="symbol">-&gt;</span><span class="normal">save </span><span class="symbol">!=</span><span class="normal"> NULL</span><span class="symbol">);</span>
 <span class="normal">  iface</span><span class="symbol">-&gt;</span><span class="function">save</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">self</span><span class="symbol">);</span>
 <span class="cbracket">}</span></pre></td>
       </tr>
@@ -149,7 +149,7 @@
         <td class="listing_code"><pre class="programlisting"><span class="keyword">static</span><span class="normal"> </span><span class="type">void</span>
 <span class="function">viewer_file_save</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">ViewerEditable</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">self</span><span class="symbol">)</span>
 <span class="cbracket">{</span>
-<span class="normal">  </span><span class="function"><a href="../glib-Warnings-and-Assertions.html#g-print">g_print</a></span><span class="normal"> </span><span class="symbol">(</span><span class="string">"File implementation of editable interface save method.</span><span class="specialchar">\n</span><span class="string">"</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function">g_print</span><span class="normal"> </span><span class="symbol">(</span><span class="string">"File implementation of editable interface save method.</span><span class="specialchar">\n</span><span class="string">"</span><span class="symbol">);</span>
 <span class="cbracket">}</span>
 
 <span class="keyword">static</span><span class="normal"> </span><span class="type">void</span>
@@ -228,7 +228,7 @@
         <td class="listing_code"><pre class="programlisting"><span class="keyword">static</span><span class="normal"> </span><span class="type">void</span>
 <span class="function">viewer_file_save</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">ViewerEditable</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">editable</span><span class="symbol">)</span>
 <span class="cbracket">{</span>
-<span class="normal">  </span><span class="function"><a href="../glib-Warnings-and-Assertions.html#g-print">g_print</a></span><span class="normal"> </span><span class="symbol">(</span><span class="string">"File implementation of editable interface save method.</span><span class="specialchar">\n</span><span class="string">"</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function">g_print</span><span class="normal"> </span><span class="symbol">(</span><span class="string">"File implementation of editable interface save method.</span><span class="specialchar">\n</span><span class="string">"</span><span class="symbol">);</span>
 <span class="cbracket">}</span>
 
 <span class="keyword">static</span><span class="normal"> </span><span class="type">void</span>
@@ -247,19 +247,19 @@
 <span class="normal">  </span><span class="keyword">if</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">type </span><span class="symbol">==</span><span class="normal"> </span><span class="number">0</span><span class="symbol">)</span><span class="normal"> </span><span class="cbracket">{</span>
 <span class="normal">    </span><span class="keyword">const</span><span class="normal"> </span><span class="usertype">GTypeInfo</span><span class="normal"> info </span><span class="symbol">=</span><span class="normal"> </span><span class="cbracket">{</span>
 <span class="normal">      </span><span class="keyword">sizeof</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">ViewerFileClass</span><span class="symbol">),</span>
-<span class="normal">      <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal">   </span><span class="comment">/* base_init */</span>
-<span class="normal">      <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal">   </span><span class="comment">/* base_finalize */</span>
-<span class="normal">      <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal">   </span><span class="comment">/* class_init */</span>
-<span class="normal">      <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal">   </span><span class="comment">/* class_finalize */</span>
-<span class="normal">      <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal">   </span><span class="comment">/* class_data */</span>
+<span class="normal">      NULL</span><span class="symbol">,</span><span class="normal">   </span><span class="comment">/* base_init */</span>
+<span class="normal">      NULL</span><span class="symbol">,</span><span class="normal">   </span><span class="comment">/* base_finalize */</span>
+<span class="normal">      NULL</span><span class="symbol">,</span><span class="normal">   </span><span class="comment">/* class_init */</span>
+<span class="normal">      NULL</span><span class="symbol">,</span><span class="normal">   </span><span class="comment">/* class_finalize */</span>
+<span class="normal">      NULL</span><span class="symbol">,</span><span class="normal">   </span><span class="comment">/* class_data */</span>
 <span class="normal">      </span><span class="keyword">sizeof</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">ViewerFile</span><span class="symbol">),</span>
 <span class="normal">      </span><span class="number">0</span><span class="symbol">,</span><span class="normal">      </span><span class="comment">/* n_preallocs */</span>
-<span class="normal">      <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a>    </span><span class="comment">/* instance_init */</span>
+<span class="normal">      NULL    </span><span class="comment">/* instance_init */</span>
 <span class="normal">    </span><span class="cbracket">}</span><span class="symbol">;</span>
 <span class="normal">    </span><span class="keyword">const</span><span class="normal"> </span><span class="usertype">GInterfaceInfo</span><span class="normal"> editable_info </span><span class="symbol">=</span><span class="normal"> </span><span class="cbracket">{</span>
 <span class="normal">      </span><span class="symbol">(</span><span class="normal"><a href="gobject-Type-Information.html#GInterfaceInitFunc">GInterfaceInitFunc</a></span><span class="symbol">)</span><span class="normal"> viewer_file_editable_interface_init</span><span class="symbol">,</span><span class="normal">  </span><span class="comment">/* interface_init */</span>
-<span class="normal">      <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal">   </span><span class="comment">/* interface_finalize */</span>
-<span class="normal">      <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a>    </span><span class="comment">/* interface_data */</span>
+<span class="normal">      NULL</span><span class="symbol">,</span><span class="normal">   </span><span class="comment">/* interface_finalize */</span>
+<span class="normal">      NULL    </span><span class="comment">/* interface_data */</span>
 <span class="normal">    </span><span class="cbracket">}</span><span class="symbol">;</span>
 <span class="normal">    type </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="gobject-Type-Information.html#g-type-register-static">g_type_register_static</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">VIEWER_TYPE_FILE</span><span class="symbol">,</span>
 <span class="normal">                                   </span><span class="string">"ViewerFile"</span><span class="symbol">,</span>
@@ -414,22 +414,22 @@
 <span class="function">viewer_editable_get_type</span><span class="normal"> </span><span class="symbol">(</span><span class="type">void</span><span class="symbol">)</span>
 <span class="cbracket">{</span>
 <span class="normal">  </span><span class="keyword">static</span><span class="normal"> </span><span class="keyword">volatile</span><span class="normal"> </span><span class="usertype">gsize</span><span class="normal"> type_id </span><span class="symbol">=</span><span class="normal"> </span><span class="number">0</span><span class="symbol">;</span>
-<span class="normal">  </span><span class="keyword">if</span><span class="normal"> </span><span class="symbol">(</span><span class="function"><a href="../glib-Threads.html#g-once-init-enter">g_once_init_enter</a></span><span class="normal"> </span><span class="symbol">(&amp;</span><span class="normal">type_id</span><span class="symbol">))</span><span class="normal"> </span><span class="cbracket">{</span>
+<span class="normal">  </span><span class="keyword">if</span><span class="normal"> </span><span class="symbol">(</span><span class="function">g_once_init_enter</span><span class="normal"> </span><span class="symbol">(&amp;</span><span class="normal">type_id</span><span class="symbol">))</span><span class="normal"> </span><span class="cbracket">{</span>
 <span class="normal">    </span><span class="keyword">const</span><span class="normal"> </span><span class="usertype">GTypeInfo</span><span class="normal"> info </span><span class="symbol">=</span><span class="normal"> </span><span class="cbracket">{</span>
 <span class="normal">      </span><span class="keyword">sizeof</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">ViewerEditableInterface</span><span class="symbol">),</span>
-<span class="normal">      <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal">   </span><span class="comment">/* base_init */</span>
-<span class="normal">      <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal">   </span><span class="comment">/* base_finalize */</span>
+<span class="normal">      NULL</span><span class="symbol">,</span><span class="normal">   </span><span class="comment">/* base_init */</span>
+<span class="normal">      NULL</span><span class="symbol">,</span><span class="normal">   </span><span class="comment">/* base_finalize */</span>
 <span class="normal">      viewer_editable_default_init</span><span class="symbol">,</span><span class="normal"> </span><span class="comment">/* class_init */</span>
-<span class="normal">      <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal">   </span><span class="comment">/* class_finalize */</span>
-<span class="normal">      <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal">   </span><span class="comment">/* class_data */</span>
+<span class="normal">      NULL</span><span class="symbol">,</span><span class="normal">   </span><span class="comment">/* class_finalize */</span>
+<span class="normal">      NULL</span><span class="symbol">,</span><span class="normal">   </span><span class="comment">/* class_data */</span>
 <span class="normal">      </span><span class="number">0</span><span class="symbol">,</span><span class="normal">      </span><span class="comment">/* instance_size */</span>
 <span class="normal">      </span><span class="number">0</span><span class="symbol">,</span><span class="normal">      </span><span class="comment">/* n_preallocs */</span>
-<span class="normal">      <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a>    </span><span class="comment">/* instance_init */</span>
+<span class="normal">      NULL    </span><span class="comment">/* instance_init */</span>
 <span class="normal">    </span><span class="cbracket">}</span><span class="symbol">;</span>
 <span class="normal">    </span><span class="usertype">GType</span><span class="normal"> type </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="gobject-Type-Information.html#g-type-register-static">g_type_register_static</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal"><a href="gobject-Type-Information.html#G-TYPE-INTERFACE:CAPS">G_TYPE_INTERFACE</a></span><span class="symbol">,</span>
 <span class="normal">                                         </span><span class="string">"ViewerEditable"</span><span class="symbol">,</span>
 <span class="normal">                                         </span><span class="symbol">&amp;</span><span class="normal">info</span><span class="symbol">,</span><span class="normal"> </span><span class="number">0</span><span class="symbol">);</span>
-<span class="normal">    </span><span class="function"><a href="../glib-Threads.html#g-once-init-leave">g_once_init_leave</a></span><span class="normal"> </span><span class="symbol">(&amp;</span><span class="normal">type_id</span><span class="symbol">,</span><span class="normal"> type</span><span class="symbol">);</span>
+<span class="normal">    </span><span class="function">g_once_init_leave</span><span class="normal"> </span><span class="symbol">(&amp;</span><span class="normal">type_id</span><span class="symbol">,</span><span class="normal"> type</span><span class="symbol">);</span>
 <span class="normal">  </span><span class="cbracket">}</span>
 <span class="normal">  </span><span class="keyword">return</span><span class="normal"> type_id</span><span class="symbol">;</span>
 <span class="cbracket">}</span>
@@ -559,6 +559,6 @@
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.28</div>
+<hr>Generated by GTK-Doc V1.26.1</div>
 </body>
 </html>

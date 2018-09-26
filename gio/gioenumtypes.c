@@ -4,7 +4,7 @@
 #include "config.h"
 #include "gioenumtypes.h"
 #include <gio.h>
-/* enumerations from "gioenums.h" */
+/* enumerations from "/opt/gnome/source/glib/gio/gioenums.h" */
 GType
 g_app_info_create_flags_get_type (void)
 {
@@ -1663,7 +1663,7 @@ g_network_connectivity_get_type (void)
 
   return g_define_type_id__volatile;
 }
-/* enumerations from "gsettings.h" */
+/* enumerations from "/opt/gnome/source/glib/gio/gsettings.h" */
 GType
 g_settings_bind_flags_get_type (void)
 {

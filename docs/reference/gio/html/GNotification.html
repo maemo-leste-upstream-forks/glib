@@ -8,7 +8,7 @@
 <link rel="up" href="application.html" title="Application support">
 <link rel="prev" href="GDBusMenuModel.html" title="GDBusMenuModel">
 <link rel="next" href="extending.html" title="Extending GIO">
-<meta name="generator" content="GTK-Doc V1.28 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.26.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -160,7 +160,7 @@
 </div>
 <div class="refsect1">
 <a name="GNotification.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="../gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+<pre class="screen">    GObject
     <span class="lineart">╰──</span> GNotification
 </pre>
 </div>
@@ -194,7 +194,7 @@ clicked.</p>
 <div class="refsect2">
 <a name="g-notification-new"></a><h3>g_notification_new ()</h3>
 <pre class="programlisting"><a class="link" href="GNotification.html" title="GNotification"><span class="returnvalue">GNotification</span></a> *
-g_notification_new (<em class="parameter"><code>const <a href="../glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>);</pre>
+g_notification_new (<em class="parameter"><code>const <span class="type">gchar</span> *title</code></em>);</pre>
 <p>Creates a new <a class="link" href="GNotification.html" title="GNotification"><span class="type">GNotification</span></a> with <em class="parameter"><code>title</code></em>
  as its title.</p>
 <p>After populating <em class="parameter"><code>notification</code></em>
@@ -229,7 +229,7 @@ resending <em class="parameter"><code>notification</code></em>
 <a name="g-notification-set-title"></a><h3>g_notification_set_title ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 g_notification_set_title (<em class="parameter"><code><a class="link" href="GNotification.html" title="GNotification"><span class="type">GNotification</span></a> *notification</code></em>,
-                          <em class="parameter"><code>const <a href="../glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>);</pre>
+                          <em class="parameter"><code>const <span class="type">gchar</span> *title</code></em>);</pre>
 <p>Sets the title of <em class="parameter"><code>notification</code></em>
  to <em class="parameter"><code>title</code></em>
 .</p>
@@ -263,7 +263,7 @@ g_notification_set_title (<em class="parameter"><code><a class="link" href="GNot
 <a name="g-notification-set-body"></a><h3>g_notification_set_body ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 g_notification_set_body (<em class="parameter"><code><a class="link" href="GNotification.html" title="GNotification"><span class="type">GNotification</span></a> *notification</code></em>,
-                         <em class="parameter"><code>const <a href="../glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *body</code></em>);</pre>
+                         <em class="parameter"><code>const <span class="type">gchar</span> *body</code></em>);</pre>
 <p>Sets the body of <em class="parameter"><code>notification</code></em>
  to <em class="parameter"><code>body</code></em>
 .</p>
@@ -284,7 +284,7 @@ g_notification_set_body (<em class="parameter"><code><a class="link" href="GNoti
 <tr>
 <td class="parameter_name"><p>body</p></td>
 <td class="parameter_description"><p>the new body for <em class="parameter"><code>notification</code></em>
-, or <a href="../glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+, or <code class="literal">NULL</code>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr>
 </tbody>
@@ -364,7 +364,7 @@ g_notification_set_priority (<em class="parameter"><code><a class="link" href="G
 <a name="g-notification-set-urgent"></a><h3>g_notification_set_urgent ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 g_notification_set_urgent (<em class="parameter"><code><a class="link" href="GNotification.html" title="GNotification"><span class="type">GNotification</span></a> *notification</code></em>,
-                           <em class="parameter"><code><a href="../glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> urgent</code></em>);</pre>
+                           <em class="parameter"><code><span class="type">gboolean</span> urgent</code></em>);</pre>
 <div class="warning">
 <p><code class="literal">g_notification_set_urgent</code> has been deprecated since version 2.42 and should not be used in newly-written code.</p>
 <p>Since 2.42, this has been deprecated in favour of
@@ -387,7 +387,7 @@ g_notification_set_urgent (<em class="parameter"><code><a class="link" href="GNo
 </tr>
 <tr>
 <td class="parameter_name"><p>urgent</p></td>
-<td class="parameter_description"><p><a href="../glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>notification</code></em>
+<td class="parameter_description"><p><code class="literal">TRUE</code> if <em class="parameter"><code>notification</code></em>
 is urgent</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
@@ -401,7 +401,7 @@ is urgent</p></td>
 <a name="g-notification-set-default-action"></a><h3>g_notification_set_default_action ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 g_notification_set_default_action (<em class="parameter"><code><a class="link" href="GNotification.html" title="GNotification"><span class="type">GNotification</span></a> *notification</code></em>,
-                                   <em class="parameter"><code>const <a href="../glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *detailed_action</code></em>);</pre>
+                                   <em class="parameter"><code>const <span class="type">gchar</span> *detailed_action</code></em>);</pre>
 <p>Sets the default action of <em class="parameter"><code>notification</code></em>
  to <em class="parameter"><code>detailed_action</code></em>
 . This
@@ -446,8 +446,8 @@ was sent on is activated.</p>
 <pre class="programlisting"><span class="returnvalue">void</span>
 g_notification_set_default_action_and_target
                                (<em class="parameter"><code><a class="link" href="GNotification.html" title="GNotification"><span class="type">GNotification</span></a> *notification</code></em>,
-                                <em class="parameter"><code>const <a href="../glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *action</code></em>,
-                                <em class="parameter"><code>const <a href="../glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *target_format</code></em>,
+                                <em class="parameter"><code>const <span class="type">gchar</span> *action</code></em>,
+                                <em class="parameter"><code>const <span class="type">gchar</span> *target_format</code></em>,
                                 <em class="parameter"><code>...</code></em>);</pre>
 <p>Sets the default action of <em class="parameter"><code>notification</code></em>
  to <em class="parameter"><code>action</code></em>
@@ -456,9 +456,9 @@ activated when the notification is clicked on. It must be an
 application-wide action (it must start with "app.").</p>
 <p>If <em class="parameter"><code>target_format</code></em>
  is given, it is used to collect remaining
-positional parameters into a <a href="../glib-GVariant.html#GVariant"><span class="type">GVariant</span></a> instance, similar to
-<a href="../glib-GVariant.html#g-variant-new"><code class="function">g_variant_new()</code></a>. <em class="parameter"><code>action</code></em>
- will be activated with that <a href="../glib-GVariant.html#GVariant"><span class="type">GVariant</span></a> as its
+positional parameters into a <span class="type">GVariant</span> instance, similar to
+<code class="function">g_variant_new()</code>. <em class="parameter"><code>action</code></em>
+ will be activated with that <span class="type">GVariant</span> as its
 parameter.</p>
 <p>When no default action is set, the application that the notification
 was sent on is activated.</p>
@@ -484,7 +484,7 @@ was sent on is activated.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>target_format</p></td>
-<td class="parameter_description"><p>a <a href="../glib-GVariant.html#GVariant"><span class="type">GVariant</span></a> format string, or <a href="../glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_description"><p>a <span class="type">GVariant</span> format string, or <code class="literal">NULL</code>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr>
 <tr>
@@ -504,15 +504,15 @@ was sent on is activated.</p>
 <pre class="programlisting"><span class="returnvalue">void</span>
 g_notification_set_default_action_and_target_value
                                (<em class="parameter"><code><a class="link" href="GNotification.html" title="GNotification"><span class="type">GNotification</span></a> *notification</code></em>,
-                                <em class="parameter"><code>const <a href="../glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *action</code></em>,
-                                <em class="parameter"><code><a href="../glib-GVariant.html#GVariant"><span class="type">GVariant</span></a> *target</code></em>);</pre>
+                                <em class="parameter"><code>const <span class="type">gchar</span> *action</code></em>,
+                                <em class="parameter"><code><span class="type">GVariant</span> *target</code></em>);</pre>
 <p>Sets the default action of <em class="parameter"><code>notification</code></em>
  to <em class="parameter"><code>action</code></em>
 . This action is
 activated when the notification is clicked on. It must be an
 application-wide action (start with "app.").</p>
 <p>If <em class="parameter"><code>target</code></em>
- is non-<a href="../glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, <em class="parameter"><code>action</code></em>
+ is non-<code class="literal">NULL</code>, <em class="parameter"><code>action</code></em>
  will be activated with <em class="parameter"><code>target</code></em>
  as
 its parameter.</p>
@@ -540,8 +540,8 @@ was sent on is activated.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>target</p></td>
-<td class="parameter_description"><p>a <a href="../glib-GVariant.html#GVariant"><span class="type">GVariant</span></a> to use as <em class="parameter"><code>action</code></em>
-'s parameter, or <a href="../glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_description"><p>a <span class="type">GVariant</span> to use as <em class="parameter"><code>action</code></em>
+'s parameter, or <code class="literal">NULL</code>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr>
 </tbody>
@@ -554,8 +554,8 @@ was sent on is activated.</p>
 <a name="g-notification-add-button"></a><h3>g_notification_add_button ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 g_notification_add_button (<em class="parameter"><code><a class="link" href="GNotification.html" title="GNotification"><span class="type">GNotification</span></a> *notification</code></em>,
-                           <em class="parameter"><code>const <a href="../glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *label</code></em>,
-                           <em class="parameter"><code>const <a href="../glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *detailed_action</code></em>);</pre>
+                           <em class="parameter"><code>const <span class="type">gchar</span> *label</code></em>,
+                           <em class="parameter"><code>const <span class="type">gchar</span> *detailed_action</code></em>);</pre>
 <p>Adds a button to <em class="parameter"><code>notification</code></em>
  that activates the action in
 <em class="parameter"><code>detailed_action</code></em>
@@ -601,9 +601,9 @@ for <em class="parameter"><code>detailed_action</code></em>
 <a name="g-notification-add-button-with-target"></a><h3>g_notification_add_button_with_target ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 g_notification_add_button_with_target (<em class="parameter"><code><a class="link" href="GNotification.html" title="GNotification"><span class="type">GNotification</span></a> *notification</code></em>,
-                                       <em class="parameter"><code>const <a href="../glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *label</code></em>,
-                                       <em class="parameter"><code>const <a href="../glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *action</code></em>,
-                                       <em class="parameter"><code>const <a href="../glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *target_format</code></em>,
+                                       <em class="parameter"><code>const <span class="type">gchar</span> *label</code></em>,
+                                       <em class="parameter"><code>const <span class="type">gchar</span> *action</code></em>,
+                                       <em class="parameter"><code>const <span class="type">gchar</span> *target_format</code></em>,
                                        <em class="parameter"><code>...</code></em>);</pre>
 <p>Adds a button to <em class="parameter"><code>notification</code></em>
  that activates <em class="parameter"><code>action</code></em>
@@ -612,9 +612,9 @@ g_notification_add_button_with_target (<em class="parameter"><code><a class="lin
  must be an application-wide action (it must start with "app.").</p>
 <p>If <em class="parameter"><code>target_format</code></em>
  is given, it is used to collect remaining
-positional parameters into a <a href="../glib-GVariant.html#GVariant"><span class="type">GVariant</span></a> instance, similar to
-<a href="../glib-GVariant.html#g-variant-new"><code class="function">g_variant_new()</code></a>. <em class="parameter"><code>action</code></em>
- will be activated with that <a href="../glib-GVariant.html#GVariant"><span class="type">GVariant</span></a> as its
+positional parameters into a <span class="type">GVariant</span> instance, similar to
+<code class="function">g_variant_new()</code>. <em class="parameter"><code>action</code></em>
+ will be activated with that <span class="type">GVariant</span> as its
 parameter.</p>
 <p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
@@ -643,7 +643,7 @@ parameter.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>target_format</p></td>
-<td class="parameter_description"><p>a <a href="../glib-GVariant.html#GVariant"><span class="type">GVariant</span></a> format string, or <a href="../glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_description"><p>a <span class="type">GVariant</span> format string, or <code class="literal">NULL</code>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr>
 <tr>
@@ -663,16 +663,16 @@ parameter.</p>
 <pre class="programlisting"><span class="returnvalue">void</span>
 g_notification_add_button_with_target_value
                                (<em class="parameter"><code><a class="link" href="GNotification.html" title="GNotification"><span class="type">GNotification</span></a> *notification</code></em>,
-                                <em class="parameter"><code>const <a href="../glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *label</code></em>,
-                                <em class="parameter"><code>const <a href="../glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *action</code></em>,
-                                <em class="parameter"><code><a href="../glib-GVariant.html#GVariant"><span class="type">GVariant</span></a> *target</code></em>);</pre>
+                                <em class="parameter"><code>const <span class="type">gchar</span> *label</code></em>,
+                                <em class="parameter"><code>const <span class="type">gchar</span> *action</code></em>,
+                                <em class="parameter"><code><span class="type">GVariant</span> *target</code></em>);</pre>
 <p>Adds a button to <em class="parameter"><code>notification</code></em>
  that activates <em class="parameter"><code>action</code></em>
  when clicked.
 <em class="parameter"><code>action</code></em>
  must be an application-wide action (it must start with "app.").</p>
 <p>If <em class="parameter"><code>target</code></em>
- is non-<a href="../glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, <em class="parameter"><code>action</code></em>
+ is non-<code class="literal">NULL</code>, <em class="parameter"><code>action</code></em>
  will be activated with <em class="parameter"><code>target</code></em>
  as
 its parameter.</p>
@@ -703,8 +703,8 @@ its parameter.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>target</p></td>
-<td class="parameter_description"><p>a <a href="../glib-GVariant.html#GVariant"><span class="type">GVariant</span></a> to use as <em class="parameter"><code>action</code></em>
-'s parameter, or <a href="../glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_description"><p>a <span class="type">GVariant</span> to use as <em class="parameter"><code>action</code></em>
+'s parameter, or <code class="literal">NULL</code>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr>
 </tbody>
@@ -779,6 +779,6 @@ public APIs.</p>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.28</div>
+<hr>Generated by GTK-Doc V1.26.1</div>
 </body>
 </html>

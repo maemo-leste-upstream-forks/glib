@@ -8,7 +8,7 @@
 <link rel="up" href="rn02.html" title="Tools Reference">
 <link rel="prev" href="rn02.html" title="Tools Reference">
 <link rel="next" href="glib-genmarshal.html" title="glib-genmarshal">
-<meta name="generator" content="GTK-Doc V1.28 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.26.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -544,7 +544,7 @@ header file; a header template file will typically look like this:
 <span class="comment">/* Include the main project header */</span>
 <span class="preproc">#include</span><span class="normal"> </span><span class="string">"project.h"</span>
 
-<span class="normal"><a href="../glib-Miscellaneous-Macros.html#G-BEGIN-DECLS:CAPS">G_BEGIN_DECLS</a></span>
+<span class="normal">G_BEGIN_DECLS</span>
 <span class="comment">/*** END file-header ***/</span>
 
 <span class="comment">/*** BEGIN file-production ***/</span>
@@ -553,12 +553,12 @@ header file; a header template file will typically look like this:
 <span class="comment">/*** END file-production ***/</span>
 
 <span class="comment">/*** BEGIN value-header ***/</span>
-<span class="normal"><a href="gobject-Type-Information.html#GType">GType</a> @enum_name@</span><span class="function">_get_type</span><span class="normal"> </span><span class="symbol">(</span><span class="type">void</span><span class="symbol">)</span><span class="normal"> <a href="../glib-Miscellaneous-Macros.html#G-GNUC-CONST:CAPS">G_GNUC_CONST</a></span><span class="symbol">;</span>
+<span class="normal"><a href="gobject-Type-Information.html#GType">GType</a> @enum_name@</span><span class="function">_get_type</span><span class="normal"> </span><span class="symbol">(</span><span class="type">void</span><span class="symbol">)</span><span class="normal"> G_GNUC_CONST</span><span class="symbol">;</span>
 <span class="preproc">#define</span><span class="normal"> @ENUMPREFIX@_TYPE_@ENUMSHORT@ </span><span class="symbol">(</span><span class="normal">@enum_name@</span><span class="function">_get_type</span><span class="normal"> </span><span class="symbol">())</span>
 <span class="comment">/*** END value-header ***/</span>
 
 <span class="comment">/*** BEGIN file-tail ***/</span>
-<span class="normal"><a href="../glib-Miscellaneous-Macros.html#G-END-DECLS:CAPS">G_END_DECLS</a></span>
+<span class="normal">G_END_DECLS</span>
 <span class="comment">/*** END file-tail ***/</span></pre></td>
       </tr>
     </tbody>
@@ -628,7 +628,7 @@ file, similar to this:
 <span class="cbracket">{</span>
 <span class="normal">  </span><span class="keyword">static</span><span class="normal"> </span><span class="keyword">volatile</span><span class="normal"> </span><span class="usertype">gsize</span><span class="normal"> g_@type@_type_id__volatile</span><span class="symbol">;</span>
 
-<span class="normal">  </span><span class="keyword">if</span><span class="normal"> </span><span class="symbol">(</span><span class="function"><a href="../glib-Threads.html#g-once-init-enter">g_once_init_enter</a></span><span class="normal"> </span><span class="symbol">(&amp;</span><span class="normal">g_define_type_id__volatile</span><span class="symbol">))</span>
+<span class="normal">  </span><span class="keyword">if</span><span class="normal"> </span><span class="symbol">(</span><span class="function">g_once_init_enter</span><span class="normal"> </span><span class="symbol">(&amp;</span><span class="normal">g_define_type_id__volatile</span><span class="symbol">))</span>
 <span class="normal">    </span><span class="cbracket">{</span>
 <span class="normal">      </span><span class="keyword">static</span><span class="normal"> </span><span class="keyword">const</span><span class="normal"> G@Type@</span><span class="usertype">Value</span><span class="normal"> values</span><span class="symbol">[]</span><span class="normal"> </span><span class="symbol">=</span><span class="normal"> </span><span class="cbracket">{</span>
 <span class="comment">/*** END value-header ***/</span>
@@ -638,13 +638,13 @@ file, similar to this:
 <span class="comment">/*** END value-production ***/</span>
 
 <span class="comment">/*** BEGIN value-tail ***/</span>
-<span class="normal">            </span><span class="cbracket">{</span><span class="normal"> </span><span class="number">0</span><span class="symbol">,</span><span class="normal"> <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">,</span><span class="normal"> <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a> </span><span class="cbracket">}</span>
+<span class="normal">            </span><span class="cbracket">{</span><span class="normal"> </span><span class="number">0</span><span class="symbol">,</span><span class="normal"> NULL</span><span class="symbol">,</span><span class="normal"> NULL </span><span class="cbracket">}</span>
 <span class="normal">      </span><span class="cbracket">}</span><span class="symbol">;</span>
 
 <span class="normal">      </span><span class="usertype">GType</span><span class="normal"> g_@type@_type_id </span><span class="symbol">=</span>
-<span class="normal">        g_@type@</span><span class="function">_register_static</span><span class="normal"> </span><span class="symbol">(</span><span class="function"><a href="../glib-Quarks.html#g-intern-static-string">g_intern_static_string</a></span><span class="normal"> </span><span class="symbol">(</span><span class="string">"@EnumName@"</span><span class="symbol">),</span><span class="normal"> values</span><span class="symbol">);</span>
+<span class="normal">        g_@type@</span><span class="function">_register_static</span><span class="normal"> </span><span class="symbol">(</span><span class="function">g_intern_static_string</span><span class="normal"> </span><span class="symbol">(</span><span class="string">"@EnumName@"</span><span class="symbol">),</span><span class="normal"> values</span><span class="symbol">);</span>
 
-<span class="normal">      </span><span class="function"><a href="../glib-Threads.html#g-once-init-leave">g_once_init_leave</a></span><span class="normal"> </span><span class="symbol">(&amp;</span><span class="normal">g_@type@_type_id__volatile</span><span class="symbol">,</span><span class="normal"> g_@type@_type_id</span><span class="symbol">);</span>
+<span class="normal">      </span><span class="function">g_once_init_leave</span><span class="normal"> </span><span class="symbol">(&amp;</span><span class="normal">g_@type@_type_id__volatile</span><span class="symbol">,</span><span class="normal"> g_@type@_type_id</span><span class="symbol">);</span>
 <span class="normal">    </span><span class="cbracket">}</span>
 <span class="normal">  </span><span class="keyword">return</span><span class="normal"> g_@type@_type_id__volatile</span><span class="symbol">;</span>
 <span class="cbracket">}</span>
@@ -664,6 +664,6 @@ file, similar to this:
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.28</div>
+<hr>Generated by GTK-Doc V1.26.1</div>
 </body>
 </html>

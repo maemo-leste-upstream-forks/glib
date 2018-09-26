@@ -48,7 +48,7 @@
 #define g_marshal_value_peek_variant(v)  (v)->data[0].v_pointer
 #endif /* !G_ENABLE_DEBUG */
 
-/* BOOLEAN:INT (./testmarshal.list:2) */
+/* BOOLEAN:INT (/opt/gnome/source/glib/tests/gobject/testmarshal.list:2) */
 void
 test_marshal_BOOLEAN__INT (GClosure     *closure,
                            GValue       *return_value,
@@ -87,7 +87,7 @@ test_marshal_BOOLEAN__INT (GClosure     *closure,
   g_value_set_boolean (return_value, v_return);
 }
 
-/* STRING:INT (./testmarshal.list:3) */
+/* STRING:INT (/opt/gnome/source/glib/tests/gobject/testmarshal.list:3) */
 void
 test_marshal_STRING__INT (GClosure     *closure,
                           GValue       *return_value,
@@ -126,7 +126,7 @@ test_marshal_STRING__INT (GClosure     *closure,
   g_value_take_string (return_value, v_return);
 }
 
-/* VARIANT:POINTER (./testmarshal.list:4) */
+/* VARIANT:POINTER (/opt/gnome/source/glib/tests/gobject/testmarshal.list:4) */
 void
 test_marshal_VARIANT__POINTER (GClosure     *closure,
                                GValue       *return_value,
