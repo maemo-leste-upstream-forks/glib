@@ -6,7 +6,7 @@
 
 G_BEGIN_DECLS
 
-/* BOOLEAN:INT (./testmarshal.list:2) */
+/* BOOLEAN:INT (/opt/gnome/source/glib/tests/gobject/testmarshal.list:2) */
 extern
 void test_marshal_BOOLEAN__INT (GClosure     *closure,
                                 GValue       *return_value,
@@ -15,7 +15,7 @@ void test_marshal_BOOLEAN__INT (GClosure     *closure,
                                 gpointer      invocation_hint,
                                 gpointer      marshal_data);
 
-/* STRING:INT (./testmarshal.list:3) */
+/* STRING:INT (/opt/gnome/source/glib/tests/gobject/testmarshal.list:3) */
 extern
 void test_marshal_STRING__INT (GClosure     *closure,
                                GValue       *return_value,
@@ -24,7 +24,7 @@ void test_marshal_STRING__INT (GClosure     *closure,
                                gpointer      invocation_hint,
                                gpointer      marshal_data);
 
-/* VARIANT:POINTER (./testmarshal.list:4) */
+/* VARIANT:POINTER (/opt/gnome/source/glib/tests/gobject/testmarshal.list:4) */
 extern
 void test_marshal_VARIANT__POINTER (GClosure     *closure,
                                     GValue       *return_value,

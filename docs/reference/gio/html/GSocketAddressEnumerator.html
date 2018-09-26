@@ -8,7 +8,7 @@
 <link rel="up" href="resolver.html" title="DNS resolution">
 <link rel="prev" href="GSocketConnectable.html" title="GSocketConnectable">
 <link rel="next" href="GProxyAddressEnumerator.html" title="GProxyAddressEnumerator">
-<meta name="generator" content="GTK-Doc V1.28 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.26.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -88,7 +88,7 @@
 </div>
 <div class="refsect1">
 <a name="GSocketAddressEnumerator.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="../gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+<pre class="screen">    GObject
     <span class="lineart">╰──</span> GSocketAddressEnumerator
         <span class="lineart">╰──</span> <a class="link" href="GProxyAddressEnumerator.html" title="GProxyAddressEnumerator">GProxyAddressEnumerator</a>
 </pre>
@@ -103,7 +103,7 @@
 <pre class="programlisting"><a class="link" href="GSocketAddress.html" title="GSocketAddress"><span class="returnvalue">GSocketAddress</span></a> *
 g_socket_address_enumerator_next (<em class="parameter"><code><a class="link" href="GSocketAddressEnumerator.html" title="GSocketAddressEnumerator"><span class="type">GSocketAddressEnumerator</span></a> *enumerator</code></em>,
                                   <em class="parameter"><code><a class="link" href="GCancellable.html" title="GCancellable"><span class="type">GCancellable</span></a> *cancellable</code></em>,
-                                  <em class="parameter"><code><a href="../glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
+                                  <em class="parameter"><code><span class="type">GError</span> **error</code></em>);</pre>
 <p>Retrieves the next <a class="link" href="GSocketAddress.html" title="GSocketAddress"><span class="type">GSocketAddress</span></a> from <em class="parameter"><code>enumerator</code></em>
 . Note that this
 may block for some amount of time. (Eg, a <a class="link" href="GNetworkAddress.html" title="GNetworkAddress"><span class="type">GNetworkAddress</span></a> may need
@@ -136,12 +136,12 @@ ignored.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>cancellable</p></td>
-<td class="parameter_description"><p>optional <a class="link" href="GCancellable.html" title="GCancellable"><span class="type">GCancellable</span></a> object, <a href="../glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to ignore. </p></td>
+<td class="parameter_description"><p>optional <a class="link" href="GCancellable.html" title="GCancellable"><span class="type">GCancellable</span></a> object, <code class="literal">NULL</code> to ignore. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>error</p></td>
-<td class="parameter_description"><p>a <a href="../glib-Error-Reporting.html#GError"><span class="type">GError</span></a>.</p></td>
+<td class="parameter_description"><p>a <span class="type">GError</span>.</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -149,7 +149,7 @@ ignored.</p>
 </div>
 <div class="refsect3">
 <a name="g-socket-address-enumerator-next.returns"></a><h4>Returns</h4>
-<p>a <a class="link" href="GSocketAddress.html" title="GSocketAddress"><span class="type">GSocketAddress</span></a> (owned by the caller), or <a href="../glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> on
+<p>a <a class="link" href="GSocketAddress.html" title="GSocketAddress"><span class="type">GSocketAddress</span></a> (owned by the caller), or <code class="literal">NULL</code> on
 error (in which case *<em class="parameter"><code>error</code></em>
 will be set) or if there are no
 more addresses. </p>
@@ -164,7 +164,7 @@ g_socket_address_enumerator_next_async
                                (<em class="parameter"><code><a class="link" href="GSocketAddressEnumerator.html" title="GSocketAddressEnumerator"><span class="type">GSocketAddressEnumerator</span></a> *enumerator</code></em>,
                                 <em class="parameter"><code><a class="link" href="GCancellable.html" title="GCancellable"><span class="type">GCancellable</span></a> *cancellable</code></em>,
                                 <em class="parameter"><code><a class="link" href="GAsyncResult.html#GAsyncReadyCallback" title="GAsyncReadyCallback ()"><span class="type">GAsyncReadyCallback</span></a> callback</code></em>,
-                                <em class="parameter"><code><a href="../glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+                                <em class="parameter"><code><span class="type">gpointer</span> user_data</code></em>);</pre>
 <p>Asynchronously retrieves the next <a class="link" href="GSocketAddress.html" title="GSocketAddress"><span class="type">GSocketAddress</span></a> from <em class="parameter"><code>enumerator</code></em>
 
 and then calls <em class="parameter"><code>callback</code></em>
@@ -186,7 +186,7 @@ and then calls <em class="parameter"><code>callback</code></em>
 </tr>
 <tr>
 <td class="parameter_name"><p>cancellable</p></td>
-<td class="parameter_description"><p>optional <a class="link" href="GCancellable.html" title="GCancellable"><span class="type">GCancellable</span></a> object, <a href="../glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to ignore. </p></td>
+<td class="parameter_description"><p>optional <a class="link" href="GCancellable.html" title="GCancellable"><span class="type">GCancellable</span></a> object, <code class="literal">NULL</code> to ignore. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr>
 <tr>
@@ -211,7 +211,7 @@ is satisfied. </p></td>
 g_socket_address_enumerator_next_finish
                                (<em class="parameter"><code><a class="link" href="GSocketAddressEnumerator.html" title="GSocketAddressEnumerator"><span class="type">GSocketAddressEnumerator</span></a> *enumerator</code></em>,
                                 <em class="parameter"><code><a class="link" href="GAsyncResult.html" title="GAsyncResult"><span class="type">GAsyncResult</span></a> *result</code></em>,
-                                <em class="parameter"><code><a href="../glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
+                                <em class="parameter"><code><span class="type">GError</span> **error</code></em>);</pre>
 <p>Retrieves the result of a completed call to
 <a class="link" href="GSocketAddressEnumerator.html#g-socket-address-enumerator-next-async" title="g_socket_address_enumerator_next_async ()"><code class="function">g_socket_address_enumerator_next_async()</code></a>. See
 <a class="link" href="GSocketAddressEnumerator.html#g-socket-address-enumerator-next" title="g_socket_address_enumerator_next ()"><code class="function">g_socket_address_enumerator_next()</code></a> for more information about
@@ -237,7 +237,7 @@ error handling.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>error</p></td>
-<td class="parameter_description"><p>a <a href="../glib-Error-Reporting.html#GError"><span class="type">GError</span></a></p></td>
+<td class="parameter_description"><p>a <span class="type">GError</span></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -245,7 +245,7 @@ error handling.</p>
 </div>
 <div class="refsect3">
 <a name="g-socket-address-enumerator-next-finish.returns"></a><h4>Returns</h4>
-<p>a <a class="link" href="GSocketAddress.html" title="GSocketAddress"><span class="type">GSocketAddress</span></a> (owned by the caller), or <a href="../glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> on
+<p>a <a class="link" href="GSocketAddress.html" title="GSocketAddress"><span class="type">GSocketAddress</span></a> (owned by the caller), or <code class="literal">NULL</code> on
 error (in which case *<em class="parameter"><code>error</code></em>
 will be set) or if there are no
 more addresses. </p>
@@ -286,6 +286,6 @@ more addresses. </p>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.28</div>
+<hr>Generated by GTK-Doc V1.26.1</div>
 </body>
 </html>

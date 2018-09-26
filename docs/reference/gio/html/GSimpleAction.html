@@ -8,7 +8,7 @@
 <link rel="up" href="application.html" title="Application support">
 <link rel="prev" href="GAction.html" title="GAction">
 <link rel="next" href="GPropertyAction.html" title="GPropertyAction">
-<meta name="generator" content="GTK-Doc V1.28 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.26.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -96,31 +96,31 @@
 </colgroup>
 <tbody>
 <tr>
-<td class="property_type"><a href="../glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_type"><span class="type">gboolean</span></td>
 <td class="property_name"><a class="link" href="GSimpleAction.html#GSimpleAction--enabled" title="The “enabled” property">enabled</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
 <td class="property_type">
-<a href="../glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
+<span class="type">gchar</span> *</td>
 <td class="property_name"><a class="link" href="GSimpleAction.html#GSimpleAction--name" title="The “name” property">name</a></td>
 <td class="property_flags">Read / Write / Construct Only</td>
 </tr>
 <tr>
 <td class="property_type">
-<a href="../glib-GVariantType.html#GVariantType"><span class="type">GVariantType</span></a> *</td>
+<span class="type">GVariantType</span> *</td>
 <td class="property_name"><a class="link" href="GSimpleAction.html#GSimpleAction--parameter-type" title="The “parameter-type” property">parameter-type</a></td>
 <td class="property_flags">Read / Write / Construct Only</td>
 </tr>
 <tr>
 <td class="property_type">
-<a href="../glib-GVariant.html#GVariant"><span class="type">GVariant</span></a> *</td>
+<span class="type">GVariant</span> *</td>
 <td class="property_name"><a class="link" href="GSimpleAction.html#GSimpleAction--state" title="The “state” property">state</a></td>
 <td class="property_flags">Read / Write / Construct</td>
 </tr>
 <tr>
 <td class="property_type">
-<a href="../glib-GVariantType.html#GVariantType"><span class="type">GVariantType</span></a> *</td>
+<span class="type">GVariantType</span> *</td>
 <td class="property_name"><a class="link" href="GSimpleAction.html#GSimpleAction--state-type" title="The “state-type” property">state-type</a></td>
 <td class="property_flags">Read</td>
 </tr>
@@ -139,12 +139,12 @@
 <tr>
 <td class="signal_type"><span class="returnvalue">void</span></td>
 <td class="signal_name"><a class="link" href="GSimpleAction.html#GSimpleAction-activate" title="The “activate” signal">activate</a></td>
-<td class="signal_flags"><a href="../gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></td>
+<td class="signal_flags">Run Last</td>
 </tr>
 <tr>
 <td class="signal_type"><span class="returnvalue">void</span></td>
 <td class="signal_name"><a class="link" href="GSimpleAction.html#GSimpleAction-change-state" title="The “change-state” signal">change-state</a></td>
-<td class="signal_flags"><a href="../gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></td>
+<td class="signal_flags">Run Last</td>
 </tr>
 </tbody>
 </table></div>
@@ -164,7 +164,7 @@
 </div>
 <div class="refsect1">
 <a name="GSimpleAction.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="../gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+<pre class="screen">    GObject
     <span class="lineart">╰──</span> GSimpleAction
 </pre>
 </div>
@@ -191,8 +191,8 @@ adding it to a <a class="link" href="GSimpleActionGroup.html" title="GSimpleActi
 <div class="refsect2">
 <a name="g-simple-action-new"></a><h3>g_simple_action_new ()</h3>
 <pre class="programlisting"><a class="link" href="GSimpleAction.html" title="GSimpleAction"><span class="returnvalue">GSimpleAction</span></a> *
-g_simple_action_new (<em class="parameter"><code>const <a href="../glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
-                     <em class="parameter"><code>const <a href="../glib-GVariantType.html#GVariantType"><span class="type">GVariantType</span></a> *parameter_type</code></em>);</pre>
+g_simple_action_new (<em class="parameter"><code>const <span class="type">gchar</span> *name</code></em>,
+                     <em class="parameter"><code>const <span class="type">GVariantType</span> *parameter_type</code></em>);</pre>
 <p>Creates a new action.</p>
 <p>The created action is stateless.  See <a class="link" href="GSimpleAction.html#g-simple-action-new-stateful" title="g_simple_action_new_stateful ()"><code class="function">g_simple_action_new_stateful()</code></a>.</p>
 <div class="refsect3">
@@ -227,13 +227,13 @@ g_simple_action_new (<em class="parameter"><code>const <a href="../glib-Basic-Ty
 <div class="refsect2">
 <a name="g-simple-action-new-stateful"></a><h3>g_simple_action_new_stateful ()</h3>
 <pre class="programlisting"><a class="link" href="GSimpleAction.html" title="GSimpleAction"><span class="returnvalue">GSimpleAction</span></a> *
-g_simple_action_new_stateful (<em class="parameter"><code>const <a href="../glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
-                              <em class="parameter"><code>const <a href="../glib-GVariantType.html#GVariantType"><span class="type">GVariantType</span></a> *parameter_type</code></em>,
-                              <em class="parameter"><code><a href="../glib-GVariant.html#GVariant"><span class="type">GVariant</span></a> *state</code></em>);</pre>
+g_simple_action_new_stateful (<em class="parameter"><code>const <span class="type">gchar</span> *name</code></em>,
+                              <em class="parameter"><code>const <span class="type">GVariantType</span> *parameter_type</code></em>,
+                              <em class="parameter"><code><span class="type">GVariant</span> *state</code></em>);</pre>
 <p>Creates a new stateful action.</p>
 <p><em class="parameter"><code>state</code></em>
  is the initial state of the action.  All future state values
-must have the same <a href="../glib-GVariantType.html#GVariantType"><span class="type">GVariantType</span></a> as the initial state.</p>
+must have the same <span class="type">GVariantType</span> as the initial state.</p>
 <p>If the <em class="parameter"><code>state</code></em>
  GVariant is floating, it is consumed.</p>
 <div class="refsect3">
@@ -274,7 +274,7 @@ must have the same <a href="../glib-GVariantType.html#GVariantType"><span class=
 <a name="g-simple-action-set-enabled"></a><h3>g_simple_action_set_enabled ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 g_simple_action_set_enabled (<em class="parameter"><code><a class="link" href="GSimpleAction.html" title="GSimpleAction"><span class="type">GSimpleAction</span></a> *simple</code></em>,
-                             <em class="parameter"><code><a href="../glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> enabled</code></em>);</pre>
+                             <em class="parameter"><code><span class="type">gboolean</span> enabled</code></em>);</pre>
 <p>Sets the action as enabled or not.</p>
 <p>An action must be enabled in order to be activated or in order to
 have its state changed from outside callers.</p>
@@ -309,7 +309,7 @@ of the action should not attempt to modify its enabled flag.</p>
 <a name="g-simple-action-set-state"></a><h3>g_simple_action_set_state ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 g_simple_action_set_state (<em class="parameter"><code><a class="link" href="GSimpleAction.html" title="GSimpleAction"><span class="type">GSimpleAction</span></a> *simple</code></em>,
-                           <em class="parameter"><code><a href="../glib-GVariant.html#GVariant"><span class="type">GVariant</span></a> *value</code></em>);</pre>
+                           <em class="parameter"><code><span class="type">GVariant</span> *value</code></em>);</pre>
 <p>Sets the state of the action.</p>
 <p>This directly updates the 'state' property to the given value.</p>
 <p>This should only be called by the implementor of the action.  Users
@@ -334,7 +334,7 @@ request the change.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>value</p></td>
-<td class="parameter_description"><p>the new <a href="../glib-GVariant.html#GVariant"><span class="type">GVariant</span></a> for the state</p></td>
+<td class="parameter_description"><p>the new <span class="type">GVariant</span> for the state</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -347,7 +347,7 @@ request the change.</p>
 <a name="g-simple-action-set-state-hint"></a><h3>g_simple_action_set_state_hint ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 g_simple_action_set_state_hint (<em class="parameter"><code><a class="link" href="GSimpleAction.html" title="GSimpleAction"><span class="type">GSimpleAction</span></a> *simple</code></em>,
-                                <em class="parameter"><code><a href="../glib-GVariant.html#GVariant"><span class="type">GVariant</span></a> *state_hint</code></em>);</pre>
+                                <em class="parameter"><code><span class="type">GVariant</span> *state_hint</code></em>);</pre>
 <p>Sets the state hint for the action.</p>
 <p>See <a class="link" href="GAction.html#g-action-get-state-hint" title="g_action_get_state_hint ()"><code class="function">g_action_get_state_hint()</code></a> for more information about
 action state hints.</p>
@@ -367,7 +367,7 @@ action state hints.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>state_hint</p></td>
-<td class="parameter_description"><p>a <a href="../glib-GVariant.html#GVariant"><span class="type">GVariant</span></a> representing the state hint. </p></td>
+<td class="parameter_description"><p>a <span class="type">GVariant</span> representing the state hint. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr>
 </tbody>
@@ -389,7 +389,7 @@ using the following functions.</p>
 <a name="GSimpleAction.property-details"></a><h2>Property Details</h2>
 <div class="refsect2">
 <a name="GSimpleAction--enabled"></a><h3>The <code class="literal">“enabled”</code> property</h3>
-<pre class="programlisting">  “enabled”                  <a href="../glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<pre class="programlisting">  “enabled”                  <span class="type">gboolean</span></pre>
 <p>If <em class="parameter"><code>action</code></em>
  is currently enabled.</p>
 <p>If the action is disabled then calls to <a class="link" href="GAction.html#g-action-activate" title="g_action_activate ()"><code class="function">g_action_activate()</code></a> and
@@ -401,7 +401,7 @@ using the following functions.</p>
 <hr>
 <div class="refsect2">
 <a name="GSimpleAction--name"></a><h3>The <code class="literal">“name”</code> property</h3>
-<pre class="programlisting">  “name”                     <a href="../glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
+<pre class="programlisting">  “name”                     <span class="type">gchar</span> *</pre>
 <p>The name of the action. This is mostly meaningful for identifying
 the action once it has been added to a <a class="link" href="GSimpleActionGroup.html" title="GSimpleActionGroup"><span class="type">GSimpleActionGroup</span></a>.</p>
 <p>Flags: Read / Write / Construct Only</p>
@@ -411,7 +411,7 @@ the action once it has been added to a <a class="link" href="GSimpleActionGroup.
 <hr>
 <div class="refsect2">
 <a name="GSimpleAction--parameter-type"></a><h3>The <code class="literal">“parameter-type”</code> property</h3>
-<pre class="programlisting">  “parameter-type”           <a href="../glib-GVariantType.html#GVariantType"><span class="type">GVariantType</span></a> *</pre>
+<pre class="programlisting">  “parameter-type”           <span class="type">GVariantType</span> *</pre>
 <p>The type of the parameter that must be given when activating the
 action.</p>
 <p>Flags: Read / Write / Construct Only</p>
@@ -420,8 +420,8 @@ action.</p>
 <hr>
 <div class="refsect2">
 <a name="GSimpleAction--state"></a><h3>The <code class="literal">“state”</code> property</h3>
-<pre class="programlisting">  “state”                    <a href="../glib-GVariant.html#GVariant"><span class="type">GVariant</span></a> *</pre>
-<p>The state of the action, or <a href="../glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the action is stateless.</p>
+<pre class="programlisting">  “state”                    <span class="type">GVariant</span> *</pre>
+<p>The state of the action, or <code class="literal">NULL</code> if the action is stateless.</p>
 <p>Flags: Read / Write / Construct</p>
 <p>Allowed values: GVariant&lt;*&gt;</p>
 <p>Default value: NULL</p>
@@ -430,8 +430,8 @@ action.</p>
 <hr>
 <div class="refsect2">
 <a name="GSimpleAction--state-type"></a><h3>The <code class="literal">“state-type”</code> property</h3>
-<pre class="programlisting">  “state-type”               <a href="../glib-GVariantType.html#GVariantType"><span class="type">GVariantType</span></a> *</pre>
-<p>The <a href="../glib-GVariantType.html#GVariantType"><span class="type">GVariantType</span></a> of the state that the action has, or <a href="../glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the
+<pre class="programlisting">  “state-type”               <span class="type">GVariantType</span> *</pre>
+<p>The <span class="type">GVariantType</span> of the state that the action has, or <code class="literal">NULL</code> if the
 action is stateless.</p>
 <p>Flags: Read</p>
 <p class="since">Since: <a class="link" href="api-index-2-28.html#api-index-2.28">2.28</a></p>
@@ -443,14 +443,14 @@ action is stateless.</p>
 <a name="GSimpleAction-activate"></a><h3>The <code class="literal">“activate”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GSimpleAction.html" title="GSimpleAction"><span class="type">GSimpleAction</span></a> *simple,
-               <a href="../glib-GVariant.html#GVariant"><span class="type">GVariant</span></a>      *parameter,
-               <a href="../glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>       user_data)</pre>
+               <span class="type">GVariant</span>      *parameter,
+               <span class="type">gpointer</span>       user_data)</pre>
 <p>Indicates that the action was just activated.</p>
 <p><em class="parameter"><code>parameter</code></em>
  will always be of the expected type.  In the event that
 an incorrect type was given, no signal will be emitted.</p>
 <p>Since GLib 2.40, if no handler is connected to this signal then the
-default behaviour for boolean-stated actions with a <a href="../glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> parameter
+default behaviour for boolean-stated actions with a <code class="literal">NULL</code> parameter
 type is to toggle them via the <a class="link" href="GSimpleAction.html#GSimpleAction-change-state" title="The “change-state” signal"><span class="type">“change-state”</span></a> signal.
 For stateful actions where the state type is equal to the parameter
 type, the default is to forward them directly to
@@ -483,7 +483,7 @@ of <a class="link" href="GSimpleAction.html" title="GSimpleAction"><span class="
 </tbody>
 </table></div>
 </div>
-<p>Flags: <a href="../gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></p>
+<p>Flags: Run Last</p>
 <p class="since">Since: <a class="link" href="api-index-2-28.html#api-index-2.28">2.28</a></p>
 </div>
 <hr>
@@ -491,8 +491,8 @@ of <a class="link" href="GSimpleAction.html" title="GSimpleAction"><span class="
 <a name="GSimpleAction-change-state"></a><h3>The <code class="literal">“change-state”</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 user_function (<a class="link" href="GSimpleAction.html" title="GSimpleAction"><span class="type">GSimpleAction</span></a> *simple,
-               <a href="../glib-GVariant.html#GVariant"><span class="type">GVariant</span></a>      *value,
-               <a href="../glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>       user_data)</pre>
+               <span class="type">GVariant</span>      *value,
+               <span class="type">gpointer</span>       user_data)</pre>
 <p>Indicates that the action just received a request to change its
 state.</p>
 <p><em class="parameter"><code>value</code></em>
@@ -528,7 +528,7 @@ call <a class="link" href="GSimpleAction.html#g-simple-action-set-state" title="
 <span class="cbracket">{</span>
 <span class="normal">  </span><span class="usertype">gint</span><span class="normal"> requested</span><span class="symbol">;</span>
 
-<span class="normal">  requested </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="../glib-GVariant.html#g-variant-get-int32">g_variant_get_int32</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">value</span><span class="symbol">);</span>
+<span class="normal">  requested </span><span class="symbol">=</span><span class="normal"> </span><span class="function">g_variant_get_int32</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">value</span><span class="symbol">);</span>
 
 <span class="normal">  </span><span class="comment">// Volume only goes from 0 to 10</span>
 <span class="normal">  </span><span class="keyword">if</span><span class="normal"> </span><span class="symbol">(</span><span class="number">0</span><span class="normal"> </span><span class="symbol">&lt;=</span><span class="normal"> requested </span><span class="symbol">&amp;&amp;</span><span class="normal"> requested </span><span class="symbol">&lt;=</span><span class="normal"> </span><span class="number">10</span><span class="symbol">)</span>
@@ -569,12 +569,12 @@ It could set it to any value at all, or take some other action.</p>
 </tbody>
 </table></div>
 </div>
-<p>Flags: <a href="../gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS">Run Last</a></p>
+<p>Flags: Run Last</p>
 <p class="since">Since: <a class="link" href="api-index-2-30.html#api-index-2.30">2.30</a></p>
 </div>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.28</div>
+<hr>Generated by GTK-Doc V1.26.1</div>
 </body>
 </html>

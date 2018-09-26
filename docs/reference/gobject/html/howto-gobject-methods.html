@@ -8,7 +8,7 @@
 <link rel="up" href="howto-gobject.html" title="How to define and implement a new GObject">
 <link rel="prev" href="howto-gobject-destruction.html" title="Object destruction">
 <link rel="next" href="howto-gobject-chainup.html" title="Chaining up">
-<meta name="generator" content="GTK-Doc V1.28 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.26.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -79,8 +79,8 @@
 <span class="function">viewer_file_open</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">ViewerFile</span><span class="normal">  </span><span class="symbol">*</span><span class="normal">self</span><span class="symbol">,</span>
 <span class="normal">                  </span><span class="usertype">GError</span><span class="normal">     </span><span class="symbol">**</span><span class="normal">error</span><span class="symbol">)</span>
 <span class="cbracket">{</span>
-<span class="normal">  </span><span class="function"><a href="../glib-Warnings-and-Assertions.html#g-return-if-fail">g_return_if_fail</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">VIEWER_IS_FILE</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">self</span><span class="symbol">));</span>
-<span class="normal">  </span><span class="function"><a href="../glib-Warnings-and-Assertions.html#g-return-if-fail">g_return_if_fail</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">error </span><span class="symbol">==</span><span class="normal"> <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a> </span><span class="symbol">||</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">error </span><span class="symbol">==</span><span class="normal"> <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function">g_return_if_fail</span><span class="normal"> </span><span class="symbol">(</span><span class="function">VIEWER_IS_FILE</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">self</span><span class="symbol">));</span>
+<span class="normal">  </span><span class="function">g_return_if_fail</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">error </span><span class="symbol">==</span><span class="normal"> NULL </span><span class="symbol">||</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">error </span><span class="symbol">==</span><span class="normal"> NULL</span><span class="symbol">);</span>
 
 <span class="normal">  </span><span class="comment">/* do stuff here. */</span>
 <span class="cbracket">}</span></pre></td>
@@ -193,11 +193,11 @@
 <span class="cbracket">{</span>
 <span class="normal">  </span><span class="usertype">ViewerFileClass</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">klass</span><span class="symbol">;</span>
 
-<span class="normal">  </span><span class="function"><a href="../glib-Warnings-and-Assertions.html#g-return-if-fail">g_return_if_fail</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">VIEWER_IS_FILE</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">self</span><span class="symbol">));</span>
-<span class="normal">  </span><span class="function"><a href="../glib-Warnings-and-Assertions.html#g-return-if-fail">g_return_if_fail</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">error </span><span class="symbol">==</span><span class="normal"> <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a> </span><span class="symbol">||</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">error </span><span class="symbol">==</span><span class="normal"> <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function">g_return_if_fail</span><span class="normal"> </span><span class="symbol">(</span><span class="function">VIEWER_IS_FILE</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">self</span><span class="symbol">));</span>
+<span class="normal">  </span><span class="function">g_return_if_fail</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">error </span><span class="symbol">==</span><span class="normal"> NULL </span><span class="symbol">||</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">error </span><span class="symbol">==</span><span class="normal"> NULL</span><span class="symbol">);</span>
 
 <span class="normal">  klass </span><span class="symbol">=</span><span class="normal"> </span><span class="function">VIEWER_FILE_GET_CLASS</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">self</span><span class="symbol">);</span>
-<span class="normal">  </span><span class="function"><a href="../glib-Warnings-and-Assertions.html#g-return-if-fail">g_return_if_fail</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">klass</span><span class="symbol">-&gt;</span><span class="normal">open </span><span class="symbol">!=</span><span class="normal"> <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function">g_return_if_fail</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">klass</span><span class="symbol">-&gt;</span><span class="normal">open </span><span class="symbol">!=</span><span class="normal"> NULL</span><span class="symbol">);</span>
 
 <span class="normal">  klass</span><span class="symbol">-&gt;</span><span class="function">open</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">self</span><span class="symbol">,</span><span class="normal"> error</span><span class="symbol">);</span>
 <span class="cbracket">}</span></pre></td>
@@ -290,7 +290,7 @@
 <span class="comment">   *</span>
 <span class="comment">   * pure virtual method: mandates implementation in children.</span>
 <span class="comment">   */</span>
-<span class="normal">  klass</span><span class="symbol">-&gt;</span><span class="normal">open </span><span class="symbol">=</span><span class="normal"> <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">;</span>
+<span class="normal">  klass</span><span class="symbol">-&gt;</span><span class="normal">open </span><span class="symbol">=</span><span class="normal"> NULL</span><span class="symbol">;</span>
 
 <span class="normal">  </span><span class="comment">/* merely virtual method. */</span>
 <span class="normal">  klass</span><span class="symbol">-&gt;</span><span class="normal">close </span><span class="symbol">=</span><span class="normal"> viewer_file_real_close</span><span class="symbol">;</span>
@@ -302,8 +302,8 @@
 <span class="cbracket">{</span>
 <span class="normal">  </span><span class="usertype">ViewerFileClass</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">klass</span><span class="symbol">;</span>
 
-<span class="normal">  </span><span class="function"><a href="../glib-Warnings-and-Assertions.html#g-return-if-fail">g_return_if_fail</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">VIEWER_IS_FILE</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">self</span><span class="symbol">));</span>
-<span class="normal">  </span><span class="function"><a href="../glib-Warnings-and-Assertions.html#g-return-if-fail">g_return_if_fail</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">error </span><span class="symbol">==</span><span class="normal"> <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a> </span><span class="symbol">||</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">error </span><span class="symbol">==</span><span class="normal"> <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function">g_return_if_fail</span><span class="normal"> </span><span class="symbol">(</span><span class="function">VIEWER_IS_FILE</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">self</span><span class="symbol">));</span>
+<span class="normal">  </span><span class="function">g_return_if_fail</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">error </span><span class="symbol">==</span><span class="normal"> NULL </span><span class="symbol">||</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">error </span><span class="symbol">==</span><span class="normal"> NULL</span><span class="symbol">);</span>
 
 <span class="normal">  klass </span><span class="symbol">=</span><span class="normal"> </span><span class="function">VIEWER_FILE_GET_CLASS</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">self</span><span class="symbol">);</span>
 
@@ -312,7 +312,7 @@
 <span class="comment">   * depending on the intent of the class, either ignore it silently</span>
 <span class="comment">   * or warn the user.</span>
 <span class="comment">   */</span>
-<span class="normal">  </span><span class="function"><a href="../glib-Warnings-and-Assertions.html#g-return-if-fail">g_return_if_fail</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">klass</span><span class="symbol">-&gt;</span><span class="normal">open </span><span class="symbol">!=</span><span class="normal"> <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function">g_return_if_fail</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">klass</span><span class="symbol">-&gt;</span><span class="normal">open </span><span class="symbol">!=</span><span class="normal"> NULL</span><span class="symbol">);</span>
 <span class="normal">  klass</span><span class="symbol">-&gt;</span><span class="function">open</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">self</span><span class="symbol">,</span><span class="normal"> error</span><span class="symbol">);</span>
 <span class="cbracket">}</span>
 
@@ -322,11 +322,11 @@
 <span class="cbracket">{</span>
 <span class="normal">  </span><span class="usertype">ViewerFileClass</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">klass</span><span class="symbol">;</span>
 
-<span class="normal">  </span><span class="function"><a href="../glib-Warnings-and-Assertions.html#g-return-if-fail">g_return_if_fail</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">VIEWER_IS_FILE</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">self</span><span class="symbol">));</span>
-<span class="normal">  </span><span class="function"><a href="../glib-Warnings-and-Assertions.html#g-return-if-fail">g_return_if_fail</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">error </span><span class="symbol">==</span><span class="normal"> <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a> </span><span class="symbol">||</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">error </span><span class="symbol">==</span><span class="normal"> <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function">g_return_if_fail</span><span class="normal"> </span><span class="symbol">(</span><span class="function">VIEWER_IS_FILE</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">self</span><span class="symbol">));</span>
+<span class="normal">  </span><span class="function">g_return_if_fail</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">error </span><span class="symbol">==</span><span class="normal"> NULL </span><span class="symbol">||</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">error </span><span class="symbol">==</span><span class="normal"> NULL</span><span class="symbol">);</span>
 
 <span class="normal">  klass </span><span class="symbol">=</span><span class="normal"> </span><span class="function">VIEWER_FILE_GET_CLASS</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">self</span><span class="symbol">);</span>
-<span class="normal">  </span><span class="keyword">if</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">klass</span><span class="symbol">-&gt;</span><span class="normal">close </span><span class="symbol">!=</span><span class="normal"> <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">)</span>
+<span class="normal">  </span><span class="keyword">if</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">klass</span><span class="symbol">-&gt;</span><span class="normal">close </span><span class="symbol">!=</span><span class="normal"> NULL</span><span class="symbol">)</span>
 <span class="normal">    klass</span><span class="symbol">-&gt;</span><span class="function">close</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">self</span><span class="symbol">,</span><span class="normal"> error</span><span class="symbol">);</span>
 <span class="cbracket">}</span></pre></td>
       </tr>
@@ -380,7 +380,7 @@
 
 <span class="normal">  </span><span class="comment">/* Private helper function to work out whether the file can be loaded via</span>
 <span class="comment">   * memory mapped I/O, or whether it has to be read as a stream. */</span>
-<span class="normal">  </span><span class="function"><a href="../glib-Basic-Types.html#gboolean">gboolean</a></span><span class="normal"> </span><span class="symbol">(*</span><span class="normal">can_memory_map</span><span class="symbol">)</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">ViewerFile</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">self</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function">gboolean</span><span class="normal"> </span><span class="symbol">(*</span><span class="normal">can_memory_map</span><span class="symbol">)</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">ViewerFile</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">self</span><span class="symbol">);</span>
 
 <span class="normal">  </span><span class="comment">/* Padding to allow adding up to 12 new virtual functions without</span>
 <span class="comment">   * breaking ABI. */</span>
@@ -429,7 +429,7 @@
 26
 27</pre></td>
         <td class="listing_code"><pre class="programlisting"><span class="comment">/* this accessor function is static: it is not exported outside of this file. */</span>
-<span class="keyword">static</span><span class="normal"> <a href="../glib-Basic-Types.html#gboolean">gboolean</a> </span>
+<span class="keyword">static</span><span class="normal"> gboolean </span>
 <span class="function">viewer_file_can_memory_map</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">ViewerFile</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">self</span><span class="symbol">)</span>
 <span class="cbracket">{</span>
 <span class="normal">  </span><span class="keyword">return</span><span class="normal"> </span><span class="function">VIEWER_FILE_GET_CLASS</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">self</span><span class="symbol">)-&gt;</span><span class="function">can_memory_map</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">self</span><span class="symbol">);</span>
@@ -439,8 +439,8 @@
 <span class="function">viewer_file_open</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">ViewerFile</span><span class="normal">  </span><span class="symbol">*</span><span class="normal">self</span><span class="symbol">,</span>
 <span class="normal">                  </span><span class="usertype">GError</span><span class="normal">     </span><span class="symbol">**</span><span class="normal">error</span><span class="symbol">)</span>
 <span class="cbracket">{</span>
-<span class="normal">  </span><span class="function"><a href="../glib-Warnings-and-Assertions.html#g-return-if-fail">g_return_if_fail</a></span><span class="normal"> </span><span class="symbol">(</span><span class="function">VIEWER_IS_FILE</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">self</span><span class="symbol">));</span>
-<span class="normal">  </span><span class="function"><a href="../glib-Warnings-and-Assertions.html#g-return-if-fail">g_return_if_fail</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">error </span><span class="symbol">==</span><span class="normal"> <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a> </span><span class="symbol">||</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">error </span><span class="symbol">==</span><span class="normal"> <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function">g_return_if_fail</span><span class="normal"> </span><span class="symbol">(</span><span class="function">VIEWER_IS_FILE</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">self</span><span class="symbol">));</span>
+<span class="normal">  </span><span class="function">g_return_if_fail</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">error </span><span class="symbol">==</span><span class="normal"> NULL </span><span class="symbol">||</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">error </span><span class="symbol">==</span><span class="normal"> NULL</span><span class="symbol">);</span>
 
 <span class="normal">  </span><span class="comment">/*</span>
 <span class="comment">   * Try to load the file using memory mapped I/O, if the implementation of the</span>
@@ -484,12 +484,12 @@
 12
 13
 14</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="keyword">static</span><span class="normal"> <a href="../glib-Basic-Types.html#gboolean">gboolean</a></span>
+        <td class="listing_code"><pre class="programlisting"><span class="keyword">static</span><span class="normal"> gboolean</span>
 <span class="function">viewer_file_real_can_memory_map</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">ViewerFile</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">self</span><span class="symbol">)</span>
 <span class="cbracket">{</span>
 <span class="normal">  </span><span class="comment">/* As an example, always return false. Or, potentially return true if the</span>
 <span class="comment">   * file is local. */</span>
-<span class="normal">  </span><span class="keyword">return</span><span class="normal"> <a href="../glib-Standard-Macros.html#FALSE:CAPS">FALSE</a></span><span class="symbol">;</span>
+<span class="normal">  </span><span class="keyword">return</span><span class="normal"> FALSE</span><span class="symbol">;</span>
 <span class="cbracket">}</span>
 
 <span class="keyword">static</span><span class="normal"> </span><span class="type">void</span>
@@ -538,6 +538,6 @@
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.28</div>
+<hr>Generated by GTK-Doc V1.26.1</div>
 </body>
 </html>

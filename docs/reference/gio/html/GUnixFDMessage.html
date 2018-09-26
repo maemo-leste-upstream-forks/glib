@@ -8,7 +8,7 @@
 <link rel="up" href="networking.html" title="Low-level network support">
 <link rel="prev" href="GUnixFDList.html" title="GUnixFDList">
 <link rel="next" href="GCredentials.html" title="GCredentials">
-<meta name="generator" content="GTK-Doc V1.28 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.26.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -67,7 +67,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="../glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<span class="returnvalue">gboolean</span>
 </td>
 <td class="function_name">
 <a class="link" href="GUnixFDMessage.html#g-unix-fd-message-append-fd" title="g_unix_fd_message_append_fd ()">g_unix_fd_message_append_fd</a> <span class="c_punctuation">()</span>
@@ -75,7 +75,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="../glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a> *
+<span class="returnvalue">gint</span> *
 </td>
 <td class="function_name">
 <a class="link" href="GUnixFDMessage.html#g-unix-fd-message-steal-fds" title="g_unix_fd_message_steal_fds ()">g_unix_fd_message_steal_fds</a> <span class="c_punctuation">()</span>
@@ -115,7 +115,7 @@
 </div>
 <div class="refsect1">
 <a name="GUnixFDMessage.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="../gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+<pre class="screen">    GObject
     <span class="lineart">╰──</span> <a class="link" href="GSocketControlMessage.html" title="GSocketControlMessage">GSocketControlMessage</a>
         <span class="lineart">╰──</span> GUnixFDMessage
 </pre>
@@ -135,7 +135,7 @@ between processes by the kernel.</p>
 <p>For an easier way to send and receive file descriptors over
 stream-oriented UNIX sockets, see <a class="link" href="GUnixConnection.html#g-unix-connection-send-fd" title="g_unix_connection_send_fd ()"><code class="function">g_unix_connection_send_fd()</code></a> and
 <a class="link" href="GUnixConnection.html#g-unix-connection-receive-fd" title="g_unix_connection_receive_fd ()"><code class="function">g_unix_connection_receive_fd()</code></a>.</p>
-<p>Note that <code class="literal">&amp;lt;gio/gunixfdmessage.h&gt;</code> belongs to the UNIX-specific GIO
+<p>Note that <code class="literal">&lt;gio/gunixfdmessage.h&gt;</code> belongs to the UNIX-specific GIO
 interfaces, thus you have to use the <code class="literal">gio-unix-2.0.pc</code> pkg-config
 file when using it.</p>
 </div>
@@ -217,10 +217,10 @@ the lifetime of <em class="parameter"><code>message</code></em>
 <hr>
 <div class="refsect2">
 <a name="g-unix-fd-message-append-fd"></a><h3>g_unix_fd_message_append_fd ()</h3>
-<pre class="programlisting"><a href="../glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><span class="returnvalue">gboolean</span>
 g_unix_fd_message_append_fd (<em class="parameter"><code><a class="link" href="GUnixFDMessage.html" title="GUnixFDMessage"><span class="type">GUnixFDMessage</span></a> *message</code></em>,
-                             <em class="parameter"><code><a href="../glib-Basic-Types.html#gint"><span class="type">gint</span></a> fd</code></em>,
-                             <em class="parameter"><code><a href="../glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);</pre>
+                             <em class="parameter"><code><span class="type">gint</span> fd</code></em>,
+                             <em class="parameter"><code><span class="type">GError</span> **error</code></em>);</pre>
 <p>Adds a file descriptor to <em class="parameter"><code>message</code></em>
 .</p>
 <p>The file descriptor is duplicated using <code class="function">dup()</code>. You keep your copy
@@ -251,7 +251,7 @@ system-wide file descriptor limit.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>error</p></td>
-<td class="parameter_description"><p>a <a href="../glib-Error-Reporting.html#GError"><span class="type">GError</span></a> pointer</p></td>
+<td class="parameter_description"><p>a <span class="type">GError</span> pointer</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -259,7 +259,7 @@ system-wide file descriptor limit.</p>
 </div>
 <div class="refsect3">
 <a name="g-unix-fd-message-append-fd.returns"></a><h4>Returns</h4>
-<p> <a href="../glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> in case of success, else <a href="../glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> (and <em class="parameter"><code>error</code></em>
+<p> <code class="literal">TRUE</code> in case of success, else <code class="literal">FALSE</code> (and <em class="parameter"><code>error</code></em>
 is set)</p>
 </div>
 <p class="since">Since: <a class="link" href="api-index-2-22.html#api-index-2.22">2.22</a></p>
@@ -267,23 +267,23 @@ is set)</p>
 <hr>
 <div class="refsect2">
 <a name="g-unix-fd-message-steal-fds"></a><h3>g_unix_fd_message_steal_fds ()</h3>
-<pre class="programlisting"><a href="../glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a> *
+<pre class="programlisting"><span class="returnvalue">gint</span> *
 g_unix_fd_message_steal_fds (<em class="parameter"><code><a class="link" href="GUnixFDMessage.html" title="GUnixFDMessage"><span class="type">GUnixFDMessage</span></a> *message</code></em>,
-                             <em class="parameter"><code><a href="../glib-Basic-Types.html#gint"><span class="type">gint</span></a> *length</code></em>);</pre>
+                             <em class="parameter"><code><span class="type">gint</span> *length</code></em>);</pre>
 <p>Returns the array of file descriptors that is contained in this
 object.</p>
 <p>After this call, the descriptors are no longer contained in
 <em class="parameter"><code>message</code></em>
 . Further calls will return an empty list (unless more
 descriptors have been added).</p>
-<p>The return result of this function must be freed with <a href="../glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a>.
+<p>The return result of this function must be freed with <code class="function">g_free()</code>.
 The caller is also responsible for closing all of the file
 descriptors.</p>
 <p>If <em class="parameter"><code>length</code></em>
- is non-<a href="../glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> then it is set to the number of file
+ is non-<code class="literal">NULL</code> then it is set to the number of file
 descriptors in the returned array. The returned array is also
 terminated with -1.</p>
-<p>This function never returns <a href="../glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. In case there are no file
+<p>This function never returns <code class="literal">NULL</code>. In case there are no file
 descriptors contained in <em class="parameter"><code>message</code></em>
 , an empty array is returned.</p>
 <div class="refsect3">
@@ -303,7 +303,7 @@ descriptors contained in <em class="parameter"><code>message</code></em>
 <tr>
 <td class="parameter_name"><p>length</p></td>
 <td class="parameter_description"><p>pointer to the length of the returned
-array, or <a href="../glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+array, or <code class="literal">NULL</code>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL may be passed instead of a pointer to a location."><span class="acronym">optional</span></acronym>]</span></td>
 </tr>
 </tbody>
@@ -342,6 +342,6 @@ using the following functions.</p>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.28</div>
+<hr>Generated by GTK-Doc V1.26.1</div>
 </body>
 </html>

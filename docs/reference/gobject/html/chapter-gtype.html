@@ -8,7 +8,7 @@
 <link rel="up" href="pt01.html" title="Part I. Concepts">
 <link rel="prev" href="ch01s02.html" title="Exporting a C API">
 <link rel="next" href="gtype-conventions.html" title="Conventions">
-<meta name="generator" content="GTK-Doc V1.28 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.26.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -257,9 +257,9 @@
 <span class="normal">  b </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="gobject-Standard-Parameter-and-Value-Types.html#g-value-get-uint64">g_value_get_uint64</a></span><span class="normal"> </span><span class="symbol">(&amp;</span><span class="normal">b_value</span><span class="symbol">);</span>
 
 <span class="normal">  </span><span class="keyword">if</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">a </span><span class="symbol">==</span><span class="normal"> b</span><span class="symbol">)</span><span class="normal"> </span><span class="cbracket">{</span>
-<span class="normal">    </span><span class="function"><a href="../glib-Warnings-and-Assertions.html#g-print">g_print</a></span><span class="normal"> </span><span class="symbol">(</span><span class="string">"Yay !! 10 lines of code to copy around a uint64.</span><span class="specialchar">\n</span><span class="string">"</span><span class="symbol">);</span>
+<span class="normal">    </span><span class="function">g_print</span><span class="normal"> </span><span class="symbol">(</span><span class="string">"Yay !! 10 lines of code to copy around a uint64.</span><span class="specialchar">\n</span><span class="string">"</span><span class="symbol">);</span>
 <span class="normal">  </span><span class="cbracket">}</span><span class="normal"> </span><span class="keyword">else</span><span class="normal"> </span><span class="cbracket">{</span>
-<span class="normal">    </span><span class="function"><a href="../glib-Warnings-and-Assertions.html#g-print">g_print</a></span><span class="normal"> </span><span class="symbol">(</span><span class="string">"Are you sure this is not a Z80 ?</span><span class="specialchar">\n</span><span class="string">"</span><span class="symbol">);</span>
+<span class="normal">    </span><span class="function">g_print</span><span class="normal"> </span><span class="symbol">(</span><span class="string">"Are you sure this is not a Z80 ?</span><span class="specialchar">\n</span><span class="string">"</span><span class="symbol">);</span>
 <span class="normal">  </span><span class="cbracket">}</span>
 <span class="cbracket">}</span>
 
@@ -268,7 +268,7 @@
 <span class="normal">  </span><span class="usertype">GObject</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">obj</span><span class="symbol">;</span>
 <span class="normal">  </span><span class="usertype">GValue</span><span class="normal"> obj_vala </span><span class="symbol">=</span><span class="normal"> <a href="gobject-Generic-values.html#G-VALUE-INIT:CAPS">G_VALUE_INIT</a></span><span class="symbol">;</span>
 <span class="normal">  </span><span class="usertype">GValue</span><span class="normal"> obj_valb </span><span class="symbol">=</span><span class="normal"> <a href="gobject-Generic-values.html#G-VALUE-INIT:CAPS">G_VALUE_INIT</a></span><span class="symbol">;</span>
-<span class="normal">  obj </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="gobject-The-Base-Object-Type.html#g-object-new">g_object_new</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">VIEWER_TYPE_FILE</span><span class="symbol">,</span><span class="normal"> <a href="../glib-Standard-Macros.html#NULL:CAPS">NULL</a></span><span class="symbol">);</span>
+<span class="normal">  obj </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="gobject-The-Base-Object-Type.html#g-object-new">g_object_new</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">VIEWER_TYPE_FILE</span><span class="symbol">,</span><span class="normal"> NULL</span><span class="symbol">);</span>
 
 <span class="normal">  </span><span class="function"><a href="gobject-Generic-values.html#g-value-init">g_value_init</a></span><span class="normal"> </span><span class="symbol">(&amp;</span><span class="normal">obj_vala</span><span class="symbol">,</span><span class="normal"> VIEWER_TYPE_FILE</span><span class="symbol">);</span>
 <span class="normal">  </span><span class="function"><a href="gobject-Standard-Parameter-and-Value-Types.html#g-value-set-object">g_value_set_object</a></span><span class="normal"> </span><span class="symbol">(&amp;</span><span class="normal">obj_vala</span><span class="symbol">,</span><span class="normal"> obj</span><span class="symbol">);</span>
@@ -311,6 +311,6 @@
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.28</div>
+<hr>Generated by GTK-Doc V1.26.1</div>
 </body>
 </html>
