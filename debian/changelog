@@ -1,9 +1,12 @@
-glib2.0 (2.58.2-5) UNRELEASED; urgency=medium
+glib2.0 (2.58.3-1) UNRELEASED; urgency=medium
 
   [ Iain Lane ]
   * debian/gbp.conf: Use upstream/2.58.x
 
- -- Simon McVittie <smcv@debian.org>  Tue, 29 Jan 2019 17:48:22 +0000
+  [ Simon McVittie ]
+  * New upstream release
+
+ -- Simon McVittie <smcv@debian.org>  Tue, 29 Jan 2019 17:50:14 +0000
 
 glib2.0 (2.58.2-4) unstable; urgency=medium
 
