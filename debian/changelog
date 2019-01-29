@@ -5,6 +5,7 @@ glib2.0 (2.58.3-1) UNRELEASED; urgency=medium
 
   [ Simon McVittie ]
   * New upstream release
+    - Drop patches that were applied upstream
 
  -- Simon McVittie <smcv@debian.org>  Tue, 29 Jan 2019 17:50:14 +0000
 
