@@ -1,4 +1,6 @@
-glib2.0 (2.58.3-1) UNRELEASED; urgency=medium
+glib2.0 (2.58.3-1) unstable; urgency=medium
+
+  * Team upload
 
   [ Iain Lane ]
   * debian/gbp.conf: Use upstream/2.58.x
@@ -13,7 +15,7 @@ glib2.0 (2.58.3-1) UNRELEASED; urgency=medium
     D-Bus messages according to the protocol specification
     (the limit was 256M, and is now the correct 128M)
 
- -- Simon McVittie <smcv@debian.org>  Tue, 29 Jan 2019 17:50:14 +0000
+ -- Simon McVittie <smcv@debian.org>  Thu, 07 Feb 2019 08:28:56 +0000
 
 glib2.0 (2.58.2-4) unstable; urgency=medium
 
