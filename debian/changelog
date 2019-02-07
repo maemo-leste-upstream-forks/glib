@@ -5,6 +5,8 @@ glib2.0 (2.58.3-1) UNRELEASED; urgency=medium
 
   [ Simon McVittie ]
   * New upstream release
+    - Fix crashes related to the GUnixMount API
+    - Make G_DEFINE_INTERFACE compatible with g++ -Wint-in-bool-context
     - Drop patches that were applied upstream
   * d/p/gdbusmessage-Fix-check-on-upper-limit-of-message-size.patch:
     Add patch from upstream glib-2-58 branch to limit the maximum size of
