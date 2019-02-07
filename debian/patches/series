@@ -8,7 +8,6 @@ gwakeuptest-Be-less-parallel-unless-invoked-with-m-slow.patch
 gvariant-test-Also-force-alignment-for-tuple-test-data.patch
 debian/02_gettext-desktopfiles-ubuntu.patch
 debian/03_disble_glib_compile_schemas_warning.patch
-debian/04_homedir_env.patch
 debian/06_thread_test_ignore_prctl_fail.patch
 debian/61_glib-compile-binaries-path.patch
 debian/90_gio-modules-multiarch-compat.patch
