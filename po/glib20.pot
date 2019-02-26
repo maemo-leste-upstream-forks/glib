@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?"
 "product=glib&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2018-09-21 10:50+0100\n"
+"POT-Creation-Date: 2018-12-18 16:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -317,19 +317,19 @@ msgstr ""
 #: /opt/gnome/source/glib/gio/gdatainputstream.c:1261
 #: /opt/gnome/source/glib/glib/gconvert.c:454
 #: /opt/gnome/source/glib/glib/gconvert.c:883
-#: /opt/gnome/source/glib/glib/giochannel.c:1557
-#: /opt/gnome/source/glib/glib/giochannel.c:1599
-#: /opt/gnome/source/glib/glib/giochannel.c:2443
-#: /opt/gnome/source/glib/glib/gutf8.c:869
-#: /opt/gnome/source/glib/glib/gutf8.c:1322
+#: /opt/gnome/source/glib/glib/giochannel.c:1558
+#: /opt/gnome/source/glib/glib/giochannel.c:1600
+#: /opt/gnome/source/glib/glib/giochannel.c:2444
+#: /opt/gnome/source/glib/glib/gutf8.c:870
+#: /opt/gnome/source/glib/glib/gutf8.c:1323
 msgid "Invalid byte sequence in conversion input"
 msgstr ""
 
 #: /opt/gnome/source/glib/gio/gcharsetconverter.c:347
 #: /opt/gnome/source/glib/glib/gconvert.c:462
 #: /opt/gnome/source/glib/glib/gconvert.c:797
-#: /opt/gnome/source/glib/glib/giochannel.c:1564
-#: /opt/gnome/source/glib/glib/giochannel.c:2455
+#: /opt/gnome/source/glib/glib/giochannel.c:1565
+#: /opt/gnome/source/glib/glib/giochannel.c:2456
 #, c-format
 msgid "Error during conversion: %s"
 msgstr ""
@@ -341,7 +341,7 @@ msgstr ""
 
 #: /opt/gnome/source/glib/gio/gcharsetconverter.c:456
 #: /opt/gnome/source/glib/glib/gconvert.c:327
-#: /opt/gnome/source/glib/glib/giochannel.c:1385
+#: /opt/gnome/source/glib/glib/giochannel.c:1386
 #, c-format
 msgid "Conversion from character set “%s” to “%s” is not supported"
 msgstr ""
@@ -740,69 +740,69 @@ msgid ""
 "- unknown value '%s'"
 msgstr ""
 
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:1246
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:1249
 msgid "type is INVALID"
 msgstr ""
 
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:1257
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:1260
 msgid "METHOD_CALL message: PATH or MEMBER header field is missing"
 msgstr ""
 
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:1268
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:1271
 msgid "METHOD_RETURN message: REPLY_SERIAL header field is missing"
 msgstr ""
 
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:1280
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:1283
 msgid "ERROR message: REPLY_SERIAL or ERROR_NAME header field is missing"
 msgstr ""
 
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:1293
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:1296
 msgid "SIGNAL message: PATH, INTERFACE or MEMBER header field is missing"
 msgstr ""
 
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:1301
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:1304
 msgid ""
 "SIGNAL message: The PATH header field is using the reserved value /org/"
 "freedesktop/DBus/Local"
 msgstr ""
 
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:1309
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:1312
 msgid ""
 "SIGNAL message: The INTERFACE header field is using the reserved value org."
 "freedesktop.DBus.Local"
 msgstr ""
 
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:1357
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:1417
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:1360
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:1420
 #, c-format
 msgid "Wanted to read %lu byte but only got %lu"
 msgid_plural "Wanted to read %lu bytes but only got %lu"
 msgstr[0] ""
 msgstr[1] ""
 
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:1371
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:1374
 #, c-format
 msgid "Expected NUL byte after the string “%s” but found byte %d"
 msgstr ""
 
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:1390
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:1393
 #, c-format
 msgid ""
 "Expected valid UTF-8 string but found invalid bytes at byte offset %d "
 "(length of string is %d). The valid UTF-8 string up until that point was “%s”"
 msgstr ""
 
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:1593
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:1596
 #, c-format
 msgid "Parsed value “%s” is not a valid D-Bus object path"
 msgstr ""
 
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:1615
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:1618
 #, c-format
 msgid "Parsed value “%s” is not a valid D-Bus signature"
 msgstr ""
 
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:1662
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:1665
 #, c-format
 msgid ""
 "Encountered array of length %u byte. Maximum length is 2<<26 bytes (64 MiB)."
@@ -811,96 +811,101 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:1682
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:1685
 #, c-format
 msgid ""
 "Encountered array of type “a%c”, expected to have a length a multiple of %u "
 "bytes, but found to be %u bytes in length"
 msgstr ""
 
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:1849
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:1855
 #, c-format
 msgid "Parsed value “%s” for variant is not a valid D-Bus signature"
 msgstr ""
 
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:1873
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:1879
 #, c-format
 msgid ""
 "Error deserializing GVariant with type string “%s” from the D-Bus wire format"
 msgstr ""
 
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:2055
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:2064
 #, c-format
 msgid ""
 "Invalid endianness value. Expected 0x6c (“l”) or 0x42 (“B”) but found value "
 "0x%02x"
 msgstr ""
 
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:2068
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:2077
 #, c-format
 msgid "Invalid major protocol version. Expected 1 but found %d"
 msgstr ""
 
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:2124
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:2130
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:2720
+msgid "Signature header found but is not of type signature"
+msgstr ""
+
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:2142
 #, c-format
 msgid "Signature header with signature “%s” found but message body is empty"
 msgstr ""
 
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:2138
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:2156
 #, c-format
 msgid "Parsed value “%s” is not a valid D-Bus signature (for body)"
 msgstr ""
 
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:2168
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:2186
 #, c-format
 msgid "No signature header in message but the message body is %u byte"
 msgid_plural "No signature header in message but the message body is %u bytes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:2178
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:2196
 msgid "Cannot deserialize message: "
 msgstr ""
 
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:2519
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:2537
 #, c-format
 msgid ""
 "Error serializing GVariant with type string “%s” to the D-Bus wire format"
 msgstr ""
 
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:2656
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:2674
 #, c-format
 msgid ""
 "Number of file descriptors in message (%d) differs from header field (%d)"
 msgstr ""
 
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:2664
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:2682
 msgid "Cannot serialize message: "
 msgstr ""
 
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:2708
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:2736
 #, c-format
 msgid "Message body has signature “%s” but there is no signature header"
 msgstr ""
 
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:2718
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:2746
 #, c-format
 msgid ""
 "Message body has type signature “%s” but signature in the header field is "
 "“%s”"
 msgstr ""
 
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:2734
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:2762
 #, c-format
 msgid "Message body is empty but signature in the header field is “(%s)”"
 msgstr ""
 
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:3287
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:3315
 #, c-format
 msgid "Error return with body of type “%s”"
 msgstr ""
 
-#: /opt/gnome/source/glib/gio/gdbusmessage.c:3295
+#: /opt/gnome/source/glib/gio/gdbusmessage.c:3323
 msgid "Error return with empty body"
 msgstr ""
 
@@ -4194,7 +4199,7 @@ msgstr ""
 #: /opt/gnome/source/glib/glib/gbookmarkfile.c:3346
 #: /opt/gnome/source/glib/glib/gbookmarkfile.c:3435
 #: /opt/gnome/source/glib/glib/gbookmarkfile.c:3524
-#: /opt/gnome/source/glib/glib/gbookmarkfile.c:3640
+#: /opt/gnome/source/glib/glib/gbookmarkfile.c:3643
 #, c-format
 msgid "No bookmark found for URI “%s”"
 msgstr ""
@@ -4230,10 +4235,10 @@ msgid "Unrepresentable character in conversion input"
 msgstr ""
 
 #: /opt/gnome/source/glib/glib/gconvert.c:500
-#: /opt/gnome/source/glib/glib/gutf8.c:865
-#: /opt/gnome/source/glib/glib/gutf8.c:1077
-#: /opt/gnome/source/glib/glib/gutf8.c:1214
-#: /opt/gnome/source/glib/glib/gutf8.c:1318
+#: /opt/gnome/source/glib/glib/gutf8.c:866
+#: /opt/gnome/source/glib/glib/gutf8.c:1078
+#: /opt/gnome/source/glib/glib/gutf8.c:1215
+#: /opt/gnome/source/glib/glib/gutf8.c:1319
 msgid "Partial character sequence at end of input"
 msgstr ""
 
@@ -4778,27 +4783,27 @@ msgstr ""
 msgid "Failed to read the symbolic link “%s”: %s"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/giochannel.c:1389
+#: /opt/gnome/source/glib/glib/giochannel.c:1390
 #, c-format
 msgid "Could not open converter from “%s” to “%s”: %s"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/giochannel.c:1734
+#: /opt/gnome/source/glib/glib/giochannel.c:1735
 msgid "Can’t do a raw read in g_io_channel_read_line_string"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/giochannel.c:1781
-#: /opt/gnome/source/glib/glib/giochannel.c:2039
-#: /opt/gnome/source/glib/glib/giochannel.c:2126
+#: /opt/gnome/source/glib/glib/giochannel.c:1782
+#: /opt/gnome/source/glib/glib/giochannel.c:2040
+#: /opt/gnome/source/glib/glib/giochannel.c:2127
 msgid "Leftover unconverted data in read buffer"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/giochannel.c:1862
-#: /opt/gnome/source/glib/glib/giochannel.c:1939
+#: /opt/gnome/source/glib/glib/giochannel.c:1863
+#: /opt/gnome/source/glib/glib/giochannel.c:1940
 msgid "Channel terminates in a partial character"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/giochannel.c:1925
+#: /opt/gnome/source/glib/glib/giochannel.c:1926
 msgid "Can’t do a raw read in g_io_channel_read_to_end"
 msgstr ""
 
@@ -4925,93 +4930,93 @@ msgstr ""
 msgid "Failed to open file “%s”: open() failed: %s"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:397
-#: /opt/gnome/source/glib/glib/gmarkup.c:439
+#: /opt/gnome/source/glib/glib/gmarkup.c:398
+#: /opt/gnome/source/glib/glib/gmarkup.c:440
 #, c-format
 msgid "Error on line %d char %d: "
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:461
-#: /opt/gnome/source/glib/glib/gmarkup.c:544
+#: /opt/gnome/source/glib/glib/gmarkup.c:462
+#: /opt/gnome/source/glib/glib/gmarkup.c:545
 #, c-format
 msgid "Invalid UTF-8 encoded text in name - not valid '%s'"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:472
+#: /opt/gnome/source/glib/glib/gmarkup.c:473
 #, c-format
 msgid "'%s' is not a valid name"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:488
+#: /opt/gnome/source/glib/glib/gmarkup.c:489
 #, c-format
 msgid "'%s' is not a valid name: '%c'"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:610
+#: /opt/gnome/source/glib/glib/gmarkup.c:611
 #, c-format
 msgid "Error on line %d: %s"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:687
+#: /opt/gnome/source/glib/glib/gmarkup.c:688
 #, c-format
 msgid ""
 "Failed to parse '%-.*s', which should have been a digit inside a character "
 "reference (&#234; for example) - perhaps the digit is too large"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:699
+#: /opt/gnome/source/glib/glib/gmarkup.c:700
 msgid ""
 "Character reference did not end with a semicolon; most likely you used an "
 "ampersand character without intending to start an entity - escape ampersand "
 "as &amp;"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:725
+#: /opt/gnome/source/glib/glib/gmarkup.c:726
 #, c-format
 msgid "Character reference '%-.*s' does not encode a permitted character"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:763
+#: /opt/gnome/source/glib/glib/gmarkup.c:764
 msgid ""
 "Empty entity '&;' seen; valid entities are: &amp; &quot; &lt; &gt; &apos;"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:771
+#: /opt/gnome/source/glib/glib/gmarkup.c:772
 #, c-format
 msgid "Entity name '%-.*s' is not known"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:776
+#: /opt/gnome/source/glib/glib/gmarkup.c:777
 msgid ""
 "Entity did not end with a semicolon; most likely you used an ampersand "
 "character without intending to start an entity - escape ampersand as &amp;"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:1182
+#: /opt/gnome/source/glib/glib/gmarkup.c:1183
 msgid "Document must begin with an element (e.g. <book>)"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:1222
+#: /opt/gnome/source/glib/glib/gmarkup.c:1223
 #, c-format
 msgid ""
 "'%s' is not a valid character following a '<' character; it may not begin an "
 "element name"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:1264
+#: /opt/gnome/source/glib/glib/gmarkup.c:1265
 #, c-format
 msgid ""
 "Odd character '%s', expected a '>' character to end the empty-element tag "
 "'%s'"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:1345
+#: /opt/gnome/source/glib/glib/gmarkup.c:1346
 #, c-format
 msgid ""
 "Odd character '%s', expected a '=' after attribute name '%s' of element '%s'"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:1386
+#: /opt/gnome/source/glib/glib/gmarkup.c:1387
 #, c-format
 msgid ""
 "Odd character '%s', expected a '>' or '/' character to end the start tag of "
@@ -5019,93 +5024,93 @@ msgid ""
 "character in an attribute name"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:1430
+#: /opt/gnome/source/glib/glib/gmarkup.c:1431
 #, c-format
 msgid ""
 "Odd character '%s', expected an open quote mark after the equals sign when "
 "giving value for attribute '%s' of element '%s'"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:1563
+#: /opt/gnome/source/glib/glib/gmarkup.c:1564
 #, c-format
 msgid ""
 "'%s' is not a valid character following the characters '</'; '%s' may not "
 "begin an element name"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:1599
+#: /opt/gnome/source/glib/glib/gmarkup.c:1600
 #, c-format
 msgid ""
 "'%s' is not a valid character following the close element name '%s'; the "
 "allowed character is '>'"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:1610
+#: /opt/gnome/source/glib/glib/gmarkup.c:1611
 #, c-format
 msgid "Element '%s' was closed, no element is currently open"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:1619
+#: /opt/gnome/source/glib/glib/gmarkup.c:1620
 #, c-format
 msgid "Element '%s' was closed, but the currently open element is '%s'"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:1772
+#: /opt/gnome/source/glib/glib/gmarkup.c:1773
 msgid "Document was empty or contained only whitespace"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:1786
+#: /opt/gnome/source/glib/glib/gmarkup.c:1787
 msgid "Document ended unexpectedly just after an open angle bracket '<'"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:1794
-#: /opt/gnome/source/glib/glib/gmarkup.c:1839
+#: /opt/gnome/source/glib/glib/gmarkup.c:1795
+#: /opt/gnome/source/glib/glib/gmarkup.c:1840
 #, c-format
 msgid ""
 "Document ended unexpectedly with elements still open - '%s' was the last "
 "element opened"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:1802
+#: /opt/gnome/source/glib/glib/gmarkup.c:1803
 #, c-format
 msgid ""
 "Document ended unexpectedly, expected to see a close angle bracket ending "
 "the tag <%s/>"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:1808
+#: /opt/gnome/source/glib/glib/gmarkup.c:1809
 msgid "Document ended unexpectedly inside an element name"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:1814
+#: /opt/gnome/source/glib/glib/gmarkup.c:1815
 msgid "Document ended unexpectedly inside an attribute name"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:1819
+#: /opt/gnome/source/glib/glib/gmarkup.c:1820
 msgid "Document ended unexpectedly inside an element-opening tag."
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:1825
+#: /opt/gnome/source/glib/glib/gmarkup.c:1826
 msgid ""
 "Document ended unexpectedly after the equals sign following an attribute "
 "name; no attribute value"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:1832
+#: /opt/gnome/source/glib/glib/gmarkup.c:1833
 msgid "Document ended unexpectedly while inside an attribute value"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:1849
+#: /opt/gnome/source/glib/glib/gmarkup.c:1850
 #, c-format
 msgid "Document ended unexpectedly inside the close tag for element '%s'"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:1853
+#: /opt/gnome/source/glib/glib/gmarkup.c:1854
 msgid ""
 "Document ended unexpectedly inside the close tag for an unopened element"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gmarkup.c:1859
+#: /opt/gnome/source/glib/glib/gmarkup.c:1860
 msgid "Document ended unexpectedly inside a comment or processing instruction"
 msgstr ""
 
@@ -5709,25 +5714,25 @@ msgstr ""
 msgid "“%s” is not an unsigned number"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gutf8.c:811
+#: /opt/gnome/source/glib/glib/gutf8.c:812
 msgid "Failed to allocate memory"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gutf8.c:944
+#: /opt/gnome/source/glib/glib/gutf8.c:945
 msgid "Character out of range for UTF-8"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gutf8.c:1045
-#: /opt/gnome/source/glib/glib/gutf8.c:1054
-#: /opt/gnome/source/glib/glib/gutf8.c:1184
-#: /opt/gnome/source/glib/glib/gutf8.c:1193
-#: /opt/gnome/source/glib/glib/gutf8.c:1332
-#: /opt/gnome/source/glib/glib/gutf8.c:1429
+#: /opt/gnome/source/glib/glib/gutf8.c:1046
+#: /opt/gnome/source/glib/glib/gutf8.c:1055
+#: /opt/gnome/source/glib/glib/gutf8.c:1185
+#: /opt/gnome/source/glib/glib/gutf8.c:1194
+#: /opt/gnome/source/glib/glib/gutf8.c:1333
+#: /opt/gnome/source/glib/glib/gutf8.c:1430
 msgid "Invalid sequence in conversion input"
 msgstr ""
 
-#: /opt/gnome/source/glib/glib/gutf8.c:1343
-#: /opt/gnome/source/glib/glib/gutf8.c:1440
+#: /opt/gnome/source/glib/glib/gutf8.c:1344
+#: /opt/gnome/source/glib/glib/gutf8.c:1441
 msgid "Character out of range for UTF-16"
 msgstr ""
 
