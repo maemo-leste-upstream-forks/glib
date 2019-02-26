@@ -1,4 +1,4 @@
-glib2.0 (2.56.4-0ubuntu0.18.04.1) UNRELEASED; urgency=medium
+glib2.0 (2.56.4-0ubuntu0.18.04.1) bionic; urgency=medium
 
   * New upstream release (LP: #1816547)
     + Various buffer overflow fixes in GMarkup/GVariant/GDBus
@@ -6,7 +6,7 @@ glib2.0 (2.56.4-0ubuntu0.18.04.1) UNRELEASED; urgency=medium
       #1760569)
   * debian/libglib2.0-0.symbols: New symbols
 
- -- Iain Lane <iain.lane@canonical.com>  Tue, 26 Feb 2019 11:07:19 +0000
+ -- Iain Lane <iain.lane@canonical.com>  Tue, 26 Feb 2019 11:59:03 +0000
 
 glib2.0 (2.56.3-0ubuntu0.18.04.1) bionic; urgency=medium
 
