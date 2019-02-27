@@ -1,0 +1,47 @@
+From: Philip Withnall <withnall@endlessm.com>
+Date: Thu, 21 Feb 2019 17:31:17 +0000
+Subject: tests: Fix flaky socket-service test caused by GTask scheduling
+
+On about 1 in 3 test runs, the socket-service would fail with the
+ref_count assertion in connection_cb() failing (the ref_count would be 3
+rather than the expected 2).
+
+This was happening because the GTask from
+g_socket_listener_accept_socket_async() now always takes at least one
+main context iteration to return a result (whereas before
+6f3d57d2ee271017f37ebdceb1e15efa7ce0ac49 it might have taken zero), but
+the ref_count can drop below 3 before the process of returning a result
+starts. During the process of returning a result, the ref_count
+temporarily increases again, which is what was breaking the test.
+
+Fix this by waiting for one more main context iteration. This is a bit
+of a hack, but the real fix would be to expose the outstanding_accept
+boolean from GSocketService as public API (which the test can
+interrogate), and that seems too much like exposing internal state.
+
+Signed-off-by: Philip Withnall <withnall@endlessm.com>
+
+Helps: #1679
+
+Bug-Upstream: https://gitlab.gnome.org/GNOME/glib/issues/1679
+Origin: upstream, commit:2aea9c84c05b66355f9aaed6e4277e503fcba8a9
+---
+ gio/tests/socket-service.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/gio/tests/socket-service.c b/gio/tests/socket-service.c
+index 5496b69..a5d114f 100644
+--- a/gio/tests/socket-service.c
++++ b/gio/tests/socket-service.c
+@@ -222,6 +222,11 @@ test_threaded_712570 (void)
+     g_main_context_iteration (NULL, TRUE);
+   while (G_OBJECT (service)->ref_count > 3);
+ 
++  /* Wait some more iterations, as #GTask results are deferred to the next
++   * #GMainContext iteration, and propagation of a #GTask result takes an
++   * additional ref on the source object. */
++  g_main_context_iteration (NULL, FALSE);
++
+   /* Drop our ref, then unlock the mutex and wait for the service to be
+    * finalized. (Without the fix for 712570 it would hang forever here.)
+    */

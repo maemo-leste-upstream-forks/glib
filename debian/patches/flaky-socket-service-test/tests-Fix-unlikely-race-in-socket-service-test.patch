@@ -1,0 +1,74 @@
+From: Philip Withnall <withnall@endlessm.com>
+Date: Thu, 21 Feb 2019 17:45:40 +0000
+Subject: tests: Fix unlikely race in socket-service test
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+It’s occasionally possible for the cancellation of the service to happen
+before connection_cb() gets scheduled in the other thread. The
+locking/unlocking order of mutex_712570 requires:
+ • test_threaded_712570(): lock mutex
+ • test_threaded_712570(): start wait loop
+ • connection_cb(): lock mutex
+ • test_threaded_socket_service_finalize(): unlock mutex
+ • test_threaded_712570(): end wait loop
+ • test_threaded_712570(): unlock mutex
+
+Fix that by quitting the main loop once connection_cb() has been called
+(i.e. once the server thread has received the incoming connection
+request), rather than just after the client thread (main thread) has
+sent a connection request.
+
+Signed-off-by: Philip Withnall <withnall@endlessm.com>
+
+Bug-Upstream: https://gitlab.gnome.org/GNOME/glib/issues/1679
+Origin: upstream, commit:f25c3f27042c0b96b22d8dabe781b12fff9b08a3
+---
+ gio/tests/socket-service.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/gio/tests/socket-service.c b/gio/tests/socket-service.c
+index a5d114f..dc8bdec 100644
+--- a/gio/tests/socket-service.c
++++ b/gio/tests/socket-service.c
+@@ -139,6 +139,12 @@ connection_cb (GThreadedSocketService *service,
+                GObject                *source_object,
+                gpointer                user_data)
+ {
++  GMainLoop *loop = user_data;
++
++  /* Since the connection attempt has come through to be handled, stop the main
++   * thread waiting for it; this causes the #GSocketService to be stopped. */
++  g_main_loop_quit (loop);
++
+   /* Block until the main thread has dropped its ref to @service, so that we
+    * will drop the final ref from this thread.
+    */
+@@ -158,7 +164,6 @@ client_connected_cb (GObject      *client,
+                      GAsyncResult *result,
+                      gpointer      user_data)
+ {
+-  GMainLoop *loop = user_data;
+   GSocketConnection *conn;
+   GError *error = NULL;
+ 
+@@ -166,7 +171,6 @@ client_connected_cb (GObject      *client,
+   g_assert_no_error (error);
+ 
+   g_object_unref (conn);
+-  g_main_loop_quit (loop);
+ }
+ 
+ static void
+@@ -195,9 +199,8 @@ test_threaded_712570 (void)
+   g_assert_no_error (error);
+   g_object_unref (addr);
+ 
+-  g_signal_connect (service, "run", G_CALLBACK (connection_cb), NULL);
+-
+   loop = g_main_loop_new (NULL, FALSE);
++  g_signal_connect (service, "run", G_CALLBACK (connection_cb), loop);
+ 
+   client = g_socket_client_new ();
+   g_socket_client_connect_async (client,
