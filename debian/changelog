@@ -1,3 +1,20 @@
+glib2.0 (2.59.3-2) experimental; urgency=medium
+
+  [ Philip Withnall ]
+  * debian: Drop GVariant alignment patches which are no longer needed.
+    The upstream 2.59.0 release contained commit
+    0f2a6c61c9c5e34d57293fb6987b21f3d1feb1cb, which automatically aligns
+    GVariants at construction time. The realignment in the tests was a
+    workaround for this.
+    See upstream issue https://gitlab.gnome.org/GNOME/glib/issues/1342.
+
+  [ Iain Lane ]
+  * Cherry-pick fixes for upstream bug #1679 to fix a flaky test.
+    This is apparently more flaky on the autopkgtest machines than elsewhere
+    - it's quite consistently failing there.
+
+ -- Iain Lane <laney@debian.org>  Wed, 27 Feb 2019 10:21:40 +0000
+
 glib2.0 (2.59.3-1) experimental; urgency=medium
 
   * New upstream release
