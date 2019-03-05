@@ -1,6 +1,3 @@
-flaky-socket-service-test/tests-Fix-flaky-socket-service-test-caused-by-GTask-sched.patch
-flaky-socket-service-test/tests-Fix-unlikely-race-in-socket-service-test.patch
-flaky-socket-service-test/tests-Unmark-socket-service-test-as-flaky.patch
 01_gettext-desktopfiles.patch
 81-skip-monitor-test-on-non-linux.patch
 0001-timer-test-use-volatile-for-locals.patch
