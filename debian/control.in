@@ -59,6 +59,7 @@ Package: libglib2.0-tests
 Architecture: any
 Depends: shared-mime-info,
          ${misc:Depends},
+         ${python3:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends}
 Description: GLib library of C routines - installed tests
