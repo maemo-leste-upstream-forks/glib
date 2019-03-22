@@ -1,3 +1,5 @@
+tests-Allocate-gvariant-data-from-the-heap-to-guarantee-a.patch
+gvariant-test-Also-force-alignment-for-tuple-test-data.patch
 01_gettext-desktopfiles.patch
 07_disable_tests_on_slow_archs.patch
 81-skip-monitor-test-on-non-linux.patch
