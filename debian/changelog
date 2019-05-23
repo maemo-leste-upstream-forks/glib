@@ -1,4 +1,4 @@
-glib2.0 (2.60.3-1) UNRELEASED; urgency=medium
+glib2.0 (2.60.3-1) experimental; urgency=medium
 
   * New upstream releases 2.60.1 2.60.2 2.60.3, fixing many bugs:
     + build: Fix a typo in the test whether _NL_ABALTMON_n is supported
@@ -26,7 +26,7 @@ glib2.0 (2.60.3-1) UNRELEASED; urgency=medium
     + GDB pretty-printer for GHashTable no longer works
     + ghash: Disable small-arrays under valgrind
 
- -- Iain Lane <laney@debian.org>  Thu, 23 May 2019 12:25:16 +0100
+ -- Iain Lane <laney@debian.org>  Thu, 23 May 2019 16:59:32 +0100
 
 glib2.0 (2.60.0-1) experimental; urgency=medium
 
