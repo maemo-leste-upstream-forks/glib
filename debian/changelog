@@ -1,6 +1,30 @@
 glib2.0 (2.60.3-1) UNRELEASED; urgency=medium
 
-  * New upstream release
+  * New upstream releases 2.60.1 2.60.2 2.60.3, fixing many bugs:
+    + build: Fix a typo in the test whether _NL_ABALTMON_n is supported
+    + Critical in g_socket_client_async_connect_complete
+    + Fix crash when displaying notifications on macOS (!786)
+    + Fix documentation for `gdbus-tool wait` to use correct units
+    + Fix typo in German translation
+    + glib/date test fails
+    + glib/gconstructor.h: Include stdlib.h for MSVC builds
+    + GNetworkAddressAddressEnumerator unsafely modifies cache in
+      GNetworkAddress
+    + gnetworkaddress: Fix parallel enumerations interfering with eachother
+    + gnetworkmonitornm: Fix network available detection
+    + GResource generation test incompatible with stable LLVM on Linux
+    + gschema.dtd: Add target attribute to alias
+    + gsocketclient: Fix a leak in the connection code
+    + Improve network status detection with NetworkManager
+    + Leaks in gsocketclient.c connection code
+    + test_month_names: assertion failed
+    + tests: Update month name check for Greek locale
+    + Update gdb pretty-printer for GHashTable
+    + Various fixes to small key/value support in `GHashTable`
+    + New GHashTable implementation confuses valgrind
+    + more GHashTable fixes
+    + GDB pretty-printer for GHashTable no longer works
+    + ghash: Disable small-arrays under valgrind
 
  -- Iain Lane <laney@debian.org>  Thu, 23 May 2019 12:25:16 +0100
 
