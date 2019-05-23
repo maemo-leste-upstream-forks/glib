@@ -1,5 +1,5 @@
 project('glib', 'c', 'cpp',
-  version : '2.60.0',
+  version : '2.60.3',
   meson_version : '>= 0.48.0',
   default_options : [
     'buildtype=debugoptimized',
@@ -986,20 +986,20 @@ if cc.links('''#ifndef _GNU_SOURCE
               #include <langinfo.h>
                int main (int argc, char ** argv) {
                  char *str;
-                 str = nl_langinfo (_NL_ALTMON_1);
-                 str = nl_langinfo (_NL_ALTMON_2);
-                 str = nl_langinfo (_NL_ALTMON_3);
-                 str = nl_langinfo (_NL_ALTMON_4);
-                 str = nl_langinfo (_NL_ALTMON_5);
-                 str = nl_langinfo (_NL_ALTMON_6);
-                 str = nl_langinfo (_NL_ALTMON_7);
-                 str = nl_langinfo (_NL_ALTMON_8);
-                 str = nl_langinfo (_NL_ALTMON_9);
-                 str = nl_langinfo (_NL_ALTMON_10);
-                 str = nl_langinfo (_NL_ALTMON_11);
-                 str = nl_langinfo (_NL_ALTMON_12);
+                 str = nl_langinfo (_NL_ABALTMON_1);
+                 str = nl_langinfo (_NL_ABALTMON_2);
+                 str = nl_langinfo (_NL_ABALTMON_3);
+                 str = nl_langinfo (_NL_ABALTMON_4);
+                 str = nl_langinfo (_NL_ABALTMON_5);
+                 str = nl_langinfo (_NL_ABALTMON_6);
+                 str = nl_langinfo (_NL_ABALTMON_7);
+                 str = nl_langinfo (_NL_ABALTMON_8);
+                 str = nl_langinfo (_NL_ABALTMON_9);
+                 str = nl_langinfo (_NL_ABALTMON_10);
+                 str = nl_langinfo (_NL_ABALTMON_11);
+                 str = nl_langinfo (_NL_ABALTMON_12);
                  return 0;
-               }''', name : 'nl_langinfo (_NL_ALTMON_n)')
+               }''', name : 'nl_langinfo (_NL_ABALTMON_n)')
   glib_conf.set('HAVE_LANGINFO_ABALTMON', 1)
 endif
 
@@ -1680,13 +1680,20 @@ glibconfig_conf.set10('G_HAVE_GROWING_STACK', growing_stack)
 # We should never use the MinGW C library's iconv. On Windows we use the
 # GNU implementation that ships with MinGW.
 
+iconv_opt = get_option('iconv')
+
+# On Darwin, the libc doesn't provide iconv. Instead, the OS provides libiconv
+# as a separate (non-GNU) library. Set the option to 'native'.
+if host_system == 'darwin' and iconv_opt == 'libc'
+  iconv_opt = 'native'
+endif
+
 # On Windows, just always use the built-in implementation
 if host_system == 'windows'
   libiconv = []
   glib_conf.set('USE_LIBICONV_NATIVE', true)
 else
   found_iconv = false
-  iconv_opt = get_option('iconv')
   if iconv_opt == 'libc'
     if cc.has_function('iconv_open')
       libiconv = []
