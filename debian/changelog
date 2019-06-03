@@ -4,6 +4,16 @@ glib2.0 (2.60.3-2) UNRELEASED; urgency=medium
     Backport patch from upstream to ensure files don't temporarily have
     less restrictive permissions during copying
     (Closes: #929753, CVE-2019-12450)
+  * Drop d/p/debian/04_homedir_env.patch:
+    Remove legacy support for Debian-specific G_HOME environment variable.
+    GLib has respected the HOME environment variable in the conventional
+    way since wheezy. Only two packages (pygtk and ruby-graphviz) still
+    set G_HOME without also setting HOME.
+  * Drop d/p/debian/90_gio-modules-multiarch-compat.patch:
+    Remove legacy support for loading modules from /usr/lib/gio/modules.
+    All the known packages containing GIO modules (dconf, glib-networking
+    and gvfs) migrated to /usr/lib/${DEB_HOST_MULTIARCH}/gio/modules
+    before wheezy.
 
  -- Simon McVittie <smcv@debian.org>  Mon, 03 Jun 2019 22:53:00 +0100
 
