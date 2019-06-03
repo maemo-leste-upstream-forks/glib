@@ -14,6 +14,10 @@ glib2.0 (2.60.3-2) UNRELEASED; urgency=medium
     All the known packages containing GIO modules (dconf, glib-networking
     and gvfs) migrated to /usr/lib/${DEB_HOST_MULTIARCH}/gio/modules
     before wheezy.
+  * Register documentation in doc-base via symlinks in /usr/share/doc.
+    The doc-base specification requires this, presumably for the benefit
+    of tools that export /usr/share/doc via HTTP (see #925200), and
+    Lintian 2.12 added a warning for not doing so.
 
  -- Simon McVittie <smcv@debian.org>  Mon, 03 Jun 2019 22:53:00 +0100
 
