@@ -1,5 +1,6 @@
-glib2.0 (2.58.3-2) UNRELEASED; urgency=medium
+glib2.0 (2.58.3-2) unstable; urgency=medium
 
+  * Team upload
   * d/p/gfile-Limit-access-to-files-when-copying.patch:
     Backport patch from upstream to ensure files don't temporarily have
     less restrictive permissions during copying
@@ -7,7 +8,7 @@ glib2.0 (2.58.3-2) UNRELEASED; urgency=medium
   * d/watch: Only watch for 2.58.x releases now that 2.60.x is out
   * Add cross-reference to #919777 in previous changelog entry
 
- -- Simon McVittie <smcv@debian.org>  Mon, 03 Jun 2019 22:28:36 +0100
+ -- Simon McVittie <smcv@debian.org>  Mon, 03 Jun 2019 22:37:45 +0100
 
 glib2.0 (2.58.3-1) unstable; urgency=medium
 
