@@ -1,4 +1,4 @@
-glib2.0 (2.60.4-1) UNRELEASED; urgency=medium
+glib2.0 (2.60.4-1) experimental; urgency=medium
 
   * New upstream release (LP: #1832457)
   +  Fixes to improved network status detection with NetworkManager (#1788)
@@ -13,7 +13,7 @@ glib2.0 (2.60.4-1) UNRELEASED; urgency=medium
     upstream.
   * d/p/*: Refresh through gbp pq
 
- -- Iain Lane <laney@debian.org>  Wed, 12 Jun 2019 09:09:50 +0100
+ -- Iain Lane <laney@debian.org>  Wed, 12 Jun 2019 09:15:11 +0100
 
 glib2.0 (2.60.3-2) experimental; urgency=medium
 
