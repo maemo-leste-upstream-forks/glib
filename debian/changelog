@@ -1,8 +1,19 @@
 glib2.0 (2.60.4-1) UNRELEASED; urgency=medium
 
-  * New upstream release
+  * New upstream release (LP: #1832457)
+  +  Fixes to improved network status detection with NetworkManager (#1788)
+  + Leak fixes to some `glib-genmarshal` generated code
+  + Further fixes to the Happy Eyeballs (RFC 8305) implementation
+  + File system permissions fix to clamp down permissions in a small time window
+    when copying files (CVE-2019-12450)
+  + Bugs fixed:
+   - Please revert #535 gmacros: Try to use the standard __func__ first in
+     G_STRFUNC
+  * gfile-Limit-access-to-files-when-copying.patch: Drop. It's in this version
+    upstream.
+  * d/p/*: Refresh through gbp pq
 
- -- Iain Lane <laney@debian.org>  Wed, 12 Jun 2019 09:07:07 +0100
+ -- Iain Lane <laney@debian.org>  Wed, 12 Jun 2019 09:09:50 +0100
 
 glib2.0 (2.60.3-2) experimental; urgency=medium
 
