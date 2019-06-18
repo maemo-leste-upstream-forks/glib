@@ -1,3 +1,23 @@
+glib2.0 (2.42.1-1+deb8u1) jessie-security; urgency=high
+
+  [Michael Biebl]
+  * debian/patches/tests-gdatetime-Use-a-real-rather-than-invented-time.patch:
+    Cherry-pick a patch from upstream to fix GDateTime tests when tzdata ≥
+    2017a is in use. (#858214)
+
+  [Simon McVittie]
+  * debian/patches/gfile-Limit-access-to-files-when-copying.patch:
+    Backport patch from upstream to ensure files don't temporarily have
+    less restrictive permissions during copying
+    (#929753, CVE-2019-12450).
+  
+  [Sylvain Beucler ]
+  * Non-maintainer upload by the Debian LTS team.
+  * Apply FTBFS fix for jessie.
+  * Apply CVE-2019-12450 fix for jessie.
+
+ -- Sylvain Beucler <beuc@debian.org>  Tue, 18 Jun 2019 21:27:05 +0200
+
 glib2.0 (2.42.1-1) unstable; urgency=medium
 
   [ Iain Lane ]

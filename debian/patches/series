@@ -20,3 +20,5 @@ skip-broken-timer-test.patch
 regex-if-PCRE-is-8.34-or-later-disable-auto-possessi.patch
 regex-test-do-not-assert-that-system-PCRE-allows-P-1.patch
 regex-test-do-not-assert-that-system-PCRE-still-has-.patch
+tests-gdatetime-Use-a-real-rather-than-invented-time.patch
+gfile-Limit-access-to-files-when-copying.patch
