@@ -108,10 +108,10 @@ typedef struct
 
 /* Hard-code the base types in a constant array */
 static const GVariantTypeInfo g_variant_type_info_basic_table[24] = {
-#define fixed_aligned(x)  x, x - 1
-#define not_a_type             0,
-#define unaligned         0, 0
-#define aligned(x)        0, x - 1
+#define fixed_aligned(x)  x, x - 1, 0
+#define not_a_type        0,     0, 0
+#define unaligned         0,     0, 0
+#define aligned(x)        0, x - 1, 0
   /* 'b' */ { fixed_aligned(1) },   /* boolean */
   /* 'c' */ { not_a_type },
   /* 'd' */ { fixed_aligned(8) },   /* double */
@@ -157,6 +157,7 @@ static void
 g_variant_type_info_check (const GVariantTypeInfo *info,
                            char                    container_class)
 {
+#ifndef G_DISABLE_ASSERT
   g_assert (!container_class || info->container_class == container_class);
 
   /* alignment can only be one of these */
@@ -185,6 +186,7 @@ g_variant_type_info_check (const GVariantTypeInfo *info,
       g_assert (0 <= index && index < 24);
       g_assert (g_variant_type_info_basic_chars[index][0] != ' ');
     }
+#endif  /* !G_DISABLE_ASSERT */
 }
 
 /* < private >
@@ -360,7 +362,7 @@ static void
 tuple_info_free (GVariantTypeInfo *info)
 {
   TupleInfo *tuple_info;
-  gint i;
+  gsize i;
 
   g_assert (info->container_class == GV_TUPLE_INFO_CLASS);
   tuple_info = (TupleInfo *) info;
@@ -638,7 +640,7 @@ tuple_set_base_info (TupleInfo *info)
        * offsets are stored and the last item is fixed-sized too (since
        * an offset is never stored for the last item).
        */
-      if (m->i == -1 && m->type_info->fixed_size)
+      if (m->i == (gsize) -1 && m->type_info->fixed_size)
         /* in that case, the fixed size can be found by finding the
          * start of the last item (in the usual way) and adding its
          * fixed size.

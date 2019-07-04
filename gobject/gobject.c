@@ -53,6 +53,13 @@
  *
  * ## Floating references # {#floating-ref}
  *
+ * **Note**: Floating references are a C convenience API and should not be
+ * used in modern GObject code. Language bindings in particular find the
+ * concept highly problematic, as floating references are not identifiable
+ * through annotations, and neither are deviations from the floating reference
+ * behavior, like types that inherit from #GInitiallyUnowned and still return
+ * a full reference from g_object_new().
+ *
  * GInitiallyUnowned is derived from GObject. The only difference between
  * the two is that the initial reference of a GInitiallyUnowned is flagged
  * as a "floating" reference. This means that it is not specifically
@@ -83,7 +90,23 @@
  * Since floating references are useful almost exclusively for C convenience,
  * language bindings that provide automated reference and memory ownership
  * maintenance (such as smart pointers or garbage collection) should not
- * expose floating references in their API.
+ * expose floating references in their API. The best practice for handling
+ * types that have initially floating references is to immediately sink those
+ * references after g_object_new() returns, by checking if the #GType
+ * inherits from #GInitiallyUnowned. For instance:
+ *
+ * |[<!-- language="C" -->
+ * GObject *res = g_object_new_with_properties (gtype,
+ *                                              n_props,
+ *                                              prop_names,
+ *                                              prop_values);
+ *
+ * // or: if (g_type_is_a (gtype, G_TYPE_INITIALLY_UNOWNED))
+ * if (G_IS_INITIALLY_UNOWNED (res))
+ *   g_object_ref_sink (res);
+ *
+ * return res;
+ * ]|
  *
  * Some object implementations may need to save an objects floating state
  * across certain code portions (an example is #GtkMenu), to achieve this,
@@ -263,7 +286,6 @@ g_object_notify_queue_thaw (GObject            *object,
   GSList *slist;
   guint n_pspecs = 0;
 
-  g_return_if_fail (nqueue->freeze_count > 0);
   g_return_if_fail (g_atomic_int_get(&object->ref_count) > 0);
 
   G_LOCK(notify_lock);
@@ -382,7 +404,7 @@ _g_object_type_init (void)
     "p",			  /* lcopy_format */
     g_value_object_lcopy_value,	  /* lcopy_value */
   };
-  GType type;
+  GType type G_GNUC_UNUSED  /* when compiling with G_DISABLE_ASSERT */;
   
   g_return_if_fail (initialized == FALSE);
   initialized = TRUE;
@@ -814,7 +836,7 @@ g_object_class_find_property (GObjectClass *class,
  * g_object_interface_find_property:
  * @g_iface: (type GObject.TypeInterface): any interface vtable for the
  *  interface, or the default vtable for the interface
- * @property_name: name of a property to lookup.
+ * @property_name: name of a property to look up.
  *
  * Find the #GParamSpec with the given name for an
  * interface. Generally, the interface vtable passed in as @g_iface
@@ -1101,7 +1123,7 @@ void
 g_object_run_dispose (GObject *object)
 {
   g_return_if_fail (G_IS_OBJECT (object));
-  g_return_if_fail (object->ref_count > 0);
+  g_return_if_fail (g_atomic_int_get (&object->ref_count) > 0);
 
   g_object_ref (object);
   TRACE (GOBJECT_OBJECT_DISPOSE(object,G_TYPE_FROM_INSTANCE(object), 0));
@@ -2819,7 +2841,7 @@ g_object_weak_ref (GObject    *object,
   
   g_return_if_fail (G_IS_OBJECT (object));
   g_return_if_fail (notify != NULL);
-  g_return_if_fail (object->ref_count >= 1);
+  g_return_if_fail (g_atomic_int_get (&object->ref_count) >= 1);
 
   G_LOCK (weak_refs_mutex);
   wstack = g_datalist_id_remove_no_notify (&object->qdata, quark_weak_refs);
@@ -3001,7 +3023,7 @@ gpointer
   GObject *object = _object;
   gboolean was_floating;
   g_return_val_if_fail (G_IS_OBJECT (object), object);
-  g_return_val_if_fail (object->ref_count >= 1, object);
+  g_return_val_if_fail (g_atomic_int_get (&object->ref_count) >= 1, object);
   g_object_ref (object);
   was_floating = floating_flag_handler (object, -1);
   if (was_floating)
@@ -3024,7 +3046,7 @@ void
 g_object_force_floating (GObject *object)
 {
   g_return_if_fail (G_IS_OBJECT (object));
-  g_return_if_fail (object->ref_count >= 1);
+  g_return_if_fail (g_atomic_int_get (&object->ref_count) >= 1);
 
   floating_flag_handler (object, +1);
 }
@@ -3105,7 +3127,7 @@ g_object_add_toggle_ref (GObject       *object,
   
   g_return_if_fail (G_IS_OBJECT (object));
   g_return_if_fail (notify != NULL);
-  g_return_if_fail (object->ref_count >= 1);
+  g_return_if_fail (g_atomic_int_get (&object->ref_count) >= 1);
 
   g_object_ref (object);
 
@@ -3630,6 +3652,11 @@ g_object_get_data (GObject     *object,
  *
  * If the object already had an association with that name,
  * the old association will be destroyed.
+ *
+ * Internally, the @key is converted to a #GQuark using g_quark_from_string().
+ * This means a copy of @key is kept permanently (even after @object has been
+ * finalized) — so it is recommended to only use a small, bounded set of values
+ * for @key in your program, to avoid the #GQuark storage growing unbounded.
  */
 void
 g_object_set_data (GObject     *object,
@@ -3707,6 +3734,9 @@ g_object_dup_data (GObject        *object,
  * It’s up to the caller to free this as needed, which may
  * or may not include using @old_destroy as sometimes replacement
  * should not destroy the object in the normal way.
+ *
+ * See g_object_set_data() for guidance on using a small, bounded set of values
+ * for @key.
  *
  * Returns: %TRUE if the existing value for @key was replaced
  *  by @newval, %FALSE otherwise.
@@ -4139,7 +4169,7 @@ g_object_watch_closure (GObject  *object,
   g_return_if_fail (closure != NULL);
   g_return_if_fail (closure->is_invalid == FALSE);
   g_return_if_fail (closure->in_marshal == FALSE);
-  g_return_if_fail (object->ref_count > 0);	/* this doesn't work on finalizing objects */
+  g_return_if_fail (g_atomic_int_get (&object->ref_count) > 0);	/* this doesn't work on finalizing objects */
   
   g_closure_add_invalidate_notifier (closure, object, object_remove_closure);
   g_closure_add_marshal_guards (closure,
@@ -4185,7 +4215,7 @@ g_closure_new_object (guint    sizeof_closure,
   GClosure *closure;
 
   g_return_val_if_fail (G_IS_OBJECT (object), NULL);
-  g_return_val_if_fail (object->ref_count > 0, NULL);     /* this doesn't work on finalizing objects */
+  g_return_val_if_fail (g_atomic_int_get (&object->ref_count) > 0, NULL);     /* this doesn't work on finalizing objects */
 
   closure = g_closure_new_simple (sizeof_closure, object);
   g_object_watch_closure (object, closure);
@@ -4213,7 +4243,7 @@ g_cclosure_new_object (GCallback callback_func,
   GClosure *closure;
 
   g_return_val_if_fail (G_IS_OBJECT (object), NULL);
-  g_return_val_if_fail (object->ref_count > 0, NULL);     /* this doesn't work on finalizing objects */
+  g_return_val_if_fail (g_atomic_int_get (&object->ref_count) > 0, NULL);     /* this doesn't work on finalizing objects */
   g_return_val_if_fail (callback_func != NULL, NULL);
 
   closure = g_cclosure_new (callback_func, object, NULL);
@@ -4242,7 +4272,7 @@ g_cclosure_new_object_swap (GCallback callback_func,
   GClosure *closure;
 
   g_return_val_if_fail (G_IS_OBJECT (object), NULL);
-  g_return_val_if_fail (object->ref_count > 0, NULL);     /* this doesn't work on finalizing objects */
+  g_return_val_if_fail (g_atomic_int_get (&object->ref_count) > 0, NULL);     /* this doesn't work on finalizing objects */
   g_return_val_if_fail (callback_func != NULL, NULL);
 
   closure = g_cclosure_new_swap (callback_func, object, NULL);

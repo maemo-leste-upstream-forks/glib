@@ -68,7 +68,7 @@ test_env.set('MALLOC_CHECK_', '2')
 test_env.set('MALLOC_PERTURB_', '@0@'.format(random_number % 256))
 
 test_deps = [libm, thread_dep, libglib_dep, libgobject_dep]
-test_cargs = ['-DG_LOG_DOMAIN="GLib-GObject"']
+test_cargs = ['-DG_LOG_DOMAIN="GLib-GObject"', '-UG_DISABLE_ASSERT']
 
 foreach test_name, extra_args : gobject_tests
   source = extra_args.get('source', test_name + '.c')
@@ -103,8 +103,7 @@ foreach test_name, extra_args : gobject_tests
     timeout = timeout * 10
   endif
 
-  test(test_name, exe, env : test_env, timeout : timeout, suite : suite,
-    args: ['--tap'])
+  test(test_name, exe, env : test_env, timeout : timeout, suite : suite)
 endforeach
 
 test(

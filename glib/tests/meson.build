@@ -140,6 +140,9 @@ if host_machine.system() == 'windows'
       },
     }
   endif
+  glib_tests += {
+    'win32' : {},
+  }
 else
   glib_tests += {
     'include' : {},
@@ -173,7 +176,7 @@ test_env.set('MALLOC_CHECK_', '2')
 test_env.set('MALLOC_PERTURB_', '@0@'.format(random_number % 256))
 
 test_deps = [libm, thread_dep, libglib_dep]
-test_cargs = ['-DG_LOG_DOMAIN="GLib"']
+test_cargs = ['-DG_LOG_DOMAIN="GLib"', '-UG_DISABLE_ASSERT']
 
 foreach test_name, extra_args : glib_tests
   source = extra_args.get('source', test_name + '.c')
@@ -201,8 +204,7 @@ foreach test_name, extra_args : glib_tests
 
   suite = ['glib'] + extra_args.get('suite', [])
   timeout = suite.contains('slow') ? test_timeout_slow : test_timeout
-  test(test_name, exe, env : test_env, timeout : timeout, suite : suite,
-    args : ['--tap'])
+  test(test_name, exe, env : test_env, timeout : timeout, suite : suite)
 endforeach
 
 # test-spawn-echo helper binary required by the spawn tests above
@@ -226,7 +228,7 @@ if not meson.is_cross_build() and host_system != 'windows'
   if xmllint.found()
     tmpsample_xml = custom_target('tmpsample.xml',
       output : 'tmpsample.xml',
-      command : [ gtester, '-k', '--quiet', '-o', '@OUTPUT@',
+      command : [ gtester, '-k', '--quiet', '--i-know-this-is-deprecated', '-o', '@OUTPUT@',
                   '--test-arg=--gtester-selftest', gtester])
 
     test('gtester-xmllint-check', xmllint,

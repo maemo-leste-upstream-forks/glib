@@ -1,5 +1,5 @@
 project('glib', 'c', 'cpp',
-  version : '2.60.4',
+  version : '2.61.1',
   meson_version : '>= 0.48.0',
   default_options : [
     'buildtype=debugoptimized',
@@ -169,7 +169,7 @@ endif
 # Detect and set symbol visibility
 glib_hidden_visibility_args = []
 if get_option('default_library') != 'static'
-  if host_system == 'windows'
+  if host_system == 'windows' or host_system == 'cygwin'
     glib_conf.set('DLL_EXPORT', true)
     if cc.get_id() == 'msvc'
       glib_conf.set('_GLIB_EXTERN', '__declspec(dllexport) extern')
@@ -188,10 +188,18 @@ if host_system == 'windows' and get_option('default_library') == 'static'
     glibconfig_conf.set('GOBJECT_STATIC_COMPILATION', '1')
 endif
 
-# FIXME: what about Cygwin (G_WITH_CYGWIN)
+# Cygwin glib port maintainers made it clear
+# (via the patches they apply) that they want no
+# part of glib W32 code, therefore we do not define
+# G_PLATFORM_WIN32 for host_system == 'cygwin'.
+# This makes G_PLATFORM_WIN32 a synonym for
+# G_OS_WIN32.
 if host_system == 'windows'
   glib_os = '''#define G_OS_WIN32
 #define G_PLATFORM_WIN32'''
+elif host_system == 'cygwin'
+  glib_os = '''#define G_OS_UNIX
+#define G_WITH_CYGWIN'''
 else
   glib_os = '#define G_OS_UNIX'
 endif
@@ -352,6 +360,8 @@ if cc.get_id() == 'gcc' or cc.get_id() == 'clang'
     '-Wmisleading-indentation',
     '-Wstrict-prototypes',
     '-Wunused',
+    # Due to maintained deprecated code, we do not want to see unused parameters
+    '-Wno-unused-parameter',
     # Due to pervasive use of things like GPOINTER_TO_UINT(), we do not support
     # building with -Wbad-function-cast.
     '-Wno-bad-function-cast',
@@ -580,6 +590,12 @@ endif
 
 if cc.has_header_symbol('dlfcn.h', 'RTLD_GLOBAL')
   glib_conf.set('HAVE_RTLD_GLOBAL', 1)
+endif
+
+have_rtld_next = false
+if cc.has_header_symbol('dlfcn.h', 'RTLD_NEXT', args: '-D_GNU_SOURCE')
+  have_rtld_next = true
+  glib_conf.set('HAVE_RTLD_NEXT', 1)
 endif
 
 # Check whether to use statfs or statvfs
@@ -1674,49 +1690,31 @@ glibconfig_conf.set10('G_HAVE_GROWING_STACK', growing_stack)
 
 # Tests for iconv
 #
-# USE_LIBICONV_GNU: Using GNU libiconv
-# USE_LIBICONV_NATIVE: Using a native impl of iconv in a separate library
-#
-# We should never use the MinGW C library's iconv. On Windows we use the
-# GNU implementation that ships with MinGW.
-
+# We should never use the MinGW C library's iconv because it may not be
+# available in the actual runtime environment. On Windows, we always use
+# the built-in implementation
 iconv_opt = get_option('iconv')
-
-# On Darwin, the libc doesn't provide iconv. Instead, the OS provides libiconv
-# as a separate (non-GNU) library. Set the option to 'native'.
-if host_system == 'darwin' and iconv_opt == 'libc'
-  iconv_opt = 'native'
-endif
-
-# On Windows, just always use the built-in implementation
 if host_system == 'windows'
   libiconv = []
-  glib_conf.set('USE_LIBICONV_NATIVE', true)
+  # We have a #include "win_iconv.c" in gconvert.c on Windows, so we don't need
+  # any external library for it
+  if iconv_opt != 'auto'
+    warning('-Diconv was set to @0@, which was ignored')
+  endif
 else
   found_iconv = false
-  if iconv_opt == 'libc'
-    if cc.has_function('iconv_open')
-      libiconv = []
-      found_iconv = true
-    endif
-  elif iconv_opt == 'gnu'
-    if cc.has_header_symbol('iconv.h', 'libiconv_open')
-      glib_conf.set('USE_LIBICONV_GNU', true)
-      libiconv = [cc.find_library('iconv')]
-      found_iconv = true
-    endif
-  elif iconv_opt == 'native'
-    if cc.has_header_symbol('iconv.h', 'iconv_open')
-      glib_conf.set('USE_LIBICONV_NATIVE', true)
-      libiconv = [cc.find_library('iconv')]
-      found_iconv = true
-    endif
+  if ['auto', 'libc'].contains(iconv_opt) and cc.has_function('iconv_open')
+    libiconv = []
+    found_iconv = true
+  endif
+  if not found_iconv and ['auto', 'external'].contains(iconv_opt) and cc.has_header_symbol('iconv.h', 'iconv_open')
+    libiconv = [cc.find_library('iconv')]
+    found_iconv = true
   endif
 
   if not found_iconv
     error('iconv implementation "@0@" not found'.format(iconv_opt))
   endif
-
 endif
 
 if get_option('internal_pcre')
@@ -1866,25 +1864,78 @@ if host_system != 'windows' and get_option('xattr')
   endif
 endif
 
-# Test if we have strlcpy/strlcat with a compatible implementation:
-# https://bugzilla.gnome.org/show_bug.cgi?id=53933
-if cc_can_run
-  rres = cc.run('''#include <stdlib.h>
-                   #include <string.h>
-                   int main() {
-                     char p[10];
-                     (void) strlcpy (p, "hi", 10);
-                     if (strlcat (p, "bye", 0) != 3)
-                       return 1;
-                     return 0;
-                   }''',
-                name : 'OpenBSD strlcpy/strlcat')
-  if rres.compiled() and rres.returncode() == 0
+# If strlcpy is present (BSD and similar), check that it conforms to the BSD
+# specification. Specifically Solaris 8's strlcpy() does not, see
+# https://bugzilla.gnome.org/show_bug.cgi?id=53933 for further context.
+if cc.has_function('strlcpy')
+  if cc_can_run
+    rres = cc.run('''#include <stdlib.h>
+                    #include <string.h>
+                    int main() {
+                      char p[10];
+                      (void) strlcpy (p, "hi", 10);
+                      if (strlcat (p, "bye", 0) != 3)
+                        return 1;
+                      return 0;
+                    }''',
+                  name : 'OpenBSD strlcpy/strlcat')
+    if rres.compiled() and rres.returncode() == 0
+      glib_conf.set('HAVE_STRLCPY', 1)
+    endif
+  elif meson.get_cross_property('have_strlcpy', false)
     glib_conf.set('HAVE_STRLCPY', 1)
   endif
-elif meson.get_cross_property('have_strlcpy', false)
-  glib_conf.set('HAVE_STRLCPY', 1)
 endif
+
+cmdline_test_code = '''
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <stdio.h>
+#include <stdlib.h>
+#undef NDEBUG
+#include <assert.h>
+
+static int
+__getcmdline (void)
+{
+/* This code is a dumbed-down version of g_file_get_contents() */
+#ifndef O_BINARY
+#define O_BINARY 0
+#endif
+#define BUFSIZE 1024
+  char result[BUFSIZE];
+  struct stat stat_buf;
+
+  int fd = open ("/proc/self/cmdline", O_RDONLY|O_BINARY);
+  assert (fd >= 0);
+  assert (fstat (fd, &stat_buf) == 0);
+
+  if (stat_buf.st_size > 0 && S_ISREG (stat_buf.st_mode))
+    assert (read (fd, result, BUFSIZE) > 0);
+  else
+    {
+      FILE *f = fdopen (fd, "r");
+      assert (f != NULL);
+      assert (fread (result, 1, BUFSIZE, f) > 0);
+    }
+
+  return 0;
+}
+
+int
+main (void)
+{
+  exit (__getcmdline ());
+}'''
+
+if cc_can_run
+  rres = cc.run(cmdline_test_code, name : '/proc/self/cmdline')
+  have_proc_self_cmdline = rres.compiled() and rres.returncode() == 0
+else
+  have_proc_self_cmdline = meson.get_cross_property('have_proc_self_cmdline', false)
+endif
+
+glib_conf.set('HAVE_PROC_SELF_CMDLINE', have_proc_self_cmdline)
 
 python = import('python').find_installation('python3')
 # used for '#!/usr/bin/env <name>'
@@ -1994,7 +2045,11 @@ subdir('gthread')
 subdir('gmodule')
 subdir('gio')
 subdir('fuzzing')
-subdir('tests')
+# Don’t build the tests unless we can run them (either natively or in an exe wrapper)
+build_tests = not meson.is_cross_build() or (meson.is_cross_build() and meson.has_exe_wrapper())
+if build_tests
+  subdir('tests')
+endif
 
 # xgettext is optional (on Windows for instance)
 if find_program('xgettext', required : get_option('nls')).found()
@@ -2052,6 +2107,4 @@ if get_option('man')
 endif
 
 gnome = import('gnome')
-subdir('docs/reference/glib')
-subdir('docs/reference/gobject')
-subdir('docs/reference/gio')
+subdir('docs/reference')

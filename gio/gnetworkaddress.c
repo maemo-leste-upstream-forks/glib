@@ -333,7 +333,7 @@ g_network_address_new (const gchar *hostname,
  * resolving `localhost`, and an IPv6 address for `localhost6`.
  *
  * g_network_address_get_hostname() will always return `localhost` for
- * #GNetworkAddresses created with this constructor.
+ * a #GNetworkAddress created with this constructor.
  *
  * Returns: (transfer full) (type GNetworkAddress): the new #GNetworkAddress
  *
@@ -1261,8 +1261,13 @@ got_ipv6_addresses (GObject      *source_object,
    */
   if (error != NULL && !addr_enum->last_error && (addr_enum->state & RESOLVE_STATE_WAITING_ON_IPV4))
     {
-      /* ipv6 lookup failed, but ipv4 is still outstanding.  wait. */
       addr_enum->last_error = g_steal_pointer (&error);
+
+      addr_enum->wait_source = g_timeout_source_new (HAPPY_EYEBALLS_RESOLUTION_DELAY_MS);
+      g_source_set_callback (addr_enum->wait_source,
+                             on_address_timeout,
+                             addr_enum, NULL);
+      g_source_attach (addr_enum->wait_source, addr_enum->context);
     }
   else if (addr_enum->waiting_task != NULL)
     {
@@ -1380,7 +1385,7 @@ g_network_address_address_enumerator_next_async (GSocketAddressEnumerator  *enum
 
               addr_enum->state = RESOLVE_STATE_WAITING_ON_IPV4 | RESOLVE_STATE_WAITING_ON_IPV6;
               addr_enum->queued_task = g_steal_pointer (&task);
-              /* Lookup in parallel as per RFC 8305 */
+              /* Look up in parallel as per RFC 8305 */
               g_resolver_lookup_by_name_with_flags_async (resolver,
                                                           addr->priv->hostname,
                                                           G_RESOLVER_NAME_LOOKUP_FLAGS_IPV6_ONLY,

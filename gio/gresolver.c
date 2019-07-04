@@ -340,9 +340,18 @@ handle_ip_address (const char  *hostname,
   if (inet_aton (hostname, &ip4addr))
 #endif
     {
+#ifdef G_OS_WIN32
+      gchar *error_message = g_win32_error_message (WSAHOST_NOT_FOUND);
+#else
+      gchar *error_message = g_locale_to_utf8 (gai_strerror (EAI_NONAME), -1, NULL, NULL, NULL);
+      if (error_message == NULL)
+        error_message = g_strdup ("[Invalid UTF-8]");
+#endif
       g_set_error (error, G_RESOLVER_ERROR, G_RESOLVER_ERROR_NOT_FOUND,
                    _("Error resolving “%s”: %s"),
-                   hostname, gai_strerror (EAI_NONAME));
+                   hostname, error_message);
+      g_free (error_message);
+
       return TRUE;
     }
 
@@ -1032,8 +1041,8 @@ g_resolver_free_targets (GList *targets)
 /**
  * g_resolver_lookup_records:
  * @resolver: a #GResolver
- * @rrname: the DNS name to lookup the record for
- * @record_type: the type of DNS record to lookup
+ * @rrname: the DNS name to look up the record for
+ * @record_type: the type of DNS record to look up
  * @cancellable: (nullable): a #GCancellable, or %NULL
  * @error: return location for a #GError, or %NULL
  *
@@ -1077,8 +1086,8 @@ g_resolver_lookup_records (GResolver            *resolver,
 /**
  * g_resolver_lookup_records_async:
  * @resolver: a #GResolver
- * @rrname: the DNS name to lookup the record for
- * @record_type: the type of DNS record to lookup
+ * @rrname: the DNS name to look up the record for
+ * @record_type: the type of DNS record to look up
  * @cancellable: (nullable): a #GCancellable, or %NULL
  * @callback: (scope async): callback to call after resolution completes
  * @user_data: (closure): data for @callback

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: glib\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/glib/issues\n"
-"POT-Creation-Date: 2019-03-05 11:46+0000\n"
+"POT-Creation-Date: 2019-01-24 14:43+0000\n"
 "PO-Revision-Date: 2019-02-26 14:51+0100\n"
 "Last-Translator: Nathan Follens <nthn@unseen.is>\n"
 "Language-Team: Dutch <gnome-nl-list@gnome.org>\n"
@@ -279,7 +279,7 @@ msgstr "De stroom is al gesloten"
 msgid "Truncate not supported on base stream"
 msgstr "Afkappen wordt niet ondersteund op een datastroom"
 
-#: gio/gcancellable.c:319 gio/gdbusconnection.c:1867 gio/gdbusprivate.c:1402
+#: gio/gcancellable.c:317 gio/gdbusconnection.c:1867 gio/gdbusprivate.c:1402
 #: gio/gsimpleasyncresult.c:871 gio/gsimpleasyncresult.c:897
 #, c-format
 msgid "Operation was cancelled"
@@ -932,52 +932,52 @@ msgstr ""
 msgid "Cannot serialize message: "
 msgstr ""
 
-#: gio/gdbusmessage.c:2739
+#: gio/gdbusmessage.c:2740
 #, c-format
 msgid "Message body has signature “%s” but there is no signature header"
 msgstr ""
 
-#: gio/gdbusmessage.c:2749
+#: gio/gdbusmessage.c:2750
 #, c-format
 msgid ""
 "Message body has type signature “%s” but signature in the header field is "
 "“%s”"
 msgstr ""
 
-#: gio/gdbusmessage.c:2765
+#: gio/gdbusmessage.c:2766
 #, c-format
 msgid "Message body is empty but signature in the header field is “(%s)”"
 msgstr ""
 
-#: gio/gdbusmessage.c:3318
+#: gio/gdbusmessage.c:3319
 #, c-format
 msgid "Error return with body of type “%s”"
 msgstr ""
 
-#: gio/gdbusmessage.c:3326
+#: gio/gdbusmessage.c:3327
 msgid "Error return with empty body"
 msgstr ""
 
-#: gio/gdbusprivate.c:2075
+#: gio/gdbusprivate.c:2066
 #, c-format
 msgid "Unable to get Hardware profile: %s"
 msgstr "Kan hardware-profiel niet verkrijgen: %s"
 
-#: gio/gdbusprivate.c:2120
+#: gio/gdbusprivate.c:2111
 msgid "Unable to load /var/lib/dbus/machine-id or /etc/machine-id: "
 msgstr ""
 
-#: gio/gdbusproxy.c:1617
+#: gio/gdbusproxy.c:1611
 #, c-format
 msgid "Error calling StartServiceByName for %s: "
 msgstr ""
 
-#: gio/gdbusproxy.c:1640
+#: gio/gdbusproxy.c:1634
 #, c-format
 msgid "Unexpected reply %d from StartServiceByName(\"%s\") method"
 msgstr ""
 
-#: gio/gdbusproxy.c:2740 gio/gdbusproxy.c:2875
+#: gio/gdbusproxy.c:2734 gio/gdbusproxy.c:2869
 #, c-format
 msgid ""
 "Cannot invoke method; proxy is for the well-known name %s without an owner, "
@@ -1285,7 +1285,7 @@ msgid "Error: %s is not a valid well-known bus name.\n"
 msgstr "Fout: %s is geen geldige unieke busnaam.\n"
 
 # naamloos/zonder naam/onbenoemd
-#: gio/gdesktopappinfo.c:2041 gio/gdesktopappinfo.c:4822
+#: gio/gdesktopappinfo.c:2041 gio/gdesktopappinfo.c:4680
 msgid "Unnamed"
 msgstr "Zonder naam"
 
@@ -1300,29 +1300,29 @@ msgstr "Desktopbestand bevat geen Exec-veld"
 msgid "Unable to find terminal required for application"
 msgstr "Kan geen terminalvenster vinden voor het uitvoeren van het programma"
 
-#: gio/gdesktopappinfo.c:3362
+#: gio/gdesktopappinfo.c:3222
 #, fuzzy, c-format
 #| msgid "Can't create user application configuration folder %s: %s"
 msgid "Can’t create user application configuration folder %s: %s"
 msgstr "Kan persoonlijke programmaconfiguratiemap %s niet aanmaken: %s"
 
-#: gio/gdesktopappinfo.c:3366
+#: gio/gdesktopappinfo.c:3226
 #, fuzzy, c-format
 #| msgid "Can't create user MIME configuration folder %s: %s"
 msgid "Can’t create user MIME configuration folder %s: %s"
 msgstr "Kan persoonlijke MIME-configuratiemap %s niet aanmaken: %s"
 
-#: gio/gdesktopappinfo.c:3606 gio/gdesktopappinfo.c:3630
+#: gio/gdesktopappinfo.c:3466 gio/gdesktopappinfo.c:3490
 msgid "Application information lacks an identifier"
 msgstr ""
 
-#: gio/gdesktopappinfo.c:3864
+#: gio/gdesktopappinfo.c:3724
 #, fuzzy, c-format
 #| msgid "Can't create user desktop file %s"
 msgid "Can’t create user desktop file %s"
 msgstr "Kan desktopbestand %s niet aanmaken"
 
-#: gio/gdesktopappinfo.c:3998
+#: gio/gdesktopappinfo.c:3858
 #, c-format
 msgid "Custom definition for %s"
 msgstr "Zelfgemaakte definitie voor %s"
@@ -1404,7 +1404,7 @@ msgstr "GEmblem voor GEmblemedIcon verwacht"
 #: gio/gfile.c:2008 gio/gfile.c:2063 gio/gfile.c:3738 gio/gfile.c:3793
 #: gio/gfile.c:4029 gio/gfile.c:4071 gio/gfile.c:4539 gio/gfile.c:4950
 #: gio/gfile.c:5035 gio/gfile.c:5125 gio/gfile.c:5222 gio/gfile.c:5309
-#: gio/gfile.c:5410 gio/gfile.c:8113 gio/gfile.c:8203 gio/gfile.c:8287
+#: gio/gfile.c:5410 gio/gfile.c:7988 gio/gfile.c:8078 gio/gfile.c:8162
 #: gio/win32/gwinhttpfile.c:437
 msgid "Operation not supported"
 msgstr "De bewerking is niet mogelijk"
@@ -1418,7 +1418,7 @@ msgstr "De bewerking is niet mogelijk"
 msgid "Containing mount does not exist"
 msgstr "Het koppelpunt hiervan bestaat niet"
 
-#: gio/gfile.c:2622 gio/glocalfile.c:2446
+#: gio/gfile.c:2622 gio/glocalfile.c:2441
 #, fuzzy
 #| msgid "Can't copy over directory"
 msgid "Can’t copy over directory"
@@ -1495,7 +1495,7 @@ msgstr "Het teken ‘%c’ mag niet in een bestandsnaam voorkomen"
 msgid "volume doesn’t implement mount"
 msgstr "volumen begrijpt de opdracht ‘aankoppelen’ niet"
 
-#: gio/gfile.c:6884 gio/gfile.c:6930
+#: gio/gfile.c:6882
 msgid "No application is registered as handling this file"
 msgstr "Er is geen programma toegewezen om dit bestand te openen"
 
@@ -1763,7 +1763,7 @@ msgstr "Fout bij schrijven naar stdout"
 #: gio/gio-tool-cat.c:133 gio/gio-tool-info.c:282 gio/gio-tool-list.c:165
 #: gio/gio-tool-mkdir.c:48 gio/gio-tool-monitor.c:37 gio/gio-tool-monitor.c:39
 #: gio/gio-tool-monitor.c:41 gio/gio-tool-monitor.c:43
-#: gio/gio-tool-monitor.c:203 gio/gio-tool-mount.c:1212 gio/gio-tool-open.c:70
+#: gio/gio-tool-monitor.c:203 gio/gio-tool-mount.c:1212 gio/gio-tool-open.c:113
 #: gio/gio-tool-remove.c:48 gio/gio-tool-rename.c:45 gio/gio-tool-set.c:89
 #: gio/gio-tool-trash.c:81 gio/gio-tool-tree.c:239
 msgid "LOCATION"
@@ -1781,7 +1781,7 @@ msgid ""
 msgstr ""
 
 #: gio/gio-tool-cat.c:162 gio/gio-tool-info.c:313 gio/gio-tool-mkdir.c:76
-#: gio/gio-tool-monitor.c:228 gio/gio-tool-mount.c:1263 gio/gio-tool-open.c:96
+#: gio/gio-tool-monitor.c:228 gio/gio-tool-mount.c:1263 gio/gio-tool-open.c:139
 #: gio/gio-tool-remove.c:72 gio/gio-tool-trash.c:136
 msgid "No locations given"
 msgstr "Geen locaties opgegeven"
@@ -2116,6 +2116,8 @@ msgid "The numeric PIM when unlocking a VeraCrypt volume"
 msgstr ""
 
 #: gio/gio-tool-mount.c:75
+#| msgctxt "GDateTime"
+#| msgid "PM"
 msgid "PIM"
 msgstr "PIM"
 
@@ -2169,7 +2171,7 @@ msgstr ""
 msgid "Target %s is not a directory"
 msgstr "Doelbestand is geen map"
 
-#: gio/gio-tool-open.c:75
+#: gio/gio-tool-open.c:118
 msgid ""
 "Open files with the default application that\n"
 "is registered to handle files of this type."
@@ -2868,12 +2870,12 @@ msgstr "niets doen.\n"
 msgid "removed existing output file.\n"
 msgstr ""
 
-#: gio/glocalfile.c:546 gio/win32/gwinhttpfile.c:420
+#: gio/glocalfile.c:544 gio/win32/gwinhttpfile.c:420
 #, c-format
 msgid "Invalid filename %s"
 msgstr "Ongeldige bestandsnaam: %s"
 
-#: gio/glocalfile.c:1013
+#: gio/glocalfile.c:1011
 #, fuzzy, c-format
 #| msgid "Error getting filesystem info: %s"
 msgid "Error getting filesystem info for %s: %s"
@@ -2884,147 +2886,147 @@ msgstr "Fout bij het ophalen van informatie over bestandssysteem: %s"
 #. * the enclosing (user visible) mount of a file, but none
 #. * exists.
 #.
-#: gio/glocalfile.c:1152
+#: gio/glocalfile.c:1150
 #, fuzzy, c-format
 #| msgid "Containing mount does not exist"
 msgid "Containing mount for file %s not found"
 msgstr "Het koppelpunt hiervan bestaat niet"
 
-#: gio/glocalfile.c:1175
+#: gio/glocalfile.c:1173
 #, fuzzy
 #| msgid "Can't rename root directory"
 msgid "Can’t rename root directory"
 msgstr "Kan de root-map niet hernoemen"
 
-#: gio/glocalfile.c:1193 gio/glocalfile.c:1216
+#: gio/glocalfile.c:1191 gio/glocalfile.c:1214
 #, fuzzy, c-format
 #| msgid "Error reading file %s: %s"
 msgid "Error renaming file %s: %s"
 msgstr "Fout bij lezen van bestand %s: %s"
 
-#: gio/glocalfile.c:1200
+#: gio/glocalfile.c:1198
 msgid "Can’t rename file, filename already exists"
 msgstr "Kan bestand niet hernoemen; bestandsnaam reeds in gebruik"
 
 # ongeldige naam voor bestand/ongeldige bestandsnaam
-#: gio/glocalfile.c:1213 gio/glocalfile.c:2322 gio/glocalfile.c:2350
-#: gio/glocalfile.c:2507 gio/glocalfileoutputstream.c:646
+#: gio/glocalfile.c:1211 gio/glocalfile.c:2317 gio/glocalfile.c:2345
+#: gio/glocalfile.c:2502 gio/glocalfileoutputstream.c:646
 msgid "Invalid filename"
 msgstr "Ongeldige bestandsnaam"
 
 # lezen/openen
-#: gio/glocalfile.c:1381 gio/glocalfile.c:1396
+#: gio/glocalfile.c:1379 gio/glocalfile.c:1394
 #, fuzzy, c-format
 #| msgid "Error opening file '%s': %s"
 msgid "Error opening file %s: %s"
 msgstr "Fout bij het openen van bestand ‘%s’: %s"
 
 # volledig verwijderen/definitief verwijderen/verwijderen
-#: gio/glocalfile.c:1521
+#: gio/glocalfile.c:1519
 #, fuzzy, c-format
 #| msgid "Error removing file: %s"
 msgid "Error removing file %s: %s"
 msgstr "Fout bij het verwijderen van bestand: %s"
 
 # naar prullenbak verplaatsen/verwijderen
-#: gio/glocalfile.c:1963
+#: gio/glocalfile.c:1958
 #, fuzzy, c-format
 #| msgid "Error trashing file: %s"
 msgid "Error trashing file %s: %s"
 msgstr "Fout bij het verplaatsen naar de prullenbak van bestand: %s"
 
-#: gio/glocalfile.c:2004
+#: gio/glocalfile.c:1999
 #, c-format
 msgid "Unable to create trash dir %s: %s"
 msgstr "Kan de prullenbakmap %s niet aanmaken: %s"
 
-#: gio/glocalfile.c:2025
+#: gio/glocalfile.c:2020
 #, fuzzy, c-format
 #| msgid "Unable to find toplevel directory for trash"
 msgid "Unable to find toplevel directory to trash %s"
 msgstr "Kan de bovenliggende map voor de prullenbak niet vinden"
 
 # (nog) niet mogelijk/niet ondersteund
-#: gio/glocalfile.c:2034
+#: gio/glocalfile.c:2029
 #, fuzzy, c-format
 msgid "Trashing on system internal mounts is not supported"
 msgstr "Verplaatsen tussen aankoppelpunten is niet mogelijk"
 
-#: gio/glocalfile.c:2118 gio/glocalfile.c:2138
+#: gio/glocalfile.c:2113 gio/glocalfile.c:2133
 #, fuzzy, c-format
 #| msgid "Unable to find or create trash directory"
 msgid "Unable to find or create trash directory for %s"
 msgstr "Kan prullenbakmap niet vinden of aanmaken"
 
-#: gio/glocalfile.c:2173
+#: gio/glocalfile.c:2168
 #, fuzzy, c-format
 #| msgid "Unable to create trashing info file: %s"
 msgid "Unable to create trashing info file for %s: %s"
 msgstr "Kan prullenbak-informatiebestand ‘%s’ niet aanmaken"
 
-#: gio/glocalfile.c:2233
+#: gio/glocalfile.c:2228
 #, c-format
 msgid "Unable to trash file %s across filesystem boundaries"
 msgstr ""
 
-#: gio/glocalfile.c:2237 gio/glocalfile.c:2293
+#: gio/glocalfile.c:2232 gio/glocalfile.c:2288
 #, c-format
 msgid "Unable to trash file %s: %s"
 msgstr "Kan het bestand %s niet naar de prullenbak verplaatsen: %s"
 
-#: gio/glocalfile.c:2299
+#: gio/glocalfile.c:2294
 #, c-format
 msgid "Unable to trash file %s"
 msgstr "Kan het bestand %s niet naar de prullenbak verplaatsen"
 
-#: gio/glocalfile.c:2325
+#: gio/glocalfile.c:2320
 #, fuzzy, c-format
 #| msgid "Error creating directory '%s': %s"
 msgid "Error creating directory %s: %s"
 msgstr "Fout bij het aanmaken van map ‘%s’: %s"
 
-#: gio/glocalfile.c:2354
+#: gio/glocalfile.c:2349
 #, c-format
 msgid "Filesystem does not support symbolic links"
 msgstr "Bestandssysteem ondersteunt geen symbolische verwijzingen"
 
-#: gio/glocalfile.c:2357
+#: gio/glocalfile.c:2352
 #, fuzzy, c-format
 #| msgid "Error making symbolic link: %s"
 msgid "Error making symbolic link %s: %s"
 msgstr "Fout bij het maken van symbolische verwijzing: %s"
 
-#: gio/glocalfile.c:2363 glib/gfileutils.c:2138
+#: gio/glocalfile.c:2358 glib/gfileutils.c:2138
 msgid "Symbolic links not supported"
 msgstr "Symbolische verwijzingen zijn niet mogelijk"
 
-#: gio/glocalfile.c:2418 gio/glocalfile.c:2453 gio/glocalfile.c:2510
+#: gio/glocalfile.c:2413 gio/glocalfile.c:2448 gio/glocalfile.c:2505
 #, fuzzy, c-format
 #| msgid "Error moving file: %s"
 msgid "Error moving file %s: %s"
 msgstr "Fout bij het verplaatsen van bestand: %s"
 
-#: gio/glocalfile.c:2441
+#: gio/glocalfile.c:2436
 msgid "Can’t move directory over directory"
 msgstr "Kan map niet over andere map heen verplaatsen"
 
-#: gio/glocalfile.c:2467 gio/glocalfileoutputstream.c:1030
+#: gio/glocalfile.c:2462 gio/glocalfileoutputstream.c:1030
 #: gio/glocalfileoutputstream.c:1044 gio/glocalfileoutputstream.c:1059
 #: gio/glocalfileoutputstream.c:1076 gio/glocalfileoutputstream.c:1090
 msgid "Backup file creation failed"
 msgstr "Aanmaken van backupbestand is mislukt"
 
-#: gio/glocalfile.c:2486
+#: gio/glocalfile.c:2481
 #, c-format
 msgid "Error removing target file: %s"
 msgstr "Fout bij het verwijderen doelbestand: %s"
 
 # (nog) niet mogelijk/niet ondersteund
-#: gio/glocalfile.c:2500
+#: gio/glocalfile.c:2495
 msgid "Move between mounts not supported"
 msgstr "Verplaatsen tussen aankoppelpunten is niet mogelijk"
 
-#: gio/glocalfile.c:2691
+#: gio/glocalfile.c:2686
 #, fuzzy, c-format
 #| msgid "could not get remote address: %s"
 msgid "Could not determine the disk usage of %s: %s"
@@ -3315,7 +3317,7 @@ msgid "mount doesn’t implement synchronous content type guessing"
 msgstr ""
 "mount heeft geen ondersteuning voor inhoudstype raden op synchrone wijze"
 
-#: gio/gnetworkaddress.c:388
+#: gio/gnetworkaddress.c:384
 #, fuzzy, c-format
 #| msgid "Hostname '%s' contains '[' but not ']'"
 msgid "Hostname “%s” contains “[” but not “]”"
@@ -3871,30 +3873,30 @@ msgid "Waiting for socket condition: %s"
 msgstr ""
 
 # openen/lezen
-#: gio/gsocket.c:4614 gio/gsocket.c:4616 gio/gsocket.c:4762 gio/gsocket.c:4847
-#: gio/gsocket.c:5027 gio/gsocket.c:5067 gio/gsocket.c:5069
+#: gio/gsocket.c:4612 gio/gsocket.c:4756 gio/gsocket.c:4841 gio/gsocket.c:5021
+#: gio/gsocket.c:5059
 #, c-format
 msgid "Error sending message: %s"
 msgstr "Fout bij versturen van bericht: %s"
 
-#: gio/gsocket.c:4789
+#: gio/gsocket.c:4783
 #, fuzzy
 msgid "GSocketControlMessage not supported on Windows"
 msgstr "GSocketControlMessage wordt niet ondersteund op windows"
 
 # volledig verwijderen/definitief verwijderen/verwijderen
-#: gio/gsocket.c:5260 gio/gsocket.c:5333 gio/gsocket.c:5560
+#: gio/gsocket.c:5248 gio/gsocket.c:5321 gio/gsocket.c:5548
 #, c-format
 msgid "Error receiving message: %s"
 msgstr "Fout bij ontvangen van bericht: %s"
 
-#: gio/gsocket.c:5832
+#: gio/gsocket.c:5820
 #, fuzzy, c-format
 #| msgid "Unable to create socket: %s"
 msgid "Unable to read socket credentials: %s"
 msgstr "Kan socket niet aanmaken: %s"
 
-#: gio/gsocket.c:5841
+#: gio/gsocket.c:5829
 msgid "g_socket_get_credentials not implemented for this OS"
 msgstr ""
 
@@ -3913,16 +3915,16 @@ msgstr "Kon niet verbinden met %s: "
 msgid "Could not connect: "
 msgstr "Kon niet verbinden: "
 
-#: gio/gsocketclient.c:1032 gio/gsocketclient.c:1749
+#: gio/gsocketclient.c:1032 gio/gsocketclient.c:1714
 msgid "Unknown error on connect"
 msgstr "Onbekende fout bij verbinden"
 
-#: gio/gsocketclient.c:1086 gio/gsocketclient.c:1657
+#: gio/gsocketclient.c:1086 gio/gsocketclient.c:1626
 #, fuzzy
 msgid "Proxying over a non-TCP connection is not supported."
 msgstr "Proxy-protocol ‘%s’ wordt niet ondersteund."
 
-#: gio/gsocketclient.c:1115 gio/gsocketclient.c:1683
+#: gio/gsocketclient.c:1115 gio/gsocketclient.c:1652
 #, fuzzy, c-format
 #| msgid "Proxy protocol '%s' is not supported."
 msgid "Proxy protocol “%s” is not supported."
@@ -4057,7 +4059,7 @@ msgid "Temporarily unable to resolve “%s”"
 msgstr "Kan tijdelijk geen resolve doen voor ‘%s’"
 
 #: gio/gthreadedresolver.c:663 gio/gthreadedresolver.c:840
-#: gio/gthreadedresolver.c:950
+#: gio/gthreadedresolver.c:948
 #, fuzzy, c-format
 msgid "Error resolving “%s”"
 msgstr "Fout bij het verwijderen van bestand: %s"
@@ -6039,158 +6041,182 @@ msgid "Character out of range for UTF-16"
 msgstr "Teken valt buiten het bereik van UTF-16"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2339
+#: glib/gutils.c:2384
 #, c-format
+#| msgid "%.1f kB"
 msgid "%.1f kB"
 msgstr "%.1f kB"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2341
+#: glib/gutils.c:2386
 #, c-format
+#| msgid "%.1f MB"
 msgid "%.1f MB"
 msgstr "%.1f MB"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2343
+#: glib/gutils.c:2388
 #, c-format
+#| msgid "%.1f GB"
 msgid "%.1f GB"
 msgstr "%.1f GB"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2345
+#: glib/gutils.c:2390
 #, c-format
+#| msgid "%.1f TB"
 msgid "%.1f TB"
 msgstr "%.1f TB"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2347
+#: glib/gutils.c:2392
 #, c-format
+#| msgid "%.1f PB"
 msgid "%.1f PB"
 msgstr "%.1f PB"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2349
+#: glib/gutils.c:2394
 #, c-format
+#| msgid "%.1f EB"
 msgid "%.1f EB"
 msgstr "%.1f EB"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2353
+#: glib/gutils.c:2398
 #, c-format
+#| msgid "%.1f KiB"
 msgid "%.1f KiB"
 msgstr "%.1f KiB"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2355
+#: glib/gutils.c:2400
 #, c-format
+#| msgid "%.1f MiB"
 msgid "%.1f MiB"
 msgstr "%.1f MiB"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2357
+#: glib/gutils.c:2402
 #, c-format
+#| msgid "%.1f GiB"
 msgid "%.1f GiB"
 msgstr "%.1f GiB"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2359
+#: glib/gutils.c:2404
 #, c-format
+#| msgid "%.1f TiB"
 msgid "%.1f TiB"
 msgstr "%.1f TiB"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2361
+#: glib/gutils.c:2406
 #, c-format
+#| msgid "%.1f PiB"
 msgid "%.1f PiB"
 msgstr "%.1f PiB"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2363
+#: glib/gutils.c:2408
 #, c-format
+#| msgid "%.1f EiB"
 msgid "%.1f EiB"
 msgstr "%.1f EiB"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2367
+#: glib/gutils.c:2412
 #, c-format
+#| msgid "%.1f kb"
 msgid "%.1f kb"
 msgstr "%.1f kb"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2369
+#: glib/gutils.c:2414
 #, c-format
+#| msgid "%.1f Mb"
 msgid "%.1f Mb"
 msgstr "%.1f Mb"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2371
+#: glib/gutils.c:2416
 #, c-format
+#| msgid "%.1f Gb"
 msgid "%.1f Gb"
 msgstr "%.1f Gb"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2373
+#: glib/gutils.c:2418
 #, c-format
+#| msgid "%.1f Tb"
 msgid "%.1f Tb"
 msgstr "%.1f Tb"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2375
+#: glib/gutils.c:2420
 #, c-format
+#| msgid "%.1f Pb"
 msgid "%.1f Pb"
 msgstr "%.1f Pb"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2377
+#: glib/gutils.c:2422
 #, c-format
+#| msgid "%.1f Eb"
 msgid "%.1f Eb"
 msgstr "%.1f Eb"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2381
+#: glib/gutils.c:2426
 #, c-format
+#| msgid "%.1f Kib"
 msgid "%.1f Kib"
 msgstr "%.1f Kib"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2383
+#: glib/gutils.c:2428
 #, c-format
+#| msgid "%.1f Mib"
 msgid "%.1f Mib"
 msgstr "%.1f Mib"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2385
+#: glib/gutils.c:2430
 #, c-format
+#| msgid "%.1f Gib"
 msgid "%.1f Gib"
 msgstr "%.1f Gib"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2387
+#: glib/gutils.c:2432
 #, c-format
+#| msgid "%.1f Tib"
 msgid "%.1f Tib"
 msgstr "%.1f Tib"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2389
+#: glib/gutils.c:2434
 #, c-format
+#| msgid "%.1f Pib"
 msgid "%.1f Pib"
 msgstr "%.1f Pib"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2391
+#: glib/gutils.c:2436
 #, c-format
+#| msgid "%.1f Eib"
 msgid "%.1f Eib"
 msgstr "%.1f Eib"
 
 # ook byte voor meervoud (het bestand is 29 byte groot)
-#: glib/gutils.c:2425 glib/gutils.c:2551
+#: glib/gutils.c:2470 glib/gutils.c:2596
 #, c-format
 msgid "%u byte"
 msgid_plural "%u bytes"
 msgstr[0] "%u byte"
 msgstr[1] "%u byte"
 
-#: glib/gutils.c:2429
+#: glib/gutils.c:2474
 #, c-format
 msgid "%u bit"
 msgid_plural "%u bits"
@@ -6199,7 +6225,7 @@ msgstr[1] "%u bits"
 
 # ook byte voor meervoud (het bestand is 29 byte groot)
 #. Translators: the %s in "%s bytes" will always be replaced by a number.
-#: glib/gutils.c:2496
+#: glib/gutils.c:2541
 #, c-format
 msgid "%s byte"
 msgid_plural "%s bytes"
@@ -6207,7 +6233,7 @@ msgstr[0] "%s byte"
 msgstr[1] "%s byte"
 
 #. Translators: the %s in "%s bits" will always be replaced by a number.
-#: glib/gutils.c:2501
+#: glib/gutils.c:2546
 #, c-format
 msgid "%s bit"
 msgid_plural "%s bits"
@@ -6219,32 +6245,32 @@ msgstr[1] "%s bits"
 #. * compatibility.  Users will not see this string unless a program is using this deprecated function.
 #. * Please translate as literally as possible.
 #.
-#: glib/gutils.c:2564
+#: glib/gutils.c:2609
 #, c-format
 msgid "%.1f KB"
 msgstr "%.1f KB"
 
-#: glib/gutils.c:2569
+#: glib/gutils.c:2614
 #, c-format
 msgid "%.1f MB"
 msgstr "%.1f MB"
 
-#: glib/gutils.c:2574
+#: glib/gutils.c:2619
 #, c-format
 msgid "%.1f GB"
 msgstr "%.1f GB"
 
-#: glib/gutils.c:2579
+#: glib/gutils.c:2624
 #, c-format
 msgid "%.1f TB"
 msgstr "%.1f TB"
 
-#: glib/gutils.c:2584
+#: glib/gutils.c:2629
 #, c-format
 msgid "%.1f PB"
 msgstr "%.1f PB"
 
-#: glib/gutils.c:2589
+#: glib/gutils.c:2634
 #, c-format
 msgid "%.1f EB"
 msgstr "%.1f EB"
