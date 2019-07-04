@@ -154,11 +154,20 @@ do_lookup_by_name (GTask         *task,
     }
   else
     {
+#ifdef G_OS_WIN32
+      gchar *error_message = g_win32_error_message (WSAGetLastError ());
+#else
+      gchar *error_message = g_locale_to_utf8 (gai_strerror (retval), -1, NULL, NULL, NULL);
+      if (error_message == NULL)
+        error_message = g_strdup ("[Invalid UTF-8]");
+#endif
+
       g_task_return_new_error (task,
                                G_RESOLVER_ERROR,
                                g_resolver_error_from_addrinfo_error (retval),
                                _("Error resolving “%s”: %s"),
-                               hostname, gai_strerror (retval));
+                               hostname, error_message);
+      g_free (error_message);
     }
 
   if (res)
@@ -310,14 +319,23 @@ do_lookup_by_address (GTask         *task,
     {
       gchar *phys;
 
+#ifdef G_OS_WIN32
+      gchar *error_message = g_win32_error_message (WSAGetLastError ());
+#else
+      gchar *error_message = g_locale_to_utf8 (gai_strerror (retval), -1, NULL, NULL, NULL);
+      if (error_message == NULL)
+        error_message = g_strdup ("[Invalid UTF-8]");
+#endif
+
       phys = g_inet_address_to_string (address);
       g_task_return_new_error (task,
                                G_RESOLVER_ERROR,
                                g_resolver_error_from_addrinfo_error (retval),
                                _("Error reverse-resolving “%s”: %s"),
                                phys ? phys : "(unknown)",
-                               gai_strerror (retval));
+                               error_message);
       g_free (phys);
+      g_free (error_message);
     }
 }
 

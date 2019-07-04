@@ -134,6 +134,7 @@ GLIB_VERSION_2_54
 GLIB_VERSION_2_56
 GLIB_VERSION_2_58
 GLIB_VERSION_2_60
+GLIB_VERSION_2_62
 GLIB_VERSION_MIN_REQUIRED
 GLIB_VERSION_MAX_ALLOWED
 GLIB_DISABLE_DEPRECATION_WARNINGS
@@ -159,6 +160,7 @@ GLIB_AVAILABLE_IN_2_54
 GLIB_AVAILABLE_IN_2_56
 GLIB_AVAILABLE_IN_2_58
 GLIB_AVAILABLE_IN_2_60
+GLIB_AVAILABLE_IN_2_62
 GLIB_DEPRECATED_IN_2_26
 GLIB_DEPRECATED_IN_2_26_FOR
 GLIB_DEPRECATED_IN_2_28
@@ -195,6 +197,8 @@ GLIB_DEPRECATED_IN_2_58
 GLIB_DEPRECATED_IN_2_58_FOR
 GLIB_DEPRECATED_IN_2_60
 GLIB_DEPRECATED_IN_2_60_FOR
+GLIB_DEPRECATED_IN_2_62
+GLIB_DEPRECATED_IN_2_62_FOR
 GLIB_VERSION_CUR_STABLE
 GLIB_VERSION_PREV_STABLE
 </SECTION>
@@ -415,6 +419,7 @@ g_autoptr
 g_autofree
 g_autolist
 g_autoslist
+g_autoqueue
 G_DEFINE_AUTOPTR_CLEANUP_FUNC
 G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC
 G_DEFINE_AUTO_CLEANUP_FREE_FUNC
@@ -737,6 +742,16 @@ g_rec_mutex_unlock
 GRecMutexLocker
 g_rec_mutex_locker_new
 g_rec_mutex_locker_free
+
+<SUBSECTION>
+GRWLockWriterLocker
+g_rw_lock_writer_locker_new
+g_rw_lock_writer_locker_free
+
+<SUBSECTION>
+GRWLockReaderLocker
+g_rw_lock_reader_locker_new
+g_rw_lock_reader_locker_free
 
 <SUBSECTION>
 GRWLock
@@ -2264,6 +2279,7 @@ g_list_append
 g_list_prepend
 g_list_insert
 g_list_insert_before
+g_list_insert_before_link
 g_list_insert_sorted
 g_list_remove
 g_list_remove_link
@@ -2385,7 +2401,9 @@ g_queue_index
 g_queue_remove
 g_queue_remove_all
 g_queue_insert_before
+g_queue_insert_before_link
 g_queue_insert_after
+g_queue_insert_after_link
 g_queue_insert_sorted
 g_queue_push_head_link
 g_queue_push_tail_link
@@ -3144,6 +3162,7 @@ g_test_failed
 g_test_message
 g_test_bug_base
 g_test_bug
+g_test_summary
 GTestLogFatalFunc
 g_test_log_set_fatal_handler
 

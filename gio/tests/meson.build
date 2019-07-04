@@ -10,6 +10,7 @@ test_c_args = [
   '-DTEST_SERVICES="@0@/gio/tests/services"'.format(meson.build_root()),
   '-DGLIB_MKENUMS="@0@"'.format(glib_mkenums),
   '-DGLIB_COMPILE_SCHEMAS="@0@"'.format(glib_compile_schemas.full_path()),
+  '-UG_DISABLE_ASSERT',
 ]
 
 if host_machine.system() == 'windows'
@@ -53,7 +54,6 @@ gio_tests = {
   'io-stream' : {},
   'memory-input-stream' : {},
   'memory-output-stream' : {},
-  'monitor' : {},
   'mount-operation' : {},
   'network-address' : {'extra_sources': ['mock-resolver.c']},
   'network-monitor' : {},
@@ -78,6 +78,7 @@ gio_tests = {
   'tls-certificate' : {'extra_sources' : ['gtesttlsbackend.c']},
   'tls-interaction' : {'extra_sources' : ['gtesttlsbackend.c']},
   'tls-database' : {'extra_sources' : ['gtesttlsbackend.c']},
+  'gdbus-address-get-session' : {},
 }
 
 test_extra_programs = {
@@ -134,26 +135,35 @@ if host_machine.system() != 'windows'
     'unix-mounts' : {},
     'unix-streams' : {},
     'g-file-info-filesystem-readonly' : {},
-    'gsocketclient-slow' : {
-      'depends' : [
-        shared_library('slow-connect-preload',
-          'slow-connect-preload.c',
-          name_prefix : '',
-          dependencies: cc.find_library('dl'),
-          install_dir : installed_tests_execdir,
-          install: installed_tests_enabled,
-        )
-      ],
-      'env' : {
-        'LD_PRELOAD': '@0@/slow-connect-preload.so'.format(meson.current_build_dir())
-      },
-      'installed_tests_env' : {
-        'LD_PRELOAD': '@0@/slow-connect-preload.so'.format(installed_tests_execdir),
-      },
-    },
     'gschema-compile' : {'install' : false},
     'trash' : {},
   }
+
+  if have_rtld_next
+    # FIXME: This list will probably grow; see
+    # https://gitlab.gnome.org/GNOME/glib/issues/1739
+    no_libdl_systems = ['freebsd', 'netbsd', 'openbsd']
+
+    gio_tests += {
+      'gsocketclient-slow' : {
+        'depends' : [
+          shared_library('slow-connect-preload',
+            'slow-connect-preload.c',
+            name_prefix : '',
+            dependencies: cc.find_library('dl', required: not no_libdl_systems.contains(host_machine.system())),
+            install_dir : installed_tests_execdir,
+            install: installed_tests_enabled,
+          )
+        ],
+        'env' : {
+          'LD_PRELOAD': '@0@/slow-connect-preload.so'.format(meson.current_build_dir())
+        },
+        'installed_tests_env' : {
+          'LD_PRELOAD': '@0@/slow-connect-preload.so'.format(installed_tests_execdir),
+        },
+      },
+    }
+  endif
 
   # Uninstalled because of the check-for-executable logic in DesktopAppInfo
   # unable to find the installed executable
@@ -241,10 +251,10 @@ if host_machine.system() != 'windows'
         'extra_sources' : extra_sources,
         'suite' : ['slow'],
       },
-      'gdbus-auth' : {'extra_sources' : extra_sources, 'suite': ['flaky']},
-      'gdbus-bz627724' : {'extra_sources' : extra_sources, 'suite': ['flaky']},
+      'gdbus-auth' : {'extra_sources' : extra_sources},
+      'gdbus-bz627724' : {'extra_sources' : extra_sources},
       'gdbus-close-pending' : {'extra_sources' : extra_sources},
-      'gdbus-connection' : {'extra_sources' : extra_sources, 'suite': ['flaky']},
+      'gdbus-connection' : {'extra_sources' : extra_sources},
       'gdbus-connection-loss' : {'extra_sources' : extra_sources},
       'gdbus-connection-slow' : {'extra_sources' : extra_sources},
       'gdbus-error' : {'extra_sources' : extra_sources},
@@ -283,7 +293,6 @@ if host_machine.system() != 'windows'
                     '-DGLIB_VERSION_MAX_ALLOWED=GLIB_VERSION_2_36'],
       },
       'gapplication' : {'extra_sources' : extra_sources},
-      'gdbus-unix-addresses' : {},
     }
 
     if not glib_have_cocoa
@@ -669,7 +678,6 @@ foreach test_name, extra_args : gio_tests
     env : local_test_env,
     timeout : timeout,
     suite : suite,
-    args : ['--tap'],
     is_parallel : extra_args.get('is_parallel', true),
     depends : extra_args.get('depends', []),
   )

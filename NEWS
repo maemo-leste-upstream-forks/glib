@@ -1,88 +1,193 @@
-Overview of changes in GLib 2.60.4
+Overview of changes in GLib 2.61.1
 ==================================
 
-* Fixes to improved network status detection with NetworkManager (#1788)
+* `g_unichar_isxdigit()` and `g_unichar_xdigit_value()` now handle full-width
+  characters (U+FF21–U+FF26 and U+FF41–U+FF46) (#58)
 
-* Leak fixes to some `glib-genmarshal` generated code (#1793)
+* Deprecate `gtester` utility and its test reporting format and enable TAP
+  output by default instead — the `--tap` option to tests is now a no-op
+  (#1441, #1619)
 
-* Further fixes to the Happy Eyeballs (RFC 8305) implementation (!865)
+* Add `g_test_summary()` to allow test authors to programmatically summarise
+  what each unit test in a test suite does (#1450)
 
-* File system permissions fix to clamp down permissions in a small time window
-  when copying files (CVE-2019-12450, !876)
+* Upgrade to Unicode Character Database v12.1 (#1713, !822)
+
+* More IPv6 Happy Eyeballs fixes to `GNetworkAddress` and `GSocketClient`
+  (#1747, #1771, #1774)
+
+* Fix valgrind and gdb support for the new `GHashTable` changes (#1749, #1780)
+
+* Fix GTask wait times growing faster than the number of task threads (#1683)
+
+* Change `GApplication` to ignore `-psn_*` arguments on the macOS command line,
+  as they are irrelevant (#1784)
+
+* Add `g_autoqueue()` helper macros, similar to `g_autolist()` (!474)
+
+* Add pre-allocated link helpers for `GList` and `GQueue`:
+ - `g_list_insert_before_link()`
+ - `g_queue_insert_before_link()`
+ - `g_queue_insert_after_link()`
+
+* Improve network availability detection with NetworkManager to treat lower
+  levels of connectivity as having reduced availability (!781)
+
+* Add `g_clear_signal_handler()` to allow disconnecting from a `GObject` signal
+  and clearing the signal handler ID to zero in a single call (!819)
+
+* Add `g_autoptr()` support for `GRWLock` (!825)
+
+* Define `G_OS_UNIX`, not `G_OS_WIN32`, when GLib is built agains Cygwin (!862)
 
 * Bugs fixed:
- - #1755 Please revert #535 gmacros: Try to use the standard __func__ first in G_STRFUNC
- - #1788 GNetworkMonitor claims I am offline
- - #1792 glib-genmarshal generated valist marshal does not respect static scope for some types
- - #1793 glib-genmarshal generates wrong code for va marshaler for VARIANT type
- - #1795 Fix mingw32 CI on older branches
- - !865 gnetworkaddress: fix "happy eyeballs" logic
- - !878 Backport !876 “gfile: Limit access to files when copying” to glib-2-60
-
-
-Overview of changes in GLib 2.60.3
-==================================
-
-* Various fixes to small key/value support in `GHashTable` (#1749, #1780)
-
-* Bugs fixed:
+ - #29 GScanner: should explicitly document modifiable fields (value, next_value, ...)
+ - #58 g_unichar_isxdigit() and g_unichar_xdigit_value() should deal with full-width a-fA-F
+ - #106 Boxed types should be documented better
+ - #135 g_unichar_totitle(0) returns 0x00001F88 instead of 0
+ - #429 g_format_size() is broken on Windows
+ - #1441 Deprecate gtester
+ - #1450 Add API for tests to describe what they're checking
+ - #1619 GTest should have a way to default to TAP
+ - #1683 GTask: task_wait_time is increased constantly when the number of running thread is greather than 10
+ - #1713 Upgrade to Unicode Character Database v12
+ - #1739 meson build failure libdl
  - #1747 Critical in g_socket_client_async_connect_complete
  - #1749 New GHashTable implementation confuses valgrind
+ - #1753 Remove memory leaks from gio/test/resolver.c
+ - #1755 Please revert #535 gmacros: Try to use the standard __func__ first in G_STRFUNC
  - #1759 test_month_names: assertion failed
+ - #1760 Document for g_resolver_lookup_records why it returns a list of list of gchar*.
+ - #1763 tests: -p runs tests in the reverse of the specified order
+ - #1768 g_strlcat(): Possible buffer overflow in implementation
  - #1771 GNetworkAddressAddressEnumerator unsafely modifies cache in GNetworkAddress
  - #1774 Leaks in gsocketclient.c connection code
  - #1776 glib/date test fails
  - #1780 GDB pretty-printer for GHashTable no longer works
- - !815 Merge branch 'wip/tingping/socketclient-cancel-2' into 'master'
- - !816 Backport !814 “gschema.dtd: Add target attribute to alias” to glib-2-60
- - !826 Backport !824 “gsocketclient: Fix a leak in the connection code” to glib-2-60
- - !829 Backport !828 “build: Fix a typo in the test whether _NL_ABALTMON_n is supported” to glib-2-60
- - !834 Backport !823 "gnetworkaddress: Fix parallel enumerations interfering with eachother" to glib-2-60
- - !838 Backport !835 “Fix typo in German translation” to glib-2-60
- - !841 Backport !839 “tests: Update month name check for Greek locale” to glib-2-60
- - !844 Backport !840 “ghash: Disable small-arrays under valgrind” to glib-2-60
- - !846 Backport !845 “Fixing g_format_size_full() on Windows-x64” to glib-2-60
- - !855 Backport !848 (more GHashTable fixes) to glib-2-60
- - !858 Backport !852 “Update gdb pretty-printer for GHashTable” to glib-2-60
-
-* Translation updates:
- - German
-
-
-Overview of changes in GLib 2.60.2
-==================================
-
-* Fix crash when displaying notifications on macOS (!786)
-
-* Improve network status detection with NetworkManager (!781)
-
-* Bugs fixed:
- - !790 glib/gconstructor.h: Include stdlib.h for MSVC builds
- - !793 Backport !786: “cocoanotificationbackend: do not release readonly property” to glib-2-60
- - !803 Backport !781 “gnetworkmonitornm: Fix network available detection” to glib-2-60
-
-* Translation updates:
- - Catalan
-
-
-Overview of changes in GLib 2.60.1
-==================================
-
-* Fix documentation for `gdbus-tool wait` to use correct units
-
-* Bugs fixed:
- - #1709 GResource generation test incompatible with stable LLVM on Linux
- - #1725 gosxappinfo.h is not installed on macOS
- - #1737 gdbus-tool wait command timeout argument incorrect unit reference
- - !711 socket: Fix annotation for flags in g_socket_receive_message
- - !722 Backport codegen: Fix use of uninitialised variable from !721 to glib-2-60
- - !727 Backport !719 “Handle an UNKNOWN NetworkManager connectivity as NONE” to glib-2-60
- - !729 Backport !728 “gsocket: Remove (type) annotation from flags arguments” to glib-2-60
- - !758 gdbusaddress, win32: backport using cwd for running rundll32
- - !775 meson: Hotfix for iconv detection on macOS
+ - #1782 Error in documentation for cross-compile.
+ - #1784 MacOS adds a -psn_X_XXXXXX parameter to the command line
+ - !474 Add g_autoqueue
+ - !476 Add pre-allocated link helpers for GList and GQueue
+ - !556 gtestutils: Make --tap compatible with -p and --GTestSkipCount
+ - !732 gsocket: Clarify in docs that `flags` arguments can be platform specific
+ - !766 W32: swap special g_get_prgname() for platform_get_argv0()
+ - !774 Only build tests if certain conditions are met.
+ - !780 Add copyright and licensing terms to test report generator
+ - !781 gnetworkmonitornm: Fix network available detection
+ - !782 build: Fix check for RTLD_NEXT
+ - !785 Remove monitor test
+ - !787 build: Remove */.gitignore files
+ - !791 glib/gconstructor.h: Include stdlib.h for MSVC builds
+ - !792 general: Remove a few unhelpful references to ‘master’
+ - !795 gdesktopappinfo: Add support for MATE and Xfce4 terminals
+ - !802 gio: tests, don't check for libdl on OpenBSD
+ - !806 Get to 100% coverage on GQueue tests
+ - !808 Update the Docker images used for CI
+ - !809 Modified version of !784 — Adding tests cases for a better coverage of glib/tests/strfuncs.c
+ - !813 gappinfo: Add precondition checks to GAppLaunchContext env methods
+ - !814 gschema.dtd: Add target attribute to alias
+ - !819 Clear signal handler
+ - !820 ci: Keep JUnit report script working on Debian stable
+ - !821 Various minor cleanups to autoptrs
+ - !822 glib: Update Unicode Character Database to version 12.1.0
+ - !825 Add autoptr support for GRWLock
+ - !831 build: (Long time after) post-release version bump
+ - !835 Fix typo in German translation
+ - !836 Document the best practices for binding GInitiallyUnowned
+ - !862 build: define G_OS_UNIX, not G_OS_WIN32 under cygwin
 
 * Translation updates:
  - Basque
+ - Catalan
+ - German
+ - Indonesian
+ - Spanish
+
+
+Overview of changes in GLib 2.61.0
+==================================
+
+* Changes to `iconv` configure options, including the default iconv
+  implementation on macOS — distributors may need to check their configure
+  scripts (#1557)
+
+* Build fixes when building GLib with `G_DISABLE_ASSERT` defined (#1708)
+
+* Fix documentation for `gdbus-tool wait` to use correct units (#1737)
+
+* Improvements to symlink handling on Windows (!269)
+
+* Add exception handling for crashes on Windows (!582)
+
+* Set `G_WITH_CYGWIN` again when GLib is built on Cygwin (this was a regression
+  from the autotools build) (!736)
+
+* Use `GCocoaNotificationBackend` by default on macOS, rather than
+  `GGtkNotificationBackend` (!745)
+
+* Use Windows symbol visibility when GLib is built on Cygwin, as PE binaries
+  are subject to W32 visibility mechanics — this affects the definition of
+  `_GLIB_EXTERN` (!752)
+
+* Add coloured output support to `gdbus introspect` (!761)
+
+* Bugs fixed:
+ - #682 docs: advise not to use non-literal strings as qdata keys
+ - #1177 gparted crashes due to g_quark_from_static_string used in global initialization
+ - #1258 the buffer written to by g_input_stream_read is not marked as an out parameter
+ - #1557 By default glib tries to use libc instead of native iconv on OSX
+ - #1566 Meld Windows shows error on startup "There was a problem starting c:\Program"
+ - #1614 GIO tests fail on FreeBSD CI with: Unexpected error from C library during 'pthread_mutex_lock': Invalid argument
+ - #1708 Building GLib with G_DISABLE_ASSERT fails
+ - #1709 GResource generation test incompatible with stable LLVM on Linux
+ - #1710 Crash in g_cancellable_cancel
+ - #1712 gdbus-proxy test is flaky
+ - #1724 unconditional check in fuzzing/meson.build
+ - #1725 gosxappinfo.h is not installed on macOS
+ - #1727 Cannot use trash folder with an NFS mount using automount / autofs
+ - #1728 GSocket does not support ENOTSOCK
+ - #1732 Win32: lookup_by_name_async segfaults for not available domains
+ - #1737 gdbus-tool wait command timeout argument incorrect unit reference
+ - !67 glib: update internal gnulib from upstream
+ - !269 Win32 symlink code refactoring
+ - !493 tests: Check that cancelling g_file_replace don't overwrite existing file
+ - !582 Basic W32 exception handling for glib
+ - !680 Fix warnings glib
+ - !690 Fix thread safety issues
+ - !694 gvariant-parser: Fix pattern coalesce of M and *
+ - !706 Fix data races in task test and gmenumodel test
+ - !709 Bump release version for 2.62 series
+ - !710 socket: Fix annotation for flags in g_socket_receive_message
+ - !712 gwin32: Fix comment for g_win32_veh_handler
+ - !716 Various minor documentation fixes
+ - !717 Improve formatting of GCC attribute documentation
+ - !718 GSocketClient - Free last error if a connection attempt fails and on retry the...
+ - !719 Handle an UNKNOWN NetworkManager connectivity as NONE
+ - !721 codegen: Fix use of uninitialised variable
+ - !723 Provide examples for GNUC attribute macros
+ - !724 meson: do a build-time check for strlcpy before attempting runtime check
+ - !728 gsocket: Remove (type) annotation from flags arguments
+ - !730 Improve gdbus-address parsing tests
+ - !735 docs: Use the right g_autoptr function when using an auxiliary function
+ - !736 Set G_WITH_CYGWIN again
+ - !737 gresolver: Don’t use gai_strerror() on Windows, as it isn’t threadsafe
+ - !741 Fix use-after-free triggered by gnome-session-binary
+ - !745 gcocoanotificationbackend: give more priority than the gtk one
+ - !749 gio: Add missing autocleanup definition for GSettingsSchema{Key,Source}
+ - !750 Check for RTLD_NEXT
+ - !752 Use W32 visibility for Cygwin
+ - !754 Check for /proc/self/cmdline
+ - !757 Fix gnulib build on older Visual Studio builds
+ - !760 Properly ensure the cocoa notification backend type
+ - !761 RFC: gdbus-tool: Add --color option for introspect
+ - !762 gutils: Add (nullable) annotation to g_get_prgname()
+ - !765 gslice: Use a convenience macro
+ - !769 ci: Generate a cover report for the test suite
+ - !772 tests: Check that option-argv0 test succeeds on Linux
+ - !776 tests: Only run --external-data test on GNU ld/objcopy
+ - !779 Fix 2.62 documentation symbols
+
+* Translation updates:
  - Dutch
 
 

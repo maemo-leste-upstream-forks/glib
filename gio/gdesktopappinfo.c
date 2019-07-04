@@ -2514,6 +2514,10 @@ prepend_terminal_to_vector (int    *argc,
   term_argv = g_new0 (char *, 3);
 
   check = g_find_program_in_path ("gnome-terminal");
+  if (check == NULL)
+    check = g_find_program_in_path ("mate-terminal");
+  if (check == NULL)
+    check = g_find_program_in_path ("xfce4-terminal");
   if (check != NULL)
     {
       term_argv[0] = check;
@@ -4710,7 +4714,7 @@ g_desktop_app_info_get_boolean (GDesktopAppInfo *info,
  *  a %NULL-terminated string array or %NULL if the specified
  *  key cannot be found. The array should be freed with g_strfreev().
  *
- * Since: 2.60.0
+ * Since: 2.60
  */
 gchar **
 g_desktop_app_info_get_string_list (GDesktopAppInfo *info,

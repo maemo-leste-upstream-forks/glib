@@ -1988,8 +1988,15 @@ g_strncasecmp (const gchar *s1,
  * changed to the @new_delimiter character. Modifies @string in place,
  * and returns @string itself, not a copy. The return value is to
  * allow nesting such as
- * |[<!-- language="C" --> 
+ * |[<!-- language="C" -->
  *   g_ascii_strup (g_strdelimit (str, "abc", '?'))
+ * ]|
+ *
+ * In order to modify a copy, you may use `g_strdup()`:
+ * |[<!-- language="C" -->
+ *   reformatted = g_strdelimit (g_strdup (const_str), "abc", '?');
+ *   ...
+ *   g_free (reformatted);
  * ]|
  *
  * Returns: @string
@@ -2025,8 +2032,15 @@ g_strdelimit (gchar       *string,
  * replaces the character with @substitutor. Modifies @string in place,
  * and return @string itself, not a copy. The return value is to allow
  * nesting such as
- * |[<!-- language="C" --> 
+ * |[<!-- language="C" -->
  *   g_ascii_strup (g_strcanon (str, "abc", '?'))
+ * ]|
+ *
+ * In order to modify a copy, you may use `g_strdup()`:
+ * |[<!-- language="C" -->
+ *   reformatted = g_strcanon (g_strdup (const_str), "abc", '?');
+ *   ...
+ *   g_free (reformatted);
  * ]|
  *
  * Returns: @string
@@ -2700,13 +2714,14 @@ g_strstr_len (const gchar *haystack,
     {
       const gchar *p = haystack;
       gsize needle_len = strlen (needle);
+      gsize haystack_len_unsigned = haystack_len;
       const gchar *end;
       gsize i;
 
       if (needle_len == 0)
         return (gchar *)haystack;
 
-      if (haystack_len < needle_len)
+      if (haystack_len_unsigned < needle_len)
         return NULL;
 
       end = haystack + haystack_len - needle_len;
