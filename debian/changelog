@@ -1,8 +1,31 @@
 glib2.0 (2.61.1-1) UNRELEASED; urgency=medium
 
   * New upstream release
+    + `g_unichar_isxdigit()` and `g_unichar_xdigit_value()` now handle
+       full-width characters (U+FF21–U+FF26 and U+FF41–U+FF46)
+    + Deprecate `gtester` utility and its test reporting format and enable TAP
+      output by default instead — the `--tap` option to tests is now a no-op
+    + Add `g_test_summary()` to allow test authors to programmatically summarise
+      what each unit test in a test suite does
+    * Upgrade to Unicode Character Database v12.1
+    + More IPv6 Happy Eyeballs fixes to `GNetworkAddress` and `GSocketClient`
+    + Fix valgrind and gdb support for the new `GHashTable` changes
+    + Fix GTask wait times growing faster than the number of task threads
+    + Add `g_autoqueue()` helper macros, similar to `g_autolist()`
+    + Add pre-allocated link helpers for `GList` and `GQueue`:
+      - `g_list_insert_before_link()`
+      - `g_queue_insert_before_link()`
+      - `g_queue_insert_after_link()`
+    + Improve network availability detection with NetworkManager to treat lower
+      levels of connectivity as having reduced availability
+    + Add `g_clear_signal_handler()` to allow disconnecting from a `GObject`
+      signal and clearing the signal handler ID to zero in a single call
+    + Add `g_autoptr()` support for `GRWLock`
+  * 81-skip-monitor-test-on-non-linux.patch: Drop. This test was removed
+    upstream.
+  * debian/libglib2.0-0.symbols: Update
 
- -- Iain Lane <laney@debian.org>  Thu, 04 Jul 2019 17:40:33 +0100
+ -- Iain Lane <laney@debian.org>  Fri, 05 Jul 2019 16:42:13 +0100
 
 glib2.0 (2.60.4-1) experimental; urgency=medium
 
