@@ -1,4 +1,4 @@
-glib2.0 (2.61.1-1) UNRELEASED; urgency=medium
+glib2.0 (2.61.1-1) experimental; urgency=medium
 
   * New upstream release
     + `g_unichar_isxdigit()` and `g_unichar_xdigit_value()` now handle
@@ -25,7 +25,7 @@ glib2.0 (2.61.1-1) UNRELEASED; urgency=medium
     upstream.
   * debian/libglib2.0-0.symbols: Update
 
- -- Iain Lane <laney@debian.org>  Fri, 05 Jul 2019 16:42:13 +0100
+ -- Iain Lane <laney@debian.org>  Fri, 05 Jul 2019 17:45:06 +0100
 
 glib2.0 (2.60.4-1) experimental; urgency=medium
 
