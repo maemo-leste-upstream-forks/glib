@@ -1,9 +1,9 @@
-glib2.0 (2.61.1-2) UNRELEASED; urgency=medium
+glib2.0 (2.61.1-2) experimental; urgency=medium
 
   * control, rules: Build with gcc-8. See #931921 - when we're built with
     gcc-9, some applications that use GLib might start hanging.
 
- -- Iain Lane <laney@debian.org>  Fri, 12 Jul 2019 11:36:52 +0100
+ -- Iain Lane <laney@debian.org>  Fri, 12 Jul 2019 11:37:01 +0100
 
 glib2.0 (2.61.1-1) experimental; urgency=medium
 
