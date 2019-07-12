@@ -17,6 +17,10 @@ DEB_LDFLAGS_MAINT_APPEND += -Wl,-O1
 
 include /usr/share/dpkg/default.mk
 
+# Drop this when #931921 is fixed
+export CC=gcc-8
+export CPP=cpp-8
+
 %:
 	dh $@ --with gnome,python3 --buildsystem=meson
 

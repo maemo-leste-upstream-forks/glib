@@ -3,7 +3,8 @@ Section: libs
 Priority: optional
 Maintainer: Debian GNOME Maintainers <pkg-gnome-maintainers@lists.alioth.debian.org>
 Uploaders: @GNOME_TEAM@
-Build-Depends: dbus <!nocheck>,
+Build-Depends: cpp-8,
+               dbus <!nocheck>,
                debhelper (>= 11),
                desktop-file-utils <!nocheck>,
                dh-exec,
@@ -11,6 +12,7 @@ Build-Depends: dbus <!nocheck>,
                docbook-xml,
                docbook-xsl,
                dpkg-dev (>= 1.17.14),
+               gcc-8,
                gettext,
                gnome-pkg-tools (>= 0.11),
                gtk-doc-tools (>= 1.20),
