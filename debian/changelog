@@ -1,4 +1,4 @@
-glib2.0 (2.60.5-1) UNRELEASED; urgency=medium
+glib2.0 (2.60.5-1) unstable; urgency=medium
 
   * Team upload
   * Prepare GLib 2.60.x stable branch for unstable
@@ -12,7 +12,7 @@ glib2.0 (2.60.5-1) UNRELEASED; urgency=medium
     while we work out what is going on in mips64el builds.
     Mitigates: #932287
 
- -- Simon McVittie <smcv@debian.org>  Wed, 17 Jul 2019 11:35:25 +0100
+ -- Simon McVittie <smcv@debian.org>  Wed, 17 Jul 2019 21:36:30 +0100
 
 glib2.0 (2.60.4-1) experimental; urgency=medium
 
