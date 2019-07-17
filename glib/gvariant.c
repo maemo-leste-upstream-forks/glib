@@ -307,6 +307,11 @@
  * Constructs a new trusted #GVariant instance from the provided data.
  * This is used to implement g_variant_new_* for all the basic types.
  *
+ * Note: @data must be backed by memory that is aligned appropriately for the
+ * @type being loaded. Otherwise this function will internally create a copy of
+ * the memory (since GLib 2.60) or (in older versions) fail and exit the
+ * process.
+ *
  * Returns: a new floating #GVariant
  */
 static GVariant *
@@ -1008,7 +1013,7 @@ g_variant_lookup (GVariant    *dictionary,
  * string specifies what type of value is expected to be inside of the
  * variant. If the value inside the variant has a different type then
  * %NULL is returned. In the event that @dictionary has a value type other
- * than v then @expected_type must directly match the key type and it is
+ * than v then @expected_type must directly match the value type and it is
  * used to unpack the value directly or an error occurs.
  *
  * In either case, if @key is not found in @dictionary, %NULL is returned.
@@ -5985,6 +5990,11 @@ g_variant_byteswap (GVariant *value)
  * @notify will be called with @user_data when @data is no longer
  * needed.  The exact time of this call is unspecified and might even be
  * before this function returns.
+ *
+ * Note: @data must be backed by memory that is aligned appropriately for the
+ * @type being loaded. Otherwise this function will internally create a copy of
+ * the memory (since GLib 2.60) or (in older versions) fail and exit the
+ * process.
  *
  * Returns: (transfer none): a new floating #GVariant of type @type
  *

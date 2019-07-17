@@ -199,6 +199,7 @@ glib_sources = files(
   'gunidecomp.c',
   'gurifuncs.c',
   'gutils.c',
+  'gutilsprivate.h',
   'guuid.c',
   'gvariant.c',
   'gvariant-core.c',
@@ -221,9 +222,16 @@ if host_system == 'windows'
   glib_sources += [glib_win_res]
   glib_sources += files('gwin32.c', 'gspawn-win32.c', 'giowin32.c')
   platform_deps = [winsock2, cc.find_library('winmm')]
+  if cc.get_id() == 'msvc'
+    glib_sources += files('dirent/wdirent.c')
+  endif
 else
   glib_sources += files('glib-unix.c', 'gspawn.c', 'giounix.c')
   platform_deps = []
+endif
+
+if host_system == 'darwin'
+  glib_sources += files('gosxutils.m')
 endif
 
 glib_sources += files('gthread-@0@.c'.format(threads_implementation))
@@ -250,18 +258,21 @@ else
   pcre_objects = [libpcre.extract_all_objects()]
 endif
 
+glib_c_args = ['-DG_LOG_DOMAIN="GLib"', '-DGLIB_COMPILATION'] + pcre_static_args + glib_hidden_visibility_args
 libglib = library('glib-2.0',
   glib_dtrace_obj, glib_dtrace_hdr,
   sources : [deprecated_sources, glib_sources],
   objects : [charset_lib.extract_all_objects()] + gnulib_objects + pcre_objects,
   version : library_version,
   soversion : soversion,
+  darwin_versions : darwin_versions,
   install : true,
   # intl.lib is not compatible with SAFESEH
   link_args : [noseh_link_args, glib_link_flags, win32_ldflags],
   include_directories : configinc,
   dependencies : pcre_deps + [thread_dep, libintl, librt] + libiconv + platform_deps,
-  c_args : ['-DG_LOG_DOMAIN="GLib"', '-DGLIB_COMPILATION'] + pcre_static_args + glib_hidden_visibility_args
+  c_args : glib_c_args,
+  objc_args : glib_c_args,
 )
 
 libglib_dep = declare_dependency(
@@ -272,7 +283,8 @@ libglib_dep = declare_dependency(
   # We sadly need to export configinc here because everyone includes <glib/*.h>
   include_directories : [configinc, glibinc])
 
-pkg.generate(libraries : [libglib, libintl],
+pkg.generate(libglib,
+  libraries : [libintl],
   libraries_private : [osx_ldflags, win32_ldflags],
   subdirs : ['glib-2.0'],
   extra_cflags : ['-I${libdir}/glib-2.0/include'] + win32_cflags,

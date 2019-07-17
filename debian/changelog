@@ -1,3 +1,178 @@
+glib2.0 (2.60.4-1) experimental; urgency=medium
+
+  * New upstream release (LP: #1832457)
+  +  Fixes to improved network status detection with NetworkManager (#1788)
+  + Leak fixes to some `glib-genmarshal` generated code
+  + Further fixes to the Happy Eyeballs (RFC 8305) implementation
+  + File system permissions fix to clamp down permissions in a small time window
+    when copying files (CVE-2019-12450)
+  + Bugs fixed:
+   - Please revert #535 gmacros: Try to use the standard __func__ first in
+     G_STRFUNC
+  * gfile-Limit-access-to-files-when-copying.patch: Drop. It's in this version
+    upstream.
+  * d/p/*: Refresh through gbp pq
+
+ -- Iain Lane <laney@debian.org>  Wed, 12 Jun 2019 09:15:11 +0100
+
+glib2.0 (2.60.3-2) experimental; urgency=medium
+
+  * Team upload
+  * d/p/gfile-Limit-access-to-files-when-copying.patch:
+    Backport patch from upstream to ensure files don't temporarily have
+    less restrictive permissions during copying
+    (Closes: #929753, CVE-2019-12450)
+  * Drop d/p/debian/04_homedir_env.patch:
+    Remove legacy support for Debian-specific G_HOME environment variable.
+    GLib has respected the HOME environment variable in the conventional
+    way since wheezy. Only two packages (pygtk and ruby-graphviz) still
+    set G_HOME without also setting HOME.
+  * Drop d/p/debian/90_gio-modules-multiarch-compat.patch:
+    Remove legacy support for loading modules from /usr/lib/gio/modules.
+    All the known packages containing GIO modules (dconf, glib-networking
+    and gvfs) migrated to /usr/lib/${DEB_HOST_MULTIARCH}/gio/modules
+    before wheezy.
+  * Register documentation in doc-base via symlinks in /usr/share/doc.
+    The doc-base specification requires this, presumably for the benefit
+    of tools that export /usr/share/doc via HTTP (see #925200), and
+    Lintian 2.12 added a warning for not doing so.
+
+ -- Simon McVittie <smcv@debian.org>  Tue, 04 Jun 2019 11:03:28 +0100
+
+glib2.0 (2.60.3-1) experimental; urgency=medium
+
+  * New upstream releases 2.60.1 2.60.2 2.60.3, fixing many bugs:
+    + build: Fix a typo in the test whether _NL_ABALTMON_n is supported
+    + Critical in g_socket_client_async_connect_complete
+    + Fix crash when displaying notifications on macOS (!786)
+    + Fix documentation for `gdbus-tool wait` to use correct units
+    + Fix typo in German translation
+    + glib/date test fails
+    + glib/gconstructor.h: Include stdlib.h for MSVC builds
+    + GNetworkAddressAddressEnumerator unsafely modifies cache in
+      GNetworkAddress
+    + gnetworkaddress: Fix parallel enumerations interfering with eachother
+    + gnetworkmonitornm: Fix network available detection
+    + GResource generation test incompatible with stable LLVM on Linux
+    + gschema.dtd: Add target attribute to alias
+    + gsocketclient: Fix a leak in the connection code
+    + Improve network status detection with NetworkManager
+    + Leaks in gsocketclient.c connection code
+    + test_month_names: assertion failed
+    + tests: Update month name check for Greek locale
+    + Update gdb pretty-printer for GHashTable
+    + Various fixes to small key/value support in `GHashTable`
+    + New GHashTable implementation confuses valgrind
+    + more GHashTable fixes
+    + GDB pretty-printer for GHashTable no longer works
+    + ghash: Disable small-arrays under valgrind
+
+ -- Iain Lane <laney@debian.org>  Thu, 23 May 2019 16:59:32 +0100
+
+glib2.0 (2.60.0-1) experimental; urgency=medium
+
+  * New upstream release
+    + Further fixes to the Happy Eyeballs (RFC 8305) implementation
+    + Add support for the XDG trash portal
+  * Call dh_python3 for all packages and add Depends to libglib2.0-tests.
+    The tests now ship a "static-link.py" test. While it early-exits
+    currently, we still need the right dependencies to be able to do that.
+    Call dh_python3 for libglib2.0-test's private directory, and while we're
+    here make sure that it is called for all packages too.
+  * flaky autopkgtest: `closures` has been renamed to `closure-refcount`
+  * Refresh and drop patches.
+    - d/p/flaky-socket-service-test/*: Drop, applied upstream.
+    - d/p/debian/closures-test-Skip-on-arm-unless-flaky-tests-are-allowed.patch:
+      Refresh.
+
+ -- Iain Lane <laney@debian.org>  Tue, 05 Mar 2019 15:32:41 +0000
+
+glib2.0 (2.59.3-2) experimental; urgency=medium
+
+  [ Philip Withnall ]
+  * debian: Drop GVariant alignment patches which are no longer needed.
+    The upstream 2.59.0 release contained commit
+    0f2a6c61c9c5e34d57293fb6987b21f3d1feb1cb, which automatically aligns
+    GVariants at construction time. The realignment in the tests was a
+    workaround for this.
+    See upstream issue https://gitlab.gnome.org/GNOME/glib/issues/1342.
+
+  [ Iain Lane ]
+  * Cherry-pick fixes for upstream bug #1679 to fix a flaky test.
+    This is apparently more flaky on the autopkgtest machines than elsewhere
+    - it's quite consistently failing there.
+
+ -- Iain Lane <laney@debian.org>  Wed, 27 Feb 2019 10:21:40 +0000
+
+glib2.0 (2.59.3-1) experimental; urgency=medium
+
+  * New upstream release
+    + Fix support for g_get_user_special_dir() on macOS, including support for
+      the Downloads directory
+    + Ensure that cancelling a GTask cannot cause its callback to be called
+      synchronously (in the same call chain as the original *_async() call)
+    + Further fixes to the Happy Eyeballs (RFC 8305) implementation
+    + Various fixes for installation of installed tests
+  * Refresh and drop patches.
+    Drop gio-tests-Install-test1.overlay-file-when-building-instal.patch,
+         tests-Install-the-slow-connect-preload.so-library-and-use.patch,
+    fixed upstream.
+
+ -- Iain Lane <laney@debian.org>  Wed, 20 Feb 2019 14:25:13 +0000
+
+glib2.0 (2.59.2-2) experimental; urgency=medium
+
+  * Install `test1.overlay' file, which is needed for the installed tests.
+  * tests: Install the slow-connect-preload.so library and use it
+
+ -- Iain Lane <laney@debian.org>  Mon, 11 Feb 2019 10:25:27 +0000
+
+glib2.0 (2.59.2-1) experimental; urgency=medium
+
+  * New upstream release
+    + Fix check on GDBusMessage size when reading it.
+    + Add async GIO API: g_file_query_default_handler_async(),
+      g_app_info_launch_uris_async()
+    + Fix some bugs in the Happy Eyeballs implementation.
+    + Install a new generated header with enum types for Unicode enums.
+    + Support the XDG trash portal.
+    + Autotools support is gone.
+    + g_format_size() now uses a no-break space to separate digits and units;
+      translations will need to be updated accordingly.
+    + New g_queue_clear_full() API.
+    + Fix argument quoting on win32 when spawning subprocesses.
+    + Allow polling more than 64 handles on win32 using g_poll().
+    + Tag various tests as ‘flaky’. These are no longer run routinely on our
+      upstream CI machines, and downstream packagers may want to not run them
+      (or not treat those test failures as package build failures) on their
+      test machines either. They are in the `flaky` test suite.
+    + Add overlay support to g_resources_get_info().
+    + Support defaults and locks in the keyfile GSettings backend. This will
+      be used for flatpaks.
+    + Accept unquoted strings in the keyfile GSettings backend to simplify
+      things for sysadmins.
+    + Update our contribution guidelines (`CONTRIBUTING.md`).
+    + Add writev() and writev_all() APIs to GOutputStream and
+      GPollableOutputStream, and provide implementations of them for many
+      subclasses.
+  * Refresh patches, drop trash test patches which are upstream now
+  * build-time tests: Run "flaky" suite separately and non fatally
+  * debian/libglib2.0-0.symbols: Add new symbols from 2.59.{1,2}
+
+ -- Iain Lane <laney@debian.org>  Wed, 06 Feb 2019 17:09:28 +0000
+
+glib2.0 (2.59.0-1) experimental; urgency=medium
+
+  * New upstream release
+  * Update patches and drop upstreamed ones
+  * debian/control: Update meson BD to ≥ 0.48.0 per upstream
+  * debian/rules: enable-selinux takes "enabled" or "disabled" now.
+    Not true/false.
+  * debian/*: Update for experimental
+  * debian/libglib2.0-0.symbols: Update with new symbols for this release
+
+ -- Iain Lane <laney@debian.org>  Thu, 17 Jan 2019 18:43:00 +0000
+
 glib2.0 (2.58.3-2) unstable; urgency=medium
 
   * Team upload

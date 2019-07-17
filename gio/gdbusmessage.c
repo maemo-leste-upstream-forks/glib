@@ -1984,7 +1984,7 @@ g_dbus_message_bytes_needed (guchar  *blob,
                    "Unable to determine message blob length - given blob is malformed");
     }
 
-  if (ret > (2<<27))
+  if (ret > (1<<27))
     {
       g_set_error (error,
                    G_IO_ERROR,
@@ -2148,18 +2148,20 @@ g_dbus_message_new_from_blob (guchar                *blob,
       else if (signature_str_len > 0)
         {
           GVariantType *variant_type;
-          gchar *tupled_signature_str;
+          gchar *tupled_signature_str = g_strdup_printf ("(%s)", signature_str);
 
-          if (!g_variant_is_signature (signature_str))
+          if (!g_variant_is_signature (signature_str) ||
+              !g_variant_type_string_is_valid (tupled_signature_str))
             {
               g_set_error (error,
                            G_IO_ERROR,
                            G_IO_ERROR_INVALID_ARGUMENT,
                            _("Parsed value “%s” is not a valid D-Bus signature (for body)"),
                            signature_str);
+              g_free (tupled_signature_str);
               goto out;
             }
-          tupled_signature_str = g_strdup_printf ("(%s)", signature_str);
+
           variant_type = g_variant_type_new (tupled_signature_str);
           g_free (tupled_signature_str);
 #ifdef DEBUG_SERIALIZER
@@ -2729,7 +2731,6 @@ g_dbus_message_to_blob (GDBusMessage          *message,
   if (message->body != NULL)
     {
       gchar *tupled_signature_str;
-      tupled_signature_str = g_strdup_printf ("(%s)", signature_str);
       if (signature == NULL)
         {
           g_set_error (error,
@@ -2737,10 +2738,10 @@ g_dbus_message_to_blob (GDBusMessage          *message,
                        G_IO_ERROR_INVALID_ARGUMENT,
                        _("Message body has signature “%s” but there is no signature header"),
                        signature_str);
-          g_free (tupled_signature_str);
           goto out;
         }
-      else if (g_strcmp0 (tupled_signature_str, g_variant_get_type_string (message->body)) != 0)
+      tupled_signature_str = g_strdup_printf ("(%s)", signature_str);
+      if (g_strcmp0 (tupled_signature_str, g_variant_get_type_string (message->body)) != 0)
         {
           g_set_error (error,
                        G_IO_ERROR,

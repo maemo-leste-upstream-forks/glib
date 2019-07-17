@@ -1,6 +1,6 @@
 project('glib', 'c', 'cpp',
-  version : '2.58.3',
-  meson_version : '>= 0.47.0',
+  version : '2.60.4',
+  meson_version : '>= 0.48.0',
   default_options : [
     'buildtype=debugoptimized',
     'warning_level=1',
@@ -45,7 +45,9 @@ binary_age = 100 * minor_version + micro_version
 soversion = 0
 # Maintain compatibility with previous libtool versioning
 # current = minor * 100 + micro
-library_version = '@0@.@1@.@2@'.format(soversion, binary_age - interface_age, interface_age)
+current = binary_age - interface_age
+library_version = '@0@.@1@.@2@'.format(soversion, current, interface_age)
+darwin_versions = [current + 1, '@0@.@1@'.format(current + 1, interface_age)]
 
 configinc = include_directories('.')
 glibinc = include_directories('glib')
@@ -346,12 +348,17 @@ if cc.get_id() == 'gcc' or cc.get_id() == 'clang'
   warning_c_args = [
     '-Wall',
     '-Wduplicated-branches',
+    '-Wimplicit-fallthrough',
     '-Wmisleading-indentation',
     '-Wstrict-prototypes',
     '-Wunused',
     # Due to pervasive use of things like GPOINTER_TO_UINT(), we do not support
     # building with -Wbad-function-cast.
     '-Wno-bad-function-cast',
+    '-Wno-cast-function-type',
+    # Due to function casts through (void*) we cannot support -Wpedantic:
+    # https://wiki.gnome.org/Projects/GLib/CompilerRequirements#Function_pointer_conversions.
+    '-Wno-pedantic',
     '-Werror=declaration-after-statement',
     '-Werror=format=2',
     '-Werror=implicit-function-declaration',
@@ -394,6 +401,7 @@ functions = [
   'fchown',
   'fdwalk',
   'fsync',
+  'getauxval',
   'getc_unlocked',
   'getfsstat',
   'getgrgid_r',
@@ -978,20 +986,20 @@ if cc.links('''#ifndef _GNU_SOURCE
               #include <langinfo.h>
                int main (int argc, char ** argv) {
                  char *str;
-                 str = nl_langinfo (_NL_ALTMON_1);
-                 str = nl_langinfo (_NL_ALTMON_2);
-                 str = nl_langinfo (_NL_ALTMON_3);
-                 str = nl_langinfo (_NL_ALTMON_4);
-                 str = nl_langinfo (_NL_ALTMON_5);
-                 str = nl_langinfo (_NL_ALTMON_6);
-                 str = nl_langinfo (_NL_ALTMON_7);
-                 str = nl_langinfo (_NL_ALTMON_8);
-                 str = nl_langinfo (_NL_ALTMON_9);
-                 str = nl_langinfo (_NL_ALTMON_10);
-                 str = nl_langinfo (_NL_ALTMON_11);
-                 str = nl_langinfo (_NL_ALTMON_12);
+                 str = nl_langinfo (_NL_ABALTMON_1);
+                 str = nl_langinfo (_NL_ABALTMON_2);
+                 str = nl_langinfo (_NL_ABALTMON_3);
+                 str = nl_langinfo (_NL_ABALTMON_4);
+                 str = nl_langinfo (_NL_ABALTMON_5);
+                 str = nl_langinfo (_NL_ABALTMON_6);
+                 str = nl_langinfo (_NL_ABALTMON_7);
+                 str = nl_langinfo (_NL_ABALTMON_8);
+                 str = nl_langinfo (_NL_ABALTMON_9);
+                 str = nl_langinfo (_NL_ABALTMON_10);
+                 str = nl_langinfo (_NL_ABALTMON_11);
+                 str = nl_langinfo (_NL_ABALTMON_12);
                  return 0;
-               }''', name : 'nl_langinfo (_NL_ALTMON_n)')
+               }''', name : 'nl_langinfo (_NL_ABALTMON_n)')
   glib_conf.set('HAVE_LANGINFO_ABALTMON', 1)
 endif
 
@@ -1672,13 +1680,20 @@ glibconfig_conf.set10('G_HAVE_GROWING_STACK', growing_stack)
 # We should never use the MinGW C library's iconv. On Windows we use the
 # GNU implementation that ships with MinGW.
 
+iconv_opt = get_option('iconv')
+
+# On Darwin, the libc doesn't provide iconv. Instead, the OS provides libiconv
+# as a separate (non-GNU) library. Set the option to 'native'.
+if host_system == 'darwin' and iconv_opt == 'libc'
+  iconv_opt = 'native'
+endif
+
 # On Windows, just always use the built-in implementation
 if host_system == 'windows'
   libiconv = []
   glib_conf.set('USE_LIBICONV_NATIVE', true)
 else
   found_iconv = false
-  iconv_opt = get_option('iconv')
   if iconv_opt == 'libc'
     if cc.has_function('iconv_open')
       libiconv = []
@@ -1761,10 +1776,9 @@ if not libz_dep.found()
       libz_dep = cc.find_library('zlib', required : false)
     endif
   endif
-endif
-
-if not libz_dep.found()
-  libz_dep = subproject('zlib').get_variable('zlib_dep')
+  if not libz_dep.found() or not cc.has_header('zlib.h')
+    libz_dep = subproject('zlib').get_variable('zlib_dep')
+  endif
 endif
 
 # First check in libc, fallback to libintl, and as last chance build
@@ -1792,8 +1806,6 @@ glib_conf.set('HAVE_DCGETTEXT', 1)
 glib_conf.set('HAVE_GETTEXT', 1)
 
 glib_conf.set_quoted('GLIB_LOCALE_DIR', join_paths(glib_datadir, 'locale'))
-# xgettext is optional (on Windows for instance)
-xgettext = find_program('xgettext', required : false)
 
 # libmount is only used by gio, but we need to fetch the libs to generate the
 # pkg-config file below
@@ -1808,9 +1820,10 @@ if host_system == 'windows'
 endif
 
 selinux_dep = []
-if host_system == 'linux' and get_option('selinux')
-  selinux_dep = [dependency('libselinux')]
-  glib_conf.set('HAVE_SELINUX', 1)
+if host_system == 'linux'
+  selinux_dep = dependency('libselinux', required: get_option('selinux'))
+
+  glib_conf.set('HAVE_SELINUX', selinux_dep.found())
 endif
 
 xattr_dep = []
@@ -1877,9 +1890,18 @@ python = import('python').find_installation('python3')
 # used for '#!/usr/bin/env <name>'
 python_name = 'python3'
 
+python_version = python.language_version()
+python_version_req = '>=3.4'
+if not python_version.version_compare(python_version_req)
+  error('Requires Python @0@, @1@ found.'.format(python_version_req, python_version))
+endif
+
 # Determine which user environment-dependent files that we want to install
 have_bash = find_program('bash', required : false).found() # For completion scripts
 have_sh = find_program('sh', required : false).found() # For glib-gettextize
+
+# Some installed tests require a custom environment
+env_program = find_program('env', required: installed_tests_enabled)
 
 # FIXME: How to detect Solaris? https://github.com/mesonbuild/meson/issues/1578
 if host_system == 'sunos'
@@ -1971,10 +1993,13 @@ subdir('gobject')
 subdir('gthread')
 subdir('gmodule')
 subdir('gio')
-if xgettext.found()
+subdir('fuzzing')
+subdir('tests')
+
+# xgettext is optional (on Windows for instance)
+if find_program('xgettext', required : get_option('nls')).found()
   subdir('po')
 endif
-subdir('tests')
 
 # Install glib-gettextize executable, if a UNIX-style shell is found
 if have_sh

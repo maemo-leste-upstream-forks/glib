@@ -125,6 +125,7 @@ endif
 override_dh_auto_test-arch:
 ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
 	# Remove LD_PRELOAD so we don't run with fakeroot, which makes dbus-related tests fail
+	# First run the non-flaky tests, and fail the build if they fail (on linux)
 	env -u LD_PRELOAD \
 		DEB_BUILD_TIME_TESTS=1 \
 		LC_ALL=C.UTF-8 \
@@ -133,8 +134,21 @@ ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
 		--no-rebuild \
 		--num-processes 1 \
 		--timeout-multiplier $(test_timeout_multiplier) \
+		--no-suite flaky \
 		--verbose \
 	|| $(handle_test_failure)
+	# and then run the flaky ones, but ignore them failing
+	env -u LD_PRELOAD \
+		DEB_BUILD_TIME_TESTS=1 \
+		LC_ALL=C.UTF-8 \
+		MESON_TESTTHREADS=1 \
+	meson test -C debian/build/deb \
+		--no-rebuild \
+		--num-processes 1 \
+		--timeout-multiplier $(test_timeout_multiplier) \
+		--suite flaky \
+		--verbose \
+	|| true
 endif
 
 # Skip build-time tests if all we are building is documentation; running
@@ -150,8 +164,10 @@ export VERBOSE=1
 
 ifeq ($(DEB_HOST_ARCH_OS),linux)
 is_linux := true
+enable_selinux := enabled
 else
 is_linux := false
+enable_selinux := disabled
 endif
 
 ifneq ($(filter hurd kfreebsd,$(DEB_HOST_ARCH_OS)),)
@@ -172,7 +188,7 @@ DEB_CONFIGURE_FLAGS_deb := \
 	-Dinstalled_tests=true \
 	-Dlibmount=$(is_linux) \
 	-Dman=true \
-	-Dselinux=$(is_linux) \
+	-Dselinux=$(enable_selinux) \
 	-Dsystemtap=true \
 	-Dxattr=$(have_non_stub_xattr) \
 	$(NULL)
@@ -188,7 +204,7 @@ DEB_CONFIGURE_FLAGS_udeb := \
 	-Dgtk_doc=false \
 	-Dinstalled_tests=false \
 	-Dlibmount=false \
-	-Dselinux=false \
+	-Dselinux=disabled \
 	-Dxattr=$(have_non_stub_xattr) \
 	$(NULL)
 
@@ -215,7 +231,8 @@ override_dh_python3:
 	# dh_python3 can't process both a private directory and /usr/bin
 	# in the same invocation
 	dh_python3 -plibglib2.0-dev-bin /usr/share/glib-2.0/codegen
-	dh_python3 -plibglib2.0-dev-bin
+	dh_python3 -plibglib2.0-tests --no-ext-rename /usr/lib/glib2.0/installed-tests/glib
+	dh_python3
 
 override_dh_install:
 	# Unwanted bits from the .deb build
