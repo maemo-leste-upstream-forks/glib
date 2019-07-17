@@ -7,6 +7,10 @@ glib2.0 (2.60.5-1) UNRELEASED; urgency=medium
     d/p/settings-Tweak-priorities-for-keyfile-backend.patch,
     d/p/key-file-Handle-filename-being-NULL.patch:
     Add post-release fixes from upstream glib-2-60 branch
+  * d/p/GIO-tests-Don-t-do-clever-tricks-with-objcopy.patch:
+    Don't do strange things with objcopy while testing GResource,
+    while we work out what is going on in mips64el builds.
+    Mitigates: #932287
 
  -- Simon McVittie <smcv@debian.org>  Wed, 17 Jul 2019 11:35:25 +0100
 
