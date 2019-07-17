@@ -1,3 +1,6 @@
+portal-Add-a-getter-for-dconf-access.patch
+settings-Tweak-priorities-for-keyfile-backend.patch
+key-file-Handle-filename-being-NULL.patch
 01_gettext-desktopfiles.patch
 81-skip-monitor-test-on-non-linux.patch
 0001-timer-test-use-volatile-for-locals.patch

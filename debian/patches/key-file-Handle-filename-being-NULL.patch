@@ -1,0 +1,27 @@
+From: Matthias Clasen <mclasen@redhat.com>
+Date: Wed, 10 Jul 2019 11:14:03 -0400
+Subject: key file: Handle filename being NULL
+
+This happens when we are default-constructed
+without explicit arguments.
+
+Closes: https://gitlab.gnome.org/GNOME/glib/issues/1825
+Origin: upstream, 2.60.6, commit:715c8670ae5d6bcbba09369b9c60e2da9f5c1d83
+---
+ gio/gkeyfilesettingsbackend.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/gio/gkeyfilesettingsbackend.c b/gio/gkeyfilesettingsbackend.c
+index 3e80b1e..3d793f5 100644
+--- a/gio/gkeyfilesettingsbackend.c
++++ b/gio/gkeyfilesettingsbackend.c
+@@ -740,7 +740,8 @@ g_keyfile_settings_backend_set_property (GObject      *object,
+     case PROP_FILENAME:
+       /* Construct only. */
+       g_assert (kfsb->file == NULL);
+-      kfsb->file = g_file_new_for_path (g_value_get_string (value));
++      if (g_value_get_string (value))
++        kfsb->file = g_file_new_for_path (g_value_get_string (value));
+       break;
+ 
+     case PROP_ROOT_PATH:

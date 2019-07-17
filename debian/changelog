@@ -3,6 +3,10 @@ glib2.0 (2.60.5-1) UNRELEASED; urgency=medium
   * Team upload
   * Prepare GLib 2.60.x stable branch for unstable
   * New upstream release
+  * d/p/portal-Add-a-getter-for-dconf-access.patch,
+    d/p/settings-Tweak-priorities-for-keyfile-backend.patch,
+    d/p/key-file-Handle-filename-being-NULL.patch:
+    Add post-release fixes from upstream glib-2-60 branch
 
  -- Simon McVittie <smcv@debian.org>  Wed, 17 Jul 2019 11:35:25 +0100
 
