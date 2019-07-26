@@ -1,5 +1,10 @@
-glib2.0 (2.60.5-2) UNRELEASED; urgency=medium
+glib2.0 (2.60.6-1) UNRELEASED; urgency=medium
 
+  * New upstream release
+    - d/p/portal-Add-a-getter-for-dconf-access.patch,
+      d/p/settings-Tweak-priorities-for-keyfile-backend.patch,
+      d/p/key-file-Handle-filename-being-NULL.patch:
+      Drop, applied upstream
   * d/p/tests-Fix-data-race-in-gmenumodel-test.patch,
     d/p/tests-Fix-data-race-in-task-test.patch:
     Add patches from upstream git master to fix data races in tests.
