@@ -182,7 +182,7 @@ endif
 
 # configure flags
 DEB_CONFIGURE_EXTRA_FLAGS := \
-	--libexecdir=lib/glib2.0 \
+	--libexecdir=libexec \
 	-Dinternal_pcre=false \
 	$(NULL)
 
@@ -235,15 +235,15 @@ override_dh_python3:
 	# dh_python3 can't process both a private directory and /usr/bin
 	# in the same invocation
 	dh_python3 -plibglib2.0-dev-bin /usr/share/glib-2.0/codegen
-	dh_python3 -plibglib2.0-tests --no-ext-rename /usr/lib/glib2.0/installed-tests/glib
+	dh_python3 -plibglib2.0-tests --no-ext-rename /usr/libexec/installed-tests/glib
 	dh_python3
 
 override_dh_install:
 	# Unwanted bits from the .deb build
 	rm -fr debian/install/deb/usr/share/glib-2.0/codegen/__pycache__
 	# https://gitlab.gnome.org/GNOME/glib/issues/1539
-	chmod -v 0644 debian/install/deb/usr/lib/glib2.0/installed-tests/glib/desktop-files/usr/applications/org.gnome.clocks.desktop
-	chmod -v 0644 debian/install/deb/usr/lib/glib2.0/installed-tests/glib/echo-script.bat
+	chmod -v 0644 debian/install/deb/usr/libexec/installed-tests/glib/desktop-files/usr/applications/org.gnome.clocks.desktop
+	chmod -v 0644 debian/install/deb/usr/libexec/installed-tests/glib/echo-script.bat
 	chmod -v 0644 debian/install/deb/usr/share/bash-completion/completions/gio
 	chmod -v 0644 debian/install/deb/usr/share/glib-2.0/codegen/codegen_main.py
 ifneq ($(filter %-udeb,$(binaries)),)
