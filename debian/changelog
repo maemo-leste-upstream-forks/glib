@@ -5,6 +5,14 @@ glib2.0 (2.60.5-2) UNRELEASED; urgency=medium
     Add patches from upstream git master to fix data races in tests.
     In particular, the one for gmenumodel might solve an unreproducible
     test failure on i386.
+  * d/p/debian/gmenumodel-test-Mark-as-flaky.patch,
+    d/p/debian/gvariant-test-Don-t-run-at-build-time-on-mips.patch:
+    Skip more tests at build-time and during the non-flaky autopkgtest.
+    The unreproducible gmenumodel test failure on i386 might in fact be
+    fixed by d/p/tests-Fix-data-race-in-gmenumodel-test.patch, but it's
+    hard to be sure about that. The gvariant fuzz test is catastrophically
+    slow on certain mips CPUs and so is impractical to run there.
+    (Closes: #932678)
 
  -- Simon McVittie <smcv@debian.org>  Fri, 26 Jul 2019 23:56:52 +0100
 
