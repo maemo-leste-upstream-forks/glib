@@ -1,0 +1,63 @@
+From: =?utf-8?q?Tomasz_Mi=C4=85sko?= <>
+Date: Wed, 27 Feb 2019 00:00:00 +0000
+Subject: tests: Fix data race in task test
+
+Ensure that all tasks have already completed before accessing buf array
+from main thread to avoid conflicting data access from multiple threads.
+
+Origin: upstream, 2.61.0, commit:330f8999a8eb7bd175a6a6c5206d7bdd5b7ee3d0
+---
+ gio/tests/task.c | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
+
+diff --git a/gio/tests/task.c b/gio/tests/task.c
+index 9f7ae25..9b2c691 100644
+--- a/gio/tests/task.c
++++ b/gio/tests/task.c
+@@ -1317,6 +1317,7 @@ test_run_in_thread_nested (void)
+  * tasks, they won't all run at once.
+  */
+ static GMutex overflow_mutex;
++static guint overflow_completed;
+ 
+ static void
+ run_overflow_task_thread (GTask        *task,
+@@ -1329,16 +1330,19 @@ run_overflow_task_thread (GTask        *task,
+   if (g_task_return_error_if_cancelled (task))
+     {
+       *result = 'X';
+-      return;
+     }
++  else
++    {
++      /* Block until the main thread is ready. */
++      g_mutex_lock (&overflow_mutex);
++      g_mutex_unlock (&overflow_mutex);
+ 
+-  /* Block until the main thread is ready. */
+-  g_mutex_lock (&overflow_mutex);
+-  g_mutex_unlock (&overflow_mutex);
++      *result = '.';
+ 
+-  *result = '.';
++      g_task_return_boolean (task, TRUE);
++    }
+ 
+-  g_task_return_boolean (task, TRUE);
++  g_atomic_int_inc (&overflow_completed);
+ }
+ 
+ #define NUM_OVERFLOW_TASKS 1024
+@@ -1382,9 +1386,11 @@ test_run_in_thread_overflow (void)
+   g_mutex_unlock (&overflow_mutex);
+ 
+   /* Wait for all tasks to complete. */
+-  while (strlen (buf) != NUM_OVERFLOW_TASKS)
++  while (g_atomic_int_get (&overflow_completed) != NUM_OVERFLOW_TASKS)
+     g_usleep (1000);
+ 
++  g_assert_cmpint (strlen (buf), ==, NUM_OVERFLOW_TASKS);
++
+   i = strspn (buf, ".");
+   /* Given the sleep times above, i should be 14 for normal, 40 for
+    * slow. But if the machine is too slow/busy then the scheduling
