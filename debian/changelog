@@ -18,6 +18,7 @@ glib2.0 (2.60.6-1) UNRELEASED; urgency=medium
     hard to be sure about that. The gvariant fuzz test is catastrophically
     slow on certain mips CPUs and so is impractical to run there.
     (Closes: #932678)
+  * Standards-Version: 4.4.0 (no changes required)
 
  -- Simon McVittie <smcv@debian.org>  Fri, 26 Jul 2019 23:56:52 +0100
 
