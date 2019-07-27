@@ -19,11 +19,12 @@ glib2.0 (2.60.6-1) UNRELEASED; urgency=medium
     slow on certain mips CPUs and so is impractical to run there.
     (Closes: #932678)
   * Standards-Version: 4.4.0 (no changes required)
-  * Set libexecdir to libexec.
-    Since FHS 3.0 (Policy 4.1.5), /usr/libexec is considered valid. It
-    will be the default in debhelper compat level 12, but we're not quite
-    there yet. In this particular package this only affects the
-    installed-tests.
+  * Use debhelper compat level 12
+    - Stop explicitly passing -V to dh_makeshlibs, it is now the default
+  * Stop overriding libexecdir.
+    Since FHS 3.0 (Policy 4.1.5), /usr/libexec is considered valid,
+    and since debhelper compat level 12 it is the default.
+    In this particular package this only affects the installed-tests.
 
  -- Simon McVittie <smcv@debian.org>  Fri, 26 Jul 2019 23:56:52 +0100
 
