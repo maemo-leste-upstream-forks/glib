@@ -1,0 +1,128 @@
+From: Simon McVittie <smcv@debian.org>
+Date: Wed, 17 Jul 2019 17:40:00 +0100
+Subject: GIO tests: Don't do clever tricks with objcopy
+
+This seems like the sort of thing that is going to be unreliable
+on unexpected architectures, and it fails on Debian mips64el,
+where the objcopy'd object ends up trying to use a 32-bit ABI.
+
+It also doesn't respect cross-properties for ld and objcopy, so it
+probably won't work when cross-compiling; and the check in the C code
+doesn't match the check in the build system, so it probably won't work
+when compiling with a non-gcc compiler.
+
+Disable it for now while we work out how to do better.
+
+Forwarded: no
+Bug-Debian: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=932287
+---
+ gio/tests/meson.build | 55 ---------------------------------------------------
+ gio/tests/resources.c | 29 +--------------------------
+ 2 files changed, 1 insertion(+), 83 deletions(-)
+
+diff --git a/gio/tests/meson.build b/gio/tests/meson.build
+index 65f43e2..6ffa4fd 100644
+--- a/gio/tests/meson.build
++++ b/gio/tests/meson.build
+@@ -560,61 +560,6 @@ if not meson.is_cross_build() or meson.has_exe_wrapper()
+     digit_test_resources_h,
+   ]
+ 
+-  # Create object file containing resource data for testing the --external-data
+-  # option. Currently only GNU ld and GNU objcopy support the right options.
+-  # Support for --add-symbol was added to LLVM objcopy in 2019
+-  # (https://reviews.llvm.org/D58234). FIXME: This test could be enabled for
+-  # LLVM once that support is in a stable release.
+-  if build_machine.system() == 'linux' and cc.get_id() == 'gcc'
+-    test_gresource_binary = custom_target('test5.gresource',
+-      input : 'test5.gresource.xml',
+-      output : 'test5.gresource',
+-      command : [glib_compile_resources,
+-                 '--target=@OUTPUT@',
+-                 '--sourcedir=' + meson.current_source_dir(),
+-                 '--sourcedir=' + meson.current_build_dir(),
+-                 '@INPUT@'],
+-      install_dir : installed_tests_execdir,
+-      install : installed_tests_enabled)
+-
+-    # Create resource data file
+-    test_resources_binary_c = custom_target('test_resources_binary.c',
+-      input : 'test5.gresource.xml',
+-      output : 'test_resources_binary.c',
+-      command : [glib_compile_resources,
+-                 '--target=@OUTPUT@',
+-                 '--sourcedir=' + meson.current_source_dir(),
+-                 '--sourcedir=' + meson.current_build_dir(),
+-                 '--generate-source',
+-                 '--external-data',
+-                 '--c-name', '_g_binary_test1',
+-                 '@INPUT@'])
+-
+-    # Create object file containing resource data
+-    test_resources_binary = custom_target('test_resources.o',
+-      input : test_gresource_binary,
+-      output : 'test_resources.o',
+-      command : ['ld',
+-                 '-r',
+-                 '-b','binary',
+-                 '@INPUT@',
+-                 '-o','@OUTPUT@'])
+-
+-    # Rename symbol to match the one in the C file
+-    test_resources_binary2 = custom_target('test_resources2.o',
+-      input : test_resources_binary,
+-      output : 'test_resources2.o',
+-      command : ['objcopy',
+-                 '--add-symbol','_g_binary_test1_resource_data=.data:0',
+-                 '@INPUT@',
+-                 '@OUTPUT@'])
+-
+-    resources_extra_sources += [
+-      test_resources_binary_c,
+-      test_resources_binary2,
+-    ]
+-  endif
+-
+   gio_tests += {
+     'resources' : {
+       'extra_sources' : resources_extra_sources,
+diff --git a/gio/tests/resources.c b/gio/tests/resources.c
+index cb2c00a..7d01697 100644
+--- a/gio/tests/resources.c
++++ b/gio/tests/resources.c
+@@ -566,34 +566,7 @@ test_resource_manual2 (void)
+ static void
+ test_resource_binary_linked (void)
+ {
+-  #ifndef __linux__
+-  g_test_skip ("--external-data test only works on Linux");
+-  return;
+-  #else /* if __linux__ */
+-  GError *error = NULL;
+-  gboolean found;
+-  gsize size;
+-  guint32 flags;
+-  GBytes *data;
+-
+-  found = g_resources_get_info ("/binary_linked/test1.txt",
+-				G_RESOURCE_LOOKUP_FLAGS_NONE,
+-				&size, &flags, &error);
+-  g_assert_true (found);
+-  g_assert_no_error (error);
+-  g_assert_cmpint (size, ==, 6);
+-  g_assert_cmpuint (flags, ==, 0);
+-
+-  data = g_resources_lookup_data ("/binary_linked/test1.txt",
+-				  G_RESOURCE_LOOKUP_FLAGS_NONE,
+-				  &error);
+-  g_assert_nonnull (data);
+-  g_assert_no_error (error);
+-  size = g_bytes_get_size (data);
+-  g_assert_cmpint (size, ==, 6);
+-  g_assert_cmpstr (g_bytes_get_data (data, NULL), ==, "test1\n");
+-  g_bytes_unref (data);
+-  #endif /* if __linux__ */
++  g_test_skip ("--external-data test only works on certain toolchains");
+ }
+ 
+ /* Test resource whose xml file starts with more than one digit
