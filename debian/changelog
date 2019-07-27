@@ -21,6 +21,10 @@ glib2.0 (2.60.6-1) UNRELEASED; urgency=medium
   * Standards-Version: 4.4.0 (no changes required)
   * Use debhelper compat level 12
     - Stop explicitly passing -V to dh_makeshlibs, it is now the default
+    - Disable dh_dwz for libglib2.0-udeb.
+      This avoids an apparent debhelper bug in which dh_dwz generates
+      multifiles for udebs, but dh_strip does not remove them from the
+      udeb's staging directory. (Workaround for #933212)
   * Stop overriding libexecdir.
     Since FHS 3.0 (Policy 4.1.5), /usr/libexec is considered valid,
     and since debhelper compat level 12 it is the default.
