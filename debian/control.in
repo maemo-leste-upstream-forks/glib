@@ -3,7 +3,8 @@ Section: libs
 Priority: optional
 Maintainer: Debian GNOME Maintainers <pkg-gnome-maintainers@lists.alioth.debian.org>
 Uploaders: @GNOME_TEAM@
-Build-Depends: cpp-8,
+Build-Depends: binutils (>= 2.32.51.20190727-1~) [mips64el],
+               cpp-8,
                dbus <!nocheck>,
                debhelper-compat (= 12),
                desktop-file-utils <!nocheck>,
