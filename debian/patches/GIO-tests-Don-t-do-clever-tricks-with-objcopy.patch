@@ -21,10 +21,10 @@ Bug-Debian: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=932287
  2 files changed, 1 insertion(+), 83 deletions(-)
 
 diff --git a/gio/tests/meson.build b/gio/tests/meson.build
-index 65f43e2..6ffa4fd 100644
+index a0c0944..ce03729 100644
 --- a/gio/tests/meson.build
 +++ b/gio/tests/meson.build
-@@ -560,61 +560,6 @@ if not meson.is_cross_build() or meson.has_exe_wrapper()
+@@ -569,61 +569,6 @@ if not meson.is_cross_build() or meson.has_exe_wrapper()
      digit_test_resources_h,
    ]
  
