@@ -1,5 +1,3 @@
-# Cannot have #! because it is test data for fallback to passing to the shell
-libglib2.0-tests: executable-not-elf-or-script usr/libexec/installed-tests/glib/echo-script
 # Lots of tests don't use libc functions
 libglib2.0-tests: hardening-no-fortify-functions usr/libexec/installed-tests/glib/*
 # Test data for content-type sniffing, never actually executed

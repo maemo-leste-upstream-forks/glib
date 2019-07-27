@@ -29,6 +29,7 @@ glib2.0 (2.60.6-1) UNRELEASED; urgency=medium
     Since FHS 3.0 (Policy 4.1.5), /usr/libexec is considered valid,
     and since debhelper compat level 12 it is the default.
     In this particular package this only affects the installed-tests.
+  * Remove an obsolete Lintian override
 
  -- Simon McVittie <smcv@debian.org>  Fri, 26 Jul 2019 23:56:52 +0100
 
