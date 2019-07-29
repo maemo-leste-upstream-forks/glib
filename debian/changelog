@@ -4,6 +4,7 @@ glib2.0 (2.58.3-2+deb10u1) UNRELEASED; urgency=medium
     Backport patch from upstream 2.60.0 so that the GKeyFile settings
     backend creates ~/.config and configuration files with restrictive
     permissions (Closes: #931234, CVE-2019-13012)
+  * d/gbp.conf: Swap branch to debian/buster
 
  -- Simon McVittie <smcv@debian.org>  Mon, 29 Jul 2019 22:15:40 +0100
 
