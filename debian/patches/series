@@ -22,3 +22,7 @@ regex-test-do-not-assert-that-system-PCRE-allows-P-1.patch
 regex-test-do-not-assert-that-system-PCRE-still-has-.patch
 tests-gdatetime-Use-a-real-rather-than-invented-time.patch
 gfile-Limit-access-to-files-when-copying.patch
+CVE-2018-16428.patch
+CVE-2018-16429.patch
+CVE-2019-13012-1.patch
+CVE-2019-13012-2.patch

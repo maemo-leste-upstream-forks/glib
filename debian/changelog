@@ -1,3 +1,15 @@
+glib2.0 (2.42.1-1+deb8u2) jessie-security; urgency=medium
+
+  * Non-maintainer upload by the LTS team.
+  * CVE-2018-16428: gmarkup: Fix crash in error handling path for closing
+    elements.
+  * CVE-2018-16429: gmarkup: Fix unvalidated UTF-8 read in markup parsing
+    error paths.
+  * CVE-2019-13012: keyfile settings: Use tighter permissions. (Closes:
+    #931234).
+
+ -- Mike Gabriel <sunweaver@debian.org>  Tue, 30 Jul 2019 21:33:27 +0200
+
 glib2.0 (2.42.1-1+deb8u1) jessie-security; urgency=high
 
   [Michael Biebl]
