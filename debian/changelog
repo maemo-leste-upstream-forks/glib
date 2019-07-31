@@ -1,6 +1,21 @@
 glib2.0 (2.50.3-2+deb9u1) UNRELEASED; urgency=medium
 
   * d/gbp.conf: Add GNOME team configuration
+  * d/p/gfile-Limit-access-to-files-when-copying.patch:
+    When copying files, give the temporary partial copy of the file
+    suitably restrictive permissions (Closes: #929753; CVE-2019-12450)
+  * d/p/keyfile-settings-Use-tighter-permissions.patch:
+    Create directory and file with restrictive permissions when using the
+    GKeyfileSettingsBackend. Mitigation: in this version of GLib, the
+    GKeyfileSettingsBackend can only be used explicitly by code, and is
+    never selected automatically. (Closes: #931234; CVE-2019-13012)
+  * d/p/gmarkup-Fix-unvalidated-UTF-8-read-in-markup-parsing-erro.patch,
+    d/p/gmarkup-Avoid-reading-off-the-end-of-a-buffer-when-non-nu.patch:
+    Avoid buffer read overrun when formatting error messages for invalid
+    UTF-8 in GMarkup (CVE-2018-16429)
+  * d/p/gmarkup-Fix-crash-in-error-handling-path-for-closing-elem.patch:
+    Avoid NULL dereference when parsing invalid GMarkup with a malformed
+    closing tag not paired with an opening tag (CVE-2018-16429)
 
  -- Simon McVittie <smcv@debian.org>  Wed, 31 Jul 2019 11:24:35 +0100
 

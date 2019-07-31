@@ -13,3 +13,8 @@ Do-not-attempt-to-autolaunch-a-session-dbus-daemon-w.patch
 skip-broken-timer-test.patch
 0001-Fix-trashing-on-overlayfs.patch
 tests-gdatetime-Use-a-real-rather-than-invented-time.patch
+gfile-Limit-access-to-files-when-copying.patch
+keyfile-settings-Use-tighter-permissions.patch
+gmarkup-Fix-unvalidated-UTF-8-read-in-markup-parsing-erro.patch
+gmarkup-Avoid-reading-off-the-end-of-a-buffer-when-non-nu.patch
+gmarkup-Fix-crash-in-error-handling-path-for-closing-elem.patch
