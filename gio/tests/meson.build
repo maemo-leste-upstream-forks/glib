@@ -97,7 +97,7 @@ test_env.set('GIO_LAUNCH_DESKTOP', meson.build_root() + '/gio/gio-launch-desktop
 # 1.2.14 required for dbus_message_set_serial
 dbus1_dep = dependency('dbus-1', required : false, version : '>= 1.2.14')
 if not dbus1_dep.found()
-  if cc.get_id() == 'msvc'
+  if cc.get_id() == 'msvc' or cc.get_id() == 'clang-cl'
     # MSVC: Search for the DBus library by the configuration, which corresponds
     # to the output of CMake builds of DBus.  Note that debugoptimized
     # is really a Release build with .PDB files.
@@ -382,7 +382,7 @@ test_extra_programs += {
   },
 }
 
-if cc.get_id() != 'msvc'
+if cc.get_id() != 'msvc' and cc.get_id() != 'clang-cl'
   test_extra_programs += {
     # These three are manual-run tests because they need a session bus but don't bring one up themselves
     # FIXME: these build but don't seem to work!
@@ -424,13 +424,20 @@ else
 endif
 
 foreach appinfo_test_desktop_file : appinfo_test_desktop_files
-  configure_file(
-    input: appinfo_test_desktop_file + '.in',
-    output: appinfo_test_desktop_file,
-    install_dir: installed_tests_execdir,
-    install: installed_tests_enabled,
-    configuration: cdata,
-  )
+  if installed_tests_enabled
+    configure_file(
+      input: appinfo_test_desktop_file + '.in',
+      output: appinfo_test_desktop_file,
+      install_dir: installed_tests_execdir,
+      configuration: cdata,
+    )
+  else
+    configure_file(
+      input: appinfo_test_desktop_file + '.in',
+      output: appinfo_test_desktop_file,
+      configuration: cdata,
+    )
+  endif
 endforeach
 
 if installed_tests_enabled
@@ -558,7 +565,7 @@ if not meson.is_cross_build() or meson.has_exe_wrapper()
   test_generated_txt = configure_file(input : 'test1.txt',
     output : 'test-generated.txt',
     copy : true,
-    install : false)
+  )
 
   resources_extra_sources = [
     test_gresource,

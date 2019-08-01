@@ -20,6 +20,10 @@
 
 #include "config.h"
 
+/* For the #GDesktopAppInfoLookup macros; since macro deprecation is implemented
+ * in the preprocessor, we need to define this before including glib.h*/
+#define GLIB_DISABLE_DEPRECATION_WARNINGS
+
 #include <string.h>
 
 #include "giomodule.h"
@@ -1087,9 +1091,7 @@ _g_io_modules_ensure_extension_points_registered (void)
 #if defined(G_OS_UNIX) && !defined(HAVE_COCOA)
 #if !GLIB_CHECK_VERSION (3, 0, 0)
       ep = g_io_extension_point_register (G_DESKTOP_APP_INFO_LOOKUP_EXTENSION_POINT_NAME);
-      G_GNUC_BEGIN_IGNORE_DEPRECATIONS
       g_io_extension_point_set_required_type (ep, G_TYPE_DESKTOP_APP_INFO_LOOKUP);
-      G_GNUC_END_IGNORE_DEPRECATIONS
 #endif
 #endif
 
@@ -1209,6 +1211,7 @@ _g_io_modules_ensure_loaded (void)
       /* Initialize types from built-in "modules" */
       g_type_ensure (g_null_settings_backend_get_type ());
       g_type_ensure (g_memory_settings_backend_get_type ());
+      g_type_ensure (g_keyfile_settings_backend_get_type ());
 #if defined(HAVE_INOTIFY_INIT1)
       g_type_ensure (g_inotify_file_monitor_get_type ());
 #endif

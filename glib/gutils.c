@@ -218,6 +218,7 @@ _glib_get_dll_directory (void)
  *
  * Deprecated:2.32: It is best to avoid g_atexit().
  */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 void
 g_atexit (GVoidFunc func)
 {
@@ -232,6 +233,7 @@ g_atexit (GVoidFunc func)
                g_strerror (errsv));
     }
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 /* Based on execvp() from GNU Libc.
  * Some of this code is cut-and-pasted into gspawn.c
@@ -1001,8 +1003,37 @@ g_get_host_name (void)
       gchar *utmp;
 
 #ifndef G_OS_WIN32
-      gchar *tmp = g_malloc (sizeof (gchar) * 100);
-      failed = (gethostname (tmp, sizeof (gchar) * 100) == -1);
+      glong max;
+      gsize size;
+      /* The number 256 * 256 is taken from the value of _POSIX_HOST_NAME_MAX,
+       * which is 255. Since we use _POSIX_HOST_NAME_MAX + 1 (= 256) in the
+       * fallback case, we pick 256 * 256 as the size of the larger buffer here.
+       * It should be large enough. It doesn't looks reasonable to name a host
+       * with a string that is longer than 64 KiB.
+       */
+      const gsize size_large = (gsize) 256 * 256;
+      gchar *tmp;
+
+      max = sysconf (_SC_HOST_NAME_MAX);
+      if (max > 0 && max <= G_MAXSIZE - 1)
+        size = (gsize) max + 1;
+      else
+#ifdef HOST_NAME_MAX
+        size = HOST_NAME_MAX + 1;
+#else
+        size = _POSIX_HOST_NAME_MAX + 1;
+#endif
+
+      tmp = g_malloc (size);
+      failed = (gethostname (tmp, size) == -1);
+      if (failed && size < size_large)
+        {
+          /* Try again with a larger buffer if 'size' may be too small. */
+          g_free (tmp);
+          tmp = g_malloc (size_large);
+          failed = (gethostname (tmp, size_large) == -1);
+        }
+
       if (failed)
         g_clear_pointer (&tmp, g_free);
       utmp = tmp;

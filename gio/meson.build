@@ -526,6 +526,7 @@ gio_sources = files(
   'gioscheduler.c',
   'giostream.c',
   'gloadableicon.c',
+  'gmarshal-internal.c',
   'gmount.c',
   'gmemoryinputstream.c',
   'gmemoryoutputstream.c',
@@ -829,9 +830,14 @@ pkg.generate(libgio,
                'schemasdir=' + join_paths('${datadir}', schemas_subdir),
                'bindir=' + join_paths('${prefix}', get_option('bindir')),
                'giomoduledir=' + giomodulesdir,
+               'gio=' + join_paths('${bindir}', 'gio'),
+               'gio_querymodules=' + join_paths('${bindir}', 'gio-querymodules'),
                'glib_compile_schemas=' + join_paths('${bindir}', 'glib-compile-schemas'),
                'glib_compile_resources=' + join_paths('${bindir}', 'glib-compile-resources'),
-               'gdbus_codegen=' + join_paths('${bindir}', 'gdbus-codegen')],
+               'gdbus=' + join_paths('${bindir}', 'gdbus'),
+               'gdbus_codegen=' + join_paths('${bindir}', 'gdbus-codegen'),
+               'gresource=' + join_paths('${bindir}', 'gresource'),
+               'gsettings=' + join_paths('${bindir}', 'gsettings')],
   version : glib_version,
   install_dir : glib_pkgconfigreldir,
   filebase : 'gio-2.0',
@@ -990,7 +996,7 @@ if enable_systemtap
     output : '@0@.stp'.format(libgio.full_path().split('/').get(-1)),
     configuration : stp_cdata,
     install_dir : tapset_install_dir,
-    install : true)
+  )
 endif
 
 subdir('fam')
@@ -999,3 +1005,14 @@ build_tests = not meson.is_cross_build() or (meson.is_cross_build() and meson.ha
 if build_tests
     subdir('tests')
 endif
+
+# The following is an example for building internal marshallers that are used
+# by GIO. We cannot guarantee glib-genmarshal availability while building GLib
+# so they are pre-generated and placed into gmarshal-internal.[ch].
+#
+# gmarshal_internal = gnome.genmarshal('gmarshal-internal',
+#   sources: 'gmarshal-internal.list',
+#   prefix: '_g_cclosure_marshal',
+#   valist_marshallers: true,
+#   internal: true,
+# )

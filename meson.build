@@ -1,6 +1,7 @@
 project('glib', 'c', 'cpp',
-  version : '2.61.1',
-  meson_version : '>= 0.48.0',
+  version : '2.61.2',
+  # NOTE: We keep this pinned at 0.49 because that's what Debian 10 ships
+  meson_version : '>= 0.49.2',
   default_options : [
     'buildtype=debugoptimized',
     'warning_level=1',
@@ -117,7 +118,7 @@ if host_system == 'windows'
   glib_conf.set('BROKEN_POLL', true)
 endif
 
-if host_system == 'windows' and cc.get_id() != 'msvc'
+if host_system == 'windows' and cc.get_id() != 'msvc' and cc.get_id() != 'clang-cl'
   # FIXME: Ideally we shouldn't depend on this on Windows and should use
   # 64 bit capable Windows API that also works with MSVC.
   # The autotools build did set this for mingw and while meson sets it
@@ -171,7 +172,7 @@ glib_hidden_visibility_args = []
 if get_option('default_library') != 'static'
   if host_system == 'windows' or host_system == 'cygwin'
     glib_conf.set('DLL_EXPORT', true)
-    if cc.get_id() == 'msvc'
+    if cc.get_id() == 'msvc' or cc.get_id() == 'clang-cl'
       glib_conf.set('_GLIB_EXTERN', '__declspec(dllexport) extern')
     elif cc.has_argument('-fvisibility=hidden')
       glib_conf.set('_GLIB_EXTERN', '__attribute__((visibility("default"))) __declspec(dllexport) extern')
@@ -183,7 +184,7 @@ if get_option('default_library') != 'static'
   endif
 endif
 
-if host_system == 'windows' and get_option('default_library') == 'static'
+if get_option('default_library') == 'static'
     glibconfig_conf.set('GLIB_STATIC_COMPILATION', '1')
     glibconfig_conf.set('GOBJECT_STATIC_COMPILATION', '1')
 endif
@@ -268,6 +269,7 @@ headers = [
   'termios.h',
   'unistd.h',
   'values.h',
+  'wchar.h',
   'xlocale.h',
 ]
 
@@ -772,7 +774,7 @@ have_good_vsnprintf = false
 have_good_snprintf = false
 have_good_printf = false
 
-if host_system == 'windows' and cc.get_id() == 'msvc'
+if host_system == 'windows' and (cc.get_id() == 'msvc' or cc.get_id() == 'clang-cl')
   # Unfortunately the Visual Studio 2015+ implementations of C99-style
   # snprintf and vsnprintf don't seem to be quite good enough.
   # (Sorry, I don't know exactly what is the problem,
@@ -1121,7 +1123,7 @@ else
   long_long_size = 0
 endif
 sizet_size = cc.sizeof('size_t')
-if cc.get_id() == 'msvc'
+if cc.get_id() == 'msvc' or cc.get_id() == 'clang-cl'
   ssizet_size = cc.sizeof('SSIZE_T', prefix : '#include <BaseTsd.h>')
 else
   ssizet_size = cc.sizeof('ssize_t')
@@ -1181,6 +1183,7 @@ glib_conf.set('SIZEOF_LONG_LONG', long_long_size)
 glib_conf.set('SIZEOF_SIZE_T', sizet_size)
 glib_conf.set('SIZEOF_SSIZE_T', ssizet_size)
 glib_conf.set('SIZEOF_VOID_P', voidp_size)
+glib_conf.set('SIZEOF_WCHAR_T', cc.sizeof('wchar_t', prefix: '#include <stddef.h>'))
 
 if short_size == 2
   gint16 = 'short'
@@ -1593,10 +1596,10 @@ atomicdefine = '''
 '''
 
 # We know that we can always use real ("lock free") atomic operations with MSVC
-if cc.get_id() == 'msvc' or cc.links(atomictest, name : 'atomic ops')
+if cc.get_id() == 'msvc' or cc.get_id() == 'clang-cl' or cc.links(atomictest, name : 'atomic ops')
   have_atomic_lock_free = true
-  if (host_system == 'android' or host_system == 'linux') and not cc.compiles(atomicdefine, name : 'atomic ops define')
-    # When building for armv5 on Linux, gcc provides
+  if cc.get_id() == 'gcc' and not cc.compiles(atomicdefine, name : 'atomic ops define')
+    # Old gcc release may provide
     # __sync_bool_compare_and_swap but doesn't define
     # __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4
     glib_conf.set('__GCC_HAVE_SYNC_COMPARE_AND_SWAP_4', true)
@@ -1723,7 +1726,7 @@ if get_option('internal_pcre')
 else
   pcre = dependency('libpcre', version: '>= 8.31', required : false) # Should check for Unicode support, too. FIXME
   if not pcre.found()
-    if cc.get_id() == 'msvc'
+    if cc.get_id() == 'msvc' or cc.get_id() == 'clang-cl'
     # MSVC: Search for the PCRE library by the configuration, which corresponds
     # to the output of CMake builds of PCRE.  Note that debugoptimized
     # is really a Release build with .PDB files.
@@ -1766,7 +1769,7 @@ libffi_dep = dependency('libffi', version : '>= 3.0.0', fallback : ['libffi', 'f
 # the system
 libz_dep = dependency('zlib', required : false)
 if not libz_dep.found()
-  if cc.get_id() != 'msvc'
+  if cc.get_id() != 'msvc' and cc.get_id() != 'clang-cl'
     libz_dep = cc.find_library('z', required : false)
   else
     libz_dep = cc.find_library('zlib1', required : false)
@@ -1978,7 +1981,7 @@ endif
 
 win32_cflags = []
 win32_ldflags = []
-if host_system == 'windows' and cc.get_id() != 'msvc'
+if host_system == 'windows' and cc.get_id() != 'msvc' and cc.get_id() != 'clang-cl'
   # Ensure MSVC-compatible struct packing convention is used when
   # compiling for Win32 with gcc. It is used for the whole project and exposed
   # in glib-2.0.pc.
@@ -2035,7 +2038,7 @@ if want_systemtap and enable_dtrace
 endif
 
 test_timeout = 60
-test_timeout_slow = 120
+test_timeout_slow = 180
 
 pkg = import('pkgconfig')
 windows = import('windows')
@@ -2066,7 +2069,6 @@ if have_sh
   gettextize_conf.set('datarootdir', glib_datadir)
   gettextize_conf.set('datadir', glib_datadir)
   configure_file(input : 'glib-gettextize.in',
-    install : true,
     install_dir : glib_bindir,
     output : 'glib-gettextize',
     configuration : gettextize_conf)

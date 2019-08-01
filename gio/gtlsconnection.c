@@ -29,6 +29,7 @@
 #include "gtlsdatabase.h"
 #include "gtlsinteraction.h"
 #include "glibintl.h"
+#include "gmarshal-internal.h"
 
 /**
  * SECTION:gtlsconnection
@@ -345,10 +346,13 @@ g_tls_connection_class_init (GTlsConnectionClass *klass)
 		  G_SIGNAL_RUN_LAST,
 		  G_STRUCT_OFFSET (GTlsConnectionClass, accept_certificate),
 		  g_signal_accumulator_true_handled, NULL,
-		  NULL,
+		  _g_cclosure_marshal_BOOLEAN__OBJECT_FLAGS,
 		  G_TYPE_BOOLEAN, 2,
 		  G_TYPE_TLS_CERTIFICATE,
 		  G_TYPE_TLS_CERTIFICATE_FLAGS);
+  g_signal_set_va_marshaller (signals[ACCEPT_CERTIFICATE],
+                              G_TYPE_FROM_CLASS (klass),
+                              _g_cclosure_marshal_BOOLEAN__OBJECT_FLAGSv);
 }
 
 static void
@@ -754,6 +758,7 @@ g_tls_connection_get_require_close_notify (GTlsConnection *conn)
  *   required for compatibility. Also, rehandshaking has been removed
  *   from the TLS protocol in TLS 1.3.
  */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 void
 g_tls_connection_set_rehandshake_mode (GTlsConnection       *conn,
 				       GTlsRehandshakeMode   mode)
@@ -764,6 +769,7 @@ g_tls_connection_set_rehandshake_mode (GTlsConnection       *conn,
 		"rehandshake-mode", mode,
 		NULL);
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 /**
  * g_tls_connection_get_rehandshake_mode:
@@ -780,6 +786,7 @@ g_tls_connection_set_rehandshake_mode (GTlsConnection       *conn,
  *   required for compatibility. Also, rehandshaking has been removed
  *   from the TLS protocol in TLS 1.3.
  */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 GTlsRehandshakeMode
 g_tls_connection_get_rehandshake_mode (GTlsConnection       *conn)
 {
@@ -792,6 +799,7 @@ g_tls_connection_get_rehandshake_mode (GTlsConnection       *conn)
 		NULL);
   return mode;
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 /**
  * g_tls_connection_set_advertised_protocols:

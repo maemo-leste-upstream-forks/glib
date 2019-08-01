@@ -224,7 +224,7 @@ g_network_address_get_property (GObject    *object,
 
 }
 
-/**
+/*
  * inet_addresses_to_inet_socket_addresses:
  * @addresses: (transfer full): #GList of #GInetAddress
  *
@@ -1261,13 +1261,8 @@ got_ipv6_addresses (GObject      *source_object,
    */
   if (error != NULL && !addr_enum->last_error && (addr_enum->state & RESOLVE_STATE_WAITING_ON_IPV4))
     {
+      /* ipv6 lookup failed, but ipv4 is still outstanding.  wait. */
       addr_enum->last_error = g_steal_pointer (&error);
-
-      addr_enum->wait_source = g_timeout_source_new (HAPPY_EYEBALLS_RESOLUTION_DELAY_MS);
-      g_source_set_callback (addr_enum->wait_source,
-                             on_address_timeout,
-                             addr_enum, NULL);
-      g_source_attach (addr_enum->wait_source, addr_enum->context);
     }
   else if (addr_enum->waiting_task != NULL)
     {

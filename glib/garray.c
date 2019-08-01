@@ -785,6 +785,89 @@ g_array_sort_with_data (GArray           *farray,
                      user_data);
 }
 
+/**
+ * g_array_binary_search:
+ * @array: a #GArray.
+ * @target: a pointer to the item to look up.
+ * @compare_func: A #GCompareFunc used to locate @target.
+ * @out_match_index: (optional) (out caller-allocates): return location
+ *    for the index of the element, if found.
+ *
+ * Checks whether @target exists in @array by performing a binary
+ * search based on the given comparison function @compare_func which
+ * get pointers to items as arguments. If the element is found, %TRUE
+ * is returned and the element’s index is returned in @out_match_index
+ * (if non-%NULL). Otherwise, %FALSE is returned and @out_match_index
+ * is undefined. If @target exists multiple times in @array, the index
+ * of the first instance is returned. This search is using a binary
+ * search, so the @array must absolutely be sorted to return a correct
+ * result (if not, the function may produce false-negative).
+ *
+ * This example defines a comparison function and search an element in a #GArray:
+ * |[<!-- language="C" -->
+ * static gint*
+ * cmpint (gconstpointer a, gconstpointer b)
+ * {
+ *   const gint *_a = a;
+ *   const gint *_b = b;
+ *
+ *   return *_a - *_b;
+ * }
+ * ...
+ * gint i = 424242;
+ * guint matched_index;
+ * gboolean result = g_array_binary_search (garray, &i, cmpint, &matched_index);
+ * ...
+ * ]|
+ *
+ * Returns: %TRUE if @target is one of the elements of @array, %FALSE otherwise.
+ *
+ * Since: 2.62
+ */
+gboolean
+g_array_binary_search (GArray        *array,
+                       gconstpointer  target,
+                       GCompareFunc   compare_func,
+                       guint         *out_match_index)
+{
+  gboolean result = FALSE;
+  GRealArray *_array = (GRealArray *) array;
+  guint left, middle, right;
+  gint val;
+
+  g_return_val_if_fail (_array != NULL, FALSE);
+  g_return_val_if_fail (compare_func != NULL, FALSE);
+
+  if (G_LIKELY(_array->len))
+    {
+      left = 0;
+      right = _array->len - 1;
+
+      while (left <= right)
+        {
+          middle = left + (right - left) / 2;
+
+          val = compare_func (_array->data + (_array->elt_size * middle), target);
+          if (val == 0)
+            {
+              result = TRUE;
+              break;
+            }
+          else if (val < 0)
+            left = middle + 1;
+          else if (/* val > 0 && */ middle > 0)
+            right = middle - 1;
+          else
+            break;  /* element not found */
+        }
+    }
+
+  if (result && out_match_index != NULL)
+    *out_match_index = middle;
+
+  return result;
+}
+
 /* Returns the smallest power of 2 greater than n, or n if
  * such power does not fit in a guint
  */
@@ -923,6 +1006,59 @@ g_ptr_array_new (void)
 }
 
 /**
+ * g_ptr_array_copy:
+ * @array: #GPtrArray to duplicate
+ * @func: (nullable): a copy function used to copy every element in the array
+ * @user_data: user data passed to the copy function @func, or %NULL
+ *
+ * Makes a full (deep) copy of a #GPtrArray.
+ *
+ * @func, as a #GCopyFunc, takes two arguments, the data to be copied
+ * and a @user_data pointer. On common processor architectures, it's safe to
+ * pass %NULL as @user_data if the copy function takes only one argument. You
+ * may get compiler warnings from this though if compiling with GCC’s
+ * `-Wcast-function-type` warning.
+ *
+ * If @func is %NULL, then only the pointers (and not what they are
+ * pointing to) are copied to the new #GPtrArray.
+ *
+ * The copy of @array will have the same #GDestroyNotify for its elements as
+ * @array.
+ *
+ * Returns: (transfer full): a deep copy of the initial #GPtrArray.
+ *
+ * Since: 2.62
+ **/
+GPtrArray *
+g_ptr_array_copy (GPtrArray *array,
+                  GCopyFunc  func,
+                  gpointer   user_data)
+{
+  gsize i;
+  GPtrArray *new_array;
+
+  g_return_val_if_fail (array != NULL, NULL);
+
+  new_array = g_ptr_array_sized_new (array->len);
+  g_ptr_array_set_free_func (new_array, ((GRealPtrArray *) array)->element_free_func);
+
+  if (func != NULL)
+    {
+      for (i = 0; i < array->len; i++)
+        new_array->pdata[i] = func (array->pdata[i], user_data);
+    }
+  else
+    {
+      memcpy (new_array->pdata, array->pdata,
+              array->len * sizeof (*array->pdata));
+    }
+
+  new_array->len = array->len;
+
+  return new_array;
+}
+
+/**
  * g_ptr_array_sized_new:
  * @reserved_size: number of pointers preallocated
  *
@@ -951,6 +1087,34 @@ g_ptr_array_sized_new (guint reserved_size)
     g_ptr_array_maybe_expand (array, reserved_size);
 
   return (GPtrArray*) array;  
+}
+
+/**
+ * g_array_copy:
+ * @array: A #GArray.
+ *
+ * Create a shallow copy of a #GArray. If the array elements consist of
+ * pointers to data, the pointers are copied but the actual data is not.
+ *
+ * Returns: (transfer container): A copy of @array.
+ *
+ * Since: 2.62
+ **/
+GArray *
+g_array_copy (GArray *array)
+{
+  GRealArray *rarray = (GRealArray *) array;
+  GRealArray *new_rarray;
+
+  g_return_val_if_fail (rarray != NULL, NULL);
+
+  new_rarray =
+    (GRealArray *) g_array_sized_new (rarray->zero_terminated, rarray->clear,
+                                      rarray->elt_size, rarray->len);
+  new_rarray->len = rarray->len;
+  memcpy (new_rarray->data, rarray->data, rarray->alloc);
+
+  return (GArray *) new_rarray;
 }
 
 /**
@@ -1490,6 +1654,89 @@ g_ptr_array_add (GPtrArray *array,
   g_ptr_array_maybe_expand (rarray, 1);
 
   rarray->pdata[rarray->len++] = data;
+}
+
+/**
+ * g_ptr_array_extend:
+ * @array_to_extend: a #GPtrArray.
+ * @array: (transfer none): a #GPtrArray to add to the end of @array_to_extend.
+ * @func: (nullable): a copy function used to copy every element in the array
+ * @user_data: user data passed to the copy function @func, or %NULL
+ *
+ * Adds all pointers of @array to the end of the array @array_to_extend.
+ * The array will grow in size automatically if needed. @array_to_extend is
+ * modified in-place.
+ *
+ * @func, as a #GCopyFunc, takes two arguments, the data to be copied
+ * and a @user_data pointer. On common processor architectures, it's safe to
+ * pass %NULL as @user_data if the copy function takes only one argument. You
+ * may get compiler warnings from this though if compiling with GCC’s
+ * `-Wcast-function-type` warning.
+ *
+ * If @func is %NULL, then only the pointers (and not what they are
+ * pointing to) are copied to the new #GPtrArray.
+ *
+ * Since: 2.62
+ **/
+void
+g_ptr_array_extend (GPtrArray  *array_to_extend,
+                    GPtrArray  *array,
+                    GCopyFunc   func,
+                    gpointer    user_data)
+{
+  GRealPtrArray *rarray_to_extend = (GRealPtrArray *) array_to_extend;
+  gsize i;
+
+  g_return_if_fail (array_to_extend != NULL);
+  g_return_if_fail (array != NULL);
+
+  g_ptr_array_maybe_expand (rarray_to_extend, array->len);
+
+  if (func != NULL)
+    {
+      for (i = 0; i < array->len; i++)
+        rarray_to_extend->pdata[i + rarray_to_extend->len] =
+          func (array->pdata[i], user_data);
+    }
+  else
+    {
+      memcpy (rarray_to_extend->pdata + rarray_to_extend->len, array->pdata,
+              array->len * sizeof (*array->pdata));
+    }
+
+  rarray_to_extend->len += array->len;
+}
+
+/**
+ * g_ptr_array_extend_and_steal:
+ * @array_to_extend: (transfer none): a #GPtrArray.
+ * @array: (transfer container): a #GPtrArray to add to the end of
+ *     @array_to_extend.
+ *
+ * Adds all the pointers in @array to the end of @array_to_extend, transferring
+ * ownership of each element from @array to @array_to_extend and modifying
+ * @array_to_extend in-place. @array is then freed.
+ *
+ * As with g_ptr_array_free(), @array will be destroyed if its reference count
+ * is 1. If its reference count is higher, it will be decremented and the
+ * length of @array set to zero.
+ *
+ * Since: 2.62
+ **/
+void
+g_ptr_array_extend_and_steal (GPtrArray  *array_to_extend,
+                              GPtrArray  *array)
+{
+  gpointer *pdata;
+
+  g_ptr_array_extend (array_to_extend, array, NULL, NULL);
+
+  /* Get rid of @array without triggering the GDestroyNotify attached
+   * to the elements moved from @array to @array_to_extend. */
+  pdata = g_steal_pointer (&array->pdata);
+  array->len = 0;
+  g_ptr_array_unref (array);
+  g_free (pdata);
 }
 
 /**

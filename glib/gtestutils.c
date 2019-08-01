@@ -1941,6 +1941,18 @@ g_test_bug (const char *bug_uri_snippet)
  *
  * This should be called at the top of a test function.
  *
+ * For example:
+ * |[<!-- language="C" -->
+ * static void
+ * test_array_sort (void)
+ * {
+ *   g_test_summary ("Test my_array_sort() sorts the array correctly and stably, "
+ *                   "including testing zero length and one-element arrays.");
+ *
+ *   …
+ * }
+ * ]|
+ *
  * Since: 2.62
  * See also: g_test_bug()
  */
@@ -3268,6 +3280,7 @@ wait_for_child (GPid pid,
  * and is not always reliable due to problems inherent in
  * fork-without-exec. Use g_test_trap_subprocess() instead.
  */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 gboolean
 g_test_trap_fork (guint64        usec_timeout,
                   GTestTrapFlags test_trap_flags)
@@ -3310,6 +3323,18 @@ g_test_trap_fork (guint64        usec_timeout,
         close (stdout_pipe[1]);
       if (stderr_pipe[1] >= 3)
         close (stderr_pipe[1]);
+
+      /* We typically expect these child processes to crash, and some
+       * tests spawn a *lot* of them.  Avoid spamming system crash
+       * collection programs such as systemd-coredump and abrt.
+       */
+#ifdef HAVE_SYS_RESOURCE_H
+      {
+        struct rlimit limit = { 0, 0 };
+        (void) setrlimit (RLIMIT_CORE, &limit);
+      }
+#endif
+
       return TRUE;
     }
   else                          /* parent */
@@ -3330,6 +3355,7 @@ g_test_trap_fork (guint64        usec_timeout,
   return FALSE;
 #endif
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 /**
  * g_test_trap_subprocess:
