@@ -25,6 +25,11 @@
 #include <glib/gstdio.h>
 #include <locale.h>
 
+#ifdef G_OS_WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#endif
+
 #define ASSERT_DATE(dt,y,m,d) G_STMT_START { \
   g_assert_nonnull ((dt)); \
   g_assert_cmpint ((y), ==, g_date_time_get_year ((dt))); \
@@ -306,6 +311,7 @@ test_GDateTime_get_hour (void)
   g_date_time_unref (dt);
 }
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static void
 test_GDateTime_get_microsecond (void)
 {
@@ -317,6 +323,7 @@ test_GDateTime_get_microsecond (void)
   g_assert_cmpint (tv.tv_usec, ==, g_date_time_get_microsecond (dt));
   g_date_time_unref (dt);
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 static void
 test_GDateTime_get_year (void)
@@ -353,6 +360,7 @@ test_GDateTime_hash (void)
   g_hash_table_destroy (h);
 }
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static void
 test_GDateTime_new_from_timeval (void)
 {
@@ -475,6 +483,7 @@ test_GDateTime_new_from_timeval_utc (void)
   g_assert_cmpint (tv.tv_usec, ==, tv2.tv_usec);
   g_date_time_unref (dt);
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 static void
 test_GDateTime_new_from_iso8601 (void)
@@ -1029,6 +1038,13 @@ test_GDateTime_new_full (void)
   GTimeZone *tz, *dt_tz;
   GDateTime *dt;
 
+#ifdef G_OS_WIN32
+  LCID currLcid = GetThreadLocale ();
+  LANGID currLangId = LANGIDFROMLCID (currLcid);
+  LANGID en = MAKELANGID (LANG_ENGLISH, SUBLANG_ENGLISH_US);
+  SetThreadUILanguage (en);
+#endif
+
   dt = g_date_time_new_utc (2009, 12, 11, 12, 11, 10);
   g_assert_cmpint (2009, ==, g_date_time_get_year (dt));
   g_assert_cmpint (12, ==, g_date_time_get_month (dt));
@@ -1063,6 +1079,7 @@ test_GDateTime_new_full (void)
                     g_date_time_get_timezone_abbreviation (dt));
   g_assert_cmpstr ("Pacific Standard Time", ==,
                    g_time_zone_get_identifier (dt_tz));
+  SetThreadUILanguage (currLangId);
 #endif
   g_assert (!g_date_time_is_daylight_savings (dt));
   g_date_time_unref (dt);
@@ -1225,6 +1242,7 @@ test_GDateTime_get_utc_offset (void)
 #endif
 }
 
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static void
 test_GDateTime_to_timeval (void)
 {
@@ -1241,6 +1259,7 @@ test_GDateTime_to_timeval (void)
   g_assert_cmpint (tv1.tv_usec, ==, tv2.tv_usec);
   g_date_time_unref (dt);
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 static void
 test_GDateTime_to_local (void)
@@ -1327,10 +1346,16 @@ test_GDateTime_printf (void)
  * that long, and it will cause the test to fail if dst isn't big
  * enough.
  */
+  gchar *old_lc_all;
   gchar *old_lc_messages;
   gchar dst[64];
   struct tm tt;
   time_t t;
+
+#ifdef G_OS_WIN32
+  gchar *current_tz = NULL;
+  DYNAMIC_TIME_ZONE_INFORMATION dtz_info;
+#endif
 
 #define TEST_PRINTF(f,o)                        G_STMT_START {  \
 GDateTime *__dt = g_date_time_new_local (2009, 10, 24, 0, 0, 0);\
@@ -1356,6 +1381,9 @@ GDateTime *__dt = g_date_time_new_local (2009, 10, 24, 0, 0, 0);\
   g_assert_cmpstr (p, ==, (o));                                 \
   g_date_time_unref (dt);                                       \
   g_free (p);                                   } G_STMT_END
+
+  old_lc_all = g_strdup (g_getenv ("LC_ALL"));
+  g_unsetenv ("LC_ALL");
 
   old_lc_messages = g_strdup (g_getenv ("LC_MESSAGES"));
   g_setenv ("LC_MESSAGES", "C", TRUE);
@@ -1426,7 +1454,14 @@ GDateTime *__dt = g_date_time_new_local (2009, 10, 24, 0, 0, 0);\
 #ifdef G_OS_UNIX
   TEST_PRINTF ("%Z", dst);
 #elif defined G_OS_WIN32
-  TEST_PRINTF ("%Z", "Pacific Standard Time");
+  g_assert (GetDynamicTimeZoneInformation (&dtz_info) != TIME_ZONE_ID_INVALID);
+  if (wcscmp (dtz_info.StandardName, L"") != 0)
+    current_tz = g_utf16_to_utf8 (dtz_info.StandardName, -1, NULL, NULL, NULL);
+  else
+    current_tz = g_utf16_to_utf8 (dtz_info.DaylightName, -1, NULL, NULL, NULL);
+
+  TEST_PRINTF ("%Z", current_tz);
+  g_free (current_tz);
 #endif
 
   if (old_lc_messages != NULL)
@@ -1434,6 +1469,10 @@ GDateTime *__dt = g_date_time_new_local (2009, 10, 24, 0, 0, 0);\
   else
     g_unsetenv ("LC_MESSAGES");
   g_free (old_lc_messages);
+
+  if (old_lc_all != NULL)
+    g_setenv ("LC_ALL", old_lc_all, TRUE);
+  g_free (old_lc_all);
 }
 
 static void
@@ -2033,6 +2072,30 @@ test_z (void)
   g_time_zone_unref (tz);
 }
 
+static void
+test_format_iso8601 (void)
+{
+  GTimeZone *tz = NULL;
+  GDateTime *dt = NULL;
+  gchar *p = NULL;
+
+  tz = g_time_zone_new_utc ();
+  dt = g_date_time_new (tz, 2019, 6, 26, 15, 1, 5);
+  p = g_date_time_format_iso8601 (dt);
+  g_assert_cmpstr (p, ==, "2019-06-26T15:01:05Z");
+  g_free (p);
+  g_date_time_unref (dt);
+  g_time_zone_unref (tz);
+
+  tz = g_time_zone_new_offset (-60 * 60);
+  dt = g_date_time_new (tz, 2019, 6, 26, 15, 1, 5);
+  p = g_date_time_format_iso8601 (dt);
+  g_assert_cmpstr (p, ==, "2019-06-26T15:01:05-01");
+  g_free (p);
+  g_date_time_unref (dt);
+  g_time_zone_unref (tz);
+}
+
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wformat-y2k"
 static void
@@ -2383,6 +2446,12 @@ test_identifier (void)
   GTimeZone *tz;
   gchar *old_tz = g_strdup (g_getenv ("TZ"));
 
+#ifdef G_OS_WIN32
+  const char *recife_tz = "SA Eastern Standard Time";
+#else
+  const char *recife_tz = "America/Recife";
+#endif
+
   tz = g_time_zone_new ("UTC");
   g_assert_cmpstr (g_time_zone_get_identifier (tz), ==, "UTC");
   g_time_zone_unref (tz);
@@ -2412,10 +2481,10 @@ test_identifier (void)
   g_time_zone_unref (tz);
 
   /* Local timezone tests. */
-  if (g_setenv ("TZ", "America/Recife", TRUE))
+  if (g_setenv ("TZ", recife_tz, TRUE))
     {
       tz = g_time_zone_new_local ();
-      g_assert_cmpstr (g_time_zone_get_identifier (tz), ==, "America/Recife");
+      g_assert_cmpstr (g_time_zone_get_identifier (tz), ==, recife_tz);
       g_time_zone_unref (tz);
     }
 
@@ -2472,6 +2541,10 @@ gint
 main (gint   argc,
       gchar *argv[])
 {
+  /* In glibc, LANGUAGE is used as highest priority guess for category value.
+   * Unset it to avoid interference with tests using setlocale and translation. */
+  g_unsetenv ("LANGUAGE");
+
   g_test_init (&argc, &argv, NULL);
   g_test_bug_base ("http://bugzilla.gnome.org/");
 
@@ -2513,6 +2586,7 @@ main (gint   argc,
   g_test_add_func ("/GDateTime/printf", test_GDateTime_printf);
   g_test_add_func ("/GDateTime/non_utf8_printf", test_non_utf8_printf);
   g_test_add_func ("/GDateTime/format_unrepresentable", test_format_unrepresentable);
+  g_test_add_func ("/GDateTime/format_iso8601", test_format_iso8601);
   g_test_add_func ("/GDateTime/strftime", test_strftime);
   g_test_add_func ("/GDateTime/strftime/error_handling", test_GDateTime_strftime_error_handling);
   g_test_add_func ("/GDateTime/modifiers", test_modifiers);

@@ -226,6 +226,20 @@ g_mkdir_with_parents (const gchar *pathname,
       return -1;
     }
 
+  /* try to create the full path first */
+  if (g_mkdir (pathname, mode) == 0)
+    return 0;
+  else if (errno == EEXIST)
+    {
+      if (!g_file_test (pathname, G_FILE_TEST_IS_DIR))
+        {
+          errno = ENOTDIR;
+          return -1;
+        }
+      return 0;
+    }
+
+  /* walk the full path and try creating each element */
   fn = g_strdup (pathname);
 
   if (g_path_is_absolute (fn))
@@ -248,9 +262,12 @@ g_mkdir_with_parents (const gchar *pathname,
 	  if (g_mkdir (fn, mode) == -1 && errno != EEXIST)
 	    {
 	      int errno_save = errno;
-	      g_free (fn);
-	      errno = errno_save;
-	      return -1;
+              if (p && errno != ENOENT)
+                {
+	          g_free (fn);
+	          errno = errno_save;
+	          return -1;
+		}
 	    }
 	}
       else if (!g_file_test (fn, G_FILE_TEST_IS_DIR))
@@ -1301,7 +1318,7 @@ get_tmp_file (gchar            *tmpl,
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   static const int NLETTERS = sizeof (letters) - 1;
   glong value;
-  GTimeVal tv;
+  gint64 now_us;
   static int counter = 0;
 
   g_return_val_if_fail (tmpl != NULL, -1);
@@ -1316,8 +1333,8 @@ get_tmp_file (gchar            *tmpl,
     }
 
   /* Get some more or less random data.  */
-  g_get_current_time (&tv);
-  value = (tv.tv_usec ^ tv.tv_sec) + counter++;
+  now_us = g_get_real_time ();
+  value = ((now_us % G_USEC_PER_SEC) ^ (now_us / G_USEC_PER_SEC)) + counter++;
 
   for (count = 0; count < 100; value += 7777, ++count)
     {
@@ -2090,7 +2107,7 @@ gchar *
 g_file_read_link (const gchar  *filename,
 	          GError      **error)
 {
-#if defined (HAVE_READLINK) || defined (G_OS_WIN32)
+#if defined (HAVE_READLINK)
   gchar *buffer;
   size_t size;
   gssize read_size;
@@ -2103,11 +2120,7 @@ g_file_read_link (const gchar  *filename,
   
   while (TRUE) 
     {
-#ifndef G_OS_WIN32
       read_size = readlink (filename, buffer, size);
-#else
-      read_size = g_win32_readlink_utf8 (filename, buffer, size);
-#endif
       if (read_size < 0)
         {
           int saved_errno = errno;
@@ -2128,6 +2141,27 @@ g_file_read_link (const gchar  *filename,
       size *= 2;
       buffer = g_realloc (buffer, size);
     }
+#elif defined (G_OS_WIN32)
+  gchar *buffer;
+  gssize read_size;
+  
+  g_return_val_if_fail (filename != NULL, NULL);
+  g_return_val_if_fail (error == NULL || *error == NULL, NULL);
+
+  read_size = g_win32_readlink_utf8 (filename, NULL, 0, &buffer, TRUE);
+  if (read_size < 0)
+    {
+      int saved_errno = errno;
+      set_file_error (error,
+                      filename,
+                      _("Failed to read the symbolic link “%s”: %s"),
+                      saved_errno);
+      return NULL;
+    }
+  else if (read_size == 0)
+    return strdup ("");
+  else
+    return buffer;
 #else
   g_return_val_if_fail (filename != NULL, NULL);
   g_return_val_if_fail (error == NULL || *error == NULL, NULL);
@@ -2387,7 +2421,9 @@ g_path_get_basename (const gchar *file_name)
  * g_path_get_dirname:
  * @file_name: (type filename): the name of the file
  *
- * Gets the directory components of a file name.
+ * Gets the directory components of a file name. For example, the directory
+ * component of `/usr/bin/test` is `/usr/bin`. The directory component of `/`
+ * is `/`.
  *
  * If the file name has no directory components "." is returned.
  * The returned string should be freed when no longer needed.

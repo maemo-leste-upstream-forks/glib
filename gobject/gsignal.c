@@ -1243,13 +1243,13 @@ g_signal_lookup (const gchar *name,
     {
       /* give elaborate warnings */
       if (!g_type_name (itype))
-	g_warning (G_STRLOC ": unable to lookup signal \"%s\" for invalid type id '%"G_GSIZE_FORMAT"'",
+	g_warning (G_STRLOC ": unable to look up signal \"%s\" for invalid type id '%"G_GSIZE_FORMAT"'",
 		   name, itype);
       else if (!G_TYPE_IS_INSTANTIATABLE (itype))
-	g_warning (G_STRLOC ": unable to lookup signal \"%s\" for non instantiatable type '%s'",
+	g_warning (G_STRLOC ": unable to look up signal \"%s\" for non instantiatable type '%s'",
 		   name, g_type_name (itype));
       else if (!g_type_class_peek (itype))
-	g_warning (G_STRLOC ": unable to lookup signal \"%s\" of unloaded type '%s'",
+	g_warning (G_STRLOC ": unable to look up signal \"%s\" of unloaded type '%s'",
 		   name, g_type_name (itype));
     }
   
@@ -1410,8 +1410,14 @@ g_signal_query (guint         signal_id,
  * in their class_init method by doing super_class->signal_handler = my_signal_handler.
  * Instead they will have to use g_signal_override_class_handler().
  *
- * If c_marshaller is %NULL, g_cclosure_marshal_generic() will be used as
- * the marshaller for this signal.
+ * If @c_marshaller is %NULL, g_cclosure_marshal_generic() will be used as
+ * the marshaller for this signal. In some simple cases, g_signal_new()
+ * will use a more optimized c_marshaller and va_marshaller for the signal
+ * instead of g_cclosure_marshal_generic().
+ *
+ * If @c_marshaller is non-%NULL, you need to also specify a va_marshaller
+ * using g_signal_set_va_marshaller() or the generic va_marshaller will
+ * be used.
  *
  * Returns: the signal id
  */
@@ -3892,4 +3898,34 @@ g_signal_accumulator_first_wins (GSignalInvocationHint *ihint,
 {
   g_value_copy (handler_return, return_accu);
   return FALSE;
+}
+
+/**
+ * g_clear_signal_handler:
+ * @handler_id_ptr: A pointer to a handler ID (of type #gulong) of the handler to be disconnected.
+ * @instance: (type GObject.Object): The instance to remove the signal handler from.
+ *
+ * Disconnects a handler from @instance so it will not be called during
+ * any future or currently ongoing emissions of the signal it has been
+ * connected to. The @handler_id_ptr is then set to zero, which is never a valid handler ID value (see g_signal_connect()).
+ *
+ * If the handler ID is 0 then this function does nothing.
+ *
+ * A macro is also included that allows this function to be used without
+ * pointer casts.
+ *
+ * Since: 2.62
+ */
+#undef g_clear_signal_handler
+void
+g_clear_signal_handler (gulong   *handler_id_ptr,
+                        gpointer  instance)
+{
+  g_return_if_fail (handler_id_ptr != NULL);
+
+  if (*handler_id_ptr != 0)
+    {
+      g_signal_handler_disconnect (instance, *handler_id_ptr);
+      *handler_id_ptr = 0;
+    }
 }

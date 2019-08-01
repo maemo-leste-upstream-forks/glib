@@ -30,6 +30,7 @@
 #include "gsettings-mapping.h"
 #include "gsettingsschema-internal.h"
 #include "gaction.h"
+#include "gmarshal-internal.h"
 
 #include "strinfo.c"
 
@@ -157,6 +158,11 @@
  *
  *     <key name="box" type="(ii)">
  *       <default>(20,30)</default>
+ *     </key>
+ *
+ *     <key name="empty-string" type="s">
+ *       <default>""</default>
+ *       <summary>Empty strings have to be provided in GVariant form</summary>
  *     </key>
  *
  *   </schema>
@@ -738,7 +744,7 @@ g_settings_class_init (GSettingsClass *class)
     g_signal_new (I_("changed"), G_TYPE_SETTINGS,
                   G_SIGNAL_RUN_LAST | G_SIGNAL_DETAILED,
                   G_STRUCT_OFFSET (GSettingsClass, changed),
-                  NULL, NULL, g_cclosure_marshal_VOID__STRING, G_TYPE_NONE,
+                  NULL, NULL, NULL, G_TYPE_NONE,
                   1, G_TYPE_STRING | G_SIGNAL_TYPE_STATIC_SCOPE);
 
   /**
@@ -772,8 +778,11 @@ g_settings_class_init (GSettingsClass *class)
                   G_SIGNAL_RUN_LAST,
                   G_STRUCT_OFFSET (GSettingsClass, change_event),
                   g_signal_accumulator_true_handled, NULL,
-                  NULL,
+                  _g_cclosure_marshal_BOOLEAN__POINTER_INT,
                   G_TYPE_BOOLEAN, 2, G_TYPE_POINTER, G_TYPE_INT);
+  g_signal_set_va_marshaller (g_settings_signals[SIGNAL_CHANGE_EVENT],
+                              G_TYPE_FROM_CLASS (class),
+                              _g_cclosure_marshal_BOOLEAN__POINTER_INTv);
 
   /**
    * GSettings::writable-changed:
@@ -792,7 +801,7 @@ g_settings_class_init (GSettingsClass *class)
     g_signal_new (I_("writable-changed"), G_TYPE_SETTINGS,
                   G_SIGNAL_RUN_LAST | G_SIGNAL_DETAILED,
                   G_STRUCT_OFFSET (GSettingsClass, writable_changed),
-                  NULL, NULL, g_cclosure_marshal_VOID__STRING, G_TYPE_NONE,
+                  NULL, NULL, NULL, G_TYPE_NONE,
                   1, G_TYPE_STRING | G_SIGNAL_TYPE_STATIC_SCOPE);
 
   /**
@@ -827,7 +836,11 @@ g_settings_class_init (GSettingsClass *class)
                   G_SIGNAL_RUN_LAST,
                   G_STRUCT_OFFSET (GSettingsClass, writable_change_event),
                   g_signal_accumulator_true_handled, NULL,
-                  NULL, G_TYPE_BOOLEAN, 1, G_TYPE_UINT);
+                  _g_cclosure_marshal_BOOLEAN__UINT,
+                  G_TYPE_BOOLEAN, 1, G_TYPE_UINT);
+  g_signal_set_va_marshaller (g_settings_signals[SIGNAL_WRITABLE_CHANGE_EVENT],
+                              G_TYPE_FROM_CLASS (class),
+                              _g_cclosure_marshal_BOOLEAN__UINTv);
 
   /**
    * GSettings:backend:
@@ -1132,6 +1145,8 @@ g_settings_new_full (GSettingsSchema  *schema,
 }
 
 /* Internal read/write utilities {{{1 */
+
+/* @value will be sunk */
 static gboolean
 g_settings_write_to_backend (GSettings          *settings,
                              GSettingsSchemaKey *key,
@@ -1412,7 +1427,7 @@ g_settings_set_enum (GSettings   *settings,
       return FALSE;
     }
 
-  success = g_settings_write_to_backend (settings, &skey, variant);
+  success = g_settings_write_to_backend (settings, &skey, g_steal_pointer (&variant));
   g_settings_schema_key_clear (&skey);
 
   return success;
@@ -1523,7 +1538,7 @@ g_settings_set_flags (GSettings   *settings,
       return FALSE;
     }
 
-  success = g_settings_write_to_backend (settings, &skey, variant);
+  success = g_settings_write_to_backend (settings, &skey, g_steal_pointer (&variant));
   g_settings_schema_key_clear (&skey);
 
   return success;
@@ -1667,7 +1682,7 @@ g_settings_set (GSettings   *settings,
   value = g_variant_new_va (format, NULL, &ap);
   va_end (ap);
 
-  return g_settings_set_value (settings, key, value);
+  return g_settings_set_value (settings, key, g_steal_pointer (&value));
 }
 
 /**
@@ -2329,7 +2344,7 @@ g_settings_get_has_unapplied (GSettings *settings)
  * Resets @key to its default value.
  *
  * This call resets the key, as much as possible, to its default value.
- * That might the value specified in the schema or the one set by the
+ * That might be the value specified in the schema or the one set by the
  * administrator.
  **/
 void
@@ -2452,7 +2467,9 @@ g_settings_get_child (GSettings   *settings,
  * You should free the return value with g_strfreev() when you are done
  * with it.
  *
- * Returns: (transfer full) (element-type utf8): a list of the keys on @settings
+ * Returns: (transfer full) (element-type utf8): a list of the keys on
+ *    @settings, in no defined order
+ * Deprecated: 2.46: Use g_settings_schema_list_keys instead().
  */
 gchar **
 g_settings_list_keys (GSettings *settings)
@@ -2469,21 +2486,15 @@ g_settings_list_keys (GSettings *settings)
  * The list is exactly the list of strings for which it is not an error
  * to call g_settings_get_child().
  *
- * For GSettings objects that are lists, this value can change at any
- * time. Note that there is a race condition here: you may
- * request a child after listing it only for it to have been destroyed
- * in the meantime.  For this reason, g_settings_get_child() may return
- * %NULL even for a child that was listed by this function.
- *
- * For GSettings objects that are not lists, you should probably not be
- * calling this function from "normal" code (since you should already
- * know what children are in your schema).  This function may still be
- * useful there for introspection reasons, however.
+ * There is little reason to call this function from "normal" code, since
+ * you should already know what children are in your schema. This function
+ * may still be useful there for introspection reasons, however.
  *
  * You should free the return value with g_strfreev() when you are done
  * with it.
  *
- * Returns: (transfer full) (element-type utf8): a list of the children on @settings
+ * Returns: (transfer full) (element-type utf8): a list of the children on
+ *    @settings, in no defined order
  */
 gchar **
 g_settings_list_children (GSettings *settings)

@@ -380,7 +380,7 @@
     inferencing in action.
    </para>
    <para>
-    <literal>[(1, 2), (3, 4.0)]</literal> causes the 2 to also be parsed as a double (but the 1 and 4 are still
+    <literal>[(1, 2), (3, 4.0)]</literal> causes the 2 to also be parsed as a double (but the 1 and 3 are still
     integers).
    </para>
    <para>
@@ -465,7 +465,7 @@
     parses successfully.  You would need to specify <literal>[&lt;['']&gt;, &lt;@as []&gt;]</literal>.
    </para>
    <para>
-    <literal>{"title": &lt;"frobit"&gt;, "enabled": &lt;true&gt;, width: &lt;800&gt;}</literal> is an example of
+    <literal>{"title": &lt;"frobit"&gt;, "enabled": &lt;true&gt;, "width": &lt;800&gt;}</literal> is an example of
     perhaps the most pervasive use of both dictionaries and variants.
    </para>
   </refsect2>
