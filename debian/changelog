@@ -12,8 +12,16 @@ glib2.0 (2.61.2-1) UNRELEASED; urgency=medium
     This fixes use of CFLAGS, etc. during cross-compilation.
     (Closes: #933560)
   * d/libglib2.0-0.symbols: Update
+  * Remove obsolete permissions fixing.
+    Issue 1539 was fixed upstream.
+  * libglib2.0-tests: Depend on libglib2.0-dev-bin.
+    This is required for the new mkenums and genmarshal tests.
+  * d/p/debian/Disable-an-optimization-when-building-with-gcc-9.patch:
+    Disable an optimization when building with gcc-9, instead of forcing
+    gcc-8. This avoids depending on an old gcc, and should be easier to
+    deal with for cross-compilation. (Workaround for #931921)
 
- -- Simon McVittie <smcv@debian.org>  Thu, 01 Aug 2019 22:39:05 +0100
+ -- Simon McVittie <smcv@debian.org>  Fri, 02 Aug 2019 23:30:14 +0100
 
 glib2.0 (2.60.6-1) unstable; urgency=medium
 
