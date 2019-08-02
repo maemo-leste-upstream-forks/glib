@@ -11,6 +11,7 @@ glib2.0 (2.61.2-1) UNRELEASED; urgency=medium
   * d/rules: Edit debcrossgen output instead of using a modified version.
     This fixes use of CFLAGS, etc. during cross-compilation.
     (Closes: #933560)
+  * d/libglib2.0-0.symbols: Update
 
  -- Simon McVittie <smcv@debian.org>  Thu, 01 Aug 2019 22:39:05 +0100
 
