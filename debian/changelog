@@ -3,8 +3,14 @@ glib2.0 (2.60.6-2) UNRELEASED; urgency=medium
   * d/rules: Edit debcrossgen output instead of using a modified version.
     This fixes use of CFLAGS, etc. during cross-compilation.
     (Closes: #933560)
+  * Remove obsolete permissions fixing.
+    Issue 1539 was fixed upstream.
+  * d/p/debian/Disable-an-optimization-when-building-with-gcc-9.patch:
+    Disable an optimization when building with gcc-9, instead of forcing
+    gcc-8. This avoids depending on an old gcc, and should be easier to
+    deal with for cross-compilation. (Workaround for #931921)
 
- -- Simon McVittie <smcv@debian.org>  Wed, 31 Jul 2019 22:12:48 +0100
+ -- Simon McVittie <smcv@debian.org>  Fri, 02 Aug 2019 23:30:23 +0100
 
 glib2.0 (2.60.6-1) unstable; urgency=medium
 
