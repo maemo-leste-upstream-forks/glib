@@ -17,12 +17,6 @@ DEB_LDFLAGS_MAINT_APPEND += -Wl,-O1
 
 include /usr/share/dpkg/default.mk
 
-ifeq ($(DEB_HOST_ARCH),$(DEB_BUILD_ARCH))
-# Drop this when #931921 is fixed
-export CC = $(DEB_HOST_GNU_TYPE)-gcc-8
-export CPP = $(DEB_HOST_GNU_TYPE)-cpp-8
-endif
-
 %:
 	dh $@ --with gnome,python3 --buildsystem=meson
 
@@ -45,11 +39,9 @@ export DH_MESON_CROSS_FILE = debian/cross.txt
 
 # We edit the debcrossgen output to work around unimplemented feature
 # request https://bugs.debian.org/912559
-# Drop --gccsuffix when #931921 is fixed
 override_dh_auto_configure:
 ifneq ($(DEB_HOST_ARCH),$(DEB_BUILD_ARCH))
 	/usr/share/meson/debcrossgen \
-		--gccsuffix=-8 \
 		-o debian/cross.txt.in
 	debian/set-cross-properties \
 		have_c99_snprintf=true \
