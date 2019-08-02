@@ -16,3 +16,4 @@ debian/Skip-unreliable-test_threaded_singleton-by-default.patch
 GIO-tests-Don-t-do-clever-tricks-with-objcopy.patch
 debian/gmenumodel-test-Mark-as-flaky.patch
 debian/gvariant-test-Don-t-run-at-build-time-on-mips.patch
+debian/Disable-an-optimization-when-building-with-gcc-9.patch
