@@ -3,8 +3,7 @@ Section: libs
 Priority: optional
 Maintainer: Debian GNOME Maintainers <pkg-gnome-maintainers@lists.alioth.debian.org>
 Uploaders: @GNOME_TEAM@
-Build-Depends: binutils (>= 2.32.51.20190727-1~) [mips64el],
-               cpp-8,
+Build-Depends: cpp-8 <!cross>,
                dbus <!nocheck>,
                debhelper-compat (= 12),
                desktop-file-utils <!nocheck>,
@@ -13,7 +12,7 @@ Build-Depends: binutils (>= 2.32.51.20190727-1~) [mips64el],
                docbook-xml,
                docbook-xsl,
                dpkg-dev (>= 1.17.14),
-               gcc-8,
+               gcc-8 <!cross>,
                gettext,
                gnome-pkg-tools (>= 0.11),
                gtk-doc-tools (>= 1.20),
@@ -36,6 +35,8 @@ Build-Depends: binutils (>= 2.32.51.20190727-1~) [mips64el],
                xsltproc,
                xterm <!nocheck>,
                zlib1g-dev
+Build-Conflicts: binutils-mips64el-linux-gnuabi64 (<< 2.32.51.20190727-1~) [mips64el],
+                 gcc (>= 4:9) <cross>
 Rules-Requires-Root: no
 Standards-Version: 4.4.0
 Homepage: http://www.gtk.org/
