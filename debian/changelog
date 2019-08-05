@@ -1,3 +1,10 @@
+glib2.0 (2.42.1-1+deb8u3) jessie-security; urgency=medium
+
+  * CVE-2019-13012: Update CVE-2019-13012-1.patch. Fix memleak regression
+    spotted by Simon McVittie. (Closes: #933877).
+
+ -- Mike Gabriel <sunweaver@debian.org>  Mon, 05 Aug 2019 20:58:34 +0200
+
 glib2.0 (2.42.1-1+deb8u2) jessie-security; urgency=medium
 
   * Non-maintainer upload by the LTS team.
