@@ -1,3 +1,4 @@
+gmessages-Only-use-structured-logs-if-GLIB_VERSION_MAX_AL.patch
 tests-Fix-data-race-in-gmenumodel-test.patch
 tests-Fix-data-race-in-task-test.patch
 01_gettext-desktopfiles.patch
