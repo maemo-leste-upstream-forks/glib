@@ -1,5 +1,6 @@
-glib2.0 (2.61.2-1) UNRELEASED; urgency=medium
+glib2.0 (2.61.2-1) experimental; urgency=medium
 
+  * Team upload
   * New upstream release
   * d/patches: Update to upstream git master, commit 2.61.2-23-g870b30bd7
     - Fix regression in g_mkdir_with_permissions()
@@ -25,7 +26,7 @@ glib2.0 (2.61.2-1) UNRELEASED; urgency=medium
     gcc-8. This avoids depending on an old gcc, and should be easier to
     deal with for cross-compilation. (Workaround for #931921)
 
- -- Simon McVittie <smcv@debian.org>  Fri, 02 Aug 2019 23:30:14 +0100
+ -- Simon McVittie <smcv@debian.org>  Mon, 12 Aug 2019 09:32:26 +0100
 
 glib2.0 (2.60.6-1) unstable; urgency=medium
 
