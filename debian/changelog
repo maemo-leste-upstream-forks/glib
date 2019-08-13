@@ -1,5 +1,6 @@
-glib2.0 (2.50.3-2+deb9u1) UNRELEASED; urgency=medium
+glib2.0 (2.50.3-2+deb9u1) stretch; urgency=medium
 
+  * Team upload
   * d/gbp.conf: Add GNOME team configuration
   * d/p/gfile-Limit-access-to-files-when-copying.patch:
     When copying files, give the temporary partial copy of the file
@@ -17,7 +18,7 @@ glib2.0 (2.50.3-2+deb9u1) UNRELEASED; urgency=medium
     Avoid NULL dereference when parsing invalid GMarkup with a malformed
     closing tag not paired with an opening tag (CVE-2018-16429)
 
- -- Simon McVittie <smcv@debian.org>  Wed, 31 Jul 2019 11:24:35 +0100
+ -- Simon McVittie <smcv@debian.org>  Tue, 13 Aug 2019 10:46:20 +0100
 
 glib2.0 (2.50.3-2) unstable; urgency=medium
 
