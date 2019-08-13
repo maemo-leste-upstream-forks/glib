@@ -16,6 +16,7 @@ docs-Remove-mentions-of-mailing-lists-1.patch
 Update-Romanian-translation.patch
 Update-Indonesian-translation.patch
 gfileutils-Fix-error-propagation-for-other-than-ENOENT.patch
+cond-test-Don-t-make-assumptions-about-struct-sigaction-m.patch
 01_gettext-desktopfiles.patch
 0001-timer-test-use-volatile-for-locals.patch
 gwakeuptest-Be-less-parallel-unless-invoked-with-m-slow.patch
