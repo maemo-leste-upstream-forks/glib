@@ -1,5 +1,4 @@
 configure_file(input : 'glibconfig.h.in', output : 'glibconfig.h',
-  install : true,
   install_dir : join_paths(get_option('libdir'), 'glib-2.0/include'),
   configuration : glibconfig_conf)
 
@@ -13,7 +12,7 @@ endif
 # <https://github.com/mesonbuild/meson/issues/3937>. When we can depend
 # on a meson version where those are fixed, revert the commit that
 # introduced this workaround.
-if have_good_vsnprintf and have_good_snprintf
+if use_system_printf
   gnulib_lib = []
   gnulib_objects = []
   gnulib_libm_dependency = []
@@ -309,7 +308,7 @@ if host_system == 'windows'
   glib_sources += [glib_win_res]
   glib_sources += files('gwin32.c', 'gspawn-win32.c', 'giowin32.c')
   platform_deps = [winsock2, cc.find_library('winmm')]
-  if cc.get_id() == 'msvc'
+  if cc.get_id() == 'msvc' or cc.get_id() == 'clang-cl'
     glib_sources += files('dirent/wdirent.c')
   endif
 else
@@ -456,7 +455,7 @@ if enable_systemtap
     output : '@0@.stp'.format(libglib.full_path().split('/').get(-1)),
     configuration : stp_cdata,
     install_dir : tapset_install_dir,
-    install : true)
+  )
 endif
 
 # Don’t build the tests unless we can run them (either natively or in an exe wrapper)

@@ -126,7 +126,7 @@
  */
 
 
-#define REPORT_BUG      "please report occurrence circumstances to gtk-devel-list@gnome.org"
+#define REPORT_BUG      "please report occurrence circumstances to https://gitlab.gnome.org/GNOME/glib/issues/new"
 
 /* --- typedefs --- */
 typedef struct _SignalNode   SignalNode;
@@ -1410,8 +1410,14 @@ g_signal_query (guint         signal_id,
  * in their class_init method by doing super_class->signal_handler = my_signal_handler.
  * Instead they will have to use g_signal_override_class_handler().
  *
- * If c_marshaller is %NULL, g_cclosure_marshal_generic() will be used as
- * the marshaller for this signal.
+ * If @c_marshaller is %NULL, g_cclosure_marshal_generic() will be used as
+ * the marshaller for this signal. In some simple cases, g_signal_new()
+ * will use a more optimized c_marshaller and va_marshaller for the signal
+ * instead of g_cclosure_marshal_generic().
+ *
+ * If @c_marshaller is non-%NULL, you need to also specify a va_marshaller
+ * using g_signal_set_va_marshaller() or the generic va_marshaller will
+ * be used.
  *
  * Returns: the signal id
  */
@@ -3753,9 +3759,14 @@ signal_emit_unlocked_R (SignalNode   *node,
 			node->n_params + 1,
 			instance_and_params,
 			&emission.ihint);
+      if (!accumulate (&emission.ihint, emission_return, &accu, accumulator) &&
+          emission.state == EMISSION_RUN)
+        emission.state = EMISSION_STOP;
       if (need_unset)
 	g_value_unset (&accu);
       SIGNAL_LOCK ();
+      return_value_altered = TRUE;
+
       emission.chain_type = G_TYPE_NONE;
       
       if (emission.state == EMISSION_RESTART)

@@ -150,7 +150,6 @@
  *   setlocale (LC_ALL, "");
  *
  *   g_test_init (&argc, &argv, NULL);
- *   g_test_bug_base ("http://bugzilla.gnome.org/show_bug.cgi?id=");
  *
  *   // Define the tests.
  *   g_test_add ("/my-object/test1", MyObjectFixture, "some-user-data",
@@ -628,7 +627,7 @@
 
 /**
  * g_assert_cmpfloat:
- * @n1: an floating point number
+ * @n1: a floating point number
  * @cmp: The comparison operator to use.
  *     One of `==`, `!=`, `<`, `>`, `<=`, `>=`.
  * @n2: another floating point number
@@ -645,7 +644,7 @@
 
 /**
  * g_assert_cmpfloat_with_epsilon:
- * @n1: an floating point number
+ * @n1: a floating point number
  * @n2: another floating point number
  * @epsilon: a numeric value that expresses the expected tolerance
  *   between @n1 and @n2
@@ -1887,6 +1886,9 @@ g_test_message (const char *format,
  * portion to @uri_pattern, or by replacing the special string
  * '\%s' within @uri_pattern if that is present.
  *
+ * If g_test_bug_base() is not called, bug URIs are formed solely
+ * from the value provided by g_test_bug().
+ *
  * Since: 2.16
  */
 void
@@ -1903,7 +1905,9 @@ g_test_bug_base (const char *uri_pattern)
  * This function adds a message to test reports that
  * associates a bug URI with a test case.
  * Bug URIs are constructed from a base URI set with g_test_bug_base()
- * and @bug_uri_snippet.
+ * and @bug_uri_snippet. If g_test_bug_base() has not been called, it is
+ * assumed to be the empty string, so a full URI can be provided to
+ * g_test_bug() instead.
  *
  * Since: 2.16
  * See also: g_test_summary()
@@ -1911,12 +1915,12 @@ g_test_bug_base (const char *uri_pattern)
 void
 g_test_bug (const char *bug_uri_snippet)
 {
-  char *c;
+  const char *c = NULL;
 
-  g_return_if_fail (test_uri_base != NULL);
   g_return_if_fail (bug_uri_snippet != NULL);
 
-  c = strstr (test_uri_base, "%s");
+  if (test_uri_base != NULL)
+    c = strstr (test_uri_base, "%s");
   if (c)
     {
       char *b = g_strndup (test_uri_base, c - test_uri_base);
@@ -1926,7 +1930,8 @@ g_test_bug (const char *bug_uri_snippet)
       g_free (s);
     }
   else
-    g_test_message ("Bug Reference: %s%s", test_uri_base, bug_uri_snippet);
+    g_test_message ("Bug Reference: %s%s",
+                    test_uri_base ? test_uri_base : "", bug_uri_snippet);
 }
 
 /**
@@ -1940,6 +1945,18 @@ g_test_bug (const char *bug_uri_snippet)
  * in future. It must be a single line.
  *
  * This should be called at the top of a test function.
+ *
+ * For example:
+ * |[<!-- language="C" -->
+ * static void
+ * test_array_sort (void)
+ * {
+ *   g_test_summary ("Test my_array_sort() sorts the array correctly and stably, "
+ *                   "including testing zero length and one-element arrays.");
+ *
+ *   …
+ * }
+ * ]|
  *
  * Since: 2.62
  * See also: g_test_bug()
@@ -3268,6 +3285,7 @@ wait_for_child (GPid pid,
  * and is not always reliable due to problems inherent in
  * fork-without-exec. Use g_test_trap_subprocess() instead.
  */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 gboolean
 g_test_trap_fork (guint64        usec_timeout,
                   GTestTrapFlags test_trap_flags)
@@ -3310,6 +3328,18 @@ g_test_trap_fork (guint64        usec_timeout,
         close (stdout_pipe[1]);
       if (stderr_pipe[1] >= 3)
         close (stderr_pipe[1]);
+
+      /* We typically expect these child processes to crash, and some
+       * tests spawn a *lot* of them.  Avoid spamming system crash
+       * collection programs such as systemd-coredump and abrt.
+       */
+#ifdef HAVE_SYS_RESOURCE_H
+      {
+        struct rlimit limit = { 0, 0 };
+        (void) setrlimit (RLIMIT_CORE, &limit);
+      }
+#endif
+
       return TRUE;
     }
   else                          /* parent */
@@ -3330,6 +3360,7 @@ g_test_trap_fork (guint64        usec_timeout,
   return FALSE;
 #endif
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 /**
  * g_test_trap_subprocess:

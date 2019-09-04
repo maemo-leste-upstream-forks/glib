@@ -1820,22 +1820,6 @@
  */
 
 /**
- * G_CONST_RETURN:
- *
- * If %G_DISABLE_CONST_RETURNS is defined, this macro expands
- * to nothing. By default, the macro expands to const. The macro
- * can be used in place of const for functions that return a value
- * that should not be modified. The purpose of this macro is to allow
- * us to turn on const for returned constant strings by default, while
- * allowing programmers who find that annoying to turn it off. This macro
- * should only be used for return values and for "out" parameters, it
- * doesn't make sense for "in" parameters.
- *
- * Deprecated: 2.30: API providers should replace all existing uses with
- * const and API consumers should adjust their code accordingly
- */
-
-/**
  * G_N_ELEMENTS:
  * @arr: the array
  *
@@ -1995,7 +1979,7 @@
  * @major: major version to check against
  * @minor: minor version to check against
  *
- * Expands to a a check for a compiler with __GNUC__ defined and a version
+ * Expands to a check for a compiler with __GNUC__ defined and a version
  * greater than or equal to the major and minor numbers provided. For example,
  * the following would only match on compilers such as GCC 4.8 or newer.
  *
@@ -2021,7 +2005,44 @@
  * has any effect.)
  *
  * This macro can be used either inside or outside of a function body,
- * but must appear on a line by itself.
+ * but must appear on a line by itself. Both this macro and the corresponding
+ * %G_GNUC_END_IGNORE_DEPRECATIONS are considered statements, so they
+ * should not be used around branching or loop conditions; for instance,
+ * this use is invalid:
+ *
+ * |[<!-- language="C" -->
+ *   G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+ *   if (check == some_deprecated_function ())
+ *   G_GNUC_END_IGNORE_DEPRECATIONS
+ *     {
+ *       do_something ();
+ *     }
+ * ]|
+ *
+ * and you should move the deprecated section outside the condition
+ *
+ * |[<!-- language="C" -->
+ *
+ *   // Solution A
+ *   some_data_t *res;
+ *
+ *   G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+ *   res = some_deprecated_function ();
+ *   G_GNUC_END_IGNORE_DEPRECATIONS
+ *
+ *   if (check == res)
+ *     {
+ *       do_something ();
+ *     }
+ *
+ *   // Solution B
+ *   G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+ *   if (check == some_deprecated_function ())
+ *     {
+ *       do_something ();
+ *     }
+ *   G_GNUC_END_IGNORE_DEPRECATIONS
+ * ]|
  *
  * |[<!-- language="C" --
  * static void
@@ -2100,24 +2121,6 @@
  * A macro that should be defined before including the glib.h header.
  * If it is defined, no compiler warnings will be produced for uses
  * of deprecated GLib APIs.
- */
-
-/**
- * G_GNUC_FUNCTION:
- *
- * Expands to "" on all modern compilers, and to  __FUNCTION__ on gcc
- * version 2.x. Don't use it.
- *
- * Deprecated: 2.16: Use G_STRFUNC() instead
- */
-
-/**
- * G_GNUC_PRETTY_FUNCTION:
- *
- * Expands to "" on all modern compilers, and to __PRETTY_FUNCTION__
- * on gcc version 2.x. Don't use it.
- *
- * Deprecated: 2.16: Use G_STRFUNC() instead
  */
 
 /**
@@ -2212,6 +2215,8 @@
  *
  * The variable is cleaned up in a way appropriate to its type when the
  * variable goes out of scope.  The type must support this.
+ * The way to clean up the type must have been defined using one of the macros
+ * G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC() or G_DEFINE_AUTO_CLEANUP_FREE_FUNC().
  *
  * This feature is only supported on GCC and clang.  This macro is not
  * defined on other compilers and should not be used in programs that
@@ -2266,6 +2271,8 @@
  *
  * The variable is cleaned up in a way appropriate to its type when the
  * variable goes out of scope.  The type must support this.
+ * The way to clean up the type must have been defined using the macro
+ * G_DEFINE_AUTOPTR_CLEANUP_FUNC().
  *
  * This feature is only supported on GCC and clang.  This macro is not
  * defined on other compilers and should not be used in programs that

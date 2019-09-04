@@ -595,9 +595,8 @@ magazine_cache_update_stamp (void)
 {
   if (allocator->stamp_counter >= MAX_STAMP_COUNTER)
     {
-      GTimeVal tv;
-      g_get_current_time (&tv);
-      allocator->last_stamp = tv.tv_sec * 1000 + tv.tv_usec / 1000; /* milli seconds */
+      gint64 now_us = g_get_real_time ();
+      allocator->last_stamp = now_us / 1000; /* milli seconds */
       allocator->stamp_counter = 0;
     }
   else
@@ -1397,7 +1396,9 @@ slab_allocator_free_chunk (gsize    chunk_size,
  */
 
 #if !(HAVE_POSIX_MEMALIGN || HAVE_MEMALIGN || HAVE_VALLOC)
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static GTrashStack *compat_valloc_trash = NULL;
+G_GNUC_END_IGNORE_DEPRECATIONS
 #endif
 
 static gpointer

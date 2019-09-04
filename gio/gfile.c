@@ -1539,9 +1539,9 @@ g_file_query_filesystem_info_finish (GFile         *file,
  *
  * Gets a #GMount for the #GFile.
  *
- * If the #GFileIface for @file does not have a mount (e.g.
- * possibly a remote share), @error will be set to %G_IO_ERROR_NOT_FOUND
- * and %NULL will be returned.
+ * #GMount is returned only for user interesting locations, see
+ * #GVolumeMonitor. If the #GFileIface for @file does not have a #mount,
+ * @error will be set to %G_IO_ERROR_NOT_FOUND and %NULL #will be returned.
  *
  * If @cancellable is not %NULL, then the operation can be cancelled by
  * triggering the cancellable object from another thread. If the operation
@@ -3284,12 +3284,12 @@ file_copy_fallback (GFile                  *source,
         out = (GOutputStream*)_g_local_file_output_stream_replace (_g_local_file_get_filename (G_LOCAL_FILE (destination)),
                                                                    FALSE, NULL,
                                                                    flags & G_FILE_COPY_BACKUP,
-                                                                   G_FILE_CREATE_REPLACE_DESTINATION,
-                                                                   info,
+                                                                   G_FILE_CREATE_REPLACE_DESTINATION |
+                                                                   G_FILE_CREATE_PRIVATE, info,
                                                                    cancellable, error);
       else
         out = (GOutputStream*)_g_local_file_output_stream_create (_g_local_file_get_filename (G_LOCAL_FILE (destination)),
-                                                                  FALSE, 0, info,
+                                                                  FALSE, G_FILE_CREATE_PRIVATE, info,
                                                                   cancellable, error);
     }
   else if (flags & G_FILE_COPY_OVERWRITE)
@@ -3297,12 +3297,13 @@ file_copy_fallback (GFile                  *source,
       out = (GOutputStream *)g_file_replace (destination,
                                              NULL,
                                              flags & G_FILE_COPY_BACKUP,
-                                             G_FILE_CREATE_REPLACE_DESTINATION,
+                                             G_FILE_CREATE_REPLACE_DESTINATION |
+                                             G_FILE_CREATE_PRIVATE,
                                              cancellable, error);
     }
   else
     {
-      out = (GOutputStream *)g_file_create (destination, 0, cancellable, error);
+      out = (GOutputStream *)g_file_create (destination, G_FILE_CREATE_PRIVATE, cancellable, error);
     }
 
   if (!out)
@@ -8219,7 +8220,7 @@ g_file_stop_mountable (GFile               *file,
  * @result: a #GAsyncResult
  * @error: a #GError, or %NULL
  *
- * Finishes an stop operation, see g_file_stop_mountable() for details.
+ * Finishes a stop operation, see g_file_stop_mountable() for details.
  *
  * Finish an asynchronous stop operation that was started
  * with g_file_stop_mountable().

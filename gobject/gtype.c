@@ -380,7 +380,10 @@ static GQuark          static_quark_type_flags = 0;
 static GQuark          static_quark_iface_holder = 0;
 static GQuark          static_quark_dependants_array = 0;
 static guint           type_registration_serial = 0;
+
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 GTypeDebugFlags	       _g_type_debug_flags = 0;
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 /* --- type nodes --- */
 static GHashTable       *static_type_nodes_ht = NULL;
@@ -3267,7 +3270,7 @@ g_type_default_interface_peek (GType g_type)
 /**
  * g_type_default_interface_unref:
  * @g_iface: (type GObject.TypeInterface): the default vtable
- *     structure for a interface, as returned by g_type_default_interface_ref()
+ *     structure for an interface, as returned by g_type_default_interface_ref()
  *
  * Decrements the reference count for the type corresponding to the
  * interface default vtable @g_iface. If the type is dynamic, then
@@ -4332,6 +4335,7 @@ _g_type_boxed_init (GType          type,
  *
  * Deprecated: 2.36: the type system is now initialised automatically
  */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 void
 g_type_init_with_debug_flags (GTypeDebugFlags debug_flags)
 {
@@ -4340,6 +4344,7 @@ g_type_init_with_debug_flags (GTypeDebugFlags debug_flags)
   if (debug_flags)
     g_message ("g_type_init_with_debug_flags() is no longer supported.  Use the GOBJECT_DEBUG environment variable.");
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 /**
  * g_type_init:
@@ -4777,7 +4782,7 @@ g_type_class_get_instance_private_offset (gpointer g_class)
 
 /**
  * g_type_add_class_private:
- * @class_type: GType of an classed type
+ * @class_type: GType of a classed type
  * @private_size: size of private structure
  *
  * Registers a private class structure for a classed type;

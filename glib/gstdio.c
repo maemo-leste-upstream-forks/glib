@@ -19,7 +19,9 @@
 #include "config.h"
 #include "glibconfig.h"
 
-#define G_STDIO_NO_WRAP_ON_UNIX
+/* Don’t redefine (for example) g_open() to open(), since we actually want to
+ * define g_open() in this file and export it as a symbol. See gstdio.h. */
+#define G_STDIO_WRAP_ON_UNIX
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -100,21 +102,34 @@ w32_error_to_errno (DWORD error_code)
     case ERROR_ACCESS_DENIED:
       return EACCES;
       break;
-    case ERROR_INVALID_HANDLE:
-      return EBADF;
+    case ERROR_ALREADY_EXISTS:
+    case ERROR_FILE_EXISTS:
+      return EEXIST;
+    case ERROR_FILE_NOT_FOUND:
+      return ENOENT;
       break;
     case ERROR_INVALID_FUNCTION:
       return EFAULT;
       break;
-    case ERROR_FILE_NOT_FOUND:
-      return ENOENT;
+    case ERROR_INVALID_HANDLE:
+      return EBADF;
       break;
-    case ERROR_PATH_NOT_FOUND:
-      return ENOENT; /* or ELOOP, or ENAMETOOLONG */
+    case ERROR_INVALID_PARAMETER:
+      return EINVAL;
+      break;
+    case ERROR_LOCK_VIOLATION:
+    case ERROR_SHARING_VIOLATION:
+      return EACCES;
       break;
     case ERROR_NOT_ENOUGH_MEMORY:
     case ERROR_OUTOFMEMORY:
       return ENOMEM;
+      break;
+    case ERROR_NOT_SAME_DEVICE:
+      return EXDEV;
+      break;
+    case ERROR_PATH_NOT_FOUND:
+      return ENOENT; /* or ELOOP, or ENAMETOOLONG */
       break;
     default:
       return EIO;
@@ -123,6 +138,26 @@ w32_error_to_errno (DWORD error_code)
 }
 
 #include "gstdio-private.c"
+
+/* Windows implementation of fopen() does not accept modes such as
+ * "wb+". The 'b' needs to be appended to "w+", i.e. "w+b". Note
+ * that otherwise these 2 modes are supposed to be aliases, hence
+ * swappable at will. TODO: Is this still true?
+ */
+static void
+_g_win32_fix_mode (wchar_t *mode)
+{
+  wchar_t *ptr;
+  wchar_t temp;
+
+  ptr = wcschr (mode, L'+');
+  if (ptr != NULL && (ptr - mode) > 1)
+    {
+      temp = mode[1];
+      mode[1] = *ptr;
+      *ptr = temp;
+    }
+}
 
 /* From
  * https://support.microsoft.com/en-ca/help/167296/how-to-convert-a-unix-time-t-to-a-win32-filetime-or-systemtime
@@ -763,26 +798,6 @@ g_win32_fstat (int                fd,
   return _g_win32_stat_fd (fd, buf);
 }
 
-static gchar *
-_g_win32_get_mode_alias (const gchar *mode)
-{
-  gchar *alias;
-
-  alias = g_strdup (mode);
-  if (strlen (mode) > 2 && mode[2] == '+')
-    {
-      /* Windows implementation of fopen() does not accept modes such as
-       * "wb+". The 'b' needs to be appended to "w+", i.e. "w+b". Note
-       * that otherwise these 2 modes are supposed to be aliases, hence
-       * swappable at will.
-       */
-      alias[1] = '+';
-      alias[2] = mode[1];
-    }
-
-  return alias;
-}
-
 /**
  * g_win32_readlink_utf8:
  * @filename: (type filename): a pathname in UTF-8
@@ -1152,20 +1167,7 @@ g_rename (const gchar *oldfilename,
   else
     {
       retval = -1;
-      switch (GetLastError ())
-	{
-#define CASE(a,b) case ERROR_##a: save_errno = b; break
-	  CASE (FILE_NOT_FOUND, ENOENT);
-	  CASE (PATH_NOT_FOUND, ENOENT);
-	  CASE (ACCESS_DENIED, EACCES);
-	  CASE (NOT_SAME_DEVICE, EXDEV);
-	  CASE (LOCK_VIOLATION, EACCES);
-	  CASE (SHARING_VIOLATION, EACCES);
-	  CASE (FILE_EXISTS, EEXIST);
-	  CASE (ALREADY_EXISTS, EEXIST);
-#undef CASE
-	default: save_errno = EIO;
-	}
+      save_errno = w32_error_to_errno (GetLastError ());
     }
 
   g_free (woldfilename);
@@ -1550,7 +1552,6 @@ g_fopen (const gchar *filename,
 #ifdef G_OS_WIN32
   wchar_t *wfilename = g_utf8_to_utf16 (filename, -1, NULL, NULL, NULL);
   wchar_t *wmode;
-  gchar   *mode2;
   FILE *retval;
   int save_errno;
 
@@ -1560,9 +1561,7 @@ g_fopen (const gchar *filename,
       return NULL;
     }
 
-  mode2 = _g_win32_get_mode_alias (mode);
-  wmode = g_utf8_to_utf16 (mode2, -1, NULL, NULL, NULL);
-  g_free (mode2);
+  wmode = g_utf8_to_utf16 (mode, -1, NULL, NULL, NULL);
 
   if (wmode == NULL)
     {
@@ -1571,6 +1570,7 @@ g_fopen (const gchar *filename,
       return NULL;
     }
 
+  _g_win32_fix_mode (wmode);
   retval = _wfopen (wfilename, wmode);
   save_errno = errno;
 
@@ -1609,7 +1609,6 @@ g_freopen (const gchar *filename,
 #ifdef G_OS_WIN32
   wchar_t *wfilename = g_utf8_to_utf16 (filename, -1, NULL, NULL, NULL);
   wchar_t *wmode;
-  gchar   *mode2;
   FILE *retval;
   int save_errno;
 
@@ -1619,9 +1618,7 @@ g_freopen (const gchar *filename,
       return NULL;
     }
 
-  mode2 = _g_win32_get_mode_alias (mode);
-  wmode = g_utf8_to_utf16 (mode2, -1, NULL, NULL, NULL);
-  g_free (mode2);
+  wmode = g_utf8_to_utf16 (mode, -1, NULL, NULL, NULL);
 
   if (wmode == NULL)
     {
@@ -1629,7 +1626,8 @@ g_freopen (const gchar *filename,
       errno = EINVAL;
       return NULL;
     }
-  
+
+  _g_win32_fix_mode (wmode);
   retval = _wfreopen (wfilename, wmode, stream);
   save_errno = errno;
 

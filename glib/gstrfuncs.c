@@ -1302,7 +1302,7 @@ g_strerror (gint errnum)
       g_strlcpy (buf, strerror (errnum), sizeof (buf));
       msg = buf;
 #endif
-      if (!g_get_charset (NULL))
+      if (!g_get_console_charset (NULL))
         {
           msg = g_locale_to_utf8 (msg, -1, NULL, NULL, &error);
           if (error)
@@ -1342,7 +1342,7 @@ g_strsignal (gint signum)
 
 #ifdef HAVE_STRSIGNAL
   msg = strsignal (signum);
-  if (!g_get_charset (NULL))
+  if (!g_get_console_charset (NULL))
     msg = tofree = g_locale_to_utf8 (msg, -1, NULL, NULL, NULL);
 #endif
 
@@ -2331,7 +2331,7 @@ g_strchomp (gchar *string)
  *
  * As a special case, the result of splitting the empty string "" is an empty
  * vector, not a vector containing a single string. The reason for this
- * special case is that being able to represent a empty vector is typically
+ * special case is that being able to represent an empty vector is typically
  * more useful than consistent handling of empty elements. If you do need
  * to represent empty elements, you'll need to check for the empty string
  * before calling g_strsplit().
@@ -2413,7 +2413,7 @@ g_strsplit (const gchar *string,
  *
  * As a special case, the result of splitting the empty string "" is an empty
  * vector, not a vector containing a single string. The reason for this
- * special case is that being able to represent a empty vector is typically
+ * special case is that being able to represent an empty vector is typically
  * more useful than consistent handling of empty elements. If you do need
  * to represent empty elements, you'll need to check for the empty string
  * before calling g_strsplit_set().

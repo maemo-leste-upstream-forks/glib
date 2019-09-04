@@ -24,6 +24,10 @@
 
 #include "config.h"
 
+/* For the #GDesktopAppInfoLookup macros; since macro deprecation is implemented
+ * in the preprocessor, we need to define this before including glib.h*/
+#define GLIB_DISABLE_DEPRECATION_WARNINGS
+
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
@@ -2514,34 +2518,43 @@ prepend_terminal_to_vector (int    *argc,
   term_argv = g_new0 (char *, 3);
 
   check = g_find_program_in_path ("gnome-terminal");
-  if (check == NULL)
-    check = g_find_program_in_path ("mate-terminal");
-  if (check == NULL)
-    check = g_find_program_in_path ("xfce4-terminal");
   if (check != NULL)
     {
       term_argv[0] = check;
-      /* Note that gnome-terminal takes -x and
-       * as -e in gnome-terminal is broken we use that. */
-      term_argv[1] = g_strdup ("-x");
+      /* Since 2017, gnome-terminal has preferred `--` over `-x` or `-e`. */
+      term_argv[1] = g_strdup ("--");
     }
   else
     {
       if (check == NULL)
-        check = g_find_program_in_path ("nxterm");
+        check = g_find_program_in_path ("mate-terminal");
       if (check == NULL)
-        check = g_find_program_in_path ("color-xterm");
-      if (check == NULL)
-        check = g_find_program_in_path ("rxvt");
-      if (check == NULL)
-        check = g_find_program_in_path ("dtterm");
-      if (check == NULL)
+        check = g_find_program_in_path ("xfce4-terminal");
+      if (check != NULL)
         {
-          check = g_strdup ("xterm");
-          g_debug ("Couldn’t find a terminal: falling back to xterm");
+          term_argv[0] = check;
+          /* Note that gnome-terminal takes -x and
+           * as -e in gnome-terminal is broken we use that. */
+          term_argv[1] = g_strdup ("-x");
         }
-      term_argv[0] = check;
-      term_argv[1] = g_strdup ("-e");
+      else
+        {
+          if (check == NULL)
+            check = g_find_program_in_path ("nxterm");
+          if (check == NULL)
+            check = g_find_program_in_path ("color-xterm");
+          if (check == NULL)
+            check = g_find_program_in_path ("rxvt");
+          if (check == NULL)
+            check = g_find_program_in_path ("dtterm");
+          if (check == NULL)
+            {
+              check = g_strdup ("xterm");
+              g_debug ("Couldn’t find a terminal: falling back to xterm");
+            }
+          term_argv[0] = check;
+          term_argv[1] = g_strdup ("-e");
+        }
     }
 
   real_argc = term_argc + *argc;
@@ -4555,6 +4568,9 @@ g_app_info_get_all (void)
  *
  * #GDesktopAppInfoLookup is an opaque data structure and can only be accessed
  * using the following functions.
+ *
+ * Deprecated: 2.28: The #GDesktopAppInfoLookup interface is deprecated and
+ *    unused by GIO.
  **/
 
 G_GNUC_BEGIN_IGNORE_DEPRECATIONS
@@ -4575,17 +4591,18 @@ g_desktop_app_info_lookup_default_init (GDesktopAppInfoLookupInterface *iface)
  * @uri_scheme: a string containing a URI scheme.
  *
  * Gets the default application for launching applications
- * using this URI scheme for a particular GDesktopAppInfoLookup
+ * using this URI scheme for a particular #GDesktopAppInfoLookup
  * implementation.
  *
- * The GDesktopAppInfoLookup interface and this function is used
+ * The #GDesktopAppInfoLookup interface and this function is used
  * to implement g_app_info_get_default_for_uri_scheme() backends
  * in a GIO module. There is no reason for applications to use it
  * directly. Applications should use g_app_info_get_default_for_uri_scheme().
  *
  * Returns: (transfer full): #GAppInfo for given @uri_scheme or %NULL on error.
  *
- * Deprecated: The #GDesktopAppInfoLookup interface is deprecated and unused by gio.
+ * Deprecated: 2.28: The #GDesktopAppInfoLookup interface is deprecated and
+ *    unused by GIO.
  */
 GAppInfo *
 g_desktop_app_info_lookup_get_default_for_uri_scheme (GDesktopAppInfoLookup *lookup,
