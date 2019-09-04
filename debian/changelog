@@ -1,4 +1,4 @@
-glib2.0 (2.61.3-1) UNRELEASED; urgency=medium
+glib2.0 (2.61.3-1) experimental; urgency=medium
 
   * New upstream release
   * d/p: Drop cherry-picks from upstream branch which we now have
@@ -6,7 +6,7 @@ glib2.0 (2.61.3-1) UNRELEASED; urgency=medium
     clutter has been fixed now (thanks Simon)
   * d/p/*: Refresh via gbp-pq as necessary
 
- -- Iain Lane <laney@debian.org>  Wed, 04 Sep 2019 15:53:37 +0100
+ -- Iain Lane <laney@debian.org>  Wed, 04 Sep 2019 17:29:23 +0100
 
 glib2.0 (2.61.2-2) experimental; urgency=medium
 
