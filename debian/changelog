@@ -1,6 +1,8 @@
 glib2.0 (2.62.0-1) UNRELEASED; urgency=medium
 
   * New upstream release
+    + Fix new `GFileInfo` APIs to work when
+      `G_FILE_ATTRIBUTE_TIME_MODIFIED_USEC` was not queried
 
  -- Iain Lane <laney@debian.org>  Mon, 09 Sep 2019 13:36:56 +0100
 
