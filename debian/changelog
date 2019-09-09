@@ -1,3 +1,9 @@
+glib2.0 (2.62.0-1) UNRELEASED; urgency=medium
+
+  * New upstream release
+
+ -- Iain Lane <laney@debian.org>  Mon, 09 Sep 2019 13:36:56 +0100
+
 glib2.0 (2.61.3-1) experimental; urgency=medium
 
   * New upstream release
