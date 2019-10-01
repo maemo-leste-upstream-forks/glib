@@ -2,6 +2,7 @@
 0001-timer-test-use-volatile-for-locals.patch
 gwakeuptest-Be-less-parallel-unless-invoked-with-m-slow.patch
 Always-build-tests-if-we-enabled-installed-tests.patch
+g_file_info_get_modification_date_time-Calculate-in-integ.patch
 debian/02_gettext-desktopfiles-ubuntu.patch
 debian/03_disble_glib_compile_schemas_warning.patch
 debian/06_thread_test_ignore_prctl_fail.patch
