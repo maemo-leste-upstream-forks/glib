@@ -1,0 +1,85 @@
+From: Simon McVittie <smcv@collabora.com>
+Date: Tue, 1 Oct 2019 19:51:48 +0100
+Subject: Always build tests if we enabled installed-tests
+
+If we're cross-compiling, the installed-tests are useful even if we
+can't run them on the build machine: we can copy them to the host
+machine (possibly via a distro package like Debian's libglib2.0-tests)
+and run them there.
+
+While I'm changing the build-tests condition anyway, deduplicate it.
+
+Based on a patch by Helmut Grohne.
+
+Bug-Debian: https://bugs.debian.org/941509
+Signed-off-by: Simon McVittie <smcv@collabora.com>
+Forwarded: https://gitlab.gnome.org/GNOME/glib/merge_requests/1138
+---
+ gio/meson.build     | 2 --
+ glib/meson.build    | 2 --
+ gobject/meson.build | 2 --
+ meson.build         | 5 +++--
+ 4 files changed, 3 insertions(+), 8 deletions(-)
+
+diff --git a/gio/meson.build b/gio/meson.build
+index 9a9e621..173000f 100644
+--- a/gio/meson.build
++++ b/gio/meson.build
+@@ -1009,8 +1009,6 @@ if enable_systemtap
+ endif
+ 
+ subdir('fam')
+-# Don’t build the tests unless we can run them (either natively or in an exe wrapper)
+-build_tests = not meson.is_cross_build() or (meson.is_cross_build() and meson.has_exe_wrapper())
+ if build_tests
+     subdir('tests')
+ endif
+diff --git a/glib/meson.build b/glib/meson.build
+index 91a48f1..aaf5f00 100644
+--- a/glib/meson.build
++++ b/glib/meson.build
+@@ -458,8 +458,6 @@ if enable_systemtap
+   )
+ endif
+ 
+-# Don’t build the tests unless we can run them (either natively or in an exe wrapper)
+-build_tests = not meson.is_cross_build() or (meson.is_cross_build() and meson.has_exe_wrapper())
+ if build_tests
+   subdir('tests')
+ endif
+diff --git a/gobject/meson.build b/gobject/meson.build
+index c7805c5..85e283b 100644
+--- a/gobject/meson.build
++++ b/gobject/meson.build
+@@ -165,8 +165,6 @@ if enable_systemtap
+   )
+ endif
+ 
+-# Don’t build the tests unless we can run them (either natively or in an exe wrapper)
+-build_tests = not meson.is_cross_build() or (meson.is_cross_build() and meson.has_exe_wrapper())
+ if build_tests
+   subdir('tests')
+ endif
+diff --git a/meson.build b/meson.build
+index 717d1bc..0c4806d 100644
+--- a/meson.build
++++ b/meson.build
+@@ -76,6 +76,9 @@ installed_tests_enabled = get_option('installed_tests')
+ installed_tests_template = files('template.test.in')
+ installed_tests_template_tap = files('template-tap.test.in')
+ 
++# Don’t build the tests unless we can run them (either natively, in an exe wrapper, or by installing them for later use)
++build_tests = not meson.is_cross_build() or (meson.is_cross_build() and meson.has_exe_wrapper()) or installed_tests_enabled
++
+ add_project_arguments('-D_GNU_SOURCE', language: 'c')
+ 
+ # Disable strict aliasing;
+@@ -2097,8 +2100,6 @@ subdir('gthread')
+ subdir('gmodule')
+ subdir('gio')
+ subdir('fuzzing')
+-# Don’t build the tests unless we can run them (either natively or in an exe wrapper)
+-build_tests = not meson.is_cross_build() or (meson.is_cross_build() and meson.has_exe_wrapper())
+ if build_tests
+   subdir('tests')
+ endif
