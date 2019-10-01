@@ -49,6 +49,7 @@
 #include <gio/gtlsclientconnection.h>
 #include <gio/ginetaddress.h>
 #include "glibintl.h"
+#include "gmarshal-internal.h"
 
 /* As recommended by RFC 8305 this is the time it waits
  * on a connection before starting another concurrent attempt.
@@ -457,7 +458,7 @@ g_socket_client_get_protocol (GSocketClient *client)
  * The sockets created by this object will use of the specified
  * protocol.
  *
- * If @protocol is %0 that means to use the default
+ * If @protocol is %G_SOCKET_PROTOCOL_DEFAULT that means to use the default
  * protocol for the socket family and type.
  *
  * Since: 2.22
@@ -832,11 +833,14 @@ g_socket_client_class_init (GSocketClientClass *class)
 		  G_SIGNAL_RUN_LAST,
 		  G_STRUCT_OFFSET (GSocketClientClass, event),
 		  NULL, NULL,
-		  NULL,
+		  _g_cclosure_marshal_VOID__ENUM_OBJECT_OBJECT,
 		  G_TYPE_NONE, 3,
 		  G_TYPE_SOCKET_CLIENT_EVENT,
 		  G_TYPE_SOCKET_CONNECTABLE,
 		  G_TYPE_IO_STREAM);
+  g_signal_set_va_marshaller (signals[EVENT],
+                              G_TYPE_FROM_CLASS (class),
+                              _g_cclosure_marshal_VOID__ENUM_OBJECT_OBJECTv);
 
   g_object_class_install_property (gobject_class, PROP_FAMILY,
 				   g_param_spec_enum ("family",
@@ -1006,6 +1010,7 @@ g_socket_client_connect (GSocketClient       *client,
       if (g_cancellable_is_cancelled (cancellable))
 	{
 	  g_clear_error (error);
+	  g_clear_error (&last_error);
 	  g_cancellable_set_error_if_cancelled (cancellable, error);
 	  break;
 	}

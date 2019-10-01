@@ -362,7 +362,7 @@ static void
 token_stream_assert (TokenStream *stream,
                      const gchar *token)
 {
-  gboolean correct_token;
+  gboolean correct_token G_GNUC_UNUSED  /* when compiling with G_DISABLE_ASSERT */;
 
   correct_token = token_stream_consume (stream, token);
   g_assert (correct_token);
@@ -418,6 +418,8 @@ pattern_copy (gchar       **out,
   while (brackets);
 }
 
+/* Returns the most general pattern that is subpattern of left and subpattern
+ * of right, or NULL if there is no such pattern. */
 static gchar *
 pattern_coalesce (const gchar *left,
                   const gchar *right)
@@ -458,7 +460,7 @@ pattern_coalesce (const gchar *left,
               *out++ = *(*the_other)++;
             }
 
-          else if (**one == 'M' && **the_other != 'm')
+          else if (**one == 'M' && **the_other != 'm' && **the_other != '*')
             {
               (*one)++;
             }
@@ -672,18 +674,7 @@ ast_array_get_pattern (AST    **array,
   gint i;
 
   /* Find the pattern which applies to all children in the array, by l-folding a
-   * coalesce operation. This will not always work: for example, the GVariant:
-   *    [[0], [], [nothing]]
-   * has patterns:
-   *    MaMN, Ma*, Mam*
-   * which pairwise coalesce as:
-   *    MaMN + Ma* = MaN
-   *    MaN + Mam* = (doesn’t coalesce)
-   *
-   * However, the pattern MamN coalesces with all three child patterns. Finding
-   * this pattern would require trying all O(n_items^2) pairs, though, which is
-   * expensive. Just let it fail, and require the user to provide type
-   * annotations.
+   * coalesce operation.
    */
   pattern = ast_get_pattern (array[0], error);
 
@@ -719,10 +710,10 @@ ast_array_get_pattern (AST    **array,
               gchar *tmp2;
               gchar *m;
 
-              /* if 'j' reaches 'i' then we failed to find the pair, which can
-               * happen due to only trying pairwise coalesces in order rather
-               * than between all pairs (see above). so just report an error
-               * for i. */
+              /* if 'j' reaches 'i' then we didn't find the pair that failed
+               * to coalesce. This shouldn't happen (see above), but just in
+               * case report an error:
+               */
               if (j >= i)
                 {
                   ast_set_error (array[i], error, NULL,
@@ -1947,7 +1938,8 @@ number_get_value (AST                 *ast,
         return number_overflow (ast, type, error);
       if (negative && abs_val > G_MAXINT16)
         return g_variant_new_int16 (G_MININT16);
-      return g_variant_new_int16 (negative ? -((gint16) abs_val) : abs_val);
+      return g_variant_new_int16 (negative ?
+                                  -((gint16) abs_val) : ((gint16) abs_val));
 
     case 'q':
       if (negative || abs_val > G_MAXUINT16)
@@ -1959,7 +1951,8 @@ number_get_value (AST                 *ast,
         return number_overflow (ast, type, error);
       if (negative && abs_val > G_MAXINT32)
         return g_variant_new_int32 (G_MININT32);
-      return g_variant_new_int32 (negative ? -((gint32) abs_val) : abs_val);
+      return g_variant_new_int32 (negative ?
+                                  -((gint32) abs_val) : ((gint32) abs_val));
 
     case 'u':
       if (negative || abs_val > G_MAXUINT32)
@@ -1971,7 +1964,8 @@ number_get_value (AST                 *ast,
         return number_overflow (ast, type, error);
       if (negative && abs_val > G_MAXINT64)
         return g_variant_new_int64 (G_MININT64);
-      return g_variant_new_int64 (negative ? -((gint64) abs_val) : abs_val);
+      return g_variant_new_int64 (negative ?
+                                  -((gint64) abs_val) : ((gint64) abs_val));
 
     case 't':
       if (negative)
@@ -1983,7 +1977,8 @@ number_get_value (AST                 *ast,
         return number_overflow (ast, type, error);
       if (negative && abs_val > G_MAXINT32)
         return g_variant_new_handle (G_MININT32);
-      return g_variant_new_handle (negative ? -((gint32) abs_val) : abs_val);
+      return g_variant_new_handle (negative ?
+                                   -((gint32) abs_val) : ((gint32) abs_val));
 
     default:
       return ast_type_error (ast, type, error);
@@ -2639,7 +2634,7 @@ g_variant_builder_add_parsed (GVariantBuilder *builder,
 static gboolean
 parse_num (const gchar *num,
            const gchar *limit,
-           gint        *result)
+           guint       *result)
 {
   gchar *endptr;
   gint64 bignum;
@@ -2652,7 +2647,7 @@ parse_num (const gchar *num,
   if (bignum < 0 || bignum > G_MAXINT)
     return FALSE;
 
-  *result = bignum;
+  *result = (guint) bignum;
 
   return TRUE;
 }
@@ -2808,7 +2803,7 @@ g_variant_parse_error_print_context (GError      *error,
 
   if (dash == NULL || colon < dash)
     {
-      gint point;
+      guint point;
 
       /* we have a single point */
       if (!parse_num (error->message, colon, &point))
@@ -2818,7 +2813,7 @@ g_variant_parse_error_print_context (GError      *error,
         /* the error is at the end of the input */
         add_last_line (err, source_str);
       else
-        /* otherwise just treat it as a error at a thin range */
+        /* otherwise just treat it as an error at a thin range */
         add_lines_from_range (err, source_str, source_str + point, source_str + point + 1, NULL, NULL);
     }
   else
@@ -2826,7 +2821,7 @@ g_variant_parse_error_print_context (GError      *error,
       /* We have one or two ranges... */
       if (comma && comma < colon)
         {
-          gint start1, end1, start2, end2;
+          guint start1, end1, start2, end2;
           const gchar *dash2;
 
           /* Two ranges */
@@ -2842,7 +2837,7 @@ g_variant_parse_error_print_context (GError      *error,
         }
       else
         {
-          gint start, end;
+          guint start, end;
 
           /* One range */
           if (!parse_num (error->message, dash, &start) || !parse_num (dash + 1, colon, &end))

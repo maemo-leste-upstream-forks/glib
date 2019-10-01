@@ -57,6 +57,9 @@
 #include <sys/time.h>
 #include <unistd.h>
 
+#ifdef HAVE_PTHREAD_SET_NAME_NP
+#include <pthread_np.h>
+#endif
 #ifdef HAVE_SCHED_H
 #include <sched.h>
 #endif
@@ -587,8 +590,10 @@ g_rw_lock_writer_unlock (GRWLock *rw_lock)
  * @rw_lock: a #GRWLock
  *
  * Obtain a read lock on @rw_lock. If another thread currently holds
- * the write lock on @rw_lock or blocks waiting for it, the current
- * thread will block. Read locks can be taken recursively.
+ * the write lock on @rw_lock, the current thread will block. If another thread
+ * does not hold the write lock, but is waiting for it, it is implementation
+ * defined whether the reader or writer will block. Read locks can be taken
+ * recursively.
  *
  * It is implementation-defined how many threads are allowed to
  * hold read locks on the same lock simultaneously. If the limit is hit,
@@ -1177,7 +1182,7 @@ g_system_thread_new (GThreadFunc   proxy,
 #ifdef _SC_THREAD_STACK_MIN
       long min_stack_size = sysconf (_SC_THREAD_STACK_MIN);
       if (min_stack_size >= 0)
-        stack_size = MAX (min_stack_size, stack_size);
+        stack_size = MAX ((gulong) min_stack_size, stack_size);
 #endif /* _SC_THREAD_STACK_MIN */
       /* No error check here, because some systems can't do it and
        * we simply don't want threads to fail because of that. */
@@ -1243,10 +1248,14 @@ g_system_thread_exit (void)
 void
 g_system_thread_set_name (const gchar *name)
 {
-#if defined(HAVE_PTHREAD_SETNAME_NP_WITH_TID)
-  pthread_setname_np (pthread_self(), name); /* on Linux and Solaris */
-#elif defined(HAVE_PTHREAD_SETNAME_NP_WITHOUT_TID)
+#if defined(HAVE_PTHREAD_SETNAME_NP_WITHOUT_TID)
   pthread_setname_np (name); /* on OS X and iOS */
+#elif defined(HAVE_PTHREAD_SETNAME_NP_WITH_TID)
+  pthread_setname_np (pthread_self (), name); /* on Linux and Solaris */
+#elif defined(HAVE_PTHREAD_SETNAME_NP_WITH_TID_AND_ARG)
+  pthread_setname_np (pthread_self (), "%s", (gchar *) name); /* on NetBSD */
+#elif defined(HAVE_PTHREAD_SET_NAME_NP)
+  pthread_set_name_np (pthread_self (), name); /* on FreeBSD, DragonFlyBSD, OpenBSD */
 #endif
 }
 

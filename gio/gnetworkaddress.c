@@ -224,7 +224,7 @@ g_network_address_get_property (GObject    *object,
 
 }
 
-/**
+/*
  * inet_addresses_to_inet_socket_addresses:
  * @addresses: (transfer full): #GList of #GInetAddress
  *
@@ -333,7 +333,7 @@ g_network_address_new (const gchar *hostname,
  * resolving `localhost`, and an IPv6 address for `localhost6`.
  *
  * g_network_address_get_hostname() will always return `localhost` for
- * #GNetworkAddresses created with this constructor.
+ * a #GNetworkAddress created with this constructor.
  *
  * Returns: (transfer full) (type GNetworkAddress): the new #GNetworkAddress
  *
@@ -1380,7 +1380,7 @@ g_network_address_address_enumerator_next_async (GSocketAddressEnumerator  *enum
 
               addr_enum->state = RESOLVE_STATE_WAITING_ON_IPV4 | RESOLVE_STATE_WAITING_ON_IPV6;
               addr_enum->queued_task = g_steal_pointer (&task);
-              /* Lookup in parallel as per RFC 8305 */
+              /* Look up in parallel as per RFC 8305 */
               g_resolver_lookup_by_name_with_flags_async (resolver,
                                                           addr->priv->hostname,
                                                           G_RESOLVER_NAME_LOOKUP_FLAGS_IPV6_ONLY,

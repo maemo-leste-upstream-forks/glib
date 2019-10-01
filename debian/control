@@ -40,8 +40,8 @@ Build-Depends: dbus <!nocheck>,
 Rules-Requires-Root: no
 Standards-Version: 4.4.0
 Homepage: http://www.gtk.org/
-Vcs-Browser: https://salsa.debian.org/gnome-team/glib
-Vcs-Git: https://salsa.debian.org/gnome-team/glib.git
+Vcs-Browser: https://salsa.debian.org/gnome-team/glib/tree/debian/experimental
+Vcs-Git: https://salsa.debian.org/gnome-team/glib.git -b debian/experimental
 
 Package: libglib2.0-0
 Architecture: any
@@ -61,7 +61,8 @@ Description: GLib library of C routines
 
 Package: libglib2.0-tests
 Architecture: any
-Depends: shared-mime-info,
+Depends: libglib2.0-dev-bin,
+         shared-mime-info,
          ${misc:Depends},
          ${python3:Depends},
          ${shlibs:Depends}

@@ -81,14 +81,16 @@ if get_option('gtk_doc')
     'gunixresolver.h',
     'gunixvolume.h',
     'gunixvolumemonitor.h',
+    'gwin32networkmonitor.h',
     'gwin32appinfo.h',
     'gwin32mount.h',
-    'gwin32registrykey.h',
     'gwin32resolver.h',
     'gwin32volumemonitor.h',
     'thumbnail-verify.h',
     'xdp-dbus.h',
   ]
+
+  sections_files = files('gio-sections-common.txt')
 
   if host_system == 'windows'
     ignore_headers += [
@@ -104,6 +106,8 @@ if get_option('gtk_doc')
       'gdesktopappinfo.h',
       'gosxappinfo.h',
     ]
+    sections_files += files('gio-sections-win32.txt')
+    platform_file = files('gio-docs-win32.xml')
   else
     if glib_have_cocoa
       ignore_headers += ['gdesktopappinfo.h']
@@ -112,74 +116,19 @@ if get_option('gtk_doc')
     endif
 
     ignore_headers += [
-      'gwin32networkmonitor.h',
       'gwin32inputstream.h',
       'gwin32outputstream.h',
+      'gwin32registrykey.h',
     ]
+    platform_file = files('gio-docs-unix.xml')
   endif
 
-  ignore_decorators = [
-    'GLIB_VAR',
-    'G_GNUC_INTERNAL',
-    'G_GNUC_WARN_UNUSED_RESULT',
-    'GLIB_AVAILABLE_IN_ALL',
-    'GLIB_AVAILABLE_IN_2_26',
-    'GLIB_AVAILABLE_IN_2_28',
-    'GLIB_AVAILABLE_IN_2_30',
-    'GLIB_AVAILABLE_IN_2_32',
-    'GLIB_AVAILABLE_IN_2_34',
-    'GLIB_AVAILABLE_IN_2_36',
-    'GLIB_AVAILABLE_IN_2_38',
-    'GLIB_AVAILABLE_IN_2_40',
-    'GLIB_AVAILABLE_IN_2_42',
-    'GLIB_AVAILABLE_IN_2_44',
-    'GLIB_AVAILABLE_IN_2_46',
-    'GLIB_AVAILABLE_IN_2_48',
-    'GLIB_AVAILABLE_IN_2_50',
-    'GLIB_AVAILABLE_IN_2_52',
-    'GLIB_AVAILABLE_IN_2_54',
-    'GLIB_AVAILABLE_IN_2_56',
-    'GLIB_AVAILABLE_IN_2_58',
-    'GLIB_AVAILABLE_IN_2_60',
-    'GLIB_DEPRECATED_IN_2_26',
-    'GLIB_DEPRECATED_IN_2_26_FOR',
-    'GLIB_DEPRECATED_IN_2_28',
-    'GLIB_DEPRECATED_IN_2_28_FOR',
-    'GLIB_DEPRECATED_IN_2_30',
-    'GLIB_DEPRECATED_IN_2_30_FOR',
-    'GLIB_DEPRECATED_IN_2_32',
-    'GLIB_DEPRECATED_IN_2_32_FOR',
-    'GLIB_DEPRECATED_IN_2_34',
-    'GLIB_DEPRECATED_IN_2_34_FOR',
-    'GLIB_DEPRECATED_IN_2_36',
-    'GLIB_DEPRECATED_IN_2_36_FOR',
-    'GLIB_DEPRECATED_IN_2_38',
-    'GLIB_DEPRECATED_IN_2_38_FOR',
-    'GLIB_DEPRECATED_IN_2_40',
-    'GLIB_DEPRECATED_IN_2_40_FOR',
-    'GLIB_DEPRECATED_IN_2_42',
-    'GLIB_DEPRECATED_IN_2_42_FOR',
-    'GLIB_DEPRECATED_IN_2_44',
-    'GLIB_DEPRECATED_IN_2_44_FOR',
-    'GLIB_DEPRECATED_IN_2_46',
-    'GLIB_DEPRECATED_IN_2_46_FOR',
-    'GLIB_DEPRECATED_IN_2_48',
-    'GLIB_DEPRECATED_IN_2_48_FOR',
-    'GLIB_DEPRECATED_IN_2_50',
-    'GLIB_DEPRECATED_IN_2_50_FOR',
-    'GLIB_DEPRECATED_IN_2_52',
-    'GLIB_DEPRECATED_IN_2_52_FOR',
-    'GLIB_DEPRECATED_IN_2_54',
-    'GLIB_DEPRECATED_IN_2_54_FOR',
-    'GLIB_DEPRECATED_IN_2_56',
-    'GLIB_DEPRECATED_IN_2_56_FOR',
-    'GLIB_DEPRECATED_IN_2_58',
-    'GLIB_DEPRECATED_IN_2_58_FOR',
-    'GLIB_DEPRECATED_IN_2_60',
-    'GLIB_DEPRECATED_IN_2_60_FOR',
+  ignore_sources = [
+    'kqueue',
+    'tests',
+    'gdbus-daemon-generated.c',
+    'xdp-dbus.c',
   ]
-
-  # FIXME: More win32 headers were added to fix building gio-scan
 
   # FIXME: ExampleAnimal docs aren't built
 
@@ -192,17 +141,31 @@ if get_option('gtk_doc')
     configuration: version_conf
   )
 
+  concat_files_helper = find_program('concat-files-helper.py')
+  configure_file(
+    output : 'gio-sections.txt',
+    input : sections_files,
+    command : [concat_files_helper, '@OUTPUT@', '@INPUT@'],
+  )
+
+  configure_file(
+    output : 'gio-docs-platform.xml',
+    input : platform_file,
+    copy : true,
+  )
+
   gnome.gtkdoc('gio',
     main_xml : 'gio-docs.xml',
     namespace : 'g',
     mode : 'none',
     dependencies : [libgio_dep, libgobject_dep, libglib_dep],
     src_dir : 'gio',
-    scan_args : [
+    scan_args : gtkdoc_common_scan_args + [
       '--rebuild-types',
-      '--deprecated-guards=G_DISABLE_DEPRECATED',
-      '--ignore-decorators=' + '|'.join(ignore_decorators),
       '--ignore-headers=' + ' '.join(ignore_headers),
+    ],
+    mkdb_args : [
+      '--ignore-files=' + ' '.join(ignore_sources),
     ],
     content_files : [
       'overview.xml',

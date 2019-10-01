@@ -95,28 +95,6 @@
 #ifdef G_OS_WIN32
 #  include <direct.h>
 #  include <shlobj.h>
-   /* older SDK (e.g. msvc 5.0) does not have these*/
-#  ifndef CSIDL_MYMUSIC
-#    define CSIDL_MYMUSIC 13
-#  endif
-#  ifndef CSIDL_MYVIDEO
-#    define CSIDL_MYVIDEO 14
-#  endif
-#  ifndef CSIDL_INTERNET_CACHE
-#    define CSIDL_INTERNET_CACHE 32
-#  endif
-#  ifndef CSIDL_COMMON_APPDATA
-#    define CSIDL_COMMON_APPDATA 35
-#  endif
-#  ifndef CSIDL_MYPICTURES
-#    define CSIDL_MYPICTURES 0x27
-#  endif
-#  ifndef CSIDL_COMMON_DOCUMENTS
-#    define CSIDL_COMMON_DOCUMENTS 46
-#  endif
-#  ifndef CSIDL_PROFILE
-#    define CSIDL_PROFILE 40
-#  endif
 #  include <process.h>
 #endif
 
@@ -218,6 +196,7 @@ _glib_get_dll_directory (void)
  *
  * Deprecated:2.32: It is best to avoid g_atexit().
  */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 void
 g_atexit (GVoidFunc func)
 {
@@ -232,6 +211,7 @@ g_atexit (GVoidFunc func)
                g_strerror (errsv));
     }
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 /* Based on execvp() from GNU Libc.
  * Some of this code is cut-and-pasted into gspawn.c
@@ -1001,8 +981,37 @@ g_get_host_name (void)
       gchar *utmp;
 
 #ifndef G_OS_WIN32
-      gchar *tmp = g_malloc (sizeof (gchar) * 100);
-      failed = (gethostname (tmp, sizeof (gchar) * 100) == -1);
+      glong max;
+      gsize size;
+      /* The number 256 * 256 is taken from the value of _POSIX_HOST_NAME_MAX,
+       * which is 255. Since we use _POSIX_HOST_NAME_MAX + 1 (= 256) in the
+       * fallback case, we pick 256 * 256 as the size of the larger buffer here.
+       * It should be large enough. It doesn't looks reasonable to name a host
+       * with a string that is longer than 64 KiB.
+       */
+      const gsize size_large = (gsize) 256 * 256;
+      gchar *tmp;
+
+      max = sysconf (_SC_HOST_NAME_MAX);
+      if (max > 0 && max <= G_MAXSIZE - 1)
+        size = (gsize) max + 1;
+      else
+#ifdef HOST_NAME_MAX
+        size = HOST_NAME_MAX + 1;
+#else
+        size = _POSIX_HOST_NAME_MAX + 1;
+#endif
+
+      tmp = g_malloc (size);
+      failed = (gethostname (tmp, size) == -1);
+      if (failed && size < size_large)
+        {
+          /* Try again with a larger buffer if 'size' may be too small. */
+          g_free (tmp);
+          tmp = g_malloc (size_large);
+          failed = (gethostname (tmp, size_large) == -1);
+        }
+
       if (failed)
         g_clear_pointer (&tmp, g_free);
       utmp = tmp;
@@ -1037,7 +1046,8 @@ static gchar *g_prgname = NULL;
  * #GtkApplication::startup handler. The program name is found by
  * taking the last component of @argv[0].
  *
- * Returns: the name of the program. The returned string belongs 
+ * Returns: (nullable): the name of the program, or %NULL if it has not been
+ *     set yet. The returned string belongs
  *     to GLib and must not be modified or freed.
  */
 const gchar*
@@ -1046,29 +1056,6 @@ g_get_prgname (void)
   gchar* retval;
 
   G_LOCK (g_prgname);
-#ifdef G_OS_WIN32
-  if (g_prgname == NULL)
-    {
-      static gboolean beenhere = FALSE;
-
-      if (!beenhere)
-	{
-	  gchar *utf8_buf = NULL;
-	  wchar_t buf[MAX_PATH+1];
-
-	  beenhere = TRUE;
-	  if (GetModuleFileNameW (GetModuleHandle (NULL),
-				  buf, G_N_ELEMENTS (buf)) > 0)
-	    utf8_buf = g_utf16_to_utf8 (buf, -1, NULL, NULL, NULL);
-
-	  if (utf8_buf)
-	    {
-	      g_prgname = g_path_get_basename (utf8_buf);
-	      g_free (utf8_buf);
-	    }
-	}
-    }
-#endif
   retval = g_prgname;
   G_UNLOCK (g_prgname);
 
@@ -2500,16 +2487,7 @@ g_format_size_full (guint64          size,
           /* Translators: the %s in "%s bits" will always be replaced by a number. */
           translated_format = g_dngettext (GETTEXT_PACKAGE, "%s bit", "%s bits", plural_form);
         }
-      /* XXX: Windows doesn't support the "'" format modifier, so we
-       * must not use it there.  Instead, just display the number
-       * without separation.  Bug #655336 is open until a solution is
-       * found.
-       */
-#ifndef G_OS_WIN32
       formatted_number = g_strdup_printf ("%'"G_GUINT64_FORMAT, size);
-#else
-      formatted_number = g_strdup_printf ("%"G_GUINT64_FORMAT, size);
-#endif
 
       g_string_append (string, " (");
       g_string_append_printf (string, translated_format, formatted_number);

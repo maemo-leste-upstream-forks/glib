@@ -60,7 +60,6 @@
  * SECTION:testing
  * @title: Testing
  * @short_description: a test framework
- * @see_also: [gtester][gtester], [gtester-report][gtester-report]
  *
  * GLib provides a framework for writing and maintaining unit tests
  * in parallel to the code they are testing. The API is designed according
@@ -151,7 +150,6 @@
  *   setlocale (LC_ALL, "");
  *
  *   g_test_init (&argc, &argv, NULL);
- *   g_test_bug_base ("http://bugzilla.gnome.org/show_bug.cgi?id=");
  *
  *   // Define the tests.
  *   g_test_add ("/my-object/test1", MyObjectFixture, "some-user-data",
@@ -235,7 +233,10 @@
  * If you don't have access to the Autotools TAP harness, you can use the
  * [gtester][gtester] and [gtester-report][gtester-report] tools, and use
  * the [glib.mk](https://gitlab.gnome.org/GNOME/glib/blob/glib-2-58/glib.mk)
- * Automake template provided by GLib.
+ * Automake template provided by GLib. Note, however, that since GLib 2.62,
+ * [gtester][gtester] and [gtester-report][gtester-report] have been deprecated
+ * in favour of using TAP. The `--tap` argument to tests is enabled by default
+ * as of GLib 2.62.
  */
 
 /**
@@ -345,28 +346,6 @@
  * g_test_queue_destroy() with a destroy callback of g_object_unref().
  *
  * Since: 2.16
- */
-
-/**
- * GTestTrapFlags:
- * @G_TEST_TRAP_SILENCE_STDOUT: Redirect stdout of the test child to
- *     `/dev/null` so it cannot be observed on the console during test
- *     runs. The actual output is still captured though to allow later
- *     tests with g_test_trap_assert_stdout().
- * @G_TEST_TRAP_SILENCE_STDERR: Redirect stderr of the test child to
- *     `/dev/null` so it cannot be observed on the console during test
- *     runs. The actual output is still captured though to allow later
- *     tests with g_test_trap_assert_stderr().
- * @G_TEST_TRAP_INHERIT_STDIN: If this flag is given, stdin of the
- *     child process is shared with stdin of its parent process.
- *     It is redirected to `/dev/null` otherwise.
- *
- * Test traps are guards around forked tests.
- * These flags determine what traps to set.
- *
- * Deprecated: #GTestTrapFlags is used only with g_test_trap_fork(),
- * which is deprecated. g_test_trap_subprocess() uses
- * #GTestSubprocessFlags.
  */
 
 /**
@@ -648,7 +627,7 @@
 
 /**
  * g_assert_cmpfloat:
- * @n1: an floating point number
+ * @n1: a floating point number
  * @cmp: The comparison operator to use.
  *     One of `==`, `!=`, `<`, `>`, `<=`, `>=`.
  * @n2: another floating point number
@@ -665,7 +644,7 @@
 
 /**
  * g_assert_cmpfloat_with_epsilon:
- * @n1: an floating point number
+ * @n1: a floating point number
  * @n2: another floating point number
  * @epsilon: a numeric value that expresses the expected tolerance
  *   between @n1 and @n2
@@ -854,7 +833,7 @@ static char       *test_trap_last_stdout = NULL;
 static char       *test_trap_last_stderr = NULL;
 static char       *test_uri_base = NULL;
 static gboolean    test_debug_log = FALSE;
-static gboolean    test_tap_log = FALSE;
+static gboolean    test_tap_log = TRUE;  /* default to TAP as of GLib 2.62; see #1619; the non-TAP output mode is deprecated */
 static gboolean    test_nonfatal_assertions = FALSE;
 static DestroyEntry *test_destroy_queue = NULL;
 static char       *test_argv0 = NULL;
@@ -964,17 +943,24 @@ g_test_log (GTestLogType lbit,
     case G_TEST_LOG_START_SUITE:
       if (test_tap_log)
         {
+          /* We only print the TAP "plan" (1..n) ahead of time if we did
+           * not use the -p option to select specific tests to be run. */
           if (string1[0] != 0)
             g_print ("# Start of %s tests\n", string1);
-          else
+          else if (test_paths == NULL)
             g_print ("1..%d\n", test_count);
         }
       break;
     case G_TEST_LOG_STOP_SUITE:
       if (test_tap_log)
         {
+          /* If we didn't print the TAP "plan" at the beginning because
+           * we were using -p, we need to print how many tests we ran at
+           * the end instead. */
           if (string1[0] != 0)
             g_print ("# End of %s tests\n", string1);
+          else if (test_paths != NULL)
+            g_print ("1..%d\n", test_run_count);
         }
       break;
     case G_TEST_LOG_STOP_CASE:
@@ -1015,6 +1001,10 @@ g_test_log (GTestLogType lbit,
         }
       if (result == G_TEST_RUN_SKIPPED || result == G_TEST_RUN_INCOMPLETE)
         test_skipped_count++;
+      break;
+    case G_TEST_LOG_SKIP_CASE:
+      if (test_tap_log)
+          g_print ("ok %d %s # SKIP\n", test_run_count, string1);
       break;
     case G_TEST_LOG_MIN_RESULT:
       if (test_tap_log)
@@ -1119,6 +1109,9 @@ parse_args (gint    *argc_p,
               test_log_fd = g_ascii_strtoull (argv[i], NULL, 0);
             }
           argv[i] = NULL;
+
+          /* Force non-TAP output when using gtester */
+          test_tap_log = FALSE;
         }
       else if (strcmp ("--GTestSkipCount", argv[i]) == 0 || strncmp ("--GTestSkipCount=", argv[i], 17) == 0)
         {
@@ -1146,6 +1139,10 @@ parse_args (gint    *argc_p,
           }
 #endif
           argv[i] = NULL;
+
+          /* Force non-TAP output when spawning a subprocess, since people often
+           * test the stdout/stderr of the subprocess strictly */
+          test_tap_log = FALSE;
         }
       else if (strcmp ("-p", argv[i]) == 0 || strncmp ("-p=", argv[i], 3) == 0)
         {
@@ -1253,6 +1250,11 @@ parse_args (gint    *argc_p,
           exit (0);
         }
     }
+
+  /* We've been prepending to test_paths, but its order matters, so
+   * permute it */
+  test_paths = g_slist_reverse (test_paths);
+
   /* collapse argv */
   e = 1;
   for (i = 1; i < argc; i++)
@@ -1555,18 +1557,6 @@ void
 
       /* Cache this for the remainder of this process’ lifetime. */
       test_tmpdir = g_getenv ("G_TEST_TMPDIR");
-    }
-
-  /* sanity check */
-  if (test_tap_log)
-    {
-      if (test_paths || test_startup_skip_count)
-        {
-          /* Not invoking every test (even if SKIPped) breaks the "1..XX" plan */
-          g_printerr ("%s: -p and --GTestSkipCount options are incompatible with --tap\n",
-                      (*argv)[0]);
-          exit (1);
-        }
     }
 
   /* verify GRand reliability, needed for reliable seeds */
@@ -1896,6 +1886,9 @@ g_test_message (const char *format,
  * portion to @uri_pattern, or by replacing the special string
  * '\%s' within @uri_pattern if that is present.
  *
+ * If g_test_bug_base() is not called, bug URIs are formed solely
+ * from the value provided by g_test_bug().
+ *
  * Since: 2.16
  */
 void
@@ -1912,19 +1905,22 @@ g_test_bug_base (const char *uri_pattern)
  * This function adds a message to test reports that
  * associates a bug URI with a test case.
  * Bug URIs are constructed from a base URI set with g_test_bug_base()
- * and @bug_uri_snippet.
+ * and @bug_uri_snippet. If g_test_bug_base() has not been called, it is
+ * assumed to be the empty string, so a full URI can be provided to
+ * g_test_bug() instead.
  *
  * Since: 2.16
+ * See also: g_test_summary()
  */
 void
 g_test_bug (const char *bug_uri_snippet)
 {
-  char *c;
+  const char *c = NULL;
 
-  g_return_if_fail (test_uri_base != NULL);
   g_return_if_fail (bug_uri_snippet != NULL);
 
-  c = strstr (test_uri_base, "%s");
+  if (test_uri_base != NULL)
+    c = strstr (test_uri_base, "%s");
   if (c)
     {
       char *b = g_strndup (test_uri_base, c - test_uri_base);
@@ -1934,7 +1930,45 @@ g_test_bug (const char *bug_uri_snippet)
       g_free (s);
     }
   else
-    g_test_message ("Bug Reference: %s%s", test_uri_base, bug_uri_snippet);
+    g_test_message ("Bug Reference: %s%s",
+                    test_uri_base ? test_uri_base : "", bug_uri_snippet);
+}
+
+/**
+ * g_test_summary:
+ * @summary: One or two sentences summarising what the test checks, and how it
+ *    checks it.
+ *
+ * Set the summary for a test, which describes what the test checks, and how it
+ * goes about checking it. This may be included in test report output, and is
+ * useful documentation for anyone reading the source code or modifying a test
+ * in future. It must be a single line.
+ *
+ * This should be called at the top of a test function.
+ *
+ * For example:
+ * |[<!-- language="C" -->
+ * static void
+ * test_array_sort (void)
+ * {
+ *   g_test_summary ("Test my_array_sort() sorts the array correctly and stably, "
+ *                   "including testing zero length and one-element arrays.");
+ *
+ *   …
+ * }
+ * ]|
+ *
+ * Since: 2.62
+ * See also: g_test_bug()
+ */
+void
+g_test_summary (const char *summary)
+{
+  g_return_if_fail (summary != NULL);
+  g_return_if_fail (strchr (summary, '\n') == NULL);
+  g_return_if_fail (strchr (summary, '\r') == NULL);
+
+  g_test_message ("%s summary: %s", test_run_name, summary);
 }
 
 /**
@@ -3251,6 +3285,7 @@ wait_for_child (GPid pid,
  * and is not always reliable due to problems inherent in
  * fork-without-exec. Use g_test_trap_subprocess() instead.
  */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 gboolean
 g_test_trap_fork (guint64        usec_timeout,
                   GTestTrapFlags test_trap_flags)
@@ -3293,6 +3328,18 @@ g_test_trap_fork (guint64        usec_timeout,
         close (stdout_pipe[1]);
       if (stderr_pipe[1] >= 3)
         close (stderr_pipe[1]);
+
+      /* We typically expect these child processes to crash, and some
+       * tests spawn a *lot* of them.  Avoid spamming system crash
+       * collection programs such as systemd-coredump and abrt.
+       */
+#ifdef HAVE_SYS_RESOURCE_H
+      {
+        struct rlimit limit = { 0, 0 };
+        (void) setrlimit (RLIMIT_CORE, &limit);
+      }
+#endif
+
       return TRUE;
     }
   else                          /* parent */
@@ -3313,6 +3360,7 @@ g_test_trap_fork (guint64        usec_timeout,
   return FALSE;
 #endif
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 
 /**
  * g_test_trap_subprocess:
@@ -3630,7 +3678,7 @@ g_test_trap_assertions (const char     *domain,
 
       logged_child_output = logged_child_output || log_child_output (process_id);
 
-      msg = g_strdup_printf ("stdout of child process (%s) %s: %s\nstderr was:\n%s",
+      msg = g_strdup_printf ("stdout of child process (%s) %s: %s\nstdout was:\n%s",
                              process_id, match_error, stdout_pattern, test_trap_last_stdout);
       g_assertion_message (domain, file, line, func, msg);
       g_free (msg);
@@ -3851,7 +3899,7 @@ g_test_build_filename_va (GTestFileType  file_type,
                           va_list        ap)
 {
   const gchar *pathv[16];
-  gint num_path_segments;
+  gsize num_path_segments;
 
   if (file_type == G_TEST_DIST)
     pathv[0] = test_disted_files_dir;

@@ -77,7 +77,6 @@ test_store_boundaries (void)
   store = g_list_store_new (G_TYPE_MENU_ITEM);
 
   item = g_menu_item_new (NULL, NULL);
-  g_object_add_weak_pointer (G_OBJECT (item), (gpointer *) &item);
 
   /* remove an item from an empty list */
   g_test_expect_message (G_LOG_DOMAIN, G_LOG_LEVEL_CRITICAL, "*g_sequence*");
@@ -123,8 +122,7 @@ test_store_boundaries (void)
   g_assert_cmpuint (g_list_model_get_n_items (G_LIST_MODEL (store)), ==, 1);
 
   g_object_unref (store);
-  g_object_unref (item);
-  g_assert_null (item);
+  g_assert_finalize_object (item);
 }
 
 static void
@@ -800,6 +798,7 @@ test_store_past_end (void)
   g_assert_cmpint (g_list_model_get_n_items (model), ==, 1);
   item = g_list_model_get_item (model, 0);
   g_assert_nonnull (item);
+  g_object_unref (item);
   item = g_list_model_get_item (model, G_MAXUINT);
   g_assert_null (item);
 

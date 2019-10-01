@@ -526,12 +526,13 @@ gio_sources = files(
   'gioscheduler.c',
   'giostream.c',
   'gloadableicon.c',
+  'gmarshal-internal.c',
   'gmount.c',
   'gmemoryinputstream.c',
   'gmemoryoutputstream.c',
   'gmountoperation.c',
-  'gnativevolumemonitor.c',
   'gnativesocketaddress.c',
+  'gnativevolumemonitor.c',
   'gnetworkaddress.c',
   'gnetworking.c',
   'gnetworkmonitor.c',
@@ -554,6 +555,7 @@ gio_sources = files(
   'gsimpleasyncresult.c',
   'gsimpleiostream.c',
   'gsimplepermission.c',
+  'gsimpleproxyresolver.c',
   'gsocket.c',
   'gsocketaddress.c',
   'gsocketaddressenumerator.c',
@@ -564,16 +566,15 @@ gio_sources = files(
   'gsocketinputstream.c',
   'gsocketlistener.c',
   'gsocketoutputstream.c',
-  'gsubprocesslauncher.c',
-  'gsubprocess.c',
   'gsocketservice.c',
   'gsrvtarget.c',
-  'gsimpleproxyresolver.c',
+  'gsubprocesslauncher.c',
+  'gsubprocess.c',
   'gtask.c',
   'gtcpconnection.c',
   'gtcpwrapperconnection.c',
-  'gthreadedsocketservice.c',
   'gthemedicon.c',
+  'gthreadedsocketservice.c',
   'gthreadedresolver.c',
   'gthreadedresolver.h',
   'gtlsbackend.c',
@@ -656,21 +657,22 @@ gio_headers = files(
   'ginetaddress.h',
   'ginetaddressmask.h',
   'ginetsocketaddress.h',
-  'ginputstream.h',
   'ginitable.h',
+  'ginputstream.h',
   'gio.h',
   'gio-autocleanups.h',
-  'giotypes.h',
   'gioenums.h',
   'gioerror.h',
   'giomodule.h',
   'gioscheduler.h',
   'giostream.h',
+  'giotypes.h',
   'gloadableicon.h',
   'gmount.h',
   'gmemoryinputstream.h',
   'gmemoryoutputstream.h',
   'gmountoperation.h',
+  'gnativesocketaddress.h',
   'gnativevolumemonitor.h',
   'gnetworkaddress.h',
   'gnetworkmonitor.h',
@@ -680,8 +682,8 @@ gio_headers = files(
   'gpollableinputstream.h',
   'gpollableoutputstream.h',
   'gpollableutils.h',
-  'gproxyaddress.h',
   'gproxy.h',
+  'gproxyaddress.h',
   'gproxyaddressenumerator.h',
   'gproxyresolver.h',
   'gresolver.h',
@@ -690,6 +692,7 @@ gio_headers = files(
   'gsimpleasyncresult.h',
   'gsimpleiostream.h',
   'gsimplepermission.h',
+  'gsimpleproxyresolver.h',
   'gsocket.h',
   'gsocketaddress.h',
   'gsocketaddressenumerator.h',
@@ -700,14 +703,13 @@ gio_headers = files(
   'gsocketlistener.h',
   'gsocketservice.h',
   'gsrvtarget.h',
-  'gsimpleproxyresolver.h',
-  'gtask.h',
   'gsubprocess.h',
   'gsubprocesslauncher.h',
+  'gtask.h',
   'gtcpconnection.h',
   'gtcpwrapperconnection.h',
-  'gthreadedsocketservice.h',
   'gthemedicon.h',
+  'gthreadedsocketservice.h',
   'gtlsbackend.h',
   'gtlscertificate.h',
   'gtlsclientconnection.h',
@@ -829,9 +831,14 @@ pkg.generate(libgio,
                'schemasdir=' + join_paths('${datadir}', schemas_subdir),
                'bindir=' + join_paths('${prefix}', get_option('bindir')),
                'giomoduledir=' + giomodulesdir,
+               'gio=' + join_paths('${bindir}', 'gio'),
+               'gio_querymodules=' + join_paths('${bindir}', 'gio-querymodules'),
                'glib_compile_schemas=' + join_paths('${bindir}', 'glib-compile-schemas'),
                'glib_compile_resources=' + join_paths('${bindir}', 'glib-compile-resources'),
-               'gdbus_codegen=' + join_paths('${bindir}', 'gdbus-codegen')],
+               'gdbus=' + join_paths('${bindir}', 'gdbus'),
+               'gdbus_codegen=' + join_paths('${bindir}', 'gdbus-codegen'),
+               'gresource=' + join_paths('${bindir}', 'gresource'),
+               'gsettings=' + join_paths('${bindir}', 'gsettings')],
   version : glib_version,
   install_dir : glib_pkgconfigreldir,
   filebase : 'gio-2.0',
@@ -957,6 +964,14 @@ glib_compile_resources = executable('glib-compile-resources',
   link_args : noseh_link_args,
   dependencies : [libgio_dep, libgobject_dep, libgmodule_dep, libglib_dep])
 
+# Cannot override those programs in cross compilation case because they are
+# native executables that cannot be run on the build machine.
+# See https://gitlab.gnome.org/GNOME/glib/issues/1859.
+if not meson.is_cross_build()
+  meson.override_find_program('glib-compile-schemas', glib_compile_schemas)
+  meson.override_find_program('glib-compile-resources', glib_compile_resources)
+endif
+
 executable('gsettings', 'gsettings-tool.c',
   install : true,
   c_args : gio_c_args,
@@ -990,8 +1005,23 @@ if enable_systemtap
     output : '@0@.stp'.format(libgio.full_path().split('/').get(-1)),
     configuration : stp_cdata,
     install_dir : tapset_install_dir,
-    install : true)
+  )
 endif
 
 subdir('fam')
-subdir('tests')
+# Don’t build the tests unless we can run them (either natively or in an exe wrapper)
+build_tests = not meson.is_cross_build() or (meson.is_cross_build() and meson.has_exe_wrapper())
+if build_tests
+    subdir('tests')
+endif
+
+# The following is an example for building internal marshallers that are used
+# by GIO. We cannot guarantee glib-genmarshal availability while building GLib
+# so they are pre-generated and placed into gmarshal-internal.[ch].
+#
+# gmarshal_internal = gnome.genmarshal('gmarshal-internal',
+#   sources: 'gmarshal-internal.list',
+#   prefix: '_g_cclosure_marshal',
+#   valist_marshallers: true,
+#   internal: true,
+# )

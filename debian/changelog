@@ -1,3 +1,12 @@
+glib2.0 (2.62.0-3) UNRELEASED; urgency=medium
+
+  * Merge packaging from 2.60.x branch previously in unstable
+    - No changes since 2.62.0-2, except in d/changelog
+    - d/p/debian/Disable-an-optimization-when-building-with-gcc-9.patch:
+      Remove workaround for #931921, which turned out to be a clutter bug
+
+ -- Simon McVittie <smcv@debian.org>  Tue, 01 Oct 2019 19:02:23 +0100
+
 glib2.0 (2.60.6-2) unstable; urgency=medium
 
   * Team upload
@@ -15,6 +24,69 @@ glib2.0 (2.60.6-2) unstable; urgency=medium
     - Don't use structured logging if GLIB_VERSION_MAX_ALLOWED < 2.56
 
  -- Simon McVittie <smcv@debian.org>  Tue, 13 Aug 2019 10:32:40 +0100
+
+glib2.0 (2.62.0-2) unstable; urgency=medium
+
+  * Team upload.
+  * Upload to unstable. (Closes: #940161)
+
+ -- Andreas Henriksson <andreas@fatal.se>  Mon, 30 Sep 2019 12:33:16 +0200
+
+glib2.0 (2.62.0-1) experimental; urgency=medium
+
+  * New upstream release
+    + Fix new `GFileInfo` APIs to work when
+      `G_FILE_ATTRIBUTE_TIME_MODIFIED_USEC` was not queried
+
+ -- Iain Lane <laney@debian.org>  Mon, 09 Sep 2019 15:41:48 +0100
+
+glib2.0 (2.61.3-1) experimental; urgency=medium
+
+  * New upstream release
+  * d/p: Drop cherry-picks from upstream branch which we now have
+  * d/p/d/Disable-an-optimization-when-building-with-gcc-9.patch: Drop,
+    clutter has been fixed now (thanks Simon)
+  * d/p/*: Refresh via gbp-pq as necessary
+
+ -- Iain Lane <laney@debian.org>  Wed, 04 Sep 2019 17:29:23 +0100
+
+glib2.0 (2.61.2-2) experimental; urgency=medium
+
+  * Team upload
+  * d/p/cond-test-Don-t-make-assumptions-about-struct-sigaction-m.patch:
+    Add proposed patch to fix FTBFS due to a test failure on mips*
+
+ -- Simon McVittie <smcv@debian.org>  Tue, 13 Aug 2019 10:29:29 +0100
+
+glib2.0 (2.61.2-1) experimental; urgency=medium
+
+  * Team upload
+  * New upstream release
+  * d/patches: Update to upstream git master, commit 2.61.2-23-g870b30bd7
+    - Fix regression in g_mkdir_with_permissions()
+    - Fix a memory leak
+    - Update translations: es, id, ro
+  * Merge changes from unstable
+  * Refresh patch series
+  * d/p/debian/06_thread_test_ignore_prctl_fail.patch:
+    Use g_test_skip() when skipping test
+  * d/p/GIO-tests-Don-t-do-clever-tricks-with-objcopy.patch:
+    Drop workaround for #932287, and build-depend on fixed binutils on
+    mips64el instead
+  * d/rules: Edit debcrossgen output instead of using a modified version.
+    This fixes use of CFLAGS, etc. during cross-compilation.
+    (Closes: #933560)
+  * d/libglib2.0-0.symbols: Update
+  * Remove obsolete permissions fixing.
+    Issue 1539 was fixed upstream.
+  * libglib2.0-tests: Depend on libglib2.0-dev-bin.
+    This is required for the new mkenums and genmarshal tests.
+  * d/p/debian/Disable-an-optimization-when-building-with-gcc-9.patch:
+    Disable an optimization when building with gcc-9, instead of forcing
+    gcc-8. This avoids depending on an old gcc, and should be easier to
+    deal with for cross-compilation. (Workaround for #931921)
+
+ -- Simon McVittie <smcv@debian.org>  Mon, 12 Aug 2019 09:32:26 +0100
 
 glib2.0 (2.60.6-1) unstable; urgency=medium
 
@@ -68,6 +140,42 @@ glib2.0 (2.60.5-1) unstable; urgency=medium
     Mitigates: #932287
 
  -- Simon McVittie <smcv@debian.org>  Wed, 17 Jul 2019 21:36:30 +0100
+
+glib2.0 (2.61.1-2) experimental; urgency=medium
+
+  * control, rules: Build with gcc-8. See #931921 - when we're built with
+    gcc-9, some applications that use GLib might start hanging.
+
+ -- Iain Lane <laney@debian.org>  Fri, 12 Jul 2019 11:37:01 +0100
+
+glib2.0 (2.61.1-1) experimental; urgency=medium
+
+  * New upstream release
+    + `g_unichar_isxdigit()` and `g_unichar_xdigit_value()` now handle
+       full-width characters (U+FF21–U+FF26 and U+FF41–U+FF46)
+    + Deprecate `gtester` utility and its test reporting format and enable TAP
+      output by default instead — the `--tap` option to tests is now a no-op
+    + Add `g_test_summary()` to allow test authors to programmatically summarise
+      what each unit test in a test suite does
+    * Upgrade to Unicode Character Database v12.1
+    + More IPv6 Happy Eyeballs fixes to `GNetworkAddress` and `GSocketClient`
+    + Fix valgrind and gdb support for the new `GHashTable` changes
+    + Fix GTask wait times growing faster than the number of task threads
+    + Add `g_autoqueue()` helper macros, similar to `g_autolist()`
+    + Add pre-allocated link helpers for `GList` and `GQueue`:
+      - `g_list_insert_before_link()`
+      - `g_queue_insert_before_link()`
+      - `g_queue_insert_after_link()`
+    + Improve network availability detection with NetworkManager to treat lower
+      levels of connectivity as having reduced availability
+    + Add `g_clear_signal_handler()` to allow disconnecting from a `GObject`
+      signal and clearing the signal handler ID to zero in a single call
+    + Add `g_autoptr()` support for `GRWLock`
+  * 81-skip-monitor-test-on-non-linux.patch: Drop. This test was removed
+    upstream.
+  * debian/libglib2.0-0.symbols: Update
+
+ -- Iain Lane <laney@debian.org>  Fri, 05 Jul 2019 17:45:06 +0100
 
 glib2.0 (2.60.4-1) experimental; urgency=medium
 

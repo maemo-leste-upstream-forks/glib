@@ -10,6 +10,7 @@ test_c_args = [
   '-DTEST_SERVICES="@0@/gio/tests/services"'.format(meson.build_root()),
   '-DGLIB_MKENUMS="@0@"'.format(glib_mkenums),
   '-DGLIB_COMPILE_SCHEMAS="@0@"'.format(glib_compile_schemas.full_path()),
+  '-UG_DISABLE_ASSERT',
 ]
 
 if host_machine.system() == 'windows'
@@ -53,7 +54,6 @@ gio_tests = {
   'io-stream' : {},
   'memory-input-stream' : {},
   'memory-output-stream' : {},
-  'monitor' : {},
   'mount-operation' : {},
   'network-address' : {'extra_sources': ['mock-resolver.c']},
   'network-monitor' : {},
@@ -78,6 +78,7 @@ gio_tests = {
   'tls-certificate' : {'extra_sources' : ['gtesttlsbackend.c']},
   'tls-interaction' : {'extra_sources' : ['gtesttlsbackend.c']},
   'tls-database' : {'extra_sources' : ['gtesttlsbackend.c']},
+  'gdbus-address-get-session' : {},
 }
 
 test_extra_programs = {
@@ -96,7 +97,7 @@ test_env.set('GIO_LAUNCH_DESKTOP', meson.build_root() + '/gio/gio-launch-desktop
 # 1.2.14 required for dbus_message_set_serial
 dbus1_dep = dependency('dbus-1', required : false, version : '>= 1.2.14')
 if not dbus1_dep.found()
-  if cc.get_id() == 'msvc'
+  if cc.get_id() == 'msvc' or cc.get_id() == 'clang-cl'
     # MSVC: Search for the DBus library by the configuration, which corresponds
     # to the output of CMake builds of DBus.  Note that debugoptimized
     # is really a Release build with .PDB files.
@@ -134,26 +135,31 @@ if host_machine.system() != 'windows'
     'unix-mounts' : {},
     'unix-streams' : {},
     'g-file-info-filesystem-readonly' : {},
-    'gsocketclient-slow' : {
-      'depends' : [
-        shared_library('slow-connect-preload',
-          'slow-connect-preload.c',
-          name_prefix : '',
-          dependencies: cc.find_library('dl'),
-          install_dir : installed_tests_execdir,
-          install: installed_tests_enabled,
-        )
-      ],
-      'env' : {
-        'LD_PRELOAD': '@0@/slow-connect-preload.so'.format(meson.current_build_dir())
-      },
-      'installed_tests_env' : {
-        'LD_PRELOAD': '@0@/slow-connect-preload.so'.format(installed_tests_execdir),
-      },
-    },
     'gschema-compile' : {'install' : false},
     'trash' : {},
   }
+
+  if have_rtld_next
+    gio_tests += {
+      'gsocketclient-slow' : {
+        'depends' : [
+          shared_library('slow-connect-preload',
+            'slow-connect-preload.c',
+            name_prefix : '',
+            dependencies: libdl_dep,
+            install_dir : installed_tests_execdir,
+            install: installed_tests_enabled,
+          )
+        ],
+        'env' : {
+          'LD_PRELOAD': '@0@/slow-connect-preload.so'.format(meson.current_build_dir())
+        },
+        'installed_tests_env' : {
+          'LD_PRELOAD': '@0@/slow-connect-preload.so'.format(installed_tests_execdir),
+        },
+      },
+    }
+  endif
 
   # Uninstalled because of the check-for-executable logic in DesktopAppInfo
   # unable to find the installed executable
@@ -241,10 +247,10 @@ if host_machine.system() != 'windows'
         'extra_sources' : extra_sources,
         'suite' : ['slow'],
       },
-      'gdbus-auth' : {'extra_sources' : extra_sources, 'suite': ['flaky']},
-      'gdbus-bz627724' : {'extra_sources' : extra_sources, 'suite': ['flaky']},
+      'gdbus-auth' : {'extra_sources' : extra_sources},
+      'gdbus-bz627724' : {'extra_sources' : extra_sources},
       'gdbus-close-pending' : {'extra_sources' : extra_sources},
-      'gdbus-connection' : {'extra_sources' : extra_sources, 'suite': ['flaky']},
+      'gdbus-connection' : {'extra_sources' : extra_sources},
       'gdbus-connection-loss' : {'extra_sources' : extra_sources},
       'gdbus-connection-slow' : {'extra_sources' : extra_sources},
       'gdbus-error' : {'extra_sources' : extra_sources},
@@ -283,7 +289,6 @@ if host_machine.system() != 'windows'
                     '-DGLIB_VERSION_MAX_ALLOWED=GLIB_VERSION_2_36'],
       },
       'gapplication' : {'extra_sources' : extra_sources},
-      'gdbus-unix-addresses' : {},
     }
 
     if not glib_have_cocoa
@@ -373,7 +378,7 @@ test_extra_programs += {
   },
 }
 
-if cc.get_id() != 'msvc'
+if cc.get_id() != 'msvc' and cc.get_id() != 'clang-cl'
   test_extra_programs += {
     # These three are manual-run tests because they need a session bus but don't bring one up themselves
     # FIXME: these build but don't seem to work!
@@ -415,13 +420,20 @@ else
 endif
 
 foreach appinfo_test_desktop_file : appinfo_test_desktop_files
-  configure_file(
-    input: appinfo_test_desktop_file + '.in',
-    output: appinfo_test_desktop_file,
-    install_dir: installed_tests_execdir,
-    install: installed_tests_enabled,
-    configuration: cdata,
-  )
+  if installed_tests_enabled
+    configure_file(
+      input: appinfo_test_desktop_file + '.in',
+      output: appinfo_test_desktop_file,
+      install_dir: installed_tests_execdir,
+      configuration: cdata,
+    )
+  else
+    configure_file(
+      input: appinfo_test_desktop_file + '.in',
+      output: appinfo_test_desktop_file,
+      configuration: cdata,
+    )
+  endif
 endforeach
 
 if installed_tests_enabled
@@ -549,7 +561,7 @@ if not meson.is_cross_build() or meson.has_exe_wrapper()
   test_generated_txt = configure_file(input : 'test1.txt',
     output : 'test-generated.txt',
     copy : true,
-    install : false)
+  )
 
   resources_extra_sources = [
     test_gresource,
@@ -669,7 +681,6 @@ foreach test_name, extra_args : gio_tests
     env : local_test_env,
     timeout : timeout,
     suite : suite,
-    args : ['--tap'],
     is_parallel : extra_args.get('is_parallel', true),
     depends : extra_args.get('depends', []),
   )

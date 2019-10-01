@@ -1539,9 +1539,9 @@ g_file_query_filesystem_info_finish (GFile         *file,
  *
  * Gets a #GMount for the #GFile.
  *
- * If the #GFileIface for @file does not have a mount (e.g.
- * possibly a remote share), @error will be set to %G_IO_ERROR_NOT_FOUND
- * and %NULL will be returned.
+ * #GMount is returned only for user interesting locations, see
+ * #GVolumeMonitor. If the #GFileIface for @file does not have a #mount,
+ * @error will be set to %G_IO_ERROR_NOT_FOUND and %NULL #will be returned.
  *
  * If @cancellable is not %NULL, then the operation can be cancelled by
  * triggering the cancellable object from another thread. If the operation
@@ -6935,6 +6935,7 @@ query_default_handler_query_info_cb (GObject      *object,
 /**
  * g_file_query_default_handler_async:
  * @file: a #GFile to open
+ * @io_priority: the [I/O priority][io-priority] of the request
  * @cancellable: optional #GCancellable object, %NULL to ignore
  * @callback: (nullable): a #GAsyncReadyCallback to call when the request is done
  * @user_data: (nullable): data to pass to @callback
@@ -7964,7 +7965,7 @@ g_file_real_measure_disk_usage_finish (GFile         *file,
  *
  * By default, errors are only reported against the toplevel file
  * itself.  Errors found while recursing are silently ignored, unless
- * %G_FILE_DISK_USAGE_REPORT_ALL_ERRORS is given in @flags.
+ * %G_FILE_MEASURE_REPORT_ANY_ERROR is given in @flags.
  *
  * The returned size, @disk_usage, is in bytes and should be formatted
  * with g_format_size() in order to get something reasonable for showing
@@ -8219,7 +8220,7 @@ g_file_stop_mountable (GFile               *file,
  * @result: a #GAsyncResult
  * @error: a #GError, or %NULL
  *
- * Finishes an stop operation, see g_file_stop_mountable() for details.
+ * Finishes a stop operation, see g_file_stop_mountable() for details.
  *
  * Finish an asynchronous stop operation that was started
  * with g_file_stop_mountable().

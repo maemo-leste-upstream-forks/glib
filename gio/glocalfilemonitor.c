@@ -328,6 +328,7 @@ g_file_monitor_source_send_synthetic_created (GFileMonitorSource *fms,
   g_file_monitor_source_queue_event (fms, G_FILE_MONITOR_EVENT_CHANGES_DONE_HINT, child, NULL);
 }
 
+#ifndef G_DISABLE_ASSERT
 static gboolean
 is_basename (const gchar *name)
 {
@@ -336,6 +337,7 @@ is_basename (const gchar *name)
 
   return !strchr (name, '/');
 }
+#endif  /* !G_DISABLE_ASSERT */
 
 gboolean
 g_file_monitor_source_handle_event (GFileMonitorSource *fms,
@@ -788,11 +790,11 @@ g_local_file_monitor_start (GLocalFileMonitor *local_monitor,
 #endif
     }
 
+  g_source_attach ((GSource *) source, context);
+
   G_LOCAL_FILE_MONITOR_GET_CLASS (local_monitor)->start (local_monitor,
                                                          source->dirname, source->basename, source->filename,
                                                          source);
-
-  g_source_attach ((GSource *) source, context);
 }
 
 static void

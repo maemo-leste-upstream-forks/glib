@@ -873,7 +873,7 @@ g_dbus_message_set_message_type (GDBusMessage      *message,
                                  GDBusMessageType   type)
 {
   g_return_if_fail (G_IS_DBUS_MESSAGE (message));
-  g_return_if_fail (type >=0 && type < 256);
+  g_return_if_fail ((guint) type >= 0 && (guint) type < 256);
 
   if (message->locked)
     {
@@ -920,7 +920,7 @@ g_dbus_message_set_flags (GDBusMessage       *message,
                           GDBusMessageFlags   flags)
 {
   g_return_if_fail (G_IS_DBUS_MESSAGE (message));
-  g_return_if_fail (flags >=0 && flags < 256);
+  g_return_if_fail ((guint) flags >= 0 && (guint) flags < 256);
 
   if (message->locked)
     {
@@ -998,7 +998,7 @@ g_dbus_message_get_header (GDBusMessage             *message,
                            GDBusMessageHeaderField   header_field)
 {
   g_return_val_if_fail (G_IS_DBUS_MESSAGE (message), NULL);
-  g_return_val_if_fail (header_field >=0 && header_field < 256, NULL);
+  g_return_val_if_fail ((guint) header_field >= 0 && (guint) header_field < 256, NULL);
   return g_hash_table_lookup (message->headers, GUINT_TO_POINTER (header_field));
 }
 
@@ -1020,7 +1020,7 @@ g_dbus_message_set_header (GDBusMessage             *message,
                            GVariant                 *value)
 {
   g_return_if_fail (G_IS_DBUS_MESSAGE (message));
-  g_return_if_fail (header_field >=0 && header_field < 256);
+  g_return_if_fail ((guint) header_field >= 0 && (guint) header_field < 256);
 
   if (message->locked)
     {
@@ -1714,7 +1714,7 @@ parse_value_from_blob (GMemoryBuffer       *buf,
 
               if (array_len == 0)
                 {
-                  GVariant *item;
+                  GVariant *item G_GNUC_UNUSED  /* when compiling with G_DISABLE_ASSERT */;
                   item = parse_value_from_blob (buf,
                                                 element_type,
                                                 TRUE,
@@ -2345,7 +2345,10 @@ append_value_to_blob (GVariant            *value,
         {
           gsize len;
           const gchar *v;
+#ifndef G_DISABLE_ASSERT
           const gchar *end;
+#endif
+
           v = g_variant_get_string (value, &len);
           g_assert (g_utf8_validate (v, -1, &end) && (end == v + len));
           g_memory_buffer_put_uint32 (mbuf, len);

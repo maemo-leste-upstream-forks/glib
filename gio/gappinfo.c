@@ -27,6 +27,7 @@
 #include "gcancellable.h"
 
 #include "glibintl.h"
+#include "gmarshal-internal.h"
 #include <gioerror.h>
 #include <gfile.h>
 
@@ -53,7 +54,7 @@
  * As of GLib 2.20, URIs will always be converted to POSIX paths
  * (using g_file_get_path()) when using g_app_info_launch() even if
  * the application requested an URI and not a POSIX path. For example
- * for an desktop-file based application with Exec key `totem
+ * for a desktop-file based application with Exec key `totem
  * %U` and a single URI, `sftp://foo/file.avi`, then
  * `/home/user/.gvfs/sftp on foo/file.avi` will be passed. This will
  * only work if a set of suitable GIO extensions (such as gvfs 2.26
@@ -778,7 +779,7 @@ g_app_info_should_show (GAppInfo *appinfo)
  *
  * The D-Bus–activated applications don't have to be started if your application
  * terminates too soon after this function. To prevent this, use
- * g_app_info_launch_default_for_uri() instead.
+ * g_app_info_launch_default_for_uri_async() instead.
  *
  * Returns: %TRUE on success, %FALSE on error.
  **/
@@ -1177,9 +1178,13 @@ g_app_launch_context_class_init (GAppLaunchContextClass *klass)
                                     G_OBJECT_CLASS_TYPE (object_class),
                                     G_SIGNAL_RUN_LAST,
                                     G_STRUCT_OFFSET (GAppLaunchContextClass, launched),
-                                    NULL, NULL, NULL,
+                                    NULL, NULL,
+                                    _g_cclosure_marshal_VOID__OBJECT_VARIANT,
                                     G_TYPE_NONE, 2,
                                     G_TYPE_APP_INFO, G_TYPE_VARIANT);
+  g_signal_set_va_marshaller (signals[LAUNCHED],
+                              G_TYPE_FROM_CLASS (klass),
+                              _g_cclosure_marshal_VOID__OBJECT_VARIANTv);
 }
 
 static void
@@ -1204,6 +1209,10 @@ g_app_launch_context_setenv (GAppLaunchContext *context,
                              const char        *variable,
                              const char        *value)
 {
+  g_return_if_fail (G_IS_APP_LAUNCH_CONTEXT (context));
+  g_return_if_fail (variable != NULL);
+  g_return_if_fail (value != NULL);
+
   if (!context->priv->envp)
     context->priv->envp = g_get_environ ();
 
@@ -1225,6 +1234,9 @@ void
 g_app_launch_context_unsetenv (GAppLaunchContext *context,
                                const char        *variable)
 {
+  g_return_if_fail (G_IS_APP_LAUNCH_CONTEXT (context));
+  g_return_if_fail (variable != NULL);
+
   if (!context->priv->envp)
     context->priv->envp = g_get_environ ();
 
@@ -1249,6 +1261,8 @@ g_app_launch_context_unsetenv (GAppLaunchContext *context,
 char **
 g_app_launch_context_get_environment (GAppLaunchContext *context)
 {
+  g_return_val_if_fail (G_IS_APP_LAUNCH_CONTEXT (context), NULL);
+
   if (!context->priv->envp)
     context->priv->envp = g_get_environ ();
 

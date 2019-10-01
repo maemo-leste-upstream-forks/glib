@@ -1,6 +1,7 @@
 project('glib', 'c', 'cpp',
-  version : '2.60.6',
-  meson_version : '>= 0.48.0',
+  version : '2.62.0',
+  # NOTE: We keep this pinned at 0.49 because that's what Debian 10 ships
+  meson_version : '>= 0.49.2',
   default_options : [
     'buildtype=debugoptimized',
     'warning_level=1',
@@ -117,7 +118,7 @@ if host_system == 'windows'
   glib_conf.set('BROKEN_POLL', true)
 endif
 
-if host_system == 'windows' and cc.get_id() != 'msvc'
+if host_system == 'windows' and cc.get_id() != 'msvc' and cc.get_id() != 'clang-cl'
   # FIXME: Ideally we shouldn't depend on this on Windows and should use
   # 64 bit capable Windows API that also works with MSVC.
   # The autotools build did set this for mingw and while meson sets it
@@ -169,9 +170,9 @@ endif
 # Detect and set symbol visibility
 glib_hidden_visibility_args = []
 if get_option('default_library') != 'static'
-  if host_system == 'windows'
+  if host_system == 'windows' or host_system == 'cygwin'
     glib_conf.set('DLL_EXPORT', true)
-    if cc.get_id() == 'msvc'
+    if cc.get_id() == 'msvc' or cc.get_id() == 'clang-cl'
       glib_conf.set('_GLIB_EXTERN', '__declspec(dllexport) extern')
     elif cc.has_argument('-fvisibility=hidden')
       glib_conf.set('_GLIB_EXTERN', '__attribute__((visibility("default"))) __declspec(dllexport) extern')
@@ -183,15 +184,23 @@ if get_option('default_library') != 'static'
   endif
 endif
 
-if host_system == 'windows' and get_option('default_library') == 'static'
+if get_option('default_library') == 'static'
     glibconfig_conf.set('GLIB_STATIC_COMPILATION', '1')
     glibconfig_conf.set('GOBJECT_STATIC_COMPILATION', '1')
 endif
 
-# FIXME: what about Cygwin (G_WITH_CYGWIN)
+# Cygwin glib port maintainers made it clear
+# (via the patches they apply) that they want no
+# part of glib W32 code, therefore we do not define
+# G_PLATFORM_WIN32 for host_system == 'cygwin'.
+# This makes G_PLATFORM_WIN32 a synonym for
+# G_OS_WIN32.
 if host_system == 'windows'
   glib_os = '''#define G_OS_WIN32
 #define G_PLATFORM_WIN32'''
+elif host_system == 'cygwin'
+  glib_os = '''#define G_OS_UNIX
+#define G_WITH_CYGWIN'''
 else
   glib_os = '#define G_OS_UNIX'
 endif
@@ -260,6 +269,7 @@ headers = [
   'termios.h',
   'unistd.h',
   'values.h',
+  'wchar.h',
   'xlocale.h',
 ]
 
@@ -352,6 +362,8 @@ if cc.get_id() == 'gcc' or cc.get_id() == 'clang'
     '-Wmisleading-indentation',
     '-Wstrict-prototypes',
     '-Wunused',
+    # Due to maintained deprecated code, we do not want to see unused parameters
+    '-Wno-unused-parameter',
     # Due to pervasive use of things like GPOINTER_TO_UINT(), we do not support
     # building with -Wbad-function-cast.
     '-Wno-bad-function-cast',
@@ -388,9 +400,22 @@ add_project_arguments(cc.get_supported_arguments(warning_c_args), language: 'c')
 # improve this.
 glib_link_flags = cc.get_supported_link_arguments(warning_c_link_args)
 
-# Windows Support (7+)
+# Windows SDK requirements and checks
 if host_system == 'windows'
-  glib_conf.set('_WIN32_WINNT', '0x0601')
+  # Check whether we're building for UWP apps
+  code = '''
+  #include <windows.h>
+  #if !(WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP) && !WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP))
+  #error "Not building for UWP"
+  #endif'''
+  if cc.compiles(code, name : 'building for UWP')
+    glib_conf.set('G_WINAPI_ONLY_APP', true)
+    # We require Windows 10+ on WinRT
+    glib_conf.set('_WIN32_WINNT', '0x0A00')
+  else
+    # We require Windows 7+ on Win32
+    glib_conf.set('_WIN32_WINNT', '0x0601')
+  endif
 endif
 
 functions = [
@@ -582,6 +607,12 @@ if cc.has_header_symbol('dlfcn.h', 'RTLD_GLOBAL')
   glib_conf.set('HAVE_RTLD_GLOBAL', 1)
 endif
 
+have_rtld_next = false
+if cc.has_header_symbol('dlfcn.h', 'RTLD_NEXT', args: '-D_GNU_SOURCE')
+  have_rtld_next = true
+  glib_conf.set('HAVE_RTLD_NEXT', 1)
+endif
+
 # Check whether to use statfs or statvfs
 # Some systems have both statfs and statvfs, pick the most "native" for these
 if have_func_statfs and have_func_statvfs
@@ -690,6 +721,28 @@ elif cc.links(clock_gettime_test_code, args : '-lrt', name : 'clock_gettime in l
   librt = cc.find_library('rt')
 endif
 
+dlopen_dlsym_test_code = '''
+#include <dlfcn.h>
+int glib_underscore_test (void) { return 42; }
+int main (int argc, char ** argv) {
+  void *f1 = (void*)0, *f2 = (void*)0, *handle;
+  handle = dlopen ((void*)0, 0);
+  if (handle) {
+    f1 = dlsym (handle, "glib_underscore_test");
+    f2 = dlsym (handle, "_glib_underscore_test");
+  }
+  return (!f2 || f1);
+}'''
+libdl_dep = []
+if cc.links(dlopen_dlsym_test_code, name : 'dlopen() and dlsym() in system libraries')
+  have_dlopen_dlsym = true
+elif cc.links(dlopen_dlsym_test_code, args : '-ldl', name : 'dlopen() and dlsym() in libdl')
+  have_dlopen_dlsym = true
+  libdl_dep = cc.find_library('dl')
+else
+  have_dlopen_dlsym = false
+endif
+
 # if statfs() takes 2 arguments (Posix) or 4 (Solaris)
 if have_func_statfs
   if cc.compiles(glib_conf_prefix + '''
@@ -756,7 +809,7 @@ have_good_vsnprintf = false
 have_good_snprintf = false
 have_good_printf = false
 
-if host_system == 'windows' and cc.get_id() == 'msvc'
+if host_system == 'windows' and (cc.get_id() == 'msvc' or cc.get_id() == 'clang-cl')
   # Unfortunately the Visual Studio 2015+ implementations of C99-style
   # snprintf and vsnprintf don't seem to be quite good enough.
   # (Sorry, I don't know exactly what is the problem,
@@ -895,20 +948,15 @@ else
   glib_conf.set('EXEEXT', '')
 endif
 
-if have_good_vsnprintf and have_good_snprintf and have_good_printf
-  # Our printf is 'good' only if vsnpintf()/snprintf()/printf() supports C99 well enough
-  glib_conf.set('HAVE_GOOD_PRINTF', 1)
-else
+# Our printf is 'good' only if vsnpintf()/snprintf()/printf() supports C99 well enough
+use_system_printf = have_good_vsnprintf and have_good_snprintf and have_good_printf
+glib_conf.set('USE_SYSTEM_PRINTF', use_system_printf)
+glibconfig_conf.set('GLIB_USING_SYSTEM_PRINTF', use_system_printf)
+
+if not use_system_printf
+  # gnulib has vasprintf so override the previous check
   glib_conf.set('HAVE_VASPRINTF', 1)
 endif
-
-glibconfig_conf.set('GLIB_USING_SYSTEM_PRINTF',
-                    have_good_vsnprintf and have_good_snprintf and have_good_printf)
-
-# Check whether the printf() family supports Unix98 %n$ positional parameters
-# AC_FUNC_PRINTF_UNIX98
-# Nothing uses HAVE_UNIX98_PRINTF
-
 
 # Check for nl_langinfo and CODESET
 if cc.links('''#include <langinfo.h>
@@ -1105,7 +1153,7 @@ else
   long_long_size = 0
 endif
 sizet_size = cc.sizeof('size_t')
-if cc.get_id() == 'msvc'
+if cc.get_id() == 'msvc' or cc.get_id() == 'clang-cl'
   ssizet_size = cc.sizeof('SSIZE_T', prefix : '#include <BaseTsd.h>')
 else
   ssizet_size = cc.sizeof('ssize_t')
@@ -1165,6 +1213,7 @@ glib_conf.set('SIZEOF_LONG_LONG', long_long_size)
 glib_conf.set('SIZEOF_SIZE_T', sizet_size)
 glib_conf.set('SIZEOF_SSIZE_T', ssizet_size)
 glib_conf.set('SIZEOF_VOID_P', voidp_size)
+glib_conf.set('SIZEOF_WCHAR_T', cc.sizeof('wchar_t', prefix: '#include <stddef.h>'))
 
 if short_size == 2
   gint16 = 'short'
@@ -1577,10 +1626,10 @@ atomicdefine = '''
 '''
 
 # We know that we can always use real ("lock free") atomic operations with MSVC
-if cc.get_id() == 'msvc' or cc.links(atomictest, name : 'atomic ops')
+if cc.get_id() == 'msvc' or cc.get_id() == 'clang-cl' or cc.links(atomictest, name : 'atomic ops')
   have_atomic_lock_free = true
-  if (host_system == 'android' or host_system == 'linux') and not cc.compiles(atomicdefine, name : 'atomic ops define')
-    # When building for armv5 on Linux, gcc provides
+  if cc.get_id() == 'gcc' and not cc.compiles(atomicdefine, name : 'atomic ops define')
+    # Old gcc release may provide
     # __sync_bool_compare_and_swap but doesn't define
     # __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4
     glib_conf.set('__GCC_HAVE_SYNC_COMPARE_AND_SWAP_4', true)
@@ -1642,6 +1691,25 @@ else
                 dependencies : thread_dep)
     # Linux, Solaris, etc.
     glib_conf.set('HAVE_PTHREAD_SETNAME_NP_WITH_TID', 1)
+  elif cc.links(pthread_prefix + '''
+                int main() {
+                  pthread_setname_np(pthread_self(), "%s", "example");
+                  return 0;
+                }''',
+                name : 'pthread_setname_np(pthread_t, const char*, void*)',
+                dependencies : thread_dep)
+    # NetBSD
+    glib_conf.set('HAVE_PTHREAD_SETNAME_NP_WITH_TID_AND_ARG', 1)
+  elif cc.links(pthread_prefix + '''
+                #include <pthread_np.h>
+                int main() {
+                  pthread_set_name_np(pthread_self(), "example");
+                  return 0;
+                }''',
+                name : 'pthread_set_name_np(pthread_t, const char*)',
+                dependencies : thread_dep)
+    # FreeBSD, DragonFlyBSD, OpenBSD, etc.
+    glib_conf.set('HAVE_PTHREAD_SET_NAME_NP', 1)
   endif
 endif
 
@@ -1674,49 +1742,31 @@ glibconfig_conf.set10('G_HAVE_GROWING_STACK', growing_stack)
 
 # Tests for iconv
 #
-# USE_LIBICONV_GNU: Using GNU libiconv
-# USE_LIBICONV_NATIVE: Using a native impl of iconv in a separate library
-#
-# We should never use the MinGW C library's iconv. On Windows we use the
-# GNU implementation that ships with MinGW.
-
+# We should never use the MinGW C library's iconv because it may not be
+# available in the actual runtime environment. On Windows, we always use
+# the built-in implementation
 iconv_opt = get_option('iconv')
-
-# On Darwin, the libc doesn't provide iconv. Instead, the OS provides libiconv
-# as a separate (non-GNU) library. Set the option to 'native'.
-if host_system == 'darwin' and iconv_opt == 'libc'
-  iconv_opt = 'native'
-endif
-
-# On Windows, just always use the built-in implementation
 if host_system == 'windows'
   libiconv = []
-  glib_conf.set('USE_LIBICONV_NATIVE', true)
+  # We have a #include "win_iconv.c" in gconvert.c on Windows, so we don't need
+  # any external library for it
+  if iconv_opt != 'auto'
+    warning('-Diconv was set to @0@, which was ignored')
+  endif
 else
   found_iconv = false
-  if iconv_opt == 'libc'
-    if cc.has_function('iconv_open')
-      libiconv = []
-      found_iconv = true
-    endif
-  elif iconv_opt == 'gnu'
-    if cc.has_header_symbol('iconv.h', 'libiconv_open')
-      glib_conf.set('USE_LIBICONV_GNU', true)
-      libiconv = [cc.find_library('iconv')]
-      found_iconv = true
-    endif
-  elif iconv_opt == 'native'
-    if cc.has_header_symbol('iconv.h', 'iconv_open')
-      glib_conf.set('USE_LIBICONV_NATIVE', true)
-      libiconv = [cc.find_library('iconv')]
-      found_iconv = true
-    endif
+  if ['auto', 'libc'].contains(iconv_opt) and cc.has_function('iconv_open')
+    libiconv = []
+    found_iconv = true
+  endif
+  if not found_iconv and ['auto', 'external'].contains(iconv_opt) and cc.has_header_symbol('iconv.h', 'iconv_open')
+    libiconv = [cc.find_library('iconv')]
+    found_iconv = true
   endif
 
   if not found_iconv
     error('iconv implementation "@0@" not found'.format(iconv_opt))
   endif
-
 endif
 
 if get_option('internal_pcre')
@@ -1725,7 +1775,7 @@ if get_option('internal_pcre')
 else
   pcre = dependency('libpcre', version: '>= 8.31', required : false) # Should check for Unicode support, too. FIXME
   if not pcre.found()
-    if cc.get_id() == 'msvc'
+    if cc.get_id() == 'msvc' or cc.get_id() == 'clang-cl'
     # MSVC: Search for the PCRE library by the configuration, which corresponds
     # to the output of CMake builds of PCRE.  Note that debugoptimized
     # is really a Release build with .PDB files.
@@ -1768,7 +1818,7 @@ libffi_dep = dependency('libffi', version : '>= 3.0.0', fallback : ['libffi', 'f
 # the system
 libz_dep = dependency('zlib', required : false)
 if not libz_dep.found()
-  if cc.get_id() != 'msvc'
+  if cc.get_id() != 'msvc' and cc.get_id() != 'clang-cl'
     libz_dep = cc.find_library('z', required : false)
   else
     libz_dep = cc.find_library('zlib1', required : false)
@@ -1866,25 +1916,78 @@ if host_system != 'windows' and get_option('xattr')
   endif
 endif
 
-# Test if we have strlcpy/strlcat with a compatible implementation:
-# https://bugzilla.gnome.org/show_bug.cgi?id=53933
-if cc_can_run
-  rres = cc.run('''#include <stdlib.h>
-                   #include <string.h>
-                   int main() {
-                     char p[10];
-                     (void) strlcpy (p, "hi", 10);
-                     if (strlcat (p, "bye", 0) != 3)
-                       return 1;
-                     return 0;
-                   }''',
-                name : 'OpenBSD strlcpy/strlcat')
-  if rres.compiled() and rres.returncode() == 0
+# If strlcpy is present (BSD and similar), check that it conforms to the BSD
+# specification. Specifically Solaris 8's strlcpy() does not, see
+# https://bugzilla.gnome.org/show_bug.cgi?id=53933 for further context.
+if cc.has_function('strlcpy')
+  if cc_can_run
+    rres = cc.run('''#include <stdlib.h>
+                    #include <string.h>
+                    int main() {
+                      char p[10];
+                      (void) strlcpy (p, "hi", 10);
+                      if (strlcat (p, "bye", 0) != 3)
+                        return 1;
+                      return 0;
+                    }''',
+                  name : 'OpenBSD strlcpy/strlcat')
+    if rres.compiled() and rres.returncode() == 0
+      glib_conf.set('HAVE_STRLCPY', 1)
+    endif
+  elif meson.get_cross_property('have_strlcpy', false)
     glib_conf.set('HAVE_STRLCPY', 1)
   endif
-elif meson.get_cross_property('have_strlcpy', false)
-  glib_conf.set('HAVE_STRLCPY', 1)
 endif
+
+cmdline_test_code = '''
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <stdio.h>
+#include <stdlib.h>
+#undef NDEBUG
+#include <assert.h>
+
+static int
+__getcmdline (void)
+{
+/* This code is a dumbed-down version of g_file_get_contents() */
+#ifndef O_BINARY
+#define O_BINARY 0
+#endif
+#define BUFSIZE 1024
+  char result[BUFSIZE];
+  struct stat stat_buf;
+
+  int fd = open ("/proc/self/cmdline", O_RDONLY|O_BINARY);
+  assert (fd >= 0);
+  assert (fstat (fd, &stat_buf) == 0);
+
+  if (stat_buf.st_size > 0 && S_ISREG (stat_buf.st_mode))
+    assert (read (fd, result, BUFSIZE) > 0);
+  else
+    {
+      FILE *f = fdopen (fd, "r");
+      assert (f != NULL);
+      assert (fread (result, 1, BUFSIZE, f) > 0);
+    }
+
+  return 0;
+}
+
+int
+main (void)
+{
+  exit (__getcmdline ());
+}'''
+
+if cc_can_run
+  rres = cc.run(cmdline_test_code, name : '/proc/self/cmdline')
+  have_proc_self_cmdline = rres.compiled() and rres.returncode() == 0
+else
+  have_proc_self_cmdline = meson.get_cross_property('have_proc_self_cmdline', false)
+endif
+
+glib_conf.set('HAVE_PROC_SELF_CMDLINE', have_proc_self_cmdline)
 
 python = import('python').find_installation('python3')
 # used for '#!/usr/bin/env <name>'
@@ -1927,7 +2030,7 @@ endif
 
 win32_cflags = []
 win32_ldflags = []
-if host_system == 'windows' and cc.get_id() != 'msvc'
+if host_system == 'windows' and cc.get_id() != 'msvc' and cc.get_id() != 'clang-cl'
   # Ensure MSVC-compatible struct packing convention is used when
   # compiling for Win32 with gcc. It is used for the whole project and exposed
   # in glib-2.0.pc.
@@ -1984,7 +2087,7 @@ if want_systemtap and enable_dtrace
 endif
 
 test_timeout = 60
-test_timeout_slow = 120
+test_timeout_slow = 180
 
 pkg = import('pkgconfig')
 windows = import('windows')
@@ -1994,7 +2097,11 @@ subdir('gthread')
 subdir('gmodule')
 subdir('gio')
 subdir('fuzzing')
-subdir('tests')
+# Don’t build the tests unless we can run them (either natively or in an exe wrapper)
+build_tests = not meson.is_cross_build() or (meson.is_cross_build() and meson.has_exe_wrapper())
+if build_tests
+  subdir('tests')
+endif
 
 # xgettext is optional (on Windows for instance)
 if find_program('xgettext', required : get_option('nls')).found()
@@ -2011,7 +2118,6 @@ if have_sh
   gettextize_conf.set('datarootdir', glib_datadir)
   gettextize_conf.set('datadir', glib_datadir)
   configure_file(input : 'glib-gettextize.in',
-    install : true,
     install_dir : glib_bindir,
     output : 'glib-gettextize',
     configuration : gettextize_conf)
@@ -2052,6 +2158,4 @@ if get_option('man')
 endif
 
 gnome = import('gnome')
-subdir('docs/reference/glib')
-subdir('docs/reference/gobject')
-subdir('docs/reference/gio')
+subdir('docs/reference')
