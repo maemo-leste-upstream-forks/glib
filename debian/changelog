@@ -4,8 +4,11 @@ glib2.0 (2.62.0-3) UNRELEASED; urgency=medium
     - No changes since 2.62.0-2, except in d/changelog
     - d/p/debian/Disable-an-optimization-when-building-with-gcc-9.patch:
       Remove workaround for #931921, which turned out to be a clutter bug
+  * d/gbp.conf: Use debian/master branch
+  * Add patch to fix installation of installed-tests in cross-builds
+    (Closes: #941509)
 
- -- Simon McVittie <smcv@debian.org>  Tue, 01 Oct 2019 19:02:23 +0100
+ -- Simon McVittie <smcv@debian.org>  Tue, 01 Oct 2019 20:19:50 +0100
 
 glib2.0 (2.60.6-2) unstable; urgency=medium
 
