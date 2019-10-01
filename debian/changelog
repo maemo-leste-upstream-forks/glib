@@ -7,6 +7,7 @@ glib2.0 (2.62.0-3) UNRELEASED; urgency=medium
   * d/gbp.conf: Use debian/master branch
   * Add patch to fix installation of installed-tests in cross-builds
     (Closes: #941509)
+  * Standards-Version: 4.4.1 (no changes required)
 
  -- Simon McVittie <smcv@debian.org>  Tue, 01 Oct 2019 20:19:50 +0100
 
