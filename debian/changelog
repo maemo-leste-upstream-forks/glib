@@ -1,5 +1,6 @@
-glib2.0 (2.62.0-3) UNRELEASED; urgency=medium
+glib2.0 (2.62.0-3) unstable; urgency=medium
 
+  * Team upload
   * Merge packaging from 2.60.x branch previously in unstable
     - No changes since 2.62.0-2, except in d/changelog
     - d/p/debian/Disable-an-optimization-when-building-with-gcc-9.patch:
@@ -10,10 +11,12 @@ glib2.0 (2.62.0-3) UNRELEASED; urgency=medium
   * d/p/g_file_info_get_modification_date_time-Calculate-in-integ.patch:
     Add patch to fix intermittent g-file-info test failures on i386
     (Closes: #941547)
+  * libglib2.0-dev: Suggest libgirepository1.0-dev, for the GIR files
+    (Closes: #914152)
   * d/gbp.conf: Use debian/master branch
   * Standards-Version: 4.4.1 (no changes required)
 
- -- Simon McVittie <smcv@debian.org>  Wed, 02 Oct 2019 08:33:39 +0100
+ -- Simon McVittie <smcv@debian.org>  Wed, 02 Oct 2019 09:13:12 +0100
 
 glib2.0 (2.60.6-2) unstable; urgency=medium
 
