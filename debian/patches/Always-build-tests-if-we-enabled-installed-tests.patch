@@ -14,6 +14,8 @@ Based on a patch by Helmut Grohne.
 Bug-Debian: https://bugs.debian.org/941509
 Signed-off-by: Simon McVittie <smcv@collabora.com>
 Forwarded: https://gitlab.gnome.org/GNOME/glib/merge_requests/1138
+Applied-upstream: 2.62.1, commit:https://gitlab.gnome.org/GNOME/glib/commit/db46306b47663bfa67d62e91e9469f3c19383358
+Applied-upstream: 2.63.0, commit:https://gitlab.gnome.org/GNOME/glib/commit/42d8e17795254ed1590241347b34d19479b9b575
 ---
  gio/meson.build     | 2 --
  glib/meson.build    | 2 --

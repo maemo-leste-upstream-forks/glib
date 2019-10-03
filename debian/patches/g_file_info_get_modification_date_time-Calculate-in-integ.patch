@@ -22,6 +22,8 @@ conveniently, that's exactly what we get from the GFileInfo.
 Bug-Debian: https://bugs.debian.org/941547
 Signed-off-by: Simon McVittie <smcv@collabora.com>
 Forwarded: https://gitlab.gnome.org/GNOME/glib/merge_requests/1139
+Applied-upstream: 2.62.1, commit:https://gitlab.gnome.org/GNOME/glib/commit/5625760f127050fef783a17d59a7de51e1065cd8
+Applied-upstream: 2.63.0, commit:https://gitlab.gnome.org/GNOME/glib/commit/14609b0b256b9c13162719868d4dfc2b419d885f
 ---
  gio/gfileinfo.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
