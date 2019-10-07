@@ -7,6 +7,8 @@ glib2.0 (2.62.1-1) UNRELEASED; urgency=medium
     - d/p/g_file_info_get_modification_date_time-Calculate-in-integ.patch,
       d/p/Always-build-tests-if-we-enabled-installed-tests.patch:
       Drop patches that were applied upstream
+  * d/p/debian/mimeapps-test-Mark-as-flaky.patch:
+    Mark mimeapps test as flaky (see #941550)
 
  -- Simon McVittie <smcv@debian.org>  Mon, 07 Oct 2019 08:44:44 +0100
 
