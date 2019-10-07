@@ -1,8 +1,14 @@
-glib2.0 (2.62.0-4) UNRELEASED; urgency=medium
+glib2.0 (2.62.1-1) UNRELEASED; urgency=medium
 
   * d/watch: Only watch for even-numbered (stable) releases
+  * New upstream release
+    - Fix regression that made G_FILE_COPY_TARGET_DEFAULT_PERMS result in
+      private permissions rather than respecting umask (Closes: #505398)
+    - d/p/g_file_info_get_modification_date_time-Calculate-in-integ.patch,
+      d/p/Always-build-tests-if-we-enabled-installed-tests.patch:
+      Drop patches that were applied upstream
 
- -- Simon McVittie <smcv@debian.org>  Mon, 07 Oct 2019 08:43:51 +0100
+ -- Simon McVittie <smcv@debian.org>  Mon, 07 Oct 2019 08:44:44 +0100
 
 glib2.0 (2.62.0-3) unstable; urgency=medium
 
