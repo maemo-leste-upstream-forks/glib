@@ -1,5 +1,6 @@
-glib2.0 (2.62.1-1) UNRELEASED; urgency=medium
+glib2.0 (2.62.1-1) unstable; urgency=medium
 
+  * Team upload
   * d/watch: Only watch for even-numbered (stable) releases
   * New upstream release
     - Fix regression that made G_FILE_COPY_TARGET_DEFAULT_PERMS result in
@@ -10,7 +11,7 @@ glib2.0 (2.62.1-1) UNRELEASED; urgency=medium
   * d/p/debian/mimeapps-test-Mark-as-flaky.patch:
     Mark mimeapps test as flaky (see #941550)
 
- -- Simon McVittie <smcv@debian.org>  Mon, 07 Oct 2019 08:44:44 +0100
+ -- Simon McVittie <smcv@debian.org>  Mon, 07 Oct 2019 09:46:24 +0100
 
 glib2.0 (2.62.0-3) unstable; urgency=medium
 
