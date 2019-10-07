@@ -1,5 +1,5 @@
 project('glib', 'c', 'cpp',
-  version : '2.62.0',
+  version : '2.62.1',
   # NOTE: We keep this pinned at 0.49 because that's what Debian 10 ships
   meson_version : '>= 0.49.2',
   default_options : [
@@ -75,6 +75,9 @@ installed_tests_execdir = join_paths(glib_libexecdir, 'installed-tests', meson.p
 installed_tests_enabled = get_option('installed_tests')
 installed_tests_template = files('template.test.in')
 installed_tests_template_tap = files('template-tap.test.in')
+
+# Don’t build the tests unless we can run them (either natively, in an exe wrapper, or by installing them for later use)
+build_tests = not meson.is_cross_build() or (meson.is_cross_build() and meson.has_exe_wrapper()) or installed_tests_enabled
 
 add_project_arguments('-D_GNU_SOURCE', language: 'c')
 
@@ -2097,8 +2100,6 @@ subdir('gthread')
 subdir('gmodule')
 subdir('gio')
 subdir('fuzzing')
-# Don’t build the tests unless we can run them (either natively or in an exe wrapper)
-build_tests = not meson.is_cross_build() or (meson.is_cross_build() and meson.has_exe_wrapper())
 if build_tests
   subdir('tests')
 endif
