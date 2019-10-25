@@ -1,5 +1,5 @@
 project('glib', 'c', 'cpp',
-  version : '2.62.1',
+  version : '2.62.2',
   # NOTE: We keep this pinned at 0.49 because that's what Debian 10 ships
   meson_version : '>= 0.49.2',
   default_options : [
@@ -2026,6 +2026,8 @@ if host_system == 'windows'
 elif host_system == 'cygwin'
   export_dynamic_ldflags = ['-Wl,--export-all-symbols']
 elif host_system == 'darwin'
+  export_dynamic_ldflags = []
+elif host_system == 'sunos'
   export_dynamic_ldflags = []
 else
   export_dynamic_ldflags = ['-Wl,--export-dynamic']
