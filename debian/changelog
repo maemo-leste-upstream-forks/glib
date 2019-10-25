@@ -1,6 +1,8 @@
 glib2.0 (2.62.2-1) UNRELEASED; urgency=medium
 
   * New upstream release
+    + Fixes use after free when calling g_dbus_connection_flush_sync() in a
+      dedicated thread (LP: #1848202)
 
  -- Iain Lane <laney@debian.org>  Fri, 25 Oct 2019 10:21:34 +0100
 
