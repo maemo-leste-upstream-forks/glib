@@ -27,6 +27,8 @@ glib2.0 (2.62.2-2) UNRELEASED; urgency=medium
     d/p/gdbus-peer-test-Use-unix-dir-address-if-exact-format-does.patch,
     d/p/gdbus-server-auth-test-Create-temporary-directory-for-Uni.patch:
     Add some proposed patches to improve GDBus unit tests
+  * d/p/debian/mimeapps-test-Mark-as-flaky.patch:
+    Drop patch, hopefully no longer needed with #941550 fixed
 
  -- Simon McVittie <smcv@debian.org>  Tue, 29 Oct 2019 21:47:10 +0000
 
