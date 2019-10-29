@@ -9,6 +9,8 @@ gspawn-Port-to-g_poll-from-select.patch
 gcredentialsprivate-Document-the-various-private-macros.patch
 credentials-Invalid-Linux-struct-ucred-means-no-informati.patch
 GDBus-prefer-getsockopt-style-credentials-passing-APIs.patch
+gdbusserver-Delete-socket-and-nonce-file-when-stopping-se.patch
+gdbusserver-Keep-a-strong-reference-to-the-server-in-call.patch
 Add-a-test-for-GDBusServer-authentication.patch
 gdbus-peer-test-Improve-diagnostics-if-g_rmdir-fails.patch
 gdbus-peer-test-Stop-GDBusServer-before-tearing-down-temp.patch

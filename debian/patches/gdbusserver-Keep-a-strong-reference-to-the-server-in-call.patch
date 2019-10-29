@@ -1,0 +1,59 @@
+From: Philip Withnall <withnall@endlessm.com>
+Date: Mon, 28 Oct 2019 20:44:07 +0000
+Subject: gdbusserver: Keep a strong reference to the server in callbacks
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+The `on_run()` function could be executed in any worker thread from the
+`GThreadedSocketListener`, but didn’t previously hold a strong reference
+to the `GDBusServer`, which meant the server could be finalised in
+another thread while `on_run()` was still running.
+
+This was not ideal.
+
+Hold a strong reference to the `GDBusServer` while the socket listener
+is listening, i.e. between every paired call to `g_dbus_server_start()`
+and `g_dbus_server_stop()`.
+
+Signed-off-by: Philip Withnall <withnall@endlessm.com>
+Bug: #1318
+Origin: upstream, 2.63.1, commit:0c07e672a28f8ee740ac61921c5e86c071909475
+---
+ gio/gdbusserver.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
+
+diff --git a/gio/gdbusserver.c b/gio/gdbusserver.c
+index 377ad44..4a8dab0 100644
+--- a/gio/gdbusserver.c
++++ b/gio/gdbusserver.c
+@@ -613,6 +613,12 @@ g_dbus_server_start (GDBusServer *server)
+     return;
+   /* Right now we don't have any transport not using the listener... */
+   g_assert (server->is_using_listener);
++  server->run_signal_handler_id = g_signal_connect_data (G_SOCKET_SERVICE (server->listener),
++                                                         "run",
++                                                         G_CALLBACK (on_run),
++                                                         g_object_ref (server),
++                                                         (GClosureNotify) g_object_unref,
++                                                         0  /* flags */);
+   g_socket_service_start (G_SOCKET_SERVICE (server->listener));
+   server->active = TRUE;
+   g_object_notify (G_OBJECT (server), "active");
+@@ -1162,15 +1168,7 @@ initable_init (GInitable     *initable,
+ 
+   if (ret)
+     {
+-      if (last_error != NULL)
+-        g_error_free (last_error);
+-
+-      /* Right now we don't have any transport not using the listener... */
+-      g_assert (server->is_using_listener);
+-      server->run_signal_handler_id = g_signal_connect (G_SOCKET_SERVICE (server->listener),
+-                                                        "run",
+-                                                        G_CALLBACK (on_run),
+-                                                        server);
++      g_clear_error (&last_error);
+     }
+   else
+     {
