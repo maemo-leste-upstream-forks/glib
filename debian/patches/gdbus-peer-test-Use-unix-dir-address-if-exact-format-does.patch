@@ -18,7 +18,7 @@ Forwarded: https://gitlab.gnome.org/GNOME/glib/merge_requests/1197
  1 file changed, 7 insertions(+), 12 deletions(-)
 
 diff --git a/gio/tests/gdbus-peer.c b/gio/tests/gdbus-peer.c
-index 85f0385..e4c4388 100644
+index bb63041..7887ab9 100644
 --- a/gio/tests/gdbus-peer.c
 +++ b/gio/tests/gdbus-peer.c
 @@ -273,14 +273,9 @@ setup_test_address (void)
@@ -54,7 +54,7 @@ index 85f0385..e4c4388 100644
  }
  
  static void
-@@ -1042,7 +1037,7 @@ test_peer (void)
+@@ -1045,7 +1040,7 @@ test_peer (void)
    teardown_test_address ();
  
  #ifdef G_OS_UNIX

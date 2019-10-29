@@ -1,0 +1,38 @@
+From: Philip Withnall <withnall@endlessm.com>
+Date: Mon, 28 Oct 2019 19:42:41 +0000
+Subject: tests: Isolate directories in gdbus-peer test
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+So that the tests all end up using separate `.dbus-keyring` directories,
+and hence not racing to create and acquire lock files, use
+`G_TEST_OPTION_ISOLATE_DIRS` to ensure they all run in separate
+disposable directories.
+
+This has the added benefit of meaning they don’t touch the developer’s
+actual `$HOME` directory.
+
+This reduces the false-failure rate of `gdbus-peer` by a factor of 9 for
+me on my local machine.
+
+Signed-off-by: Philip Withnall <withnall@endlessm.com>
+Bug: #1912
+Origin: upstream, 2.63.1, commit:6fb38c3f25e8e859812e25fe88fad752a68133b3
+---
+ gio/tests/gdbus-peer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gio/tests/gdbus-peer.c b/gio/tests/gdbus-peer.c
+index b410e80..dc4176c 100644
+--- a/gio/tests/gdbus-peer.c
++++ b/gio/tests/gdbus-peer.c
+@@ -1922,7 +1922,7 @@ main (int   argc,
+   gint ret;
+   GDBusNodeInfo *introspection_data = NULL;
+ 
+-  g_test_init (&argc, &argv, NULL);
++  g_test_init (&argc, &argv, G_TEST_OPTION_ISOLATE_DIRS, NULL);
+ 
+   introspection_data = g_dbus_node_info_new_for_xml (test_interface_introspection_xml, NULL);
+   g_assert (introspection_data != NULL);

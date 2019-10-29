@@ -10,7 +10,7 @@ Forwarded: https://gitlab.gnome.org/GNOME/glib/merge_requests/1197
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/gio/tests/gdbus-peer.c b/gio/tests/gdbus-peer.c
-index a3260a6..34a633e 100644
+index dc4176c..c51166a 100644
 --- a/gio/tests/gdbus-peer.c
 +++ b/gio/tests/gdbus-peer.c
 @@ -313,7 +313,8 @@ teardown_test_address (void)

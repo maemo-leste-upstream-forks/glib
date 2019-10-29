@@ -12,6 +12,10 @@ GDBus-prefer-getsockopt-style-credentials-passing-APIs.patch
 gdbusserver-Delete-socket-and-nonce-file-when-stopping-se.patch
 gdbusserver-Keep-a-strong-reference-to-the-server-in-call.patch
 Add-a-test-for-GDBusServer-authentication.patch
+gdbusauthmechanismsha1-Remove-unnecessary-g_warning-calls.patch
+gdbusauthmechanismsha1-Create-.dbus-keyrings-directory-re.patch
+tests-Move-main-loop-and-test-GUID-into-test-functions-in.patch
+tests-Isolate-directories-in-gdbus-peer-test.patch
 gdbus-peer-test-Improve-diagnostics-if-g_rmdir-fails.patch
 gdbus-peer-test-Stop-GDBusServer-before-tearing-down-temp.patch
 gdbus-peer-test-Use-unix-dir-address-if-exact-format-does.patch

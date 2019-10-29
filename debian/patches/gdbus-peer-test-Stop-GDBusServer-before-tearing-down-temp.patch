@@ -16,10 +16,10 @@ Forwarded: https://gitlab.gnome.org/GNOME/glib/merge_requests/1197
  1 file changed, 1 insertion(+)
 
 diff --git a/gio/tests/gdbus-peer.c b/gio/tests/gdbus-peer.c
-index 34a633e..85f0385 100644
+index c51166a..bb63041 100644
 --- a/gio/tests/gdbus-peer.c
 +++ b/gio/tests/gdbus-peer.c
-@@ -1247,6 +1247,7 @@ dmp_thread_func (gpointer user_data)
+@@ -1259,6 +1259,7 @@ dmp_thread_func (gpointer user_data)
    data->loop = g_main_loop_new (data->context, FALSE);
    g_main_loop_run (data->loop);
  

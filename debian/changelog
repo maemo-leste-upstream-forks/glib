@@ -24,6 +24,11 @@ glib2.0 (2.62.2-2) UNRELEASED; urgency=medium
     d/p/gdbusserver-Keep-a-strong-reference-to-the-server-in-call.patch,
     d/p/Add-a-test-for-GDBusServer-authentication.patch:
     Backport regression test for #941018 from upstream git master
+  * d/p/gdbusauthmechanismsha1-Remove-unnecessary-g_warning-calls.patch,
+    d/p/gdbusauthmechanismsha1-Create-.dbus-keyrings-directory-re.patch,
+    d/p/tests-Move-main-loop-and-test-GUID-into-test-functions-in.patch,
+    d/p/tests-Isolate-directories-in-gdbus-peer-test.patch:
+    Backport reliability fixes for gdbus-peer test from upstream git master
   * d/p/gdbus-peer-test-Improve-diagnostics-if-g_rmdir-fails.patch,
     d/p/gdbus-peer-test-Stop-GDBusServer-before-tearing-down-temp.patch,
     d/p/gdbus-peer-test-Use-unix-dir-address-if-exact-format-does.patch,
