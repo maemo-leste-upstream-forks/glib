@@ -1,0 +1,29 @@
+From: Simon McVittie <smcv@collabora.com>
+Date: Tue, 29 Oct 2019 16:14:16 +0000
+Subject: gdbus-peer test: Stop GDBusServer before tearing down temporary
+ directory
+
+Otherwise, since GNOME/glib!1193, the listening socket won't be deleted,
+and if we are not using abstract sockets (for example on *BSD), g_rmdir
+will fail with ENOTEMPTY.
+
+Fixes: 8e32b8e8 "gdbusserver: Delete socket and nonce file when stopping server"
+Bug: GNOME/glib#1921
+Signed-off-by: Simon McVittie <smcv@collabora.com>
+Forwarded: https://gitlab.gnome.org/GNOME/glib/merge_requests/1197
+---
+ gio/tests/gdbus-peer.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/gio/tests/gdbus-peer.c b/gio/tests/gdbus-peer.c
+index 34a633e..85f0385 100644
+--- a/gio/tests/gdbus-peer.c
++++ b/gio/tests/gdbus-peer.c
+@@ -1247,6 +1247,7 @@ dmp_thread_func (gpointer user_data)
+   data->loop = g_main_loop_new (data->context, FALSE);
+   g_main_loop_run (data->loop);
+ 
++  g_dbus_server_stop (data->server);
+   g_main_context_pop_thread_default (data->context);
+ 
+   g_free (guid);

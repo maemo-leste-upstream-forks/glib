@@ -1,0 +1,25 @@
+From: Simon McVittie <smcv@collabora.com>
+Date: Tue, 29 Oct 2019 16:05:55 +0000
+Subject: gdbus-peer test: Improve diagnostics if g_rmdir fails
+
+Bug: GNOME/glib#1921
+Signed-off-by: Simon McVittie <smcv@collabora.com>
+Forwarded: https://gitlab.gnome.org/GNOME/glib/merge_requests/1197
+---
+ gio/tests/gdbus-peer.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/gio/tests/gdbus-peer.c b/gio/tests/gdbus-peer.c
+index a3260a6..34a633e 100644
+--- a/gio/tests/gdbus-peer.c
++++ b/gio/tests/gdbus-peer.c
+@@ -313,7 +313,8 @@ teardown_test_address (void)
+       /* Ensuring the rmdir succeeds also ensures any sockets created on the
+        * filesystem are also deleted.
+        */
+-      g_assert_cmpint (g_rmdir (tmpdir), ==, 0);
++      g_assert_cmpstr (g_rmdir (tmpdir) == 0 ? "OK" : g_strerror (errno),
++                       ==, "OK");
+       g_clear_pointer (&tmpdir, g_free);
+     }
+ }

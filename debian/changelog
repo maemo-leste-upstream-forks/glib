@@ -1,3 +1,35 @@
+glib2.0 (2.62.2-2) UNRELEASED; urgency=medium
+
+  * Update to upstream commit 2.62.2-14-gfcbb88823:
+    - d/p/gdesktopappinfo-Allocate-DesktopFileDir-structs-dynamical.patch,
+      d/p/gdesktopappinfo-Cancel-file-monitor-when-resetting-a-Desk.patch,
+      d/p/glocalfilemonitor-Keep-a-weak-ref-to-the-monitor-in-GFile.patch:
+      Fix intermittent test failures for GDesktopAppInfo (Closes: #941550)
+    - d/p/gvariant-Limit-recursion-in-g_variant_parse.patch:
+      Ensure that parsing a text-format GVariant does not run out of stack
+      space
+    - d/p/tests-Use-objcopy-from-the-cross-compilation-file-if-conf.patch,
+      d/p/docs-Add-objcopy-to-example-cross-compilation-file.patch:
+      Use the appropriate architecture's objcopy when cross-compiling
+    - d/p/gtestutils-Add-additional-non-NULL-check-in-g_assert_cmpm.patch:
+      Avoid false positive NULL dereference warnings in g_assert_cmpmem()
+    - d/p/gspawn-Port-to-g_poll-from-select.patch:
+      Fix launching subprocesses when a very large number of fds are open
+    - d/p/gcredentialsprivate-Document-the-various-private-macros.patch,
+      d/p/credentials-Invalid-Linux-struct-ucred-means-no-informati.patch,
+      d/p/GDBus-prefer-getsockopt-style-credentials-passing-APIs.patch:
+      Ensure libdbus clients can authenticate with a GDBusServer like the
+      one in ibus (Closes: #941018)
+  * d/p/Add-a-test-for-GDBusServer-authentication.patch:
+    Backport regression test for #941018 from upstream git master
+  * d/p/gdbus-peer-test-Improve-diagnostics-if-g_rmdir-fails.patch,
+    d/p/gdbus-peer-test-Stop-GDBusServer-before-tearing-down-temp.patch,
+    d/p/gdbus-peer-test-Use-unix-dir-address-if-exact-format-does.patch,
+    d/p/gdbus-server-auth-test-Create-temporary-directory-for-Uni.patch:
+    Add some proposed patches to improve GDBus unit tests
+
+ -- Simon McVittie <smcv@debian.org>  Tue, 29 Oct 2019 21:47:10 +0000
+
 glib2.0 (2.62.2-1) unstable; urgency=medium
 
   * New upstream release

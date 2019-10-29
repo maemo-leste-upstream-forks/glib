@@ -1,0 +1,23 @@
+From: Simon McVittie <smcv@debian.org>
+Date: Tue, 29 Oct 2019 21:37:12 +0000
+Subject: docs: Add objcopy to example cross-compilation file
+
+Signed-off-by: Philip Withnall <withnall@endlessm.com>
+Bug: #1916
+Origin: upstream, 2.62.3, commit:9dc2fca2886058dbf86a5987d9621fea4c487edb
+---
+ docs/reference/glib/cross.xml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/docs/reference/glib/cross.xml b/docs/reference/glib/cross.xml
+index 50e7ba6..977421f 100644
+--- a/docs/reference/glib/cross.xml
++++ b/docs/reference/glib/cross.xml
+@@ -59,6 +59,7 @@ c_link_args = []
+ c = 'x86_64-w64-mingw32-gcc'
+ cpp = 'x86_64-w64-mingw32-g++'
+ ar = 'x86_64-w64-mingw32-ar'
++objcopy = 'x86_64-w64-mingw32-objcopy'
+ strip = 'x86_64-w64-mingw32-strip'
+ pkgconfig = 'x86_64-w64-mingw32-pkg-config'
+ windres = 'x86_64-w64-mingw32-windres'
