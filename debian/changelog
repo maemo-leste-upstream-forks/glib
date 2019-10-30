@@ -1,5 +1,6 @@
-glib2.0 (2.62.2-2) UNRELEASED; urgency=medium
+glib2.0 (2.62.2-2) unstable; urgency=medium
 
+  * Team upload
   * Update to upstream commit 2.62.2-14-gfcbb88823:
     - d/p/gdesktopappinfo-Allocate-DesktopFileDir-structs-dynamical.patch,
       d/p/gdesktopappinfo-Cancel-file-monitor-when-resetting-a-Desk.patch,
@@ -39,7 +40,7 @@ glib2.0 (2.62.2-2) UNRELEASED; urgency=medium
   * d/p/debian/taptestrunner-Stop-looking-like-an-executable-script.patch:
     Make taptestrunner non-executable to avoid a Lintian warning
 
- -- Simon McVittie <smcv@debian.org>  Tue, 29 Oct 2019 21:47:10 +0000
+ -- Simon McVittie <smcv@debian.org>  Wed, 30 Oct 2019 08:45:56 +0000
 
 glib2.0 (2.62.2-1) unstable; urgency=medium
 
