@@ -21,6 +21,7 @@ gdbus-peer-test-Stop-GDBusServer-before-tearing-down-temp.patch
 gdbus-peer-test-Use-unix-dir-address-if-exact-format-does.patch
 gdbus-server-auth-test-Create-temporary-directory-for-Uni.patch
 gdbus-server-auth-test-Include-gcredentialsprivate.h.patch
+Make-ld-executable-configurable.patch
 01_gettext-desktopfiles.patch
 0001-timer-test-use-volatile-for-locals.patch
 gwakeuptest-Be-less-parallel-unless-invoked-with-m-slow.patch
