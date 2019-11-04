@@ -640,7 +640,7 @@ g_option_context_get_main_group (GOptionContext *context)
 /**
  * g_option_context_add_main_entries:
  * @context: a #GOptionContext
- * @entries: a %NULL-terminated array of #GOptionEntrys
+ * @entries: (array zero-terminated=1): a %NULL-terminated array of #GOptionEntrys
  * @translation_domain: (nullable): a translation domain to use for translating
  *    the `--help` output for the options in @entries
  *    with gettext(), or %NULL
@@ -1833,8 +1833,10 @@ platform_get_argv0 (void)
 			    NULL))
     return NULL;
 
-  /* Sanity check for a NUL terminator. */
-  g_assert (memchr (cmdline, 0, len));
+  /* g_file_get_contents() guarantees to put a NUL immediately after the
+   * file's contents (at cmdline[len] here), even if the file itself was
+   * not NUL-terminated. */
+  g_assert (memchr (cmdline, 0, len + 1));
 
   /* We could just return cmdline, but I think it's better
    * to hold on to a smaller malloc block; the arguments
@@ -2398,7 +2400,7 @@ g_option_group_unref (GOptionGroup *group)
 /**
  * g_option_group_add_entries:
  * @group: a #GOptionGroup
- * @entries: a %NULL-terminated array of #GOptionEntrys
+ * @entries: (array zero-terminated=1): a %NULL-terminated array of #GOptionEntrys
  *
  * Adds the options specified in @entries to @group.
  *

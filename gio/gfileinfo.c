@@ -564,7 +564,7 @@ g_file_info_find_value_by_name (GFileInfo  *info,
  *
  * Checks if a file info structure has an attribute named @attribute.
  *
- * Returns: %TRUE if @Ginfo has an attribute named @attribute,
+ * Returns: %TRUE if @info has an attribute named @attribute,
  *     %FALSE otherwise.
  **/
 gboolean
@@ -588,7 +588,7 @@ g_file_info_has_attribute (GFileInfo  *info,
  * Checks if a file info structure has an attribute in the
  * specified @name_space.
  *
- * Returns: %TRUE if @Ginfo has an attribute in @name_space,
+ * Returns: %TRUE if @info has an attribute in @name_space,
  *     %FALSE otherwise.
  *
  * Since: 2.22
@@ -2163,8 +2163,9 @@ g_file_info_set_size (GFileInfo *info,
  * @info: a #GFileInfo.
  * @mtime: a #GTimeVal.
  *
- * Sets the %G_FILE_ATTRIBUTE_TIME_MODIFIED attribute in the file
- * info to the given time value.
+ * Sets the %G_FILE_ATTRIBUTE_TIME_MODIFIED and
+ * %G_FILE_ATTRIBUTE_TIME_MODIFIED_USEC attributes in the file info to the
+ * given time value.
  *
  * Deprecated: 2.62: Use g_file_info_set_modification_date_time() instead, as
  *    #GTimeVal is deprecated due to the year 2038 problem.
@@ -2200,8 +2201,9 @@ G_GNUC_END_IGNORE_DEPRECATIONS
  * @info: a #GFileInfo.
  * @mtime: (not nullable): a #GDateTime.
  *
- * Sets the %G_FILE_ATTRIBUTE_TIME_MODIFIED attribute in the file
- * info to the given date/time value.
+ * Sets the %G_FILE_ATTRIBUTE_TIME_MODIFIED and
+ * %G_FILE_ATTRIBUTE_TIME_MODIFIED_USEC attributes in the file info to the
+ * given date/time value.
  *
  * Since: 2.62
  */
@@ -2389,7 +2391,7 @@ matcher_optimize (GFileAttributeMatcher *matcher)
  * the number of references falls to 0, the #GFileAttributeMatcher is
  * automatically destroyed.
  *
- * The @attribute string should be formatted with specific keys separated
+ * The @attributes string should be formatted with specific keys separated
  * from namespaces with a double colon. Several "namespace::key" strings may be
  * concatenated with a single comma (e.g. "standard::type,standard::is-hidden").
  * The wildcard "*" may be used to match all keys and namespaces, or
