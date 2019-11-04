@@ -1,5 +1,5 @@
 From: Simon McVittie <smcv@debian.org>
-Date: Wed, 30 Oct 2019 11:33:02 +0000
+Date: Mon, 4 Nov 2019 17:29:16 +0000
 Subject: Make ld executable configurable
 
 Tools like this should be configurable in a cross or native file. In
@@ -7,8 +7,8 @@ particular, if we are cross-compiling (with an executable wrapper like
 qemu-arm), the build system ld is not necessarily able to manipulate
 host system objects.
 
-Signed-off-by: Simon McVittie <smcv@debian.org>
-Forwarded: https://gitlab.gnome.org/GNOME/glib/merge_requests/1209
+Signed-off-by: Simon McVittie <smcv@collabora.com>
+Applied-upstream: 2.63.2, commit:81936ca5808ed7f52571e1fdc49ecffc4d202b07
 ---
  docs/reference/glib/cross.xml | 1 +
  gio/tests/meson.build         | 5 +++--
