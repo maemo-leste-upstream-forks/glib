@@ -3,6 +3,9 @@ glib2.0 (2.62.2-3) UNRELEASED; urgency=medium
   [ Iain Lane ]
   * control: Drop `debian/experimental` from Vcs-*
 
+  [ Simon McVittie ]
+  * Build-depend on libdbus-1-dev for better test coverage
+
  -- Simon McVittie <smcv@debian.org>  Mon, 04 Nov 2019 17:09:25 +0000
 
 glib2.0 (2.62.2-2) unstable; urgency=medium
