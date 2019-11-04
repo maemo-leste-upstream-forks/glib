@@ -51,6 +51,13 @@ def generate_namespace(namespace):
 
     return (ns, ns_upper, ns_lower)
 
+def generate_header_guard(header_name):
+    # There might be more characters that are safe to use than these, but lets
+    # stay conservative.
+    safe_valid_chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    return ''.join(map(lambda c: c if c in safe_valid_chars else '_',
+                       header_name.upper()))
+
 class HeaderCodeGenerator:
     def __init__(self, ifaces, namespace, generate_objmanager,
                  generate_autocleanup, header_name, input_files_basenames,
@@ -59,7 +66,7 @@ class HeaderCodeGenerator:
         self.namespace, self.ns_upper, self.ns_lower = generate_namespace(namespace)
         self.generate_objmanager = generate_objmanager
         self.generate_autocleanup = generate_autocleanup
-        self.header_guard = header_name.upper().replace('.', '_').replace('-', '_').replace('/', '_').replace(':', '_')
+        self.header_guard = generate_header_guard(header_name)
         self.input_files_basenames = input_files_basenames
         self.use_pragma = use_pragma
         self.outfile = outfile
@@ -112,14 +119,11 @@ class HeaderCodeGenerator:
             if len(i.methods) > 0:
                 self.outfile.write('\n')
                 for m in i.methods:
-                    unix_fd = False
-                    if utils.lookup_annotation(m.annotations, 'org.gtk.GDBus.C.UnixFD'):
-                        unix_fd = True
                     key = (m.since, '_method_%s'%m.name_lower)
                     value  = '  gboolean (*handle_%s) (\n'%(m.name_lower)
                     value += '    %s *object,\n'%(i.camel_name)
                     value += '    GDBusMethodInvocation *invocation'%()
-                    if unix_fd:
+                    if m.unix_fd:
                         value += ',\n    GUnixFDList *fd_list'
                     for a in m.in_args:
                         value += ',\n    %sarg_%s'%(a.ctype_in, a.name)
@@ -176,15 +180,12 @@ class HeaderCodeGenerator:
                 self.outfile.write('\n')
                 self.outfile.write('/* D-Bus method call completion functions: */\n')
                 for m in i.methods:
-                    unix_fd = False
-                    if utils.lookup_annotation(m.annotations, 'org.gtk.GDBus.C.UnixFD'):
-                        unix_fd = True
                     if m.deprecated:
                         self.outfile.write('G_GNUC_DEPRECATED ')
                     self.outfile.write('void %s_complete_%s (\n'
                                        '    %s *object,\n'
                                        '    GDBusMethodInvocation *invocation'%(i.name_lower, m.name_lower, i.camel_name))
-                    if unix_fd:
+                    if m.unix_fd:
                         self.outfile.write(',\n    GUnixFDList *fd_list')
                     for a in m.out_args:
                         self.outfile.write(',\n    %s%s'%(a.ctype_in, a.name))
@@ -212,9 +213,6 @@ class HeaderCodeGenerator:
                 self.outfile.write('\n')
                 self.outfile.write('/* D-Bus method calls: */\n')
                 for m in i.methods:
-                    unix_fd = False
-                    if utils.lookup_annotation(m.annotations, 'org.gtk.GDBus.C.UnixFD'):
-                        unix_fd = True
                     # async begin
                     if m.deprecated:
                         self.outfile.write('G_GNUC_DEPRECATED ')
@@ -222,7 +220,7 @@ class HeaderCodeGenerator:
                                        '    %s *proxy'%(i.name_lower, m.name_lower, i.camel_name))
                     for a in m.in_args:
                         self.outfile.write(',\n    %sarg_%s'%(a.ctype_in, a.name))
-                    if unix_fd:
+                    if m.unix_fd:
                         self.outfile.write(',\n    GUnixFDList *fd_list')
                     self.outfile.write(',\n'
                                        '    GCancellable *cancellable,\n'
@@ -236,7 +234,7 @@ class HeaderCodeGenerator:
                                        '    %s *proxy'%(i.name_lower, m.name_lower, i.camel_name))
                     for a in m.out_args:
                         self.outfile.write(',\n    %sout_%s'%(a.ctype_out, a.name))
-                    if unix_fd:
+                    if m.unix_fd:
                         self.outfile.write(',\n    GUnixFDList **out_fd_list')
                     self.outfile.write(',\n'
                                        '    GAsyncResult *res,\n'
@@ -249,11 +247,11 @@ class HeaderCodeGenerator:
                                        '    %s *proxy'%(i.name_lower, m.name_lower, i.camel_name))
                     for a in m.in_args:
                         self.outfile.write(',\n    %sarg_%s'%(a.ctype_in, a.name))
-                    if unix_fd:
+                    if m.unix_fd:
                         self.outfile.write(',\n    GUnixFDList  *fd_list')
                     for a in m.out_args:
                         self.outfile.write(',\n    %sout_%s'%(a.ctype_out, a.name))
-                    if unix_fd:
+                    if m.unix_fd:
                         self.outfile.write(',\n    GUnixFDList **out_fd_list')
                     self.outfile.write(',\n'
                                        '    GCancellable *cancellable,\n'
@@ -622,7 +620,7 @@ class InterfaceInfoHeaderCodeGenerator:
     def __init__(self, ifaces, namespace, header_name, input_files_basenames, use_pragma, outfile):
         self.ifaces = ifaces
         self.namespace, self.ns_upper, self.ns_lower = generate_namespace(namespace)
-        self.header_guard = header_name.upper().replace('.', '_').replace('-', '_').replace('/', '_').replace(':', '_')
+        self.header_guard = generate_header_guard(header_name)
         self.input_files_basenames = input_files_basenames
         self.use_pragma = use_pragma
         self.outfile = outfile
@@ -1153,9 +1151,6 @@ class CodeGenerator:
 
             if len(i.methods) > 0:
                 for m in i.methods:
-                    unix_fd = False
-                    if utils.lookup_annotation(m.annotations, 'org.gtk.GDBus.C.UnixFD'):
-                        unix_fd = True
                     self.generate_args('_%s_method_info_%s_IN_ARG'%(i.name_lower, m.name_lower), m.in_args)
                     self.generate_args('_%s_method_info_%s_OUT_ARG'%(i.name_lower, m.name_lower), m.out_args)
 
@@ -1181,7 +1176,7 @@ class CodeGenerator:
                     self.outfile.write('  },\n'
                                        '  "handle-%s",\n'
                                        '  %s\n'
-                                       %(m.name_hyphen, 'TRUE' if unix_fd else 'FALSE'))
+                                       %(m.name_hyphen, 'TRUE' if m.unix_fd else 'FALSE'))
                     self.outfile.write('};\n'
                                        '\n')
 
@@ -1399,16 +1394,13 @@ class CodeGenerator:
         if len(i.methods) > 0:
             self.outfile.write('  /* GObject signals for incoming D-Bus method calls: */\n')
             for m in i.methods:
-                unix_fd = False
-                if utils.lookup_annotation(m.annotations, 'org.gtk.GDBus.C.UnixFD'):
-                    unix_fd = True
                 self.outfile.write(self.docbook_gen.expand(
                         '  /**\n'
                         '   * %s::handle-%s:\n'
                         '   * @object: A #%s.\n'
                         '   * @invocation: A #GDBusMethodInvocation.\n'
                         %(i.camel_name, m.name_hyphen, i.camel_name), False))
-                if unix_fd:
+                if m.unix_fd:
                     self.outfile.write('   * @fd_list: (nullable): A #GUnixFDList or %NULL.\n')
                 for a in m.in_args:
                     self.outfile.write('   * @arg_%s: Argument passed by remote caller.\n'%(a.name))
@@ -1421,7 +1413,7 @@ class CodeGenerator:
                         '   * Returns: %%TRUE if the invocation was handled, %%FALSE to let other signal handlers run.\n'
                         %(i.name, m.name, i.name_lower, m.name_lower), False))
                 self.write_gtkdoc_deprecated_and_since_and_close(m, self.outfile, 2)
-                if unix_fd:
+                if m.unix_fd:
                     extra_args = 2
                 else:
                     extra_args = 1
@@ -1436,7 +1428,7 @@ class CodeGenerator:
                                    '    %d,\n'
                                    '    G_TYPE_DBUS_METHOD_INVOCATION'
                                    %(m.name_hyphen, i.camel_name, m.name_lower, len(m.in_args) + extra_args))
-                if unix_fd:
+                if m.unix_fd:
                     self.outfile.write(', G_TYPE_UNIX_FD_LIST')
                 for a in m.in_args:
                     self.outfile.write(', %s'%(a.gtype))
@@ -1662,9 +1654,6 @@ class CodeGenerator:
 
     def generate_method_calls(self, i):
         for m in i.methods:
-            unix_fd = False
-            if utils.lookup_annotation(m.annotations, 'org.gtk.GDBus.C.UnixFD'):
-                unix_fd = True
             # async begin
             self.outfile.write('/**\n'
                                ' * %s_call_%s:\n'
@@ -1672,7 +1661,7 @@ class CodeGenerator:
                                %(i.name_lower, m.name_lower, i.camel_name))
             for a in m.in_args:
                 self.outfile.write(' * @arg_%s: Argument to pass with the method invocation.\n'%(a.name))
-            if unix_fd:
+            if m.unix_fd:
                 self.outfile.write(' * @fd_list: (nullable): A #GUnixFDList or %NULL.\n')
             self.outfile.write(self.docbook_gen.expand(
                     ' * @cancellable: (nullable): A #GCancellable or %%NULL.\n'
@@ -1691,14 +1680,14 @@ class CodeGenerator:
                                '    %s *proxy'%(i.name_lower, m.name_lower, i.camel_name))
             for a in m.in_args:
                 self.outfile.write(',\n    %sarg_%s'%(a.ctype_in, a.name))
-            if unix_fd:
+            if m.unix_fd:
                 self.outfile.write(',\n    GUnixFDList *fd_list')
             self.outfile.write(',\n'
                                '    GCancellable *cancellable,\n'
                                '    GAsyncReadyCallback callback,\n'
                                '    gpointer user_data)\n'
                                '{\n')
-            if unix_fd:
+            if m.unix_fd:
                 self.outfile.write('  g_dbus_proxy_call_with_unix_fd_list (G_DBUS_PROXY (proxy),\n')
             else:
                 self.outfile.write('  g_dbus_proxy_call (G_DBUS_PROXY (proxy),\n')
@@ -1712,7 +1701,7 @@ class CodeGenerator:
             self.outfile.write('),\n'
                                '    G_DBUS_CALL_FLAGS_NONE,\n'
                                '    -1,\n')
-            if unix_fd:
+            if m.unix_fd:
                 self.outfile.write('    fd_list,\n')
             self.outfile.write('    cancellable,\n'
                                '    callback,\n'
@@ -1726,7 +1715,7 @@ class CodeGenerator:
                                %(i.name_lower, m.name_lower, i.camel_name))
             for a in m.out_args:
                 self.outfile.write(' * @out_%s: (out) (optional)%s: Return location for return parameter or %%NULL to ignore.\n'%(a.name, ' ' + a.array_annotation if a.array_annotation else ''))
-            if unix_fd:
+            if m.unix_fd:
                 self.outfile.write(' * @out_fd_list: (out) (optional): Return location for a #GUnixFDList or %NULL to ignore.\n')
             self.outfile.write(self.docbook_gen.expand(
                     ' * @res: The #GAsyncResult obtained from the #GAsyncReadyCallback passed to %s_call_%s().\n'
@@ -1742,14 +1731,14 @@ class CodeGenerator:
                                '    %s *proxy'%(i.name_lower, m.name_lower, i.camel_name))
             for a in m.out_args:
                 self.outfile.write(',\n    %sout_%s'%(a.ctype_out, a.name))
-            if unix_fd:
+            if m.unix_fd:
                 self.outfile.write(',\n    GUnixFDList **out_fd_list')
             self.outfile.write(',\n'
                                '    GAsyncResult *res,\n'
                                '    GError **error)\n'
                                '{\n'
                                '  GVariant *_ret;\n')
-            if unix_fd:
+            if m.unix_fd:
                 self.outfile.write('  _ret = g_dbus_proxy_call_with_unix_fd_list_finish (G_DBUS_PROXY (proxy), out_fd_list, res, error);\n')
             else:
                 self.outfile.write('  _ret = g_dbus_proxy_call_finish (G_DBUS_PROXY (proxy), res, error);\n')
@@ -1777,11 +1766,11 @@ class CodeGenerator:
                                %(i.name_lower, m.name_lower, i.camel_name))
             for a in m.in_args:
                 self.outfile.write(' * @arg_%s: Argument to pass with the method invocation.\n'%(a.name))
-            if unix_fd:
+            if m.unix_fd:
                 self.outfile.write(' * @fd_list: (nullable): A #GUnixFDList or %NULL.\n')
             for a in m.out_args:
                 self.outfile.write(' * @out_%s: (out) (optional)%s: Return location for return parameter or %%NULL to ignore.\n'%(a.name, ' ' + a.array_annotation if a.array_annotation else ''))
-            if unix_fd:
+            if m.unix_fd:
                 self.outfile.write(' * @out_fd_list: (out): Return location for a #GUnixFDList or %NULL.\n')
             self.outfile.write(self.docbook_gen.expand(
                     ' * @cancellable: (nullable): A #GCancellable or %%NULL.\n'
@@ -1799,18 +1788,18 @@ class CodeGenerator:
                                '    %s *proxy'%(i.name_lower, m.name_lower, i.camel_name))
             for a in m.in_args:
                 self.outfile.write(',\n    %sarg_%s'%(a.ctype_in, a.name))
-            if unix_fd:
+            if m.unix_fd:
                 self.outfile.write(',\n    GUnixFDList  *fd_list')
             for a in m.out_args:
                 self.outfile.write(',\n    %sout_%s'%(a.ctype_out, a.name))
-            if unix_fd:
+            if m.unix_fd:
                 self.outfile.write(',\n    GUnixFDList **out_fd_list')
             self.outfile.write(',\n'
                                '    GCancellable *cancellable,\n'
                                '    GError **error)\n'
                                '{\n'
                                '  GVariant *_ret;\n')
-            if unix_fd:
+            if m.unix_fd:
                 self.outfile.write('  _ret = g_dbus_proxy_call_with_unix_fd_list_sync (G_DBUS_PROXY (proxy),\n')
             else:
                 self.outfile.write('  _ret = g_dbus_proxy_call_sync (G_DBUS_PROXY (proxy),\n')
@@ -1824,7 +1813,7 @@ class CodeGenerator:
             self.outfile.write('),\n'
                                '    G_DBUS_CALL_FLAGS_NONE,\n'
                                '    -1,\n')
-            if unix_fd:
+            if m.unix_fd:
                 self.outfile.write('    fd_list,\n'
                                    '    out_fd_list,\n')
             self.outfile.write('    cancellable,\n'
@@ -1849,15 +1838,12 @@ class CodeGenerator:
 
     def generate_method_completers(self, i):
         for m in i.methods:
-            unix_fd = False
-            if utils.lookup_annotation(m.annotations, 'org.gtk.GDBus.C.UnixFD'):
-                unix_fd = True
             self.outfile.write('/**\n'
                                ' * %s_complete_%s:\n'
                                ' * @object: A #%s.\n'
                                ' * @invocation: (transfer full): A #GDBusMethodInvocation.\n'
                                %(i.name_lower, m.name_lower, i.camel_name))
-            if unix_fd:
+            if m.unix_fd:
                 self.outfile.write(' * @fd_list: (nullable): A #GUnixFDList or %NULL.\n')
             for a in m.out_args:
                 self.outfile.write(' * @%s: Parameter to return.\n'%(a.name))
@@ -1872,14 +1858,14 @@ class CodeGenerator:
                                '%s_complete_%s (\n'
                                '    %s *object,\n'
                                '    GDBusMethodInvocation *invocation'%(i.name_lower, m.name_lower, i.camel_name))
-            if unix_fd:
+            if m.unix_fd:
                 self.outfile.write(',\n    GUnixFDList *fd_list')
             for a in m.out_args:
                 self.outfile.write(',\n    %s%s'%(a.ctype_in, a.name))
             self.outfile.write(')\n'
                                '{\n')
 
-            if unix_fd:
+            if m.unix_fd:
                 self.outfile.write('  g_dbus_method_invocation_return_value_with_unix_fd_list (invocation,\n'
                                    '    g_variant_new ("(')
             else:
@@ -1890,7 +1876,7 @@ class CodeGenerator:
             self.outfile.write(')"')
             for a in m.out_args:
                 self.outfile.write(',\n                   %s'%(a.name))
-            if unix_fd:
+            if m.unix_fd:
                 self.outfile.write('),\n    fd_list);\n')
             else:
                 self.outfile.write('));\n')

@@ -1,11 +1,11 @@
 project('glib', 'c', 'cpp',
-  version : '2.62.2',
+  version : '2.63.1',
   # NOTE: We keep this pinned at 0.49 because that's what Debian 10 ships
   meson_version : '>= 0.49.2',
   default_options : [
     'buildtype=debugoptimized',
     'warning_level=1',
-    'c_std=gnu89'
+    'c_std=gnu99'
   ]
 )
 
@@ -1997,7 +1997,7 @@ python = import('python').find_installation('python3')
 python_name = 'python3'
 
 python_version = python.language_version()
-python_version_req = '>=3.4'
+python_version_req = '>=3.5'
 if not python_version.version_compare(python_version_req)
   error('Requires Python @0@, @1@ found.'.format(python_version_req, python_version))
 endif

@@ -140,6 +140,57 @@ array_new_zero_terminated (void)
   g_free (out_str);
 }
 
+/* Check g_array_steal() function */
+static void
+array_steal (void)
+{
+  const guint array_size = 10000;
+  GArray *garray;
+  gint *adata;
+  guint i;
+  gsize len, past_len;
+
+  garray = g_array_new (FALSE, FALSE, sizeof (gint));
+  adata = (gint *) g_array_steal (garray, NULL);
+  g_assert_null (adata);
+
+  adata = (gint *) g_array_steal (garray, &len);
+  g_assert_null (adata);
+  g_assert_cmpint (len, ==, 0);
+
+  for (i = 0; i < array_size; i++)
+    g_array_append_val (garray, i);
+
+  for (i = 0; i < array_size; i++)
+    g_assert_cmpint (g_array_index (garray, gint, i), ==, i);
+
+
+  past_len = garray->len;
+  adata = (gint *) g_array_steal (garray, &len);
+  for (i = 0; i < array_size; i++)
+    g_assert_cmpint (adata[i], ==, i);
+
+  g_assert_cmpint (past_len, ==, len);
+  g_assert_cmpint (garray->len, ==, 0);
+
+  g_array_append_val (garray, i);
+
+  g_assert_cmpint (adata[0], ==, 0);
+  g_assert_cmpint (g_array_index (garray, gint, 0), ==, array_size);
+  g_assert_cmpint (garray->len, ==, 1);
+
+  g_array_remove_index (garray, 0);
+
+  for (i = 0; i < array_size; i++)
+    g_array_append_val (garray, i);
+
+  g_assert_cmpint (garray->len, ==, array_size);
+  g_assert_cmpmem (adata, array_size * sizeof (gint),
+                   garray->data, array_size * sizeof (gint));
+  g_free (adata);
+  g_array_free (garray, TRUE);
+}
+
 /* Check that g_array_append_val() works correctly for various #GArray
  * configurations. */
 static void
@@ -760,6 +811,49 @@ test_array_binary_search (void)
   g_array_free (garray, TRUE);
 }
 
+/* Check g_ptr_array_steal() function */
+static void
+pointer_array_steal (void)
+{
+  const guint array_size = 10000;
+  GPtrArray *gparray;
+  gpointer *pdata;
+  guint i;
+  gsize len, past_len;
+
+  gparray = g_ptr_array_new ();
+  pdata = g_ptr_array_steal (gparray, NULL);
+  g_assert_null (pdata);
+
+  pdata = g_ptr_array_steal (gparray, &len);
+  g_assert_null (pdata);
+  g_assert_cmpint (len, ==, 0);
+
+  for (i = 0; i < array_size; i++)
+    g_ptr_array_add (gparray, GINT_TO_POINTER (i));
+
+  past_len = gparray->len;
+  pdata = g_ptr_array_steal (gparray, &len);
+  g_assert_cmpint (gparray->len, ==, 0);
+  g_assert_cmpint (past_len, ==, len);
+  g_ptr_array_add (gparray, GINT_TO_POINTER (10));
+
+  g_assert_cmpint ((gsize) pdata[0], ==, (gsize) GINT_TO_POINTER (0));
+  g_assert_cmpint ((gsize) g_ptr_array_index (gparray, 0), ==,
+                   (gsize) GINT_TO_POINTER (10));
+  g_assert_cmpint (gparray->len, ==, 1);
+
+  g_ptr_array_remove_index (gparray, 0);
+
+  for (i = 0; i < array_size; i++)
+    g_ptr_array_add (gparray, GINT_TO_POINTER (i));
+  g_assert_cmpmem (pdata, array_size * sizeof (gpointer),
+                   gparray->pdata, array_size * sizeof (gpointer));
+  g_free (pdata);
+
+  g_ptr_array_free (gparray, TRUE);
+}
+
 static void
 pointer_array_add (void)
 {
@@ -1231,6 +1325,150 @@ pointer_array_sort (void)
   g_ptr_array_free (gparray, TRUE);
 }
 
+/* Please keep pointer_array_sort_example() in sync with the doc-comment
+ * of g_ptr_array_sort() */
+
+typedef struct
+{
+  gchar *name;
+  gint size;
+} FileListEntry;
+
+static void
+file_list_entry_free (gpointer p)
+{
+  FileListEntry *entry = p;
+
+  g_free (entry->name);
+  g_free (entry);
+}
+
+static gint
+sort_filelist (gconstpointer a, gconstpointer b)
+{
+   const FileListEntry *entry1 = *((FileListEntry **) a);
+   const FileListEntry *entry2 = *((FileListEntry **) b);
+
+   return g_ascii_strcasecmp (entry1->name, entry2->name);
+}
+
+static void
+pointer_array_sort_example (void)
+{
+  GPtrArray *file_list = NULL;
+  FileListEntry *entry;
+
+  g_test_summary ("Check that the doc-comment for g_ptr_array_sort() is correct");
+
+  file_list = g_ptr_array_new_with_free_func (file_list_entry_free);
+
+  entry = g_new0 (FileListEntry, 1);
+  entry->name = g_strdup ("README");
+  entry->size = 42;
+  g_ptr_array_add (file_list, g_steal_pointer (&entry));
+
+  entry = g_new0 (FileListEntry, 1);
+  entry->name = g_strdup ("empty");
+  entry->size = 0;
+  g_ptr_array_add (file_list, g_steal_pointer (&entry));
+
+  entry = g_new0 (FileListEntry, 1);
+  entry->name = g_strdup ("aardvark");
+  entry->size = 23;
+  g_ptr_array_add (file_list, g_steal_pointer (&entry));
+
+  g_ptr_array_sort (file_list, sort_filelist);
+
+  g_assert_cmpuint (file_list->len, ==, 3);
+  entry = g_ptr_array_index (file_list, 0);
+  g_assert_cmpstr (entry->name, ==, "aardvark");
+  entry = g_ptr_array_index (file_list, 1);
+  g_assert_cmpstr (entry->name, ==, "empty");
+  entry = g_ptr_array_index (file_list, 2);
+  g_assert_cmpstr (entry->name, ==, "README");
+
+  g_ptr_array_unref (file_list);
+}
+
+/* Please keep pointer_array_sort_with_data_example() in sync with the
+ * doc-comment of g_ptr_array_sort_with_data() */
+
+typedef enum { SORT_NAME, SORT_SIZE } SortMode;
+
+static gint
+sort_filelist_how (gconstpointer a, gconstpointer b, gpointer user_data)
+{
+  gint order;
+  const SortMode sort_mode = GPOINTER_TO_INT (user_data);
+  const FileListEntry *entry1 = *((FileListEntry **) a);
+  const FileListEntry *entry2 = *((FileListEntry **) b);
+
+  switch (sort_mode)
+    {
+    case SORT_NAME:
+      order = g_ascii_strcasecmp (entry1->name, entry2->name);
+      break;
+    case SORT_SIZE:
+      order = entry1->size - entry2->size;
+      break;
+    default:
+      order = 0;
+      break;
+    }
+  return order;
+}
+
+static void
+pointer_array_sort_with_data_example (void)
+{
+  GPtrArray *file_list = NULL;
+  FileListEntry *entry;
+  SortMode sort_mode;
+
+  g_test_summary ("Check that the doc-comment for g_ptr_array_sort_with_data() is correct");
+
+  file_list = g_ptr_array_new_with_free_func (file_list_entry_free);
+
+  entry = g_new0 (FileListEntry, 1);
+  entry->name = g_strdup ("README");
+  entry->size = 42;
+  g_ptr_array_add (file_list, g_steal_pointer (&entry));
+
+  entry = g_new0 (FileListEntry, 1);
+  entry->name = g_strdup ("empty");
+  entry->size = 0;
+  g_ptr_array_add (file_list, g_steal_pointer (&entry));
+
+  entry = g_new0 (FileListEntry, 1);
+  entry->name = g_strdup ("aardvark");
+  entry->size = 23;
+  g_ptr_array_add (file_list, g_steal_pointer (&entry));
+
+  sort_mode = SORT_NAME;
+  g_ptr_array_sort_with_data (file_list, sort_filelist_how, GINT_TO_POINTER (sort_mode));
+
+  g_assert_cmpuint (file_list->len, ==, 3);
+  entry = g_ptr_array_index (file_list, 0);
+  g_assert_cmpstr (entry->name, ==, "aardvark");
+  entry = g_ptr_array_index (file_list, 1);
+  g_assert_cmpstr (entry->name, ==, "empty");
+  entry = g_ptr_array_index (file_list, 2);
+  g_assert_cmpstr (entry->name, ==, "README");
+
+  sort_mode = SORT_SIZE;
+  g_ptr_array_sort_with_data (file_list, sort_filelist_how, GINT_TO_POINTER (sort_mode));
+
+  g_assert_cmpuint (file_list->len, ==, 3);
+  entry = g_ptr_array_index (file_list, 0);
+  g_assert_cmpstr (entry->name, ==, "empty");
+  entry = g_ptr_array_index (file_list, 1);
+  g_assert_cmpstr (entry->name, ==, "aardvark");
+  entry = g_ptr_array_index (file_list, 2);
+  g_assert_cmpstr (entry->name, ==, "README");
+
+  g_ptr_array_unref (file_list);
+}
+
 static void
 pointer_array_sort_with_data (void)
 {
@@ -1318,7 +1556,7 @@ steal_destroy_notify (gpointer data)
 /* Test that g_ptr_array_steal_index() and g_ptr_array_steal_index_fast() can
  * remove elements from a pointer array without the #GDestroyNotify being called. */
 static void
-pointer_array_steal (void)
+pointer_array_steal_index (void)
 {
   guint i1 = 0, i2 = 0, i3 = 0, i4 = 0;
   gpointer out1, out2;
@@ -1359,6 +1597,41 @@ pointer_array_steal (void)
   g_assert_cmpuint (i2, ==, 0);
   g_assert_cmpuint (i3, ==, 1);
   g_assert_cmpuint (i4, ==, 1);
+}
+
+static void
+byte_array_steal (void)
+{
+  const guint array_size = 10000;
+  GByteArray *gbarray;
+  guint8 *bdata;
+  guint i;
+  gsize len, past_len;
+
+  gbarray = g_byte_array_new ();
+  bdata = g_byte_array_steal (gbarray, NULL);
+  g_assert_cmpint ((gsize) bdata, ==, (gsize) gbarray->data);
+  g_free (bdata);
+
+  for (i = 0; i < array_size; i++)
+    g_byte_array_append (gbarray, (guint8 *) "abcd", 4);
+
+  past_len = gbarray->len;
+  bdata = g_byte_array_steal (gbarray, &len);
+
+  g_assert_cmpint (len, ==, past_len);
+  g_assert_cmpint (gbarray->len, ==, 0);
+
+  g_byte_array_append (gbarray, (guint8 *) "@", 1);
+
+  g_assert_cmpint (bdata[0], ==, 'a');
+  g_assert_cmpint (gbarray->data[0], ==, '@');
+  g_assert_cmpint (gbarray->len, ==, 1);
+
+  g_byte_array_remove_index (gbarray, 0);
+
+  g_free (bdata);
+  g_byte_array_free (gbarray, TRUE);
 }
 
 static void
@@ -1679,6 +1952,7 @@ main (int argc, char *argv[])
   /* array tests */
   g_test_add_func ("/array/new/zero-terminated", array_new_zero_terminated);
   g_test_add_func ("/array/ref-count", array_ref_count);
+  g_test_add_func ("/array/steal", array_steal);
   g_test_add_func ("/array/clear-func", array_clear_func);
   g_test_add_func ("/array/binary-search", test_array_binary_search);
 
@@ -1707,12 +1981,16 @@ main (int argc, char *argv[])
   g_test_add_func ("/pointerarray/array_extend", pointer_array_extend);
   g_test_add_func ("/pointerarray/array_extend_and_steal", pointer_array_extend_and_steal);
   g_test_add_func ("/pointerarray/sort", pointer_array_sort);
+  g_test_add_func ("/pointerarray/sort/example", pointer_array_sort_example);
   g_test_add_func ("/pointerarray/sort-with-data", pointer_array_sort_with_data);
+  g_test_add_func ("/pointerarray/sort-with-data/example", pointer_array_sort_with_data_example);
   g_test_add_func ("/pointerarray/find/empty", pointer_array_find_empty);
   g_test_add_func ("/pointerarray/find/non-empty", pointer_array_find_non_empty);
   g_test_add_func ("/pointerarray/steal", pointer_array_steal);
+  g_test_add_func ("/pointerarray/steal_index", pointer_array_steal_index);
 
   /* byte arrays */
+  g_test_add_func ("/bytearray/steal", byte_array_steal);
   g_test_add_func ("/bytearray/append", byte_array_append);
   g_test_add_func ("/bytearray/prepend", byte_array_prepend);
   g_test_add_func ("/bytearray/remove", byte_array_remove);
