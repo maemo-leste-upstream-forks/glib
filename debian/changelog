@@ -1,3 +1,12 @@
+glib2.0 (2.50.3-2+deb9u2) UNRELEASED; urgency=medium
+
+  * d/p/credentials-Invalid-Linux-struct-ucred-means-no-informati.patch,
+    d/p/GDBus-prefer-getsockopt-style-credentials-passing-APIs.patch:
+    Ensure libdbus clients can authenticate with a GDBusServer like the
+    one in ibus, backported from upstream 2.62.x branch (Closes: #941018)
+
+ -- Simon McVittie <smcv@debian.org>  Mon, 04 Nov 2019 09:20:40 +0000
+
 glib2.0 (2.50.3-2+deb9u1) stretch; urgency=medium
 
   * Team upload

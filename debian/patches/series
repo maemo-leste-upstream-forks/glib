@@ -18,3 +18,5 @@ keyfile-settings-Use-tighter-permissions.patch
 gmarkup-Fix-unvalidated-UTF-8-read-in-markup-parsing-erro.patch
 gmarkup-Avoid-reading-off-the-end-of-a-buffer-when-non-nu.patch
 gmarkup-Fix-crash-in-error-handling-path-for-closing-elem.patch
+credentials-Invalid-Linux-struct-ucred-means-no-informati.patch
+GDBus-prefer-getsockopt-style-credentials-passing-APIs.patch
