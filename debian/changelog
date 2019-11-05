@@ -9,6 +9,7 @@ glib2.0 (2.58.3-2+deb10u2) UNRELEASED; urgency=medium
     d/p/gdbus-server-auth-test-Include-gcredentialsprivate.h.patch:
     Backport regression test for #941018
   * Build-depend on libdbus-1-dev for better test coverage
+  * d/control.in: Set branch to debian/buster in Vcs-Git
 
  -- Simon McVittie <smcv@debian.org>  Mon, 04 Nov 2019 09:01:56 +0000
 
