@@ -35,8 +35,8 @@ Build-Depends: debhelper (>= 9.20141010),
                libffi-dev (>= 3.0.0)
 Standards-Version: 3.9.8
 Homepage: http://www.gtk.org/
-Vcs-Browser: https://anonscm.debian.org/viewvc/pkg-gnome/desktop/unstable/glib2.0/
-Vcs-Svn: svn://anonscm.debian.org/pkg-gnome/desktop/unstable/glib2.0/
+Vcs-Browser: https://salsa.debian.org/gnome-team/glib
+Vcs-Git: https://salsa.debian.org/gnome-team/glib.git -b debian/stretch
 
 Package: @SHARED_PKG@
 Architecture: any
