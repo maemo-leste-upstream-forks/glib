@@ -1,4 +1,6 @@
-glib2.0 (2.62.2-3) UNRELEASED; urgency=medium
+glib2.0 (2.62.2-3) unstable; urgency=medium
+
+  * Team upload
 
   [ Iain Lane ]
   * control: Drop `debian/experimental` from Vcs-*
@@ -30,7 +32,7 @@ glib2.0 (2.62.2-3) UNRELEASED; urgency=medium
     Mark as applied upstream in 2.63.x branch
   * Improve patch metadata: use more URLs for bug references
 
- -- Simon McVittie <smcv@debian.org>  Mon, 04 Nov 2019 17:09:25 +0000
+ -- Simon McVittie <smcv@debian.org>  Wed, 06 Nov 2019 09:02:14 +0000
 
 glib2.0 (2.62.2-2) unstable; urgency=medium
 
