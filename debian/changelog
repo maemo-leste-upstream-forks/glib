@@ -1,4 +1,4 @@
-glib2.0 (2.63.1-1) UNRELEASED; urgency=medium
+glib2.0 (2.63.1-1) experimental; urgency=medium
 
   * New upstream release
     - Add `g_array_steal()`, `g_ptr_array_steal()` and `g_byte_array_steal()`
@@ -19,7 +19,7 @@ glib2.0 (2.63.1-1) UNRELEASED; urgency=medium
     - Update to upstream master at cc1b53f74. There are several test fixes
       that we might as well grab now.
 
- -- Iain Lane <laney@debian.org>  Wed, 06 Nov 2019 14:01:24 +0000
+ -- Iain Lane <laney@debian.org>  Wed, 06 Nov 2019 16:37:24 +0000
 
 glib2.0 (2.62.2-3) unstable; urgency=medium
 
