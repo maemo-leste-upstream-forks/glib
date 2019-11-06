@@ -5,10 +5,30 @@ glib2.0 (2.62.2-3) UNRELEASED; urgency=medium
 
   [ Simon McVittie ]
   * Build-depend on libdbus-1-dev for better test coverage
+  * Update to upstream commit 2.62.2-28-g3cf25070e:
+    - d/p/goption-Relax-assertion-to-avoid-being-broken-by-kdeinit5.patch:
+      Fix assertion failure when called from a process that overwrites its
+      argv, such as kdeinit5
+    - d/p/gdbus-peer-Specifically-listen-on-127.0.0.1.patch:
+      Improve reliability of gdbus-peer test in some container environments
+    - d/p/gdbusserver-Delete-socket-and-nonce-file-when-stopping-se.patch,
+      d/p/gdbusserver-Keep-a-strong-reference-to-the-server-in-call.patch,
+      d/p/gdbusauthmechanismsha1-Remove-unnecessary-g_warning-calls.patch,
+      d/p/gdbusauthmechanismsha1-Create-.dbus-keyrings-directory-re.patch,
+      d/p/tests-Move-main-loop-and-test-GUID-into-test-functions-in.patch,
+      d/p/tests-Isolate-directories-in-gdbus-peer-test.patch,
+      d/p/gdbus-peer-test-Improve-diagnostics-if-g_rmdir-fails.patch,
+      d/p/gdbus-peer-test-Stop-GDBusServer-before-tearing-down-temp.patch,
+      d/p/gdbus-peer-test-Use-unix-dir-address-if-exact-format-does.patch,
+      d/p/gdbus-server-auth-test-Create-temporary-directory-for-Uni.patch:
+      Mark as applied upstream in 2.62.x branch
   * d/p/gdbus-server-auth-test-Include-gcredentialsprivate.h.patch:
-    Fix missing test coverage in test for #941018
+    Apply patch from 2.63.x to fix missing coverage in test for #941018
   * d/p/Make-ld-executable-configurable.patch:
-    Use cross ld if necessary
+    Apply patch from 2.63.x to use cross ld where necessary
+  * d/p/gdbus-server-auth-test-Create-temporary-directory-for-Uni.patch:
+    Mark as applied upstream in 2.63.x branch
+  * Improve patch metadata: use more URLs for bug references
 
  -- Simon McVittie <smcv@debian.org>  Mon, 04 Nov 2019 17:09:25 +0000
 

@@ -13,8 +13,8 @@ This is one step towards eliminating shared state between the unit
 tests.
 
 Signed-off-by: Philip Withnall <withnall@endlessm.com>
-Bug: #1912
-Origin: upstream, 2.63.1, commit:833579d982e23d440210e82580fe920cacd24be9
+Bug: https://gitlab.gnome.org/GNOME/glib/issues/1912
+Origin: upstream, 2.62.3, commit:45d98b8863cfa0f86503236415aab90774b5c13c
 ---
  gio/tests/gdbus-peer.c | 45 +++++++++++++++++++++++++++++++++++++--------
  1 file changed, 37 insertions(+), 8 deletions(-)

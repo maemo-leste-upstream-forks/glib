@@ -10,8 +10,8 @@ period) and will cause spurious test failures due to the use of
 Instead, allow the error messages to be inspected programmatically.
 
 Signed-off-by: Philip Withnall <withnall@endlessm.com>
-Bug: #1912
-Origin: upstream, 2.63.1, commit:ef3eec8a2876691a71574d871668283ae8d379b7
+Bug: https://gitlab.gnome.org/GNOME/glib/issues/1912
+Origin: upstream, 2.62.3, commit:74c33c73aca1162292ac82820fe622726db56478
 ---
  gio/gdbusauthmechanismsha1.c | 24 +++++++++++++++---------
  1 file changed, 15 insertions(+), 9 deletions(-)

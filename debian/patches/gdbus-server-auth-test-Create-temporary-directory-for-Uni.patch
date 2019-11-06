@@ -11,11 +11,12 @@ the unix:dir address type, where Linux is equivalent to other Unix
 kernels; just do one unix:tmpdir test, to check that we still
 interoperate with libdbus when using abstract sockets on Linux.
 
-Bug: GNOME/glib#1920
+Bug: https://gitlab.gnome.org/GNOME/glib/issues/1920
 Bug-Debian: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=941018
 Fixes: 9f962ebe "Add a test for GDBusServer authentication"
 Signed-off-by: Simon McVittie <smcv@collabora.com>
 Forwarded: https://gitlab.gnome.org/GNOME/glib/merge_requests/1197
+Applied-upstream: 2.63.1, commit:2b1e706b2f0007982f4fe6a70734d4490e4093a3
 ---
  gio/tests/gdbus-server-auth.c | 88 +++++++++++++++++++++++++++++--------------
  1 file changed, 60 insertions(+), 28 deletions(-)

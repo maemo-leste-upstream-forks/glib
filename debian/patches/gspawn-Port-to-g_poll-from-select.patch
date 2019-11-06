@@ -12,7 +12,7 @@ due to an assertion failure in libc.
 translatable string changes.)
 
 Signed-off-by: Philip Withnall <withnall@endlessm.com>
-Bug: #954
+Bug: https://gitlab.gnome.org/GNOME/glib/issues/954
 Origin: upstream, 2.62.3, commit:8214e07a60ce296e9a7294e8a5d32dcff63b5b98
 ---
  glib/gspawn.c | 27 ++++++++++++---------------

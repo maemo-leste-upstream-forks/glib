@@ -19,7 +19,7 @@ having a worker thread. So that leaves option (2), which is implemented
 here.
 
 Signed-off-by: Philip Withnall <withnall@endlessm.com>
-Bug: #1903
+Bug: https://gitlab.gnome.org/GNOME/glib/issues/1903
 Bug-Debian: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=941550
 Origin: upstream, 2.62.3, commit:e127bf8453e18e5bf658d01a99b3910bcdbf78f2
 ---

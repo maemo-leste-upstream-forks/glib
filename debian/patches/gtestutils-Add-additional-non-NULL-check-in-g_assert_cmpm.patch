@@ -10,7 +10,7 @@ that it’s not possible for (m2 == NULL) to hold true when memcmp() is
 called, so add an explicit condition.
 
 Signed-off-by: Philip Withnall <withnall@endlessm.com>
-Bug: #1897
+Bug: https://gitlab.gnome.org/GNOME/glib/issues/1897
 Origin: upstream, 2.62.3, commit:531baac79d51b64fadd25a54ac2bb8a591765dd2
 ---
  glib/gtestutils.h | 2 +-

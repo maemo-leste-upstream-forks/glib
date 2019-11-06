@@ -15,7 +15,7 @@ Use a weak reference, and upgrade it to a strong reference whenever the
 `GFileMonitorSource` is referring to the file monitor.
 
 Signed-off-by: Philip Withnall <withnall@endlessm.com>
-Bug: #1903
+Bug: https://gitlab.gnome.org/GNOME/glib/issues/1903
 Bug-Debian: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=941550
 Origin: upstream, 2.62.3, commit:a2811a5236334cd624f9311c7b7671f0a4d65908
 ---

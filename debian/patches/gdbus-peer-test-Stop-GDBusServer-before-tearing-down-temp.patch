@@ -8,9 +8,9 @@ and if we are not using abstract sockets (for example on *BSD), g_rmdir
 will fail with ENOTEMPTY.
 
 Fixes: 8e32b8e8 "gdbusserver: Delete socket and nonce file when stopping server"
-Bug: GNOME/glib#1921
+Bug: https://gitlab.gnome.org/GNOME/glib/issues/1921
 Signed-off-by: Simon McVittie <smcv@collabora.com>
-Forwarded: https://gitlab.gnome.org/GNOME/glib/merge_requests/1197
+Origin: upstream, 2.62.3, commit:3560c29d948e0c7b9c121f19d4823113f546e929
 ---
  gio/tests/gdbus-peer.c | 1 +
  1 file changed, 1 insertion(+)

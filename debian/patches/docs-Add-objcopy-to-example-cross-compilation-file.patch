@@ -3,7 +3,7 @@ Date: Tue, 29 Oct 2019 21:37:12 +0000
 Subject: docs: Add objcopy to example cross-compilation file
 
 Signed-off-by: Philip Withnall <withnall@endlessm.com>
-Bug: #1916
+Bug: https://gitlab.gnome.org/GNOME/glib/issues/1916
 Origin: upstream, 2.62.3, commit:9dc2fca2886058dbf86a5987d9621fea4c487edb
 ---
  docs/reference/glib/cross.xml | 1 +

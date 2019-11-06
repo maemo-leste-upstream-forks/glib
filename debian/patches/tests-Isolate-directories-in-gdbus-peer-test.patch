@@ -17,8 +17,8 @@ This reduces the false-failure rate of `gdbus-peer` by a factor of 9 for
 me on my local machine.
 
 Signed-off-by: Philip Withnall <withnall@endlessm.com>
-Bug: #1912
-Origin: upstream, 2.63.1, commit:6fb38c3f25e8e859812e25fe88fad752a68133b3
+Bug: https://gitlab.gnome.org/GNOME/glib/issues/1912
+Origin: upstream, 2.62.3, commit:964804014a56aee6b41841ee894aa64c311bb29e
 ---
  gio/tests/gdbus-peer.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)

@@ -11,8 +11,8 @@ g_dbus_server_{start,stop}(). Finalisation of the server object could
 happen an arbitrarily long time after g_dbus_server_stop() is called.
 
 Signed-off-by: Philip Withnall <withnall@endlessm.com>
-Bug: #1318
-Origin: upstream, 2.63.1, commit:8e32b8e87f855a8d0a1bf8903ff2d0a6ae5fc984
+Bug: https://gitlab.gnome.org/GNOME/glib/issues/1318
+Origin: upstream, 2.62.3, commit:30b7623e1ee4e5ef2d7a50f9a0936934c9737636
 ---
  gio/gdbusserver.c | 29 ++++++++++++++++-------------
  1 file changed, 16 insertions(+), 13 deletions(-)

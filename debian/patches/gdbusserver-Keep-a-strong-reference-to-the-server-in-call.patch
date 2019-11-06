@@ -17,8 +17,8 @@ is listening, i.e. between every paired call to `g_dbus_server_start()`
 and `g_dbus_server_stop()`.
 
 Signed-off-by: Philip Withnall <withnall@endlessm.com>
-Bug: #1318
-Origin: upstream, 2.63.1, commit:0c07e672a28f8ee740ac61921c5e86c071909475
+Bug: https://gitlab.gnome.org/GNOME/glib/issues/1318
+Origin: upstream, 2.62.3, commit:4c8d7c24c1f697856f3118862a1375ca58b605d6
 ---
  gio/gdbusserver.c | 16 +++++++---------
  1 file changed, 7 insertions(+), 9 deletions(-)

@@ -9,8 +9,8 @@ might not exist. Create it automatically.
 This should realistically not have an effect on non-test code.
 
 Signed-off-by: Philip Withnall <withnall@endlessm.com>
-Bug: #1912
-Origin: upstream, 2.63.1, commit:9df8d76c972de7cad6e62f7fbdda043ce86b8cc7
+Bug: https://gitlab.gnome.org/GNOME/glib/issues/1912
+Origin: upstream, 2.62.3, commit:3f7fa2f95551e27855db0684b07d8e42a2e36929
 ---
  gio/gdbusauthmechanismsha1.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)

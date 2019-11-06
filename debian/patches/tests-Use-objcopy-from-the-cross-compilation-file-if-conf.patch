@@ -10,7 +10,7 @@ object files in the wrong format.
 
 Signed-off-by: Philip Withnall <withnall@endlessm.com>
 
-Fixes: #1916
+Bug: https://gitlab.gnome.org/GNOME/glib/issues/1916
 Origin: upstream, 2.62.3, commit:56da3e5a01c1ab63f0a7f6d84e3b661370e13440
 ---
  gio/tests/meson.build | 6 ++++--

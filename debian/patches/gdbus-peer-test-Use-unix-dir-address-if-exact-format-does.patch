@@ -11,8 +11,9 @@ kernels, where abstract sockets do not exist and so unix:tmpdir is
 equivalent to unix:dir, even in the common case where the developer has
 only tried the test on Linux.
 
+Bug: https://gitlab.gnome.org/GNOME/glib/issues/1921
 Signed-off-by: Simon McVittie <smcv@collabora.com>
-Forwarded: https://gitlab.gnome.org/GNOME/glib/merge_requests/1197
+Applied-upstream: 2.62.3, commit:73e4bc7fed8b75ba59ecfb12b2bb7ee4b12ce7d2
 ---
  gio/tests/gdbus-peer.c | 19 +++++++------------
  1 file changed, 7 insertions(+), 12 deletions(-)

@@ -10,7 +10,7 @@ still hold a reference to it.
 
 Signed-off-by: Philip Withnall <withnall@endlessm.com>
 
-Bug: #1903
+Bug: https://gitlab.gnome.org/GNOME/glib/issues/1903
 Bug-Debian: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=941550
 Origin: upstream, 2.62.3, commit:fd15e33bc89ceb3f4545e12d6c0fb1a1ed7e7d5e
 ---
