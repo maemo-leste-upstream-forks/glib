@@ -1,0 +1,29 @@
+From: Philip Withnall <withnall@endlessm.com>
+Date: Fri, 1 Nov 2019 11:35:25 +0000
+Subject: gutils: Slightly improve docs formatting for g_get_os_info()
+
+Signed-off-by: Philip Withnall <withnall@endlessm.com>
+
+Origin: upstream, commit:0bbb8afcb102e71887da42af50653de38e0bb43f
+Applied-Upstream: 2.63.2
+---
+ glib/gutils.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/glib/gutils.c b/glib/gutils.c
+index 4aadf76..33baa17 100644
+--- a/glib/gutils.c
++++ b/glib/gutils.c
+@@ -1488,10 +1488,10 @@ get_os_info_from_uname (const gchar *key_name)
+  *
+  * Get information about the operating system.
+  *
+- * On Linux this comes from the /etc/os-release file. On other systems, it may
++ * On Linux this comes from the `/etc/os-release` file. On other systems, it may
+  * come from a variety of sources. You can either use the standard key names
+  * like %G_OS_INFO_KEY_NAME or pass any UTF-8 string key name. For example,
+- * /etc/os-release provides a number of other less commonly used values that may
++ * `/etc/os-release` provides a number of other less commonly used values that may
+  * be useful. No key is guaranteed to be provided, so the caller should always
+  * check if the result is %NULL.
+  *
