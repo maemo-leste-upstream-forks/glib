@@ -8,7 +8,7 @@ This reverts commit bfdc5fc4fc84ef8518d2d1a328c8482cf5a38e98.
 This commit changes the semantics of the `unix::mode` attribute, which
 some things (the one we've noticed is ostree) rely on.
 
-Forwarded: https://gitlab.gnome.org/GNOME/glib/issues/1934
+Bug-Upstream: https://gitlab.gnome.org/GNOME/glib/issues/1934
 ---
  gio/glocalfileinfo.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
