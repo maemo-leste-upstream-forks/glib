@@ -28,3 +28,4 @@ debian/Skip-unreliable-test_threaded_singleton-by-default.patch
 debian/gmenumodel-test-Mark-as-flaky.patch
 debian/gvariant-test-Don-t-run-at-build-time-on-mips.patch
 debian/taptestrunner-Stop-looking-like-an-executable-script.patch
+Revert-glocalfileinfo-Only-return-file-mode-not-type-as-U.patch
