@@ -2,6 +2,11 @@ glib2.0 (2.62.3-1) UNRELEASED; urgency=medium
 
   * New upstream release
     - Drop patches that were applied upstream
+  * Don't build libglib2.0-tests under pkg.glib2.0.noinsttest build profile.
+    This is a prototype of the proposed standard build profile noinsttest.
+    If the build profiles include both nocheck and pkg.glib2.0.noinsttest,
+    we can drop the libdbus-1-dev build-dependency without harming test
+    coverage or altering the contents of binary packages.
 
  -- Simon McVittie <smcv@debian.org>  Wed, 20 Nov 2019 12:05:33 +0000
 
