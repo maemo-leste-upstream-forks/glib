@@ -1,5 +1,6 @@
-glib2.0 (2.62.3-1) UNRELEASED; urgency=medium
+glib2.0 (2.62.3-1) unstable; urgency=medium
 
+  * Team upload
   * New upstream release
     - Drop patches that were applied upstream
   * Don't build libglib2.0-tests under pkg.glib2.0.noinsttest build profile.
@@ -9,7 +10,7 @@ glib2.0 (2.62.3-1) UNRELEASED; urgency=medium
     coverage or altering the contents of binary packages.
   * d/gbp.conf: Use upstream/2.62.x branch
 
- -- Simon McVittie <smcv@debian.org>  Wed, 20 Nov 2019 12:05:33 +0000
+ -- Simon McVittie <smcv@debian.org>  Mon, 25 Nov 2019 08:47:58 +0000
 
 glib2.0 (2.62.2-3) unstable; urgency=medium
 
