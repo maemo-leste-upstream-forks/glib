@@ -18,7 +18,7 @@ Build-Depends: dbus <!nocheck>,
                gettext,
                gnome-pkg-tools (>= 0.11),
                gtk-doc-tools (>= 1.20),
-               libdbus-1-dev (>= 1.2.14),
+               libdbus-1-dev (>= 1.2.14) <!nocheck> <!pkg.glib2.0.noinsttest>,
                libelf-dev (>= 0.142),
                libffi-dev (>= 3.0.0),
                libgamin-dev [!linux-any] | libfam-dev [!linux-any],
@@ -61,6 +61,7 @@ Description: GLib library of C routines
  This package contains the shared libraries.
 
 Package: libglib2.0-tests
+Build-profiles: <!pkg.glib2.0.noinsttest>
 Architecture: any
 Depends: libglib2.0-dev-bin,
          shared-mime-info,

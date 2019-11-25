@@ -1,3 +1,17 @@
+glib2.0 (2.62.3-1) unstable; urgency=medium
+
+  * Team upload
+  * New upstream release
+    - Drop patches that were applied upstream
+  * Don't build libglib2.0-tests under pkg.glib2.0.noinsttest build profile.
+    This is a prototype of the proposed standard build profile noinsttest.
+    If the build profiles include both nocheck and pkg.glib2.0.noinsttest,
+    we can drop the libdbus-1-dev build-dependency without harming test
+    coverage or altering the contents of binary packages.
+  * d/gbp.conf: Use upstream/2.62.x branch
+
+ -- Simon McVittie <smcv@debian.org>  Mon, 25 Nov 2019 08:47:58 +0000
+
 glib2.0 (2.63.1-2) experimental; urgency=medium
 
   * d/p/Revert-glocalfileinfo-Only-return-file-mode-not-type-as-U.patch:
