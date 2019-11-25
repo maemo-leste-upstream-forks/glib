@@ -61,6 +61,7 @@ Description: GLib library of C routines
  This package contains the shared libraries.
 
 Package: libglib2.0-tests
+Build-profiles: <!pkg.glib2.0.noinsttest>
 Architecture: any
 Depends: libglib2.0-dev-bin,
          shared-mime-info,
