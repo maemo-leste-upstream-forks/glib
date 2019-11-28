@@ -80,14 +80,17 @@ test_types (void)
   g_atomic_pointer_set (&vp, 0);
   vp2 = g_atomic_pointer_get (&vp);
   g_assert_true (vp2 == 0);
-  res = g_atomic_pointer_compare_and_exchange (&vp, 0, 0);
+  res = g_atomic_pointer_compare_and_exchange (&vp, &s, &s);
+  g_assert_false (res);
+  g_assert_true (vp == 0);
+  res = g_atomic_pointer_compare_and_exchange (&vp, NULL, NULL);
   g_assert_true (res);
   g_assert_true (vp == 0);
 
   g_atomic_pointer_set (&ip, 0);
   ip2 = g_atomic_pointer_get (&ip);
   g_assert_true (ip2 == 0);
-  res = g_atomic_pointer_compare_and_exchange (&ip, 0, 0);
+  res = g_atomic_pointer_compare_and_exchange (&ip, NULL, NULL);
   g_assert_true (res);
   g_assert_true (ip == 0);
 
@@ -95,7 +98,7 @@ test_types (void)
   vp2 = (gpointer) g_atomic_pointer_get (&gs);
   gs2 = (gsize) vp2;
   g_assert_cmpuint (gs2, ==, 0);
-  res = g_atomic_pointer_compare_and_exchange (&gs, 0, 0);
+  res = g_atomic_pointer_compare_and_exchange (&gs, NULL, NULL);
   g_assert_true (res);
   g_assert_cmpuint (gs, ==, 0);
   gs2 = (gsize) g_atomic_pointer_add (&gs, 5);
@@ -185,14 +188,17 @@ G_GNUC_END_IGNORE_DEPRECATIONS
   g_atomic_pointer_set (&vp, 0);
   vp2 = g_atomic_pointer_get (&vp);
   g_assert_true (vp2 == 0);
-  res = g_atomic_pointer_compare_and_exchange (&vp, 0, 0);
+  res = g_atomic_pointer_compare_and_exchange (&vp, &s, &s);
+  g_assert_false (res);
+  g_assert_true (vp == 0);
+  res = g_atomic_pointer_compare_and_exchange (&vp, NULL, NULL);
   g_assert_true (res);
   g_assert_true (vp == 0);
 
   g_atomic_pointer_set (&ip, 0);
   ip2 = g_atomic_pointer_get (&ip);
   g_assert_true (ip2 == 0);
-  res = g_atomic_pointer_compare_and_exchange (&ip, 0, 0);
+  res = g_atomic_pointer_compare_and_exchange (&ip, NULL, NULL);
   g_assert_true (res);
   g_assert_true (ip == 0);
 
@@ -200,7 +206,7 @@ G_GNUC_END_IGNORE_DEPRECATIONS
   vp = g_atomic_pointer_get (&gs);
   gs2 = (gsize) vp;
   g_assert_cmpuint (gs2, ==, 0);
-  res = g_atomic_pointer_compare_and_exchange (&gs, 0, 0);
+  res = g_atomic_pointer_compare_and_exchange (&gs, NULL, NULL);
   g_assert_true (res);
   g_assert_cmpuint (gs, ==, 0);
   gs2 = (gsize) g_atomic_pointer_add (&gs, 5);

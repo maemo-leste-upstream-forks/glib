@@ -585,9 +585,15 @@ if not meson.is_cross_build() or meson.has_exe_wrapper()
   # Support for --add-symbol was added to LLVM objcopy in 2019
   # (https://reviews.llvm.org/D58234). FIXME: This test could be enabled for
   # LLVM once that support is in a stable release.
+  objcopy_supports_add_symbol = false
   objcopy = find_program('objcopy', required : false)
+  if objcopy.found()
+    objcopy_supports_add_symbol = run_command(objcopy, '--help').stdout().contains('--add-symbol')
+  endif
 
-  if build_machine.system() == 'linux' and cc.get_id() == 'gcc' and objcopy.found()
+  ld = find_program('ld', required : false)
+
+  if build_machine.system() == 'linux' and cc.get_id() == 'gcc' and objcopy.found() and objcopy_supports_add_symbol and ld.found()
     test_gresource_binary = custom_target('test5.gresource',
       input : 'test5.gresource.xml',
       output : 'test5.gresource',
@@ -616,7 +622,7 @@ if not meson.is_cross_build() or meson.has_exe_wrapper()
     test_resources_binary = custom_target('test_resources.o',
       input : test_gresource_binary,
       output : 'test_resources.o',
-      command : ['ld',
+      command : [ld,
                  '-r',
                  '-b','binary',
                  '@INPUT@',
