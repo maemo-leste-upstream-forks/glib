@@ -8,6 +8,7 @@ glib2.0 (2.63.2-1) UNRELEASED; urgency=medium
     - Drop patches that were applied upstream
   * Rename pkg.glib2.0.noinsttest build profile to noinsttest.
     This is now registered on <https://wiki.debian.org/BuildProfileSpec>.
+  * Update symbols file
 
  -- Simon McVittie <smcv@debian.org>  Thu, 28 Nov 2019 12:35:00 +0000
 

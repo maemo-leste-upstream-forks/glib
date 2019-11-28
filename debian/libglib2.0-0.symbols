@@ -1748,6 +1748,7 @@ libgio-2.0.so.0 libglib2.0-0 #MINVER#
  g_task_propagate_boolean@Base 2.35.8
  g_task_propagate_int@Base 2.35.8
  g_task_propagate_pointer@Base 2.35.8
+ g_task_propagate_value@Base 2.63.2
  g_task_report_error@Base 2.35.8
  g_task_report_new_error@Base 2.35.8
  g_task_return_boolean@Base 2.35.8
@@ -1756,6 +1757,7 @@ libgio-2.0.so.0 libglib2.0-0 #MINVER#
  g_task_return_int@Base 2.35.8
  g_task_return_new_error@Base 2.35.8
  g_task_return_pointer@Base 2.35.8
+ g_task_return_value@Base 2.63.2
  g_task_run_in_thread@Base 2.35.8
  g_task_run_in_thread_sync@Base 2.35.8
  g_task_set_check_cancellable@Base 2.35.8
