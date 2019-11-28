@@ -4197,7 +4197,7 @@ test_parser_recursion (void)
     }
 
   value = g_variant_parse (NULL, silly_dict, NULL, NULL, &local_error);
-  g_assert_error (local_error, G_VARIANT_PARSE_ERROR, G_VARIANT_PARSE_ERROR_FAILED);
+  g_assert_error (local_error, G_VARIANT_PARSE_ERROR, G_VARIANT_PARSE_ERROR_RECURSION);
   g_assert_null (value);
   g_error_free (local_error);
   g_free (silly_dict);

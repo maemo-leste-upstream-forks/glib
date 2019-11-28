@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: glib\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/glib/issues\n"
-"POT-Creation-Date: 2019-09-09 05:42+0000\n"
-"PO-Revision-Date: 2019-09-10 08:50+0200\n"
+"POT-Creation-Date: 2019-08-21 17:54+0000\n"
+"PO-Revision-Date: 2019-09-04 11:41+0200\n"
 "Last-Translator: Milo Casagrande <milo@milo.name>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
 "Language: it\n"
@@ -124,8 +124,8 @@ msgstr "Il comando di cui stampare istruzioni dettagliate"
 msgid "Application identifier in D-Bus format (eg: org.example.viewer)"
 msgstr "Identificatore dell'applicazione in formato D-Bus (org.example.viewer)"
 
-#: gio/gapplication-tool.c:72 gio/glib-compile-resources.c:738
-#: gio/glib-compile-resources.c:744 gio/glib-compile-resources.c:772
+#: gio/gapplication-tool.c:72 gio/glib-compile-resources.c:735
+#: gio/glib-compile-resources.c:741 gio/glib-compile-resources.c:769
 #: gio/gresource-tool.c:500 gio/gresource-tool.c:566
 msgid "FILE"
 msgstr "FILE"
@@ -381,7 +381,7 @@ msgid "Meaningless key/value pair combination in address entry “%s”"
 msgstr ""
 "Combinazione coppia chiave/valore senza significato nella voce indirizzo «%s»"
 
-# Come chiarito in un messaggio seguente, path, tmpdir e abstract sono nomi di chiavi (NdT)
+# Come chiarito in un messaggio seguente, path, tmpdir e abstract sono nomi chi chiavi (NdT)
 #: gio/gdbusaddress.c:180
 #, c-format
 msgid ""
@@ -389,7 +389,7 @@ msgid ""
 "keys)"
 msgstr ""
 "L'indirizzo «%s» non è valido (necessario esattamente una tra le chiavi "
-"path, dir, tmpdir o abstract)"
+"path, tmpdir o abstract)"
 
 #: gio/gdbusaddress.c:247 gio/gdbusaddress.c:328
 #, c-format
@@ -1630,7 +1630,7 @@ msgstr "Tieni assieme al file quando spostato"
 msgid "“version” takes no arguments"
 msgstr "«version» non accetta alcun argomento"
 
-#: gio/gio-tool.c:207 gio/gio-tool.c:223 glib/goption.c:864
+#: gio/gio-tool.c:207 gio/gio-tool.c:223 glib/goption.c:861
 msgid "Usage:"
 msgstr "Uso:"
 
@@ -2341,20 +2341,20 @@ msgstr "Errore nel leggere il file %s: %s"
 msgid "Error compressing file %s"
 msgstr "Errore nel comprimere il file %s"
 
-#: gio/glib-compile-resources.c:541
+#: gio/glib-compile-resources.c:538
 #, c-format
 msgid "text may not appear inside <%s>"
 msgstr "il testo non può apparire all'interno di <%s>"
 
-#: gio/glib-compile-resources.c:737 gio/glib-compile-schemas.c:2172
+#: gio/glib-compile-resources.c:734 gio/glib-compile-schemas.c:2172
 msgid "Show program version and exit"
 msgstr "Mostra la versione del programma ed esce"
 
-#: gio/glib-compile-resources.c:738
+#: gio/glib-compile-resources.c:735
 msgid "Name of the output file"
 msgstr "Nome del file di output"
 
-#: gio/glib-compile-resources.c:739
+#: gio/glib-compile-resources.c:736
 msgid ""
 "The directories to load files referenced in FILE from (default: current "
 "directory)"
@@ -2362,49 +2362,49 @@ msgstr ""
 "Le directory da cui caricare i file indicati in FILE (predefinito: directory "
 "corrente)"
 
-#: gio/glib-compile-resources.c:739 gio/glib-compile-schemas.c:2173
+#: gio/glib-compile-resources.c:736 gio/glib-compile-schemas.c:2173
 #: gio/glib-compile-schemas.c:2202
 msgid "DIRECTORY"
 msgstr "DIRECTORY"
 
-#: gio/glib-compile-resources.c:740
+#: gio/glib-compile-resources.c:737
 msgid ""
 "Generate output in the format selected for by the target filename extension"
 msgstr ""
 "Genera l'output nel formato selezionato in base all'estensione del nome di "
 "file della destinazione"
 
-#: gio/glib-compile-resources.c:741
+#: gio/glib-compile-resources.c:738
 msgid "Generate source header"
 msgstr "Genera header sorgente"
 
-#: gio/glib-compile-resources.c:742
+#: gio/glib-compile-resources.c:739
 msgid "Generate source code used to link in the resource file into your code"
 msgstr ""
 "Genera codice sorgente usato per collegare il file risorsa all'interno del "
 "codice"
 
-#: gio/glib-compile-resources.c:743
+#: gio/glib-compile-resources.c:740
 msgid "Generate dependency list"
 msgstr "Genera elenco delle dipendenze"
 
-#: gio/glib-compile-resources.c:744
+#: gio/glib-compile-resources.c:741
 msgid "Name of the dependency file to generate"
 msgstr "Nome del file dipendenza da generare"
 
-#: gio/glib-compile-resources.c:745
+#: gio/glib-compile-resources.c:742
 msgid "Include phony targets in the generated dependency file"
 msgstr "Include le destinazioni phony nel file delle dipendenze"
 
-#: gio/glib-compile-resources.c:746
+#: gio/glib-compile-resources.c:743
 msgid "Don’t automatically create and register resource"
 msgstr "Non crea e registra automaticamente la risorsa"
 
-#: gio/glib-compile-resources.c:747
+#: gio/glib-compile-resources.c:744
 msgid "Don’t export functions; declare them G_GNUC_INTERNAL"
 msgstr "Non esporta le funzioni, le dichiara G_GNUC_INTERNAL"
 
-#: gio/glib-compile-resources.c:748
+#: gio/glib-compile-resources.c:745
 msgid ""
 "Don’t embed resource data in the C file; assume it's linked externally "
 "instead"
@@ -2412,11 +2412,11 @@ msgstr ""
 "Non incorpora i dati delle risorse nel file C, assume sia collegato "
 "esternamente"
 
-#: gio/glib-compile-resources.c:749
+#: gio/glib-compile-resources.c:746
 msgid "C identifier name used for the generated source code"
 msgstr "Nome identificatore C usato per il codice sorgente generato"
 
-#: gio/glib-compile-resources.c:775
+#: gio/glib-compile-resources.c:772
 msgid ""
 "Compile a resource specification into a resource file.\n"
 "Resource specification files have the extension .gresource.xml,\n"
@@ -2426,7 +2426,7 @@ msgstr ""
 "I file di specifica di risorsa hanno estensione .gresource.xml\n"
 "e i file risorsa hanno estensione .gresource."
 
-#: gio/glib-compile-resources.c:797
+#: gio/glib-compile-resources.c:794
 msgid "You should give exactly one file name\n"
 msgstr "È necessario indicare esattamente un nome di file\n"
 
@@ -2784,6 +2784,7 @@ msgstr "Questo intero file è stato ignorato."
 msgid "Ignoring this file."
 msgstr "Ignorato questo file."
 
+# override...
 #: gio/glib-compile-schemas.c:1963
 #, c-format
 msgid ""
@@ -2793,6 +2794,7 @@ msgstr ""
 "Nessuna chiave «%s» nello schema «%s» come specificato nel file di override "
 "«%s»; override ignorato per questa chiave."
 
+# override...
 #: gio/glib-compile-schemas.c:1971
 #, c-format
 msgid ""
@@ -2913,7 +2915,6 @@ msgstr "È necessario indicare esattamente un nome di directory"
 msgid "No schema files found: doing nothing."
 msgstr "Nessun file schema trovato: nessuna azione eseguita."
 
-# visto che se lo rimuovo esisto, proviamo con preesistente
 #: gio/glib-compile-schemas.c:2271
 msgid "No schema files found: removed existing output file."
 msgstr "Nessun file schema trovato: rimosso il file di output preesistente."
@@ -5301,61 +5302,61 @@ msgstr ""
 "Il documento è terminato in modo inatteso all'interno di un commento o "
 "istruzione di elaborazione"
 
-#: glib/goption.c:868
+#: glib/goption.c:865
 msgid "[OPTION…]"
 msgstr "[OPZIONE…]"
 
-#: glib/goption.c:984
+#: glib/goption.c:981
 msgid "Help Options:"
 msgstr "Opzioni di aiuto:"
 
-#: glib/goption.c:985
+#: glib/goption.c:982
 msgid "Show help options"
 msgstr "Mostra le opzioni di aiuto"
 
-#: glib/goption.c:991
+#: glib/goption.c:988
 msgid "Show all help options"
 msgstr "Mostra tutte le opzioni di aiuto"
 
-#: glib/goption.c:1054
+#: glib/goption.c:1051
 msgid "Application Options:"
 msgstr "Opzioni dell'applicazione:"
 
-#: glib/goption.c:1056
+#: glib/goption.c:1053
 msgid "Options:"
 msgstr "Opzioni:"
 
-#: glib/goption.c:1120 glib/goption.c:1190
+#: glib/goption.c:1117 glib/goption.c:1187
 #, c-format
 msgid "Cannot parse integer value “%s” for %s"
 msgstr "Impossibile analizzare il valore intero «%s» per %s"
 
-#: glib/goption.c:1130 glib/goption.c:1198
+#: glib/goption.c:1127 glib/goption.c:1195
 #, c-format
 msgid "Integer value “%s” for %s out of range"
 msgstr "Il valore intero «%s» per %s è fuori dall'intervallo"
 
-#: glib/goption.c:1155
+#: glib/goption.c:1152
 #, c-format
 msgid "Cannot parse double value “%s” for %s"
 msgstr "Impossibile analizzare il valore double «%s» per %s"
 
-#: glib/goption.c:1163
+#: glib/goption.c:1160
 #, c-format
 msgid "Double value “%s” for %s out of range"
 msgstr "Il valore double «%s» per %s è fuori dall'intervallo"
 
-#: glib/goption.c:1455 glib/goption.c:1534
+#: glib/goption.c:1452 glib/goption.c:1531
 #, c-format
 msgid "Error parsing option %s"
 msgstr "Errore nell'analizzare l'opzione %s"
 
-#: glib/goption.c:1565 glib/goption.c:1678
+#: glib/goption.c:1562 glib/goption.c:1675
 #, c-format
 msgid "Missing argument for %s"
 msgstr "Argomento mancante per %s"
 
-#: glib/goption.c:2187
+#: glib/goption.c:2181
 #, c-format
 msgid "Unknown option %s"
 msgstr "Opzione %s sconosciuta"
@@ -5957,157 +5958,157 @@ msgid "Character out of range for UTF-16"
 msgstr "Carattere fuori dall'intervallo per UTF-16"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2326
+#: glib/gutils.c:2348
 #, c-format
 msgid "%.1f kB"
 msgstr "%.1f kB"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2328
+#: glib/gutils.c:2350
 #, c-format
 msgid "%.1f MB"
 msgstr "%.1f MB"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2330
+#: glib/gutils.c:2352
 #, c-format
 msgid "%.1f GB"
 msgstr "%.1f GB"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2332
+#: glib/gutils.c:2354
 #, c-format
 msgid "%.1f TB"
 msgstr "%.1f TB"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2334
+#: glib/gutils.c:2356
 #, c-format
 msgid "%.1f PB"
 msgstr "%.1f PB"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2336
+#: glib/gutils.c:2358
 #, c-format
 msgid "%.1f EB"
 msgstr "%.1f EB"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2340
+#: glib/gutils.c:2362
 #, c-format
 msgid "%.1f KiB"
 msgstr "%.1f KiB"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2342
+#: glib/gutils.c:2364
 #, c-format
 msgid "%.1f MiB"
 msgstr "%.1f MiB"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2344
+#: glib/gutils.c:2366
 #, c-format
 msgid "%.1f GiB"
 msgstr "%.1f GiB"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2346
+#: glib/gutils.c:2368
 #, c-format
 msgid "%.1f TiB"
 msgstr "%.1f TiB"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2348
+#: glib/gutils.c:2370
 #, c-format
 msgid "%.1f PiB"
 msgstr "%.1f PiB"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2350
+#: glib/gutils.c:2372
 #, c-format
 msgid "%.1f EiB"
 msgstr "%.1f EiB"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2354
+#: glib/gutils.c:2376
 #, c-format
 msgid "%.1f kb"
 msgstr "%.1f kb"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2356
+#: glib/gutils.c:2378
 #, c-format
 msgid "%.1f Mb"
 msgstr "%.1f Mb"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2358
+#: glib/gutils.c:2380
 #, c-format
 msgid "%.1f Gb"
 msgstr "%.1f Gb"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2360
+#: glib/gutils.c:2382
 #, c-format
 msgid "%.1f Tb"
 msgstr "%.1f Tb"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2362
+#: glib/gutils.c:2384
 #, c-format
 msgid "%.1f Pb"
 msgstr "%.1f Pb"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2364
+#: glib/gutils.c:2386
 #, c-format
 msgid "%.1f Eb"
 msgstr "%.1f Eb"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2368
+#: glib/gutils.c:2390
 #, c-format
 msgid "%.1f Kib"
 msgstr "%.1f Kib"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2370
+#: glib/gutils.c:2392
 #, c-format
 msgid "%.1f Mib"
 msgstr "%.1f Mib"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2372
+#: glib/gutils.c:2394
 #, c-format
 msgid "%.1f Gib"
 msgstr "%.1f Gib"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2374
+#: glib/gutils.c:2396
 #, c-format
 msgid "%.1f Tib"
 msgstr "%.1f Tib"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2376
+#: glib/gutils.c:2398
 #, c-format
 msgid "%.1f Pib"
 msgstr "%.1f Pib"
 
 #. Translators: Keep the no-break space between %.1f and the unit symbol
-#: glib/gutils.c:2378
+#: glib/gutils.c:2400
 #, c-format
 msgid "%.1f Eib"
 msgstr "%.1f Eib"
 
-#: glib/gutils.c:2412 glib/gutils.c:2529
+#: glib/gutils.c:2434 glib/gutils.c:2551
 #, c-format
 msgid "%u byte"
 msgid_plural "%u bytes"
 msgstr[0] "%u byte"
 msgstr[1] "%u byte"
 
-#: glib/gutils.c:2416
+#: glib/gutils.c:2438
 #, c-format
 msgid "%u bit"
 msgid_plural "%u bits"
@@ -6115,7 +6116,7 @@ msgstr[0] "%u bit"
 msgstr[1] "%u bit"
 
 #. Translators: the %s in "%s bytes" will always be replaced by a number.
-#: glib/gutils.c:2483
+#: glib/gutils.c:2505
 #, c-format
 msgid "%s byte"
 msgid_plural "%s bytes"
@@ -6123,7 +6124,7 @@ msgstr[0] "%s byte"
 msgstr[1] "%s byte"
 
 #. Translators: the %s in "%s bits" will always be replaced by a number.
-#: glib/gutils.c:2488
+#: glib/gutils.c:2510
 #, c-format
 msgid "%s bit"
 msgid_plural "%s bits"
@@ -6135,32 +6136,32 @@ msgstr[1] "%s bit"
 #. * compatibility.  Users will not see this string unless a program is using this deprecated function.
 #. * Please translate as literally as possible.
 #.
-#: glib/gutils.c:2542
+#: glib/gutils.c:2564
 #, c-format
 msgid "%.1f KB"
 msgstr "%.1f kB"
 
-#: glib/gutils.c:2547
+#: glib/gutils.c:2569
 #, c-format
 msgid "%.1f MB"
 msgstr "%.1f MB"
 
-#: glib/gutils.c:2552
+#: glib/gutils.c:2574
 #, c-format
 msgid "%.1f GB"
 msgstr "%.1f GB"
 
-#: glib/gutils.c:2557
+#: glib/gutils.c:2579
 #, c-format
 msgid "%.1f TB"
 msgstr "%.1f TB"
 
-#: glib/gutils.c:2562
+#: glib/gutils.c:2584
 #, c-format
 msgid "%.1f PB"
 msgstr "%.1f PB"
 
-#: glib/gutils.c:2567
+#: glib/gutils.c:2589
 #, c-format
 msgid "%.1f EB"
 msgstr "%.1f EB"

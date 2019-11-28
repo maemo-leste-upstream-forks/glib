@@ -115,8 +115,10 @@
  *
  * To allow multiple independent sets of sources to be handled in
  * different threads, each source is associated with a #GMainContext.
- * A GMainContext can only be running in a single thread, but
- * sources can be added to it and removed from it from other threads.
+ * A #GMainContext can only be running in a single thread, but
+ * sources can be added to it and removed from it from other threads. All
+ * functions which operate on a #GMainContext or a built-in #GSource are
+ * thread-safe.
  *
  * Each event source is assigned a priority. The default priority,
  * #G_PRIORITY_DEFAULT, is 0. Values less than 0 denote higher priorities.
@@ -439,9 +441,6 @@ static void block_source (GSource *source);
 
 static GMainContext *glib_worker_context;
 
-G_LOCK_DEFINE_STATIC (main_loop);
-static GMainContext *default_main_context;
-
 #ifndef G_OS_WIN32
 
 
@@ -667,34 +666,34 @@ g_main_context_new (void)
 
 /**
  * g_main_context_default:
- * 
+ *
  * Returns the global default main context. This is the main context
  * used for main loop functions when a main loop is not explicitly
  * specified, and corresponds to the "main" main loop. See also
  * g_main_context_get_thread_default().
- * 
+ *
  * Returns: (transfer none): the global default main context.
  **/
 GMainContext *
 g_main_context_default (void)
 {
-  /* Slow, but safe */
-  
-  G_LOCK (main_loop);
+  static GMainContext *default_main_context = NULL;
 
-  if (!default_main_context)
+  if (g_once_init_enter (&default_main_context))
     {
-      default_main_context = g_main_context_new ();
+      GMainContext *context;
 
-      TRACE (GLIB_MAIN_CONTEXT_DEFAULT (default_main_context));
+      context = g_main_context_new ();
+
+      TRACE (GLIB_MAIN_CONTEXT_DEFAULT (context));
 
 #ifdef G_MAIN_POLL_DEBUG
       if (_g_main_poll_debug)
-	g_print ("default context=%p\n", default_main_context);
+        g_print ("default context=%p\n", context);
 #endif
-    }
 
-  G_UNLOCK (main_loop);
+      g_once_init_leave (&default_main_context, context);
+    }
 
   return default_main_context;
 }
@@ -1040,6 +1039,7 @@ find_source_list_for_priority (GMainContext *context,
        * context->source_lists without having to walk the list again.
        */
       last = g_list_append (last, source_list);
+      (void) last;
     }
   return source_list;
 }
@@ -1173,6 +1173,9 @@ g_source_attach_unlocked (GSource      *source,
  * Adds a #GSource to a @context so that it will be executed within
  * that context. Remove it by calling g_source_destroy().
  *
+ * This function is safe to call from any thread, regardless of which thread
+ * the @context is running in.
+ *
  * Returns: the ID (greater than 0) for the source within the 
  *   #GMainContext. 
  **/
@@ -1269,6 +1272,9 @@ g_source_destroy_internal (GSource      *source,
  *
  * This does not unref the #GSource: if you still hold a reference, use
  * g_source_unref() to drop it.
+ *
+ * This function is safe to call from any thread, regardless of which thread
+ * the #GMainContext is running in.
  */
 void
 g_source_destroy (GSource *source)
@@ -4834,6 +4840,8 @@ g_timeout_add_full (gint           priority,
  * context. You can do these steps manually if you need greater control or to
  * use a custom main context.
  * 
+ * It is safe to call this function from any thread.
+ *
  * The interval given is in terms of monotonic time, not wall clock
  * time.  See g_get_monotonic_time().
  * 
@@ -4890,7 +4898,9 @@ g_timeout_add (guint32        interval,
  * g_timeout_source_new_seconds() and attaches it to the main loop context 
  * using g_source_attach(). You can do these steps manually if you need 
  * greater control.
- * 
+ *
+ * It is safe to call this function from any thread.
+ *
  * The interval given is in terms of monotonic time, not wall clock
  * time.  See g_get_monotonic_time().
  * 
@@ -4937,6 +4947,8 @@ g_timeout_add_seconds_full (gint           priority,
  * g_timeout_source_new_seconds() and attaches it to the main loop context
  * using g_source_attach(). You can do these steps manually if you need
  * greater control. Also see g_timeout_add_seconds_full().
+ *
+ * It is safe to call this function from any thread.
  *
  * Note that the first call of the timer may not be precise for timeouts
  * of one second. If you need finer precision and have such a timeout,
