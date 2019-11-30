@@ -1,5 +1,6 @@
-glib2.0 (2.63.2-1) UNRELEASED; urgency=medium
+glib2.0 (2.63.2-1) experimental; urgency=medium
 
+  * Team upload
   * Merge packaging changes from unstable
     - Support for pkg.glib2.0.noinsttest build profile
   * d/control.in: Refer to debian/experimental branch.
@@ -10,7 +11,7 @@ glib2.0 (2.63.2-1) UNRELEASED; urgency=medium
     This is now registered on <https://wiki.debian.org/BuildProfileSpec>.
   * Update symbols file
 
- -- Simon McVittie <smcv@debian.org>  Thu, 28 Nov 2019 12:35:00 +0000
+ -- Simon McVittie <smcv@debian.org>  Sat, 30 Nov 2019 10:55:48 +0000
 
 glib2.0 (2.62.3-1) unstable; urgency=medium
 
