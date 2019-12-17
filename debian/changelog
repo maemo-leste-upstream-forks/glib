@@ -1,8 +1,38 @@
 glib2.0 (2.63.3-1) UNRELEASED; urgency=medium
 
+  [ Iain Lane ]
   * New upstream release
+    + Add a `--glib-min-version` argument to `gdbus-codegen` which controls
+      breaks in the API of generated code
+    + Add `g_clear_list()` API to clear `GList`s to `NULL`
+    + Add a `GMemoryMonitor` API to be notified of memory pressure situations
+      using the low-memory-monitor project
+    + Add support for dispose functions for `GSource` implementations
+    + Tighten up validation of GObject signal and property names, allowing
+      performance improvements
+  * debian/tests/build: Style fixes, thanks to shellcheck.
+  * d/p/d/Disable-some-tests-on-slow-architectures-which-keep-faili.patch:
+    Rebase. Upstream have disabled these tests by default too (unless slow
+    mode is enabled), so we don't need to add a patch to do a similar thing.
+  * debian/libglib2.0-0.symbols: New symbols for 2.63.3
+  * d/p/tests-Skip-GMemoryMonitor-tests-if-the-dbusmock-template-.patch: Add.
+    We don't have a new enough dbusmock in Debian at the minute (one is not
+    released yet). Skip the test if the required template isn't available.
+  * control: Add Depends for the new memory-monitor tests.
+    There are new tests, written in python, for GMemoryMonitor. They require
+    dbus-python, pygobject, and the GI bindings for GLib and GIO.
 
- -- Iain Lane <laney@debian.org>  Tue, 17 Dec 2019 11:34:51 +0000
+  [ Steve Langasek ]
+  * debian/tests/build: Make cross-test friendly
+    autopkgtest is soon to get a `-a ARCHITECTURE` switch, which will
+    cross-test autopkgtests. This is to be detected by the presence of the
+    `dpkg-architecture`-style family of variables being set in the
+    environment.
+    For build tests like `glib2.0`'s `build` test, this means that we should
+    test "${DEB_HOST_ARCH}" and invoke the cross toolchain as necessary.
+    (Closes: #946355)
+
+ -- Iain Lane <laney@debian.org>  Tue, 17 Dec 2019 15:04:03 +0000
 
 glib2.0 (2.63.2-1) experimental; urgency=medium
 
