@@ -53,6 +53,7 @@ gio_tests = {
   'inet-address' : {},
   'io-stream' : {},
   'memory-input-stream' : {},
+  'memory-monitor' : {},
   'memory-output-stream' : {},
   'mount-operation' : {},
   'network-address' : {'extra_sources': ['mock-resolver.c']},
@@ -86,6 +87,10 @@ test_extra_programs = {
   'gdbus-testserver' : {},
   'gsubprocess-testprog' : {},
 }
+
+python_tests = [
+  'codegen.py',
+]
 
 test_env = environment()
 test_env.set('G_TEST_SRCDIR', meson.current_source_dir())
@@ -473,6 +478,31 @@ if installed_tests_enabled
   install_data('static-link.py', install_dir : installed_tests_execdir)
 endif
 
+memory_monitor_tests = [
+  'memory-monitor-dbus',
+  'memory-monitor-portal',
+]
+
+foreach memory_monitor_test : memory_monitor_tests
+  cdata = configuration_data()
+  cdata.set('installed_tests_dir', installed_tests_execdir)
+  cdata.set('program', memory_monitor_test + '.py')
+  configure_file(
+    input: installed_tests_template,
+    output: memory_monitor_test + '.test',
+    install_dir: installed_tests_metadir,
+    configuration: cdata
+  )
+  cdata = configuration_data()
+  cdata.set('libexecdir', join_paths(glib_prefix, get_option('libexecdir')))
+  configure_file(
+    input: memory_monitor_test + '.py.in',
+    output: memory_monitor_test + '.py',
+    install_dir : installed_tests_execdir,
+    configuration: cdata,
+  )
+endforeach
+
 if not meson.is_cross_build() or meson.has_exe_wrapper()
 
   plugin_resources_c = custom_target('plugin-resources.c',
@@ -713,6 +743,43 @@ foreach program_name, extra_args : test_extra_programs
       install : install,
   )
 endforeach
+
+foreach test_name : python_tests
+  test(
+    test_name,
+    python,
+    args: ['-B', files(test_name)],
+    env: test_env,
+    suite: ['gio', 'no-valgrind'],
+  )
+
+  if installed_tests_enabled
+    install_data(
+      files(test_name),
+      install_dir: installed_tests_execdir,
+      install_mode: 'rwxr-xr-x',
+    )
+
+    test_conf = configuration_data()
+    test_conf.set('installed_tests_dir', installed_tests_execdir)
+    test_conf.set('program', test_name)
+    test_conf.set('env', '')
+    configure_file(
+      input: installed_tests_template_tap,
+      output: test_name + '.test',
+      install_dir: installed_tests_metadir,
+      configuration: test_conf,
+    )
+  endif
+endforeach
+
+# TAP test runner for Python tests
+if installed_tests_enabled
+  install_data(
+    files('taptestrunner.py'),
+    install_dir: installed_tests_execdir,
+  )
+endif
 
 # FIXME: subdir('services')
 subdir('modules')
