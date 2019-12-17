@@ -1072,6 +1072,8 @@ libgio-2.0.so.0 libglib2.0-0 #MINVER#
  g_list_model_get_type@Base 2.43.4
  g_list_model_items_changed@Base 2.43.4
  g_list_store_append@Base 2.43.4
+ g_list_store_find@Base 2.63.3
+ g_list_store_find_with_equal_func@Base 2.63.3
  g_list_store_get_type@Base 2.43.4
  g_list_store_insert@Base 2.43.4
  g_list_store_insert_sorted@Base 2.43.4
@@ -1091,6 +1093,9 @@ libgio-2.0.so.0 libglib2.0-0 #MINVER#
  g_memory_input_stream_new@Base 2.16.0
  g_memory_input_stream_new_from_bytes@Base 2.33.14
  g_memory_input_stream_new_from_data@Base 2.16.0
+ g_memory_monitor_dup_default@Base 2.63.3
+ g_memory_monitor_get_type@Base 2.63.3
+ g_memory_monitor_warning_level_get_type@Base 2.63.3
  g_memory_output_stream_get_data@Base 2.16.0
  g_memory_output_stream_get_data_size@Base 2.18.0
  g_memory_output_stream_get_size@Base 2.16.0
@@ -2246,7 +2251,9 @@ libglib-2.0.so.0 libglib2.0-0 #MINVER#
  g_chmod@Base 2.12.0
  g_clear_error@Base 2.12.0
  g_clear_handle_id@Base 2.55.1
+ g_clear_list@Base 2.63.3
  g_clear_pointer@Base 2.33.14
+ g_clear_slist@Base 2.63.3
  g_close@Base 2.35.8
  g_completion_add_items@Base 2.12.0
  g_completion_clear_items@Base 2.12.0
@@ -3195,6 +3202,7 @@ libglib-2.0.so.0 libglib2.0-0 #MINVER#
  g_source_set_callback@Base 2.12.0
  g_source_set_callback_indirect@Base 2.12.0
  g_source_set_can_recurse@Base 2.12.0
+ g_source_set_dispose_function@Base 2.63.3
  g_source_set_funcs@Base 2.12.0
  g_source_set_name@Base 2.26.0
  g_source_set_name_by_id@Base 2.26.0
@@ -3508,6 +3516,7 @@ libglib-2.0.so.0 libglib2.0-0 #MINVER#
  g_unix_fd_add_full@Base 2.35.8
  g_unix_fd_source_funcs@Base 2.37.5
  g_unix_fd_source_new@Base 2.35.8
+ g_unix_get_passwd_entry@Base 2.63.3
  g_unix_open_pipe@Base 2.30.0
  g_unix_set_fd_nonblocking@Base 2.30.0
  g_unix_signal_add@Base 2.30.0
