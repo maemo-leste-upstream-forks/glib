@@ -13,3 +13,4 @@ debian/Skip-unreliable-test_threaded_singleton-by-default.patch
 debian/gmenumodel-test-Mark-as-flaky.patch
 debian/gvariant-test-Don-t-run-at-build-time-on-mips.patch
 debian/taptestrunner-Stop-looking-like-an-executable-script.patch
+tests-Skip-GMemoryMonitor-tests-if-the-dbusmock-template-.patch
