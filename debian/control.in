@@ -59,7 +59,11 @@ Description: GLib library of C routines
 Package: libglib2.0-tests
 Build-profiles: <!noinsttest>
 Architecture: any
-Depends: libglib2.0-dev-bin,
+Depends: gir1.2-glib-2.0,
+         libglib2.0-dev-bin,
+         python3-dbus,
+         python3-dbusmock,
+         python3-gi,
          shared-mime-info,
          ${misc:Depends},
          ${python3:Depends},
