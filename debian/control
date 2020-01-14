@@ -69,6 +69,7 @@ Depends: gir1.2-glib-2.0,
          python3-dbusmock,
          python3-gi,
          shared-mime-info,
+         xdg-desktop-portal,
          ${misc:Depends},
          ${python3:Depends},
          ${shlibs:Depends}
