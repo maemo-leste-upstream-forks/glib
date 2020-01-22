@@ -1,4 +1,4 @@
-glib2.0 (2.63.3-3) UNRELEASED; urgency=medium
+glib2.0 (2.63.3-3) experimental; urgency=medium
 
   * debian/control.in:
     - lower the libglib2.0-tests Depends on xdg-desktop-portal to a
