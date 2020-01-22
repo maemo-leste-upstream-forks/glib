@@ -69,10 +69,10 @@ Depends: gir1.2-glib-2.0,
          python3-dbusmock,
          python3-gi,
          shared-mime-info,
-         xdg-desktop-portal,
          ${misc:Depends},
          ${python3:Depends},
          ${shlibs:Depends}
+Recommends: xdg-desktop-portal,
 Pre-Depends: ${misc:Pre-Depends}
 Description: GLib library of C routines - installed tests
  GLib is a library containing many useful C routines for things such

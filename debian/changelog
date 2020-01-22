@@ -1,3 +1,15 @@
+glib2.0 (2.63.3-3) UNRELEASED; urgency=medium
+
+  * debian/control.in:
+    - lower the libglib2.0-tests Depends on xdg-desktop-portal to a
+      Recommends since the portal is not available on some architectures
+  * debian/patches/tests-optional-portal.patch:
+    - skip the new memory monitor tests if the portal is not available,
+      that allows the tests to be still successful on architectures were
+      the portal is not available (e.g Ubuntu/i386)
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Wed, 22 Jan 2020 09:36:27 +0200
+
 glib2.0 (2.63.3-2) experimental; urgency=medium
 
   * debian/control.in:

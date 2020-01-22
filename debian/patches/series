@@ -14,3 +14,4 @@ debian/gmenumodel-test-Mark-as-flaky.patch
 debian/gvariant-test-Don-t-run-at-build-time-on-mips.patch
 debian/taptestrunner-Stop-looking-like-an-executable-script.patch
 tests-Skip-GMemoryMonitor-tests-if-the-dbusmock-template-.patch
+tests-optional-portal.patch
