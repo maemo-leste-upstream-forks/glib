@@ -1,3 +1,15 @@
+glib2.0 (2.62.4-2) UNRELEASED; urgency=medium
+
+  * Adjust dependencies to avoid broken partial upgrades on arm64 during
+    libffi7 transition:
+    - Bump versioned Depends on libffi-dev to get a guarantee that we'll
+      depend on libffi7
+    - Add Breaks on libgirepository-1.0-1 (<< 1.62.0-4~) so we cannot
+      get a GObject built with libffi7 but a libgirepository built with
+      libffi6
+
+ -- Simon McVittie <smcv@debian.org>  Fri, 31 Jan 2020 17:29:52 +0100
+
 glib2.0 (2.62.4-1) unstable; urgency=medium
 
   * Team upload
