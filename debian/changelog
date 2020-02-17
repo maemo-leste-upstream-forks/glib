@@ -1,4 +1,4 @@
-glib2.0 (2.63.5-1) UNRELEASED; urgency=medium
+glib2.0 (2.63.5-1) experimental; urgency=medium
 
   [ Iain Lane ]
   * New upstream release
@@ -25,7 +25,7 @@ glib2.0 (2.63.5-1) UNRELEASED; urgency=medium
     documentation
   * Rework libmount Meson argument as it’s now a feature; see !1344 upstream
 
- -- Iain Lane <laney@debian.org>  Mon, 17 Feb 2020 17:09:17 +0000
+ -- Iain Lane <laney@debian.org>  Mon, 17 Feb 2020 17:47:17 +0000
 
 glib2.0 (2.63.3-3) experimental; urgency=medium
 
