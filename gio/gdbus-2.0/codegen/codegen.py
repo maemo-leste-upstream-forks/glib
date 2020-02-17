@@ -62,7 +62,7 @@ def generate_header_guard(header_name):
 class HeaderCodeGenerator:
     def __init__(self, ifaces, namespace, generate_objmanager,
                  generate_autocleanup, header_name, input_files_basenames,
-                 use_pragma, glib_min_version, outfile):
+                 use_pragma, glib_min_required, outfile):
         self.ifaces = ifaces
         self.namespace, self.ns_upper, self.ns_lower = generate_namespace(namespace)
         self.generate_objmanager = generate_objmanager
@@ -70,7 +70,7 @@ class HeaderCodeGenerator:
         self.header_guard = generate_header_guard(header_name)
         self.input_files_basenames = input_files_basenames
         self.use_pragma = use_pragma
-        self.glib_min_version = glib_min_version
+        self.glib_min_required = glib_min_required
         self.outfile = outfile
 
     # ----------------------------------------------------------------------------------------------------
@@ -222,6 +222,9 @@ class HeaderCodeGenerator:
                                        '    %s *proxy'%(i.name_lower, m.name_lower, i.camel_name))
                     for a in m.in_args:
                         self.outfile.write(',\n    %sarg_%s'%(a.ctype_in, a.name))
+                    if self.glib_min_required >= (2, 64):
+                        self.outfile.write(',\n    GDBusCallFlags call_flags'
+                                           ',\n    gint timeout_msec')
                     if m.unix_fd:
                         self.outfile.write(',\n    GUnixFDList *fd_list')
                     self.outfile.write(',\n'
@@ -249,6 +252,9 @@ class HeaderCodeGenerator:
                                        '    %s *proxy'%(i.name_lower, m.name_lower, i.camel_name))
                     for a in m.in_args:
                         self.outfile.write(',\n    %sarg_%s'%(a.ctype_in, a.name))
+                    if self.glib_min_required >= (2, 64):
+                        self.outfile.write(',\n    GDBusCallFlags call_flags'
+                                           ',\n    gint timeout_msec')
                     if m.unix_fd:
                         self.outfile.write(',\n    GUnixFDList  *fd_list')
                     for a in m.out_args:
@@ -619,13 +625,13 @@ class HeaderCodeGenerator:
 # ----------------------------------------------------------------------------------------------------
 
 class InterfaceInfoHeaderCodeGenerator:
-    def __init__(self, ifaces, namespace, header_name, input_files_basenames, use_pragma, glib_min_version, outfile):
+    def __init__(self, ifaces, namespace, header_name, input_files_basenames, use_pragma, glib_min_required, outfile):
         self.ifaces = ifaces
         self.namespace, self.ns_upper, self.ns_lower = generate_namespace(namespace)
         self.header_guard = generate_header_guard(header_name)
         self.input_files_basenames = input_files_basenames
         self.use_pragma = use_pragma
-        self.glib_min_version = glib_min_version
+        self.glib_min_required = glib_min_required
         self.outfile = outfile
 
     # ----------------------------------------------------------------------------------------------------
@@ -673,12 +679,12 @@ class InterfaceInfoHeaderCodeGenerator:
 # ----------------------------------------------------------------------------------------------------
 
 class InterfaceInfoBodyCodeGenerator:
-    def __init__(self, ifaces, namespace, header_name, input_files_basenames, glib_min_version, outfile):
+    def __init__(self, ifaces, namespace, header_name, input_files_basenames, glib_min_required, outfile):
         self.ifaces = ifaces
         self.namespace, self.ns_upper, self.ns_lower = generate_namespace(namespace)
         self.header_name = header_name
         self.input_files_basenames = input_files_basenames
-        self.glib_min_version = glib_min_version
+        self.glib_min_required = glib_min_required
         self.outfile = outfile
 
     # ----------------------------------------------------------------------------------------------------
@@ -906,14 +912,14 @@ class InterfaceInfoBodyCodeGenerator:
 
 class CodeGenerator:
     def __init__(self, ifaces, namespace, generate_objmanager, header_name,
-                 input_files_basenames, docbook_gen, glib_min_version, outfile):
+                 input_files_basenames, docbook_gen, glib_min_required, outfile):
         self.ifaces = ifaces
         self.namespace, self.ns_upper, self.ns_lower = generate_namespace(namespace)
         self.generate_objmanager = generate_objmanager
         self.header_name = header_name
         self.input_files_basenames = input_files_basenames
         self.docbook_gen = docbook_gen
-        self.glib_min_version = glib_min_version
+        self.glib_min_required = glib_min_required
         self.outfile = outfile
 
     # ----------------------------------------------------------------------------------------------------
@@ -1666,6 +1672,11 @@ class CodeGenerator:
                                %(i.name_lower, m.name_lower, i.camel_name))
             for a in m.in_args:
                 self.outfile.write(' * @arg_%s: Argument to pass with the method invocation.\n'%(a.name))
+            if self.glib_min_required >= (2, 64):
+                self.outfile.write(' * @call_flags: Flags from the #GDBusCallFlags enumeration. If you want to allow interactive\n'
+                                   '       authorization be sure to set %G_DBUS_CALL_FLAGS_ALLOW_INTERACTIVE_AUTHORIZATION.\n'
+                                   ' * @timeout_msec: The timeout in milliseconds (with %G_MAXINT meaning "infinite") or\n'
+                                   '       -1 to use the proxy default timeout.\n')
             if m.unix_fd:
                 self.outfile.write(' * @fd_list: (nullable): A #GUnixFDList or %NULL.\n')
             self.outfile.write(self.docbook_gen.expand(
@@ -1685,6 +1696,9 @@ class CodeGenerator:
                                '    %s *proxy'%(i.name_lower, m.name_lower, i.camel_name))
             for a in m.in_args:
                 self.outfile.write(',\n    %sarg_%s'%(a.ctype_in, a.name))
+            if self.glib_min_required >= (2, 64):
+                self.outfile.write(',\n    GDBusCallFlags call_flags'
+                                   ',\n    gint timeout_msec')
             if m.unix_fd:
                 self.outfile.write(',\n    GUnixFDList *fd_list')
             self.outfile.write(',\n'
@@ -1703,9 +1717,13 @@ class CodeGenerator:
             self.outfile.write(')"')
             for a in m.in_args:
                 self.outfile.write(',\n                   arg_%s'%(a.name))
-            self.outfile.write('),\n'
-                               '    G_DBUS_CALL_FLAGS_NONE,\n'
-                               '    -1,\n')
+            self.outfile.write('),\n')
+            if self.glib_min_required >= (2, 64):
+                self.outfile.write('    call_flags,\n'
+                                   '    timeout_msec,\n')
+            else:
+                self.outfile.write('    G_DBUS_CALL_FLAGS_NONE,\n'
+                                   '    -1,\n')
             if m.unix_fd:
                 self.outfile.write('    fd_list,\n')
             self.outfile.write('    cancellable,\n'
@@ -1771,6 +1789,11 @@ class CodeGenerator:
                                %(i.name_lower, m.name_lower, i.camel_name))
             for a in m.in_args:
                 self.outfile.write(' * @arg_%s: Argument to pass with the method invocation.\n'%(a.name))
+            if self.glib_min_required >= (2, 64):
+                self.outfile.write(' * @call_flags: Flags from the #GDBusCallFlags enumeration. If you want to allow interactive\n'
+                                   '       authorization be sure to set %G_DBUS_CALL_FLAGS_ALLOW_INTERACTIVE_AUTHORIZATION.\n'
+                                   ' * @timeout_msec: The timeout in milliseconds (with %G_MAXINT meaning "infinite") or\n'
+                                   '       -1 to use the proxy default timeout.\n')
             if m.unix_fd:
                 self.outfile.write(' * @fd_list: (nullable): A #GUnixFDList or %NULL.\n')
             for a in m.out_args:
@@ -1793,6 +1816,9 @@ class CodeGenerator:
                                '    %s *proxy'%(i.name_lower, m.name_lower, i.camel_name))
             for a in m.in_args:
                 self.outfile.write(',\n    %sarg_%s'%(a.ctype_in, a.name))
+            if self.glib_min_required >= (2, 64):
+                self.outfile.write(',\n    GDBusCallFlags call_flags'
+                                   ',\n    gint timeout_msec')
             if m.unix_fd:
                 self.outfile.write(',\n    GUnixFDList  *fd_list')
             for a in m.out_args:
@@ -1815,9 +1841,13 @@ class CodeGenerator:
             self.outfile.write(')"')
             for a in m.in_args:
                 self.outfile.write(',\n                   arg_%s'%(a.name))
-            self.outfile.write('),\n'
-                               '    G_DBUS_CALL_FLAGS_NONE,\n'
-                               '    -1,\n')
+            self.outfile.write('),\n')
+            if self.glib_min_required >= (2, 64):
+                self.outfile.write('    call_flags,\n'
+                                   '    timeout_msec,\n')
+            else:
+                self.outfile.write('    G_DBUS_CALL_FLAGS_NONE,\n'
+                                   '    -1,\n')
             if m.unix_fd:
                 self.outfile.write('    fd_list,\n'
                                    '    out_fd_list,\n')

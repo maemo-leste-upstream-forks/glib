@@ -464,6 +464,17 @@
 }
 
 {
+	g-task-thread-pool-init
+	Memcheck:Leak
+	match-leak-kinds:possible,reachable,definite
+	fun:malloc
+	...
+	fun:g_thread_new
+	...
+	fun:g_task_thread_pool_init
+}
+
+{
 	g-io-module-default-proxy-resolver-gnome
 	Memcheck:Leak
 	match-leak-kinds:reachable
@@ -478,7 +489,7 @@
 {
 	g-threaded-resolver-getaddrinfo-config
 	Memcheck:Leak
-	match-leak-kinds:reachable
+	match-leak-kinds:reachable,definite
 	fun:malloc
 	...
 	fun:__resolv_conf_allocate

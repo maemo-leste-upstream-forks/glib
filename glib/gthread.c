@@ -512,6 +512,8 @@ static GMutex    g_once_mutex;
 static GCond     g_once_cond;
 static GSList   *g_once_init_list = NULL;
 
+static volatile guint g_thread_n_created_counter = 0;
+
 static void g_thread_cleanup (gpointer data);
 static GPrivate     g_thread_specific_private = G_PRIVATE_INIT (g_thread_cleanup);
 
@@ -807,6 +809,12 @@ g_thread_proxy (gpointer data)
   return NULL;
 }
 
+guint
+g_thread_n_created (void)
+{
+  return g_atomic_int_get (&g_thread_n_created_counter);
+}
+
 /**
  * g_thread_new:
  * @name: (nullable): an (optional) name for the new thread
@@ -833,6 +841,14 @@ g_thread_proxy (gpointer data)
  * To free the struct returned by this function, use g_thread_unref().
  * Note that g_thread_join() implicitly unrefs the #GThread as well.
  *
+ * New threads by default inherit their scheduler policy (POSIX) or thread
+ * priority (Windows) of the thread creating the new thread.
+ *
+ * This behaviour changed in GLib 2.64: before threads on Windows were not
+ * inheriting the thread priority but were spawned with the default priority.
+ * Starting with GLib 2.64 the behaviour is now consistent between Windows and
+ * POSIX and all threads inherit their parent thread's priority.
+ *
  * Returns: the new #GThread
  *
  * Since: 2.32
@@ -845,7 +861,7 @@ g_thread_new (const gchar *name,
   GError *error = NULL;
   GThread *thread;
 
-  thread = g_thread_new_internal (name, g_thread_proxy, func, data, 0, &error);
+  thread = g_thread_new_internal (name, g_thread_proxy, func, data, 0, NULL, &error);
 
   if G_UNLIKELY (thread == NULL)
     g_error ("creating thread '%s': %s", name ? name : "", error->message);
@@ -876,21 +892,32 @@ g_thread_try_new (const gchar  *name,
                   gpointer      data,
                   GError      **error)
 {
-  return g_thread_new_internal (name, g_thread_proxy, func, data, 0, error);
+  return g_thread_new_internal (name, g_thread_proxy, func, data, 0, NULL, error);
 }
 
 GThread *
-g_thread_new_internal (const gchar   *name,
-                       GThreadFunc    proxy,
-                       GThreadFunc    func,
-                       gpointer       data,
-                       gsize          stack_size,
-                       GError       **error)
+g_thread_new_internal (const gchar *name,
+                       GThreadFunc proxy,
+                       GThreadFunc func,
+                       gpointer data,
+                       gsize stack_size,
+                       const GThreadSchedulerSettings *scheduler_settings,
+                       GError **error)
 {
   g_return_val_if_fail (func != NULL, NULL);
 
-  return (GThread*) g_system_thread_new (proxy, stack_size, name,
-                                         func, data, error);
+  g_atomic_int_inc (&g_thread_n_created_counter);
+
+  return (GThread *) g_system_thread_new (proxy, stack_size, scheduler_settings,
+                                          name, func, data, error);
+}
+
+gboolean
+g_thread_get_scheduler_settings (GThreadSchedulerSettings *scheduler_settings)
+{
+  g_return_val_if_fail (scheduler_settings != NULL, FALSE);
+
+  return g_system_thread_get_scheduler_settings (scheduler_settings);
 }
 
 /**
