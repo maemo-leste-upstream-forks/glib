@@ -1,8 +1,31 @@
 glib2.0 (2.63.5-1) UNRELEASED; urgency=medium
 
+  [ Iain Lane ]
   * New upstream release
 
- -- Iain Lane <laney@debian.org>  Mon, 17 Feb 2020 16:36:30 +0000
+  [ Philip Withnall ]
+  * Rework 01_gettext-desktopfiles.patch to not add new public API.
+    Downstreams should not be adding new public API to GLib. From some code
+    searching, this doesn’t appear to be used in more than one or two places,
+    so won’t be too inconvenient to drop.  The original patch should either be
+    upstreamed (I’d be open to some form of it, if there’s still evidence it’s
+    useful) or dropped. If it’s upstreamed, the new keys should be
+    standardised.  The alternative to this was to document the added public
+    API; its addition was causing the new gtk-doc tests in GLib to fail.
+  * Bump gtk-doc-tools dependency to >= 1.32-4 as GLib requires some fixes
+    pushed to gtk-doc after its 1.32 release.
+  * control: Bump Meson dependency to >= 0.52.0 for building the documentation
+  * Drop PKCS#11 APIs added in 2.63.1 (not stable yet)
+      - g_tls_certificate_new_from_pkcs11_uris()
+  * Remove patches applied upstream:
+    - tests-Skip-GMemoryMonitor-tests-if-the-dbusmock-template-.patch
+    - tests-optional-portal.patch
+  * d/p/docs-Don-t-install-object-manager-example-separately.patch: Add patch
+    from upstream to disable incorrect installation of some example
+    documentation
+  * Rework libmount Meson argument as it’s now a feature; see !1344 upstream
+
+ -- Iain Lane <laney@debian.org>  Mon, 17 Feb 2020 17:09:17 +0000
 
 glib2.0 (2.63.3-3) experimental; urgency=medium
 
