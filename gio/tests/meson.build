@@ -7,7 +7,6 @@ common_gio_tests_deps = [
 
 test_c_args = [
   '-DG_LOG_DOMAIN="GLib-GIO"',
-  '-DTEST_SERVICES="@0@/gio/tests/services"'.format(meson.build_root()),
   '-DGLIB_MKENUMS="@0@"'.format(glib_mkenums),
   '-DGLIB_COMPILE_SCHEMAS="@0@"'.format(glib_compile_schemas.full_path()),
   '-UG_DISABLE_ASSERT',
@@ -80,6 +79,7 @@ gio_tests = {
   'tls-interaction' : {'extra_sources' : ['gtesttlsbackend.c']},
   'tls-database' : {'extra_sources' : ['gtesttlsbackend.c']},
   'gdbus-address-get-session' : {},
+  'win32-appinfo' : {},
 }
 
 test_extra_programs = {
@@ -231,7 +231,23 @@ if host_machine.system() != 'windows'
                    '--generate-docbook', 'gdbus-test-codegen-generated-doc',
                    annotate_args,
                    '@INPUT@'])
-
+    # Generate gdbus-test-codegen-generated-min-required-2-64.{c,h}
+    gdbus_test_codegen_generated_min_required_2_64 = custom_target('gdbus-test-codegen-generated-min-required-2-64',
+        input :   ['test-codegen.xml'],
+        output :  ['gdbus-test-codegen-generated-min-required-2-64.h',
+                   'gdbus-test-codegen-generated-min-required-2-64.c'],
+        depend_files : gdbus_codegen_built_files,
+        command : [python, gdbus_codegen,
+                   '--glib-min-required', '2.64',
+                   '--interface-prefix', 'org.project.',
+                   '--output-directory', '@OUTDIR@',
+                   '--generate-c-code', 'gdbus-test-codegen-generated-min-required-2-64',
+                   '--c-generate-object-manager',
+                   '--c-generate-autocleanup', 'all',
+                   '--c-namespace', 'Foo_iGen',
+                   '--generate-docbook', 'gdbus-test-codegen-generated-doc',
+                   annotate_args,
+                   '@INPUT@'])
     gdbus_test_codegen_generated_interface_info = [
       custom_target('gdbus-test-codegen-generated-interface-info-h',
           input :   ['test-codegen.xml'],
@@ -283,6 +299,7 @@ if host_machine.system() != 'windows'
       'gdbus-proxy-well-known-name' : {'extra_sources' : extra_sources},
       'gdbus-test-codegen' : {
         'extra_sources' : [extra_sources, gdbus_test_codegen_generated, gdbus_test_codegen_generated_interface_info],
+        'c_args' : ['-DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_32'],
       },
       'gdbus-threading' : {
         'extra_sources' : extra_sources,
@@ -301,6 +318,11 @@ if host_machine.system() != 'windows'
         'c_args' : ['-DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_36',
                     '-DGLIB_VERSION_MAX_ALLOWED=GLIB_VERSION_2_36'],
       },
+      'gdbus-test-codegen-min-required-2-64' : {
+        'source' : 'gdbus-test-codegen.c',
+        'extra_sources' : [extra_sources, gdbus_test_codegen_generated_min_required_2_64, gdbus_test_codegen_generated_interface_info],
+        'c_args' : ['-DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_64'],
+      },
       'gapplication' : {'extra_sources' : extra_sources},
     }
 
@@ -311,6 +333,24 @@ if host_machine.system() != 'windows'
         },
       }
     endif
+
+    fake_document_portal_generated = custom_target('fake-document-portal-generated',
+        input :   ['../org.freedesktop.portal.Documents.xml'],
+        output :  ['fake-document-portal-generated.h',
+                   'fake-document-portal-generated.c'],
+        depend_files : gdbus_codegen_built_files,
+        command : [python, gdbus_codegen,
+                   '--interface-prefix', 'org.freedesktop.portal.',
+                   '--output-directory', '@OUTDIR@',
+                   '--generate-c-code', 'fake-document-portal-generated',
+                   '--c-namespace', 'Fake',
+                   '@INPUT@'])
+
+    test_extra_programs += {
+      'fake-document-portal' : {
+        'extra_sources': fake_document_portal_generated,
+      },
+    }
   endif # have_dbus_daemon
 
   # This test is currently unreliable
@@ -391,6 +431,11 @@ test_extra_programs += {
   },
 }
 
+gdbus_example_objectmanager_sources = files(
+  'gdbus-example-objectmanager-client.c',
+  'gdbus-example-objectmanager-server.c',
+)
+
 if cc.get_id() != 'msvc' and cc.get_id() != 'clang-cl'
   test_extra_programs += {
     # These three are manual-run tests because they need a session bus but don't bring one up themselves
@@ -457,6 +502,7 @@ if installed_tests_enabled
     'appinfo-test-static.desktop',
     'file.c',
     'org.gtk.test.dbusappinfo.desktop',
+    'org.gtk.test.dbusappinfo.flatpak.desktop',
     'test1.overlay',
     install_dir : installed_tests_execdir,
   )
@@ -781,5 +827,5 @@ if installed_tests_enabled
   )
 endif
 
-# FIXME: subdir('services')
+subdir('services')
 subdir('modules')

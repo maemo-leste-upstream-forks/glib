@@ -1,5 +1,5 @@
 project('glib', 'c', 'cpp',
-  version : '2.63.3',
+  version : '2.63.5',
   # NOTE: We keep this pinned at 0.49 because that's what Debian 10 ships
   meson_version : '>= 0.49.2',
   default_options : [
@@ -353,7 +353,6 @@ endforeach
 # Compiler flags
 if cc.get_id() == 'gcc' or cc.get_id() == 'clang'
   warning_c_args = [
-    '-Wall',
     '-Wduplicated-branches',
     '-Wimplicit-fallthrough',
     '-Wmisleading-indentation',
@@ -1718,6 +1717,9 @@ else
   if cc.has_header_symbol('pthread.h', 'pthread_attr_setstacksize')
     glib_conf.set('HAVE_PTHREAD_ATTR_SETSTACKSIZE', 1)
   endif
+  if cc.has_header_symbol('pthread.h', 'pthread_attr_setinheritsched')
+    glib_conf.set('HAVE_PTHREAD_ATTR_SETINHERITSCHED', 1)
+  endif
   if cc.has_header_symbol('pthread.h', 'pthread_condattr_setclock')
     glib_conf.set('HAVE_PTHREAD_CONDATTR_SETCLOCK', 1)
   endif
@@ -1727,6 +1729,11 @@ else
   if cc.has_header_symbol('pthread.h', 'pthread_getname_np', prefix : pthread_prefix)
     glib_conf.set('HAVE_PTHREAD_GETNAME_NP', 1)
   endif
+
+  if cc.has_header_symbol('sys/syscall.h', 'SYS_sched_getattr')
+    glib_conf.set('HAVE_SYS_SCHED_GETATTR', 1)
+  endif
+
   # Assume that pthread_setname_np is available in some form; same as configure
   if cc.links(pthread_prefix + '''
               int main() {
@@ -1915,9 +1922,9 @@ glib_conf.set_quoted('GLIB_LOCALE_DIR', join_paths(glib_datadir, 'locale'))
 # libmount is only used by gio, but we need to fetch the libs to generate the
 # pkg-config file below
 libmount_dep = []
-if host_system == 'linux' and get_option('libmount')
-  libmount_dep = [dependency('mount', version : '>=2.23', required : true)]
-  glib_conf.set('HAVE_LIBMOUNT', 1)
+if host_system == 'linux'
+  libmount_dep = dependency('mount', version : '>=2.23', required : get_option('libmount'))
+  glib_conf.set('HAVE_LIBMOUNT', libmount_dep.found())
 endif
 
 if host_system == 'windows'
