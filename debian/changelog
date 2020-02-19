@@ -1,3 +1,13 @@
+glib2.0 (2.63.5-2) UNRELEASED; urgency=medium
+
+  * Skip-unreliable-gdbus-threading-tests--by-default.patch: Skip all of
+    gdbus-threading test_method_calls_in_thread() has become (more?)
+    unreliable too. When skipped, the test bus doesn't get torn down properly
+    - it times out. Let's stop running these tests for now, until they are
+    made reliable.
+
+ -- Iain Lane <laney@debian.org>  Wed, 19 Feb 2020 16:51:21 +0000
+
 glib2.0 (2.63.5-1) experimental; urgency=medium
 
   [ Iain Lane ]
