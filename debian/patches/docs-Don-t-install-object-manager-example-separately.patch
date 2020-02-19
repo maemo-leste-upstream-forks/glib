@@ -1,11 +1,7 @@
-From fd082bb703a21925c69f49a97ee6cd8dcc981033 Mon Sep 17 00:00:00 2001
 From: Philip Withnall <withnall@endlessm.com>
 Date: Tue, 11 Feb 2020 11:47:03 +0000
-Subject: [PATCH] =?UTF-8?q?docs:=20Don=E2=80=99t=20install=20object=20mana?=
- =?UTF-8?q?ger=20example=20separately?=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Subject: =?utf-8?q?=5BPATCH=5D_docs=3A_Don=E2=80=99t_install_object_manager?=
+ =?utf-8?q?_example_separately?=
 
 The relevant parts of the generated example documentation are already
 `xi:include`d into the `migrating-gdbus.xml` page, so are turned into
@@ -21,7 +17,7 @@ Bug-Upstream: https://gitlab.gnome.org/GNOME/glib/merge_requests/1359
  1 file changed, 1 insertion(+)
 
 diff --git a/docs/reference/gio/gdbus-object-manager-example/meson.build b/docs/reference/gio/gdbus-object-manager-example/meson.build
-index 126e67731..13cae5b48 100644
+index 126e677..13cae5b 100644
 --- a/docs/reference/gio/gdbus-object-manager-example/meson.build
 +++ b/docs/reference/gio/gdbus-object-manager-example/meson.build
 @@ -6,5 +6,6 @@ gdbus_object_manager_example_doc = gnome.gtkdoc('gdbus-object-manager-example',
@@ -31,6 +27,3 @@ index 126e67731..13cae5b48 100644
 +  install : false,
  )
  
--- 
-2.24.1
-
