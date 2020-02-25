@@ -6,6 +6,7 @@ glib2.0 (2.62.5-1) UNRELEASED; urgency=medium
   * Build-depend on libnss-myhostname | netbase if running tests.
     This is an attempt to work around localhost not being a resolvable
     name in some build environments, notably reproducible-builds.
+    (See #948834)
   * Put the result of `getent ahosts localhost` and
     `getent ahosts $(hostname)` in the build log, to check whether those
     names are resolvable in the build environment.
