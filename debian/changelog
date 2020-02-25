@@ -12,6 +12,9 @@ glib2.0 (2.63.6-1) UNRELEASED; urgency=medium
     This is an attempt to work around localhost not being a resolvable
     name in some build environments, notably reproducible-builds.
     (See #948834)
+  * Put the result of `getent ahosts localhost` and
+    `getent ahosts $(hostname)` in the build log, to check whether those
+    names are resolvable in the build environment.
   * d/p/debian/testfilemonitor-Skip-if-we-are-avoiding-flaky-tests.patch:
     Treat testfilemonitor as a flaky test
   * Standards-Version: 4.5.0 (no changes required)
