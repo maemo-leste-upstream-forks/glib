@@ -6,6 +6,8 @@ glib2.0 (2.63.6-1) UNRELEASED; urgency=medium
     - Stop installing gio-launch-desktop, which no longer exists
     - d/p/debian/Look-for-gio-launch-desktop-in-libdir-glib-2.0.patch:
       Drop, no longer necessary
+    - d/p/docs-Don-t-install-object-manager-example-separately.patch:
+      Drop, applied upstream
 
  -- Simon McVittie <smcv@debian.org>  Tue, 25 Feb 2020 08:18:48 +0000
 
