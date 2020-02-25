@@ -8,6 +8,7 @@ glib2.0 (2.62.5-1) UNRELEASED; urgency=medium
     name in some build environments, notably reproducible-builds.
   * d/p/debian/testfilemonitor-Skip-if-we-are-avoiding-flaky-tests.patch:
     Treat testfilemonitor as a flaky test
+  * Standards-Version: 4.5.0 (no changes required)
 
  -- Simon McVittie <smcv@debian.org>  Tue, 25 Feb 2020 00:26:07 +0000
 
