@@ -1,3 +1,11 @@
+glib2.0 (2.63.6-1) UNRELEASED; urgency=medium
+
+  * New upstream release
+    - Fixes a vulnerability where GSocketClient sometimes forgot to use
+      a configured proxy (CVE-2020-6750, Closes: #948554)
+
+ -- Simon McVittie <smcv@debian.org>  Tue, 25 Feb 2020 08:18:48 +0000
+
 glib2.0 (2.63.5-2) experimental; urgency=medium
 
   * Skip-unreliable-gdbus-threading-tests--by-default.patch: Skip all of
