@@ -1,6 +1,8 @@
 glib2.0 (2.62.5-1) UNRELEASED; urgency=medium
 
   * New upstream release
+    - Fixes a vulnerability where GSocketClient sometimes forgot to use
+      a configured proxy (CVE-2020-6750, Closes: #948554)
 
  -- Simon McVittie <smcv@debian.org>  Tue, 25 Feb 2020 00:26:07 +0000
 
