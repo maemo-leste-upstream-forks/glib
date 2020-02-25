@@ -1211,6 +1211,19 @@ g_system_thread_get_scheduler_settings (GThreadSchedulerSettings *scheduler_sett
     }
   while (res == -1);
 
+  /* Try setting them on the current thread to see if any system policies are
+   * in place that would disallow doing so */
+  res = syscall (SYS_sched_setattr, tid, scheduler_settings->attr, flags);
+  if (res == -1)
+    {
+      int errsv = errno;
+
+      g_debug ("Failed to set thread scheduler attributes: %s", g_strerror (errsv));
+      g_free (scheduler_settings->attr);
+
+      return FALSE;
+    }
+
   return TRUE;
 #else
   return FALSE;
@@ -1235,7 +1248,7 @@ linux_pthread_proxy (void *data)
       res = syscall (SYS_sched_setattr, tid, thread->scheduler_settings->attr, flags);
       errsv = errno;
       if (res == -1)
-        g_error ("Failed to set scheduler settings: %s", g_strerror (errsv));
+        g_critical ("Failed to set scheduler settings: %s", g_strerror (errsv));
     }
 
   return thread->proxy (data);
