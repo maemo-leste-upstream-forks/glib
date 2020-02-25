@@ -12,3 +12,4 @@ debian/Skip-unreliable-gdbus-threading-tests--by-default.patch
 debian/gmenumodel-test-Mark-as-flaky.patch
 debian/gvariant-test-Don-t-run-at-build-time-on-mips.patch
 debian/taptestrunner-Stop-looking-like-an-executable-script.patch
+debian/testfilemonitor-Skip-if-we-are-avoiding-flaky-tests.patch
