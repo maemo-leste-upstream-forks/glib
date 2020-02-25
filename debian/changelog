@@ -8,6 +8,10 @@ glib2.0 (2.63.6-1) UNRELEASED; urgency=medium
       Drop, no longer necessary
     - d/p/docs-Don-t-install-object-manager-example-separately.patch:
       Drop, applied upstream
+  * Build-depend on libnss-myhostname | netbase if running tests.
+    This is an attempt to work around localhost not being a resolvable
+    name in some build environments, notably reproducible-builds.
+    (See #948834)
 
  -- Simon McVittie <smcv@debian.org>  Tue, 25 Feb 2020 08:18:48 +0000
 
