@@ -7,11 +7,11 @@ See https://gitlab.gnome.org/GNOME/glib/issues/1634
 Signed-off-by: Simon McVittie <smcv@debian.org>
 Forwarded: no
 ---
- gio/tests/testfilemonitor.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ gio/tests/testfilemonitor.c | 34 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 33 insertions(+), 1 deletion(-)
 
 diff --git a/gio/tests/testfilemonitor.c b/gio/tests/testfilemonitor.c
-index 6057958..8a890a6 100644
+index 6057958..f68e1b0 100644
 --- a/gio/tests/testfilemonitor.c
 +++ b/gio/tests/testfilemonitor.c
 @@ -21,6 +21,12 @@ setup (Fixture       *fixture,
@@ -27,7 +27,18 @@ index 6057958..8a890a6 100644
    path = g_dir_make_tmp ("gio-test-testfilemonitor_XXXXXX", &local_error);
    g_assert_no_error (local_error);
  
-@@ -358,6 +364,10 @@ test_atomic_replace (Fixture       *fixture,
+@@ -35,7 +41,9 @@ teardown (Fixture       *fixture,
+ {
+   GError *local_error = NULL;
+ 
+-  g_file_delete (fixture->tmp_dir, NULL, &local_error);
++  if (fixture->tmp_dir != NULL)
++    g_file_delete (fixture->tmp_dir, NULL, &local_error);
++
+   g_assert_no_error (local_error);
+   g_clear_object (&fixture->tmp_dir);
+ }
+@@ -358,6 +366,10 @@ test_atomic_replace (Fixture       *fixture,
    GError *error = NULL;
    TestData data;
  
@@ -38,7 +49,7 @@ index 6057958..8a890a6 100644
    data.step = 0;
    data.events = NULL;
  
-@@ -463,6 +473,10 @@ test_file_changes (Fixture       *fixture,
+@@ -463,6 +475,10 @@ test_file_changes (Fixture       *fixture,
    GError *error = NULL;
    TestData data;
  
@@ -49,7 +60,7 @@ index 6057958..8a890a6 100644
    data.step = 0;
    data.events = NULL;
  
-@@ -580,6 +594,10 @@ test_dir_monitor (Fixture       *fixture,
+@@ -580,6 +596,10 @@ test_dir_monitor (Fixture       *fixture,
    GError *error = NULL;
    TestData data;
  
@@ -60,7 +71,7 @@ index 6057958..8a890a6 100644
    data.step = 0;
    data.events = NULL;
  
-@@ -677,6 +695,10 @@ test_dir_non_existent (Fixture       *fixture,
+@@ -677,6 +697,10 @@ test_dir_non_existent (Fixture       *fixture,
    TestData data;
    GError *error = NULL;
  
@@ -71,7 +82,7 @@ index 6057958..8a890a6 100644
    data.step = 0;
    data.events = NULL;
  
-@@ -786,6 +808,10 @@ test_cross_dir_moves (Fixture       *fixture,
+@@ -786,6 +810,10 @@ test_cross_dir_moves (Fixture       *fixture,
    GError *error = NULL;
    TestData data[2];
  
@@ -82,7 +93,7 @@ index 6057958..8a890a6 100644
    data[0].step = 0;
    data[0].events = NULL;
  
-@@ -955,6 +981,10 @@ test_file_hard_links (Fixture       *fixture,
+@@ -955,6 +983,10 @@ test_file_hard_links (Fixture       *fixture,
    GError *error = NULL;
    TestData data;
  
