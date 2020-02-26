@@ -8,9 +8,6 @@ glib2.0 (2.63.6-1) UNRELEASED; urgency=medium
       Drop, no longer necessary
     - d/p/docs-Don-t-install-object-manager-example-separately.patch:
       Drop, applied upstream
-  * Put the result of `getent ahosts localhost` and
-    `getent ahosts $(hostname)` in the build log, to check whether those
-    names are resolvable in the build environment.
   * d/p/debian/testfilemonitor-Skip-if-we-are-avoiding-flaky-tests.patch:
     Treat testfilemonitor as a flaky test
   * Standards-Version: 4.5.0 (no changes required)
