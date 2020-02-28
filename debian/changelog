@@ -1,5 +1,6 @@
-glib2.0 (2.64.0-1) UNRELEASED; urgency=medium
+glib2.0 (2.64.0-1) experimental; urgency=medium
 
+  * Team upload
   * New upstream release
     - Fixes a vulnerability where GSocketClient sometimes forgot to use
       a configured proxy (CVE-2020-6750, Closes: #948554)
@@ -18,7 +19,7 @@ glib2.0 (2.64.0-1) UNRELEASED; urgency=medium
     memory before the upgrade. This can be removed after Ubuntu 20.04
     and Debian 11 are both released.
 
- -- Simon McVittie <smcv@debian.org>  Fri, 28 Feb 2020 09:16:50 +0000
+ -- Simon McVittie <smcv@debian.org>  Fri, 28 Feb 2020 17:16:04 +0000
 
 glib2.0 (2.63.5-2) experimental; urgency=medium
 
