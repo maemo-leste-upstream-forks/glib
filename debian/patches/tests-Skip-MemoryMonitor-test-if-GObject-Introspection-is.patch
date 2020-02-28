@@ -1,0 +1,48 @@
+From: Simon McVittie <smcv@debian.org>
+Date: Fri, 28 Feb 2020 12:29:09 +0000
+Subject: tests: Skip MemoryMonitor test if GObject-Introspection is too old
+
+Distributions will likely want to update GLib before
+GObject-Introspection, to avoid circular dependencies.
+
+Forwarded: https://gitlab.gnome.org/GNOME/glib/-/merge_requests/1397
+Signed-off-by: Simon McVittie <smcv@debian.org>
+---
+ gio/tests/memory-monitor-dbus.py.in   | 6 ++++++
+ gio/tests/memory-monitor-portal.py.in | 6 ++++++
+ 2 files changed, 12 insertions(+)
+
+diff --git a/gio/tests/memory-monitor-dbus.py.in b/gio/tests/memory-monitor-dbus.py.in
+index 43c6c63..675024a 100755
+--- a/gio/tests/memory-monitor-dbus.py.in
++++ b/gio/tests/memory-monitor-dbus.py.in
+@@ -38,6 +38,12 @@ class TestLowMemoryMonitor(dbusmock.DBusTestCase):
+         klass.dbus_con = klass.get_dbus(True)
+ 
+     def setUp(self):
++        try:
++            Gio.MemoryMonitor
++        except AttributeError:
++            raise unittest.SkipTest('Low memory monitor not in '
++                                    'introspection data. Requires '
++                                    'GObject-Introspection ≥ 1.63.2')
+         try:
+             (self.p_mock, self.obj_lmm) = self.spawn_server_template(
+                 'low_memory_monitor', {}, stdout=subprocess.PIPE)
+diff --git a/gio/tests/memory-monitor-portal.py.in b/gio/tests/memory-monitor-portal.py.in
+index 8572d8f..37c206f 100755
+--- a/gio/tests/memory-monitor-portal.py.in
++++ b/gio/tests/memory-monitor-portal.py.in
+@@ -40,6 +40,12 @@ class TestLowMemoryMonitorPortal(dbusmock.DBusTestCase):
+         klass.start_session_bus()
+ 
+     def setUp(self):
++        try:
++            Gio.MemoryMonitor
++        except AttributeError:
++            raise unittest.SkipTest('Low memory monitor not in '
++                                    'introspection data. Requires '
++                                    'GObject-Introspection ≥ 1.63.2')
+         try:
+             (self.p_mock, self.obj_lmm) = self.spawn_server_template(
+                 'low_memory_monitor', {}, stdout=subprocess.PIPE)

@@ -1,3 +1,4 @@
+tests-Skip-MemoryMonitor-test-if-GObject-Introspection-is.patch
 01_gettext-desktopfiles.patch
 0001-timer-test-use-volatile-for-locals.patch
 gwakeuptest-Be-less-parallel-unless-invoked-with-m-slow.patch

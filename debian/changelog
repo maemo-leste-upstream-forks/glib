@@ -12,6 +12,8 @@ glib2.0 (2.64.0-1) UNRELEASED; urgency=medium
     Treat testfilemonitor as a flaky test
   * Standards-Version: 4.5.0 (no changes required)
   * New upstream release
+  * d/p/tests-Skip-MemoryMonitor-test-if-GObject-Introspection-is.patch:
+    Skip MemoryMonitor test if GObject-Introspection is too old to know it
 
  -- Simon McVittie <smcv@debian.org>  Fri, 28 Feb 2020 09:16:50 +0000
 
