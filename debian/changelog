@@ -4,8 +4,6 @@ glib2.0 (2.64.0-1) UNRELEASED; urgency=medium
     - Fixes a vulnerability where GSocketClient sometimes forgot to use
       a configured proxy (CVE-2020-6750, Closes: #948554)
     - Stop installing gio-launch-desktop, which no longer exists
-    - d/p/debian/Look-for-gio-launch-desktop-in-libdir-glib-2.0.patch:
-      Drop, no longer necessary
     - d/p/docs-Don-t-install-object-manager-example-separately.patch:
       Drop, applied upstream
   * d/p/debian/testfilemonitor-Skip-if-we-are-avoiding-flaky-tests.patch:
@@ -14,6 +12,11 @@ glib2.0 (2.64.0-1) UNRELEASED; urgency=medium
   * New upstream release
   * d/p/tests-Skip-MemoryMonitor-test-if-GObject-Introspection-is.patch:
     Skip MemoryMonitor test if GObject-Introspection is too old to know it
+  * Install a shell script implementation of the old gio-launch-desktop
+    executable. While not required for *this* GLib, it is required by
+    old processes that already had the old GLib (2.57.2 to 2.63.5) in
+    memory before the upgrade. This can be removed after Ubuntu 20.04
+    and Debian 11 are both released.
 
  -- Simon McVittie <smcv@debian.org>  Fri, 28 Feb 2020 09:16:50 +0000
 
