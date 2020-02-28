@@ -1,4 +1,4 @@
-glib2.0 (2.63.6-1) UNRELEASED; urgency=medium
+glib2.0 (2.64.0-1) UNRELEASED; urgency=medium
 
   * New upstream release
     - Fixes a vulnerability where GSocketClient sometimes forgot to use
@@ -11,8 +11,9 @@ glib2.0 (2.63.6-1) UNRELEASED; urgency=medium
   * d/p/debian/testfilemonitor-Skip-if-we-are-avoiding-flaky-tests.patch:
     Treat testfilemonitor as a flaky test
   * Standards-Version: 4.5.0 (no changes required)
+  * New upstream release
 
- -- Simon McVittie <smcv@debian.org>  Tue, 25 Feb 2020 08:18:48 +0000
+ -- Simon McVittie <smcv@debian.org>  Fri, 28 Feb 2020 09:16:50 +0000
 
 glib2.0 (2.63.5-2) experimental; urgency=medium
 
