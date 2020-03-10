@@ -1,5 +1,6 @@
-glib2.0 (2.64.0-2) UNRELEASED; urgency=medium
+glib2.0 (2.64.0-2) unstable; urgency=medium
 
+  * Team upload
   * Merge packaging changes from unstable with new upstream release from
     experimental
   * d/control.in: Add Breaks on libgladeui-2-6 before 3.22.2.
@@ -7,7 +8,7 @@ glib2.0 (2.64.0-2) UNRELEASED; urgency=medium
     "support warning", which GObject used to canonicalize to
     "support-warning". GLib 2.64 made this check more strict (see #953010).
 
- -- Simon McVittie <smcv@debian.org>  Mon, 09 Mar 2020 00:12:46 +0000
+ -- Simon McVittie <smcv@debian.org>  Tue, 10 Mar 2020 21:22:18 +0000
 
 glib2.0 (2.64.0-1) experimental; urgency=medium
 
