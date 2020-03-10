@@ -1,5 +1,7 @@
 glib2.0 (2.64.0-2) UNRELEASED; urgency=medium
 
+  * Merge packaging changes from unstable with new upstream release from
+    experimental
   * d/control.in: Add Breaks on libgladeui-2-6 before 3.22.2.
     Older versions used a syntactically invalid property name
     "support warning", which GObject used to canonicalize to
