@@ -247,16 +247,6 @@ xdp_dbus_generated = custom_target('xdp-dbus',
                '--output-directory', '@OUTDIR@',
                '--generate-c-code', 'xdp-dbus',
                '--c-namespace', 'GXdp',
-               '--annotate', 'org.freedesktop.portal.Documents.Add()',
-                             'org.gtk.GDBus.C.UnixFD', 'true',
-               '--annotate', 'org.freedesktop.portal.Documents.AddNamed()',
-                             'org.gtk.GDBus.C.UnixFD', 'true',
-               '--annotate', 'org.freedesktop.portal.Documents.AddFull()',
-                             'org.gtk.GDBus.C.UnixFD', 'true',
-               '--annotate', 'org.freedesktop.portal.OpenURI.OpenFile()',
-                             'org.gtk.GDBus.C.UnixFD', 'true',
-               '--annotate', 'org.freedesktop.portal.Trash.TrashFile()',
-                             'org.gtk.GDBus.C.UnixFD', 'true',
                '@INPUT@'])
 
 # Generate gdbus-generated.{c,h}
@@ -393,6 +383,7 @@ if host_system != 'windows'
   portal_sources = [files(
     'gdocumentportal.c',
     'gopenuriportal.c',
+    'gmemorymonitorportal.c',
     'gnetworkmonitorportal.c',
     'gproxyresolverportal.c',
     'gtrashportal.c',
@@ -425,12 +416,6 @@ if host_system != 'windows'
     contenttype_sources += files('gcontenttype.c')
     appinfo_sources += files('gdesktopappinfo.c')
     gio_unix_include_headers += files('gdesktopappinfo.h')
-
-    executable('gio-launch-desktop', 'gio-launch-desktop.c',
-      install : true,
-      c_args : gio_c_args,
-      # intl.lib is not compatible with SAFESEH
-      link_args : noseh_link_args)
   endif
 
   subdir('xdgmime')
@@ -528,6 +513,8 @@ gio_sources = files(
   'gloadableicon.c',
   'gmarshal-internal.c',
   'gmount.c',
+  'gmemorymonitor.c',
+  'gmemorymonitordbus.c',
   'gmemoryinputstream.c',
   'gmemoryoutputstream.c',
   'gmountoperation.c',
@@ -670,6 +657,7 @@ gio_headers = files(
   'gloadableicon.h',
   'gmount.h',
   'gmemoryinputstream.h',
+  'gmemorymonitor.h',
   'gmemoryoutputstream.h',
   'gmountoperation.h',
   'gnativesocketaddress.h',

@@ -37,6 +37,7 @@
 #include "gslice.h"
 #include "gdatetime.h"
 #include "gdate.h"
+#include "genviron.h"
 
 #ifdef G_OS_WIN32
 
@@ -196,6 +197,8 @@ struct _GTimeZone
 
 G_LOCK_DEFINE_STATIC (time_zones);
 static GHashTable/*<string?, GTimeZone>*/ *time_zones;
+G_LOCK_DEFINE_STATIC (tz_local);
+static GTimeZone *tz_local = NULL;
 
 #define MIN_TZYEAR 1916 /* Daylight Savings started in WWI */
 #define MAX_TZYEAR 2999 /* And it's not likely ever to go away, but
@@ -1501,7 +1504,8 @@ rules_from_identifier (const gchar   *identifier,
  * the local time.
  *
  * In UNIX, the `TZ` environment variable typically corresponds
- * to the name of a file in the zoneinfo database, or string in
+ * to the name of a file in the zoneinfo database, an absolute path to a file
+ * somewhere else, or a string in
  * "std offset [dst [offset],start[/time],end[/time]]" (POSIX) format.
  * There  are  no spaces in the specification. The name of standard
  * and daylight savings time zone must be three or more alphabetic
@@ -1675,7 +1679,16 @@ g_time_zone_new (const gchar *identifier)
 GTimeZone *
 g_time_zone_new_utc (void)
 {
-  return g_time_zone_new ("UTC");
+  static GTimeZone *utc = NULL;
+  static gsize initialised;
+
+  if (g_once_init_enter (&initialised))
+    {
+      utc = g_time_zone_new ("UTC");
+      g_once_init_leave (&initialised, TRUE);
+    }
+
+  return g_time_zone_ref (utc);
 }
 
 /**
@@ -1698,7 +1711,23 @@ g_time_zone_new_utc (void)
 GTimeZone *
 g_time_zone_new_local (void)
 {
-  return g_time_zone_new (getenv ("TZ"));
+  const gchar *tzenv = g_getenv ("TZ");
+  GTimeZone *tz;
+
+  G_LOCK (tz_local);
+
+  /* Is time zone changed and must be flushed? */
+  if (tz_local && g_strcmp0 (g_time_zone_get_identifier (tz_local), tzenv))
+    g_clear_pointer (&tz_local, g_time_zone_unref);
+
+  if (tz_local == NULL)
+    tz_local = g_time_zone_new (tzenv);
+
+  tz = g_time_zone_ref (tz_local);
+
+  G_UNLOCK (tz_local);
+
+  return tz;
 }
 
 /**

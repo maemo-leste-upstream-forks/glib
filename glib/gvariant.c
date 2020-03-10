@@ -2765,7 +2765,10 @@ g_variant_equal (gconstpointer one,
       data_one = g_variant_get_data ((GVariant *) one);
       data_two = g_variant_get_data ((GVariant *) two);
 
-      equal = memcmp (data_one, data_two, size_one) == 0;
+      if (size_one)
+        equal = memcmp (data_one, data_two, size_one) == 0;
+      else
+        equal = TRUE;
     }
   else
     {
@@ -5431,6 +5434,7 @@ g_variant_get (GVariant    *value,
 {
   va_list ap;
 
+  g_return_if_fail (value != NULL);
   g_return_if_fail (valid_format_string (format_string, TRUE, value));
 
   /* if any direct-pointer-access formats are in use, flatten first */

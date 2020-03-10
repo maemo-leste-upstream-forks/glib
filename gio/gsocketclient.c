@@ -1901,7 +1901,7 @@ g_socket_client_enumerator_callback (GObject      *object,
     attempt->proxy_addr = g_object_ref (G_PROXY_ADDRESS (address));
 
   g_source_set_callback (attempt->timeout_source, on_connection_attempt_timeout, attempt, NULL);
-  g_source_attach (attempt->timeout_source, g_main_context_get_thread_default ());
+  g_source_attach (attempt->timeout_source, g_task_get_context (data->task));
   data->connection_attempts = g_slist_append (data->connection_attempts, attempt);
 
   if (g_task_get_cancellable (data->task))

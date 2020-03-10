@@ -40,8 +40,6 @@ export DH_MESON_CROSS_FILE = debian/cross.txt
 # We edit the debcrossgen output to work around unimplemented feature
 # request https://bugs.debian.org/912559
 override_dh_auto_configure:
-	getent ahosts localhost || :
-	getent ahosts $$(hostname) || :
 ifneq ($(DEB_HOST_ARCH),$(DEB_BUILD_ARCH))
 	/usr/share/meson/debcrossgen \
 		-o debian/cross.txt.in
@@ -167,10 +165,10 @@ export XDG_RUNTIME_DIR=$(CURDIR)/debian/tmp-xdg-runtime-dir
 export VERBOSE=1
 
 ifeq ($(DEB_HOST_ARCH_OS),linux)
-is_linux := true
+enable_libmount := enabled
 enable_selinux := enabled
 else
-is_linux := false
+enable_libmount := disabled
 enable_selinux := disabled
 endif
 
@@ -189,7 +187,7 @@ DEB_CONFIGURE_FLAGS_deb := \
 	--default-library both \
 	-Dfam=$(use_fam) \
 	-Dinstalled_tests=true \
-	-Dlibmount=$(is_linux) \
+	-Dlibmount=$(enable_libmount) \
 	-Dman=true \
 	-Dselinux=$(enable_selinux) \
 	-Dsystemtap=true \
@@ -206,7 +204,7 @@ DEB_CONFIGURE_FLAGS_udeb := \
 	--default-library shared \
 	-Dgtk_doc=false \
 	-Dinstalled_tests=false \
-	-Dlibmount=false \
+	-Dlibmount=disabled \
 	-Dselinux=disabled \
 	-Dxattr=$(have_non_stub_xattr) \
 	$(NULL)
@@ -252,6 +250,7 @@ ifneq ($(filter %-udeb,$(binaries)),)
 	dh_install -plibglib2.0-udeb --sourcedir=debian/install/udeb
 endif
 	dh_install --remaining-packages --sourcedir=debian/install/deb
+	install -D -t debian/libglib2.0-0/usr/lib/${DEB_HOST_MULTIARCH}/glib-2.0/ debian/gio-launch-desktop
 
 override_dh_dwz:
 	dh_dwz -Nlibglib2.0-udeb

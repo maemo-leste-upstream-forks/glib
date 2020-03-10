@@ -1,4 +1,5 @@
 if get_option('gtk_doc')
+  subdir('gdbus-object-manager-example')
   subdir('xml')
 
   ignore_headers = [
@@ -50,6 +51,8 @@ if get_option('gtk_doc')
     'glocalfilemonitor.h',
     'glocalfileoutputstream.h',
     'glocalvfs.h',
+    'gmemorymonitordbus.h',
+    'gmemorymonitorportal.h',
     'gmountprivate.h',
     'gnativevolumemonitor.h',
     'gnetworkingprivate.h',
@@ -130,8 +133,6 @@ if get_option('gtk_doc')
     'xdp-dbus.c',
   ]
 
-  # FIXME: ExampleAnimal docs aren't built
-
   docpath = join_paths(glib_datadir, 'gtk-doc', 'html')
   version_conf = configuration_data()
   version_conf.set('VERSION', meson.project_version())
@@ -186,6 +187,9 @@ if get_option('gtk_doc')
       'gresource.xml',
       'gdbus.xml',
       'gdbus-codegen.xml',
+      gdbus_example_objectmanager_xml,
+      gdbus_example_objectmanager_sources,
+      gdbus_object_manager_example_doc,
     ],
     expand_content_files : [
       'overview.xml',
@@ -205,7 +209,8 @@ if get_option('gtk_doc')
       '--extra-dir=' + join_paths('gio', '..', 'glib', 'html'),
       '--extra-dir=' + join_paths('gio', '..', 'gobject', 'html'),
     ],
-    install: true
+    install: true,
+    check: true,
   )
 endif
 

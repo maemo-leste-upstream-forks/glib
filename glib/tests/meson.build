@@ -35,6 +35,7 @@ glib_tests = {
   'hmac' : {},
   'hook' : {},
   'hostutils' : {},
+  'io-channel' : {},
   'keyfile' : {},
   'list' : {},
   'logging' : {},
@@ -91,6 +92,7 @@ glib_tests = {
   'testing' : {},
   'test-printf' : {},
   'thread' : {},
+  'thread-pool' : {},
   'timeout' : {},
   'timer' : {},
   'tree' : {},
@@ -148,6 +150,27 @@ else
     'include' : {},
     'unix' : {},
   }
+  if have_rtld_next
+    glib_tests += {
+      'gutils-user-database' : {
+        'depends' : [
+          shared_library('getpwuid-preload',
+            'getpwuid-preload.c',
+            name_prefix : '',
+            dependencies: libdl_dep,
+            install_dir : installed_tests_execdir,
+            install: installed_tests_enabled,
+          ),
+        ],
+        'env' : {
+          'LD_PRELOAD': '@0@/getpwuid-preload.so'.format(meson.current_build_dir()),
+        },
+        'installed_tests_env' : {
+          'LD_PRELOAD': '@0@/getpwuid-preload.so'.format(installed_tests_execdir),
+        },
+      },
+    }
+  endif
 endif
 
 if installed_tests_enabled
