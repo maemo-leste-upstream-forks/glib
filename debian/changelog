@@ -1,6 +1,9 @@
 glib2.0 (2.64.1-1) UNRELEASED; urgency=medium
 
   * New upstream release
+  * Add Breaks on glib-networking-tests older than 2.63.2.
+    Those versions had a test that relied on TLS version fallback
+    behaviour that has now been removed. (Closes: #953766)
 
  -- Simon McVittie <smcv@debian.org>  Sun, 15 Mar 2020 18:26:46 +0000
 
