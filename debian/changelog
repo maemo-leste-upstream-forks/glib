@@ -1,11 +1,14 @@
-glib2.0 (2.64.1-1) UNRELEASED; urgency=medium
+glib2.0 (2.64.1-1) unstable; urgency=medium
 
-  * New upstream release
+  * Team upload
+  * New upstream stable release
+  * d/p/tests-Skip-MemoryMonitor-test-if-GObject-Introspection-is.patch:
+    Drop patch, applied upstream
   * Add Breaks on glib-networking-tests older than 2.63.2.
     Those versions had a test that relied on TLS version fallback
     behaviour that has now been removed. (Closes: #953766)
 
- -- Simon McVittie <smcv@debian.org>  Sun, 15 Mar 2020 18:26:46 +0000
+ -- Simon McVittie <smcv@debian.org>  Sun, 15 Mar 2020 18:39:17 +0000
 
 glib2.0 (2.64.0-2) unstable; urgency=medium
 
