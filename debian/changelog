@@ -1,4 +1,4 @@
-glib2.0 (2.64.2-1) UNRELEASED; urgency=medium
+glib2.0 (2.64.2-1) unstable; urgency=medium
 
   [ Simon McVittie ]
   * Add Breaks on older versions of gimp, which used a syntactically
@@ -11,7 +11,7 @@ glib2.0 (2.64.2-1) UNRELEASED; urgency=medium
     - backport an upstream git change to fix a signal handler disconnect
       segfault situation (lp: #1872153)
 
- -- Sebastien Bacher <seb128@ubuntu.com>  Wed, 15 Apr 2020 22:51:43 +0200
+ -- Sebastien Bacher <seb128@ubuntu.com>  Wed, 15 Apr 2020 23:01:50 +0200
 
 glib2.0 (2.64.1-1) unstable; urgency=medium
 
