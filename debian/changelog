@@ -1,10 +1,15 @@
 glib2.0 (2.64.1-2) UNRELEASED; urgency=medium
 
+  [ Simon McVittie ]
   * Add Breaks on older versions of gimp, which used a syntactically
     invalid property name in a plugin, and would crash when GObject
     rejects syntactically invalid property names
 
- -- Simon McVittie <smcv@debian.org>  Wed, 18 Mar 2020 09:09:45 +0000
+  [ Laurent Bigonville ]
+  * Drop the libgio-fam package and merge the fam GIO plugin in libglib2.0-0,
+    see: #885011 (Closes: #875915)
+
+ -- Laurent Bigonville <bigon@debian.org>  Thu, 16 Apr 2020 14:52:02 +0200
 
 glib2.0 (2.64.1-1) unstable; urgency=medium
 
