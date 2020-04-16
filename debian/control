@@ -21,7 +21,7 @@ Build-Depends: dbus <!nocheck>,
                libdbus-1-dev (>= 1.2.14) <!nocheck> <!noinsttest>,
                libelf-dev (>= 0.142),
                libffi-dev (>= 3.3),
-               libgamin-dev [!linux-any] | libfam-dev [!linux-any],
+               libgamin-dev [hurd-any] | libfam-dev [hurd-any],
                libmount-dev (>= 2.28) [linux-any],
                libpcre3-dev (>= 1:8.35),
                libselinux1-dev [linux-any],
@@ -46,16 +46,17 @@ Vcs-Git: https://salsa.debian.org/gnome-team/glib.git
 
 Package: libglib2.0-0
 Architecture: any
-Depends: libgio-fam (= ${binary:Version}) [hurd-i386],
-         ${misc:Depends},
+Depends: ${misc:Depends},
          ${shlibs:Depends}
 Recommends: libglib2.0-data,
             shared-mime-info,
             xdg-user-dirs
 Breaks: gimp (<< 2.10.14-3~),
         glib-networking-tests (<< 2.63.2),
+        libgio-fam (<< 2.64.1-2~) [kfreebsd-any hurd-any],
         libgirepository-1.0-1 (<< 1.62.0-4~),
         libgladeui-2-6 (<< 3.22.2)
+Replaces: libgio-fam (<< 2.64.1-2~) [kfreebsd-any hurd-any]
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
 Description: GLib library of C routines
@@ -201,13 +202,3 @@ Description: Documentation files for the GLib library
  .
  This package contains the HTML documentation for the GLib library
  in /usr/share/doc/libglib2.0-doc/ .
-
-Package: libgio-fam
-Architecture: hurd-any kfreebsd-any
-Depends: ${misc:Depends},
-         ${shlibs:Depends}
-Recommends: gamin
-Multi-Arch: same
-Description: GLib Input, Output and Streaming Library (fam module)
- GIO is the input, output and streaming API of GLib. This package
- provides a fam file and directory monitoring backend for it.
