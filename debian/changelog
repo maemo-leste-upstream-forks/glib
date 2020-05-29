@@ -1,4 +1,6 @@
-glib2.0 (2.64.3-1) UNRELEASED; urgency=medium
+glib2.0 (2.64.3-1) unstable; urgency=medium
+
+  * Team upload
 
   [ Laurent Bigonville ]
   * Drop the libgio-fam package, and install the fam GIO plugin in
@@ -10,7 +12,7 @@ glib2.0 (2.64.3-1) UNRELEASED; urgency=medium
   * Clarify changelog entry regarding Hurd and kFreeBSD
   * New upstream stable release
 
- -- Simon McVittie <smcv@debian.org>  Fri, 29 May 2020 10:48:44 +0100
+ -- Simon McVittie <smcv@debian.org>  Fri, 29 May 2020 20:24:33 +0100
 
 glib2.0 (2.64.2-1) unstable; urgency=medium
 
