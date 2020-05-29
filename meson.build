@@ -1,5 +1,5 @@
 project('glib', 'c', 'cpp',
-  version : '2.64.2',
+  version : '2.64.3',
   # NOTE: We keep this pinned at 0.49 because that's what Debian 10 ships
   meson_version : '>= 0.49.2',
   default_options : [
@@ -374,6 +374,8 @@ if cc.get_id() == 'gcc' or cc.get_id() == 'clang'
     # Due to function casts through (void*) we cannot support -Wpedantic:
     # https://wiki.gnome.org/Projects/GLib/CompilerRequirements#Function_pointer_conversions.
     '-Wno-pedantic',
+    # A zero-length format string shouldn't be considered an issue.
+    '-Wno-format-zero-length',
     '-Werror=declaration-after-statement',
     '-Werror=format=2',
     '-Werror=implicit-function-declaration',
@@ -530,13 +532,23 @@ foreach f : functions
   endif
 endforeach
 
-# Check that stpcpy() is usable; must use header
-if cc.has_function('stpcpy', prefix : '#include <string.h>')
+# Check that stpcpy() is usable; must use header.
+# cc.has_function() in some cases (clang, gcc 10+) assumes that if the
+# compiler provides a builtin of the same name that the function exists, while
+# it's in fact not provided by any header or library. This is true for
+# stpcpy() on Windows using clang and gcc as well as posix_memalign() using
+# gcc on Windows. Skip these checks on Windows for now to avoid false
+# positives. See https://github.com/mesonbuild/meson/pull/7116,
+# https://github.com/mesonbuild/meson/issues/3672 and
+# https://github.com/mesonbuild/meson/issues/5628.
+# FIXME: Once meson no longer returns success for stpcpy() and
+# posix_memalign() on Windows using GCC and clang we can remove this.
+if host_system != 'windows' and cc.has_function('stpcpy', prefix : '#include <string.h>')
   glib_conf.set('HAVE_STPCPY', 1)
 endif
 
 # Check that posix_memalign() is usable; must use header
-if cc.has_function('posix_memalign', prefix : '#include <stdlib.h>')
+if host_system != 'windows' and cc.has_function('posix_memalign', prefix : '#include <stdlib.h>')
   glib_conf.set('HAVE_POSIX_MEMALIGN', 1)
 endif
 
@@ -795,7 +807,7 @@ endif
 #AC_MSG_CHECKING([])
 if cc.compiles('''#include <fcntl.h>
                   #include <sys/types.h>
-                  #include <sys/stat.h>],
+                  #include <sys/stat.h>
                   void some_func (void) {
                     open(0, O_DIRECTORY, 0);
                   }''', name : 'open() option O_DIRECTORY')
