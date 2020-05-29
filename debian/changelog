@@ -1,4 +1,4 @@
-glib2.0 (2.64.1-2) UNRELEASED; urgency=medium
+glib2.0 (2.64.2-2) UNRELEASED; urgency=medium
 
   [ Laurent Bigonville ]
   * Drop the libgio-fam package, and install the fam GIO plugin in
