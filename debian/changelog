@@ -1,4 +1,4 @@
-glib2.0 (2.64.3-1~ubuntu20.04.1) UNRELEASED; urgency=medium
+glib2.0 (2.64.3-1~ubuntu20.04.1) focal; urgency=medium
 
   * No-change backport from unstable / groovy to focal (LP: #1883694)
   * control, gbp.conf: Use the ubuntu/focal branch
