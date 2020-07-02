@@ -1,3 +1,19 @@
+glib2.0 (2.64.3-2) unstable; urgency=medium
+
+  * Team upload
+  * Temporarily disable libmount support.
+    Recent Debian revisions of libmount pull in libcryptsetup as a
+    dependency, for dm-verity support. libcryptsetup depends on json-c
+    and OpenSSL, causing crashes due to symbol conflicts with other
+    JSON libraries (jansson and json-glib, for example in firewalld and
+    virt-manager) and with statically-linked copies of OpenSSL (for
+    example in Steam and Minecraft). Until this is resolved in some
+    other way, disable libmount and parse /etc/fstab and /proc/mounts
+    ourselves, as we do in libglib2.0-udeb.
+    Mitigates: #963933, #963932, #963525, #963721
+
+ -- Simon McVittie <smcv@debian.org>  Thu, 02 Jul 2020 10:05:03 +0100
+
 glib2.0 (2.64.3-1) unstable; urgency=medium
 
   * Team upload
