@@ -123,6 +123,14 @@ for lib in glib gobject gio gio-unix gmodule gthread; do
         (static)
             cflags=-static
             pcflags=--static
+
+            case "$lib" in
+                (gio|gio-unix)
+                    # GIO depends on libmount which no longer supports
+                    # being linked statically
+                    continue
+                    ;;
+            esac
             ;;
     esac
 
