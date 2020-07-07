@@ -1,3 +1,18 @@
+glib2.0 (2.64.3-3) UNRELEASED; urgency=medium
+
+  * d/tests/build: Don't exercise static linking for GIO.
+    libmount will no longer support being linked statically from 2.35.2-8
+    onwards. For now I'm continuing to test that the other libraries can
+    still be statically linked, but please consider them to be "at risk".
+    (Closes: #963933)
+  * Re-enable libmount support.
+    libmount no longer depends on libcryptsetup, avoiding the various
+    crashes that we are working around. Future versions will dlopen it
+    on-demand, which should also avoid those crashes. Bump the
+    build-dependency to a suitable version.
+
+ -- Simon McVittie <smcv@debian.org>  Tue, 07 Jul 2020 13:17:52 +0100
+
 glib2.0 (2.64.3-2) unstable; urgency=medium
 
   * Team upload
