@@ -12,8 +12,15 @@ glib2.0 (2.64.4-1) UNRELEASED; urgency=medium
     crashes that we are working around. Future versions will dlopen it
     on-demand, which should also avoid those crashes. Bump the
     build-dependency to a suitable version.
+  * d/p/tests-Use-g_assert_-in-cancellable-test-rather-than-g_ass.patch,
+    d/p/gcancellable-Fix-minor-race-between-GCancellable-and-GCan.patch:
+    Split combined d/p/git_gsource_segfault.patch into its two component
+    upstream commits, and add metadata
+  * d/p/glib-compile-resources-Fix-exporting-on-Visual-Studio.patch,
+    d/p/gdesktopappinfo-Fix-unnecessarily-copied-and-leaked-URI-l.patch:
+    Add post-release bugfixes from upstream
 
- -- Simon McVittie <smcv@debian.org>  Tue, 07 Jul 2020 13:18:54 +0100
+ -- Simon McVittie <smcv@debian.org>  Tue, 07 Jul 2020 13:31:21 +0100
 
 glib2.0 (2.64.3-2) unstable; urgency=medium
 
