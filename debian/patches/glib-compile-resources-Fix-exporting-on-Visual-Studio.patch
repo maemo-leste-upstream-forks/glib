@@ -1,0 +1,83 @@
+From: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date: Wed, 29 Apr 2020 19:04:36 +0800
+Subject: glib-compile-resources: Fix exporting on Visual Studio
+
+Have the generated .c code decorate the prototypes with "G_MODULE_EXPORT"
+instead of "extern" when --internal is not being used, so that we also
+export the symbols from the generated code on Visual Studio-style
+compilers.  If --internal is used, we decorate the prototypes with
+"G_GNUC_INTERNAL", as we did before.
+
+Note that since the generated .c code does not attempt to include the
+generated headers (if one is also generated), the gnerated headers are
+still generated as they were before.
+
+Origin: upstream, 2.64.5, commit:e56a2865cb17ce3c7edc97379eaac74ed125ca5a
+---
+ gio/glib-compile-resources.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
+
+diff --git a/gio/glib-compile-resources.c b/gio/glib-compile-resources.c
+index 9b82eba..f3675c1 100644
+--- a/gio/glib-compile-resources.c
++++ b/gio/glib-compile-resources.c
+@@ -1061,6 +1061,7 @@ main (int argc, char **argv)
+       guint8 *data;
+       gsize data_size;
+       gsize i;
++      const char *export = "G_MODULE_EXPORT";
+ 
+       if (!g_file_get_contents (binary_target, (char **)&data,
+ 				&data_size, NULL))
+@@ -1081,6 +1082,9 @@ main (int argc, char **argv)
+ 	  return 1;
+ 	}
+ 
++      if (internal)
++        export = "G_GNUC_INTERNAL";
++
+       g_fprintf (file,
+ 	       "#include <gio/gio.h>\n"
+ 	       "\n"
+@@ -1140,30 +1144,36 @@ main (int argc, char **argv)
+       g_fprintf (file,
+ 	       "\n"
+ 	       "static GStaticResource static_resource = { %s_resource_data.data, sizeof (%s_resource_data.data)%s, NULL, NULL, NULL };\n"
+-	       "%s GResource *%s_get_resource (void);\n"
++	       "\n"
++	       "%s\n"
++	       "GResource *%s_get_resource (void);\n"
+ 	       "GResource *%s_get_resource (void)\n"
+ 	       "{\n"
+ 	       "  return g_static_resource_get_resource (&static_resource);\n"
+ 	       "}\n",
+-	       c_name, c_name, (external_data ? "" : " - 1 /* nul terminator */"), linkage, c_name, c_name);
++	       c_name, c_name, (external_data ? "" : " - 1 /* nul terminator */"),
++	       export, c_name, c_name);
+ 
+ 
+       if (manual_register)
+ 	{
+ 	  g_fprintf (file,
+ 		   "\n"
+-		   "%s void %s_unregister_resource (void);\n"
++		   "%s\n"
++		   "void %s_unregister_resource (void);\n"
+ 		   "void %s_unregister_resource (void)\n"
+ 		   "{\n"
+ 		   "  g_static_resource_fini (&static_resource);\n"
+ 		   "}\n"
+ 		   "\n"
+-		   "%s void %s_register_resource (void);\n"
++		   "%s\n"
++		   "void %s_register_resource (void);\n"
+ 		   "void %s_register_resource (void)\n"
+ 		   "{\n"
+ 		   "  g_static_resource_init (&static_resource);\n"
+ 		   "}\n",
+-		   linkage, c_name, c_name, linkage, c_name, c_name);
++		   export, c_name, c_name,
++		   export, c_name, c_name);
+ 	}
+       else
+ 	{
