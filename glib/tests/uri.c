@@ -417,7 +417,7 @@ test_uri_unescape_bytes (gconstpointer test_data)
       if (tests[i].expected_unescaped_len < 0)
         {
           g_assert_null (bytes);
-          g_assert_error (error, G_URI_ERROR, G_URI_ERROR_MISC);
+          g_assert_error (error, G_URI_ERROR, G_URI_ERROR_FAILED);
           g_clear_error (&error);
         }
       else
@@ -443,6 +443,9 @@ test_uri_unescape_segment (void)
   s = g_uri_unescape_segment (escaped_segment, escaped_segment + 10, NULL);
   g_assert_cmpstr (s, ==, "+abc O");
   g_free (s);
+
+  s = g_uri_unescape_segment ("%2Babc%00cde", NULL, NULL);
+  g_assert_null (s);
 }
 
 static void
@@ -476,6 +479,10 @@ test_uri_scheme (void)
 
   s = g_uri_parse_scheme ("ftp://ftp.gtk.org");
   g_assert_cmpstr (s, ==, "ftp");
+  g_free (s);
+
+  s = g_uri_parse_scheme ("good-scheme.but+weird:gtk.org");
+  g_assert_cmpstr (s, ==, "good-scheme.but+weird");
   g_free (s);
 
   s = g_uri_parse_scheme ("1bad:");
@@ -512,201 +519,202 @@ typedef struct {
 
 typedef struct {
   const gchar *orig;
+  GUriFlags flags;
   const UriParts parts;
 } UriAbsoluteTest;
 
 static const UriAbsoluteTest absolute_tests[] = {
-  { "foo:",
+  { "foo:", G_URI_FLAGS_NONE,
     { "foo", NULL, NULL, -1, "", NULL, NULL }
   },
-  { "file:/dev/null",
+  { "file:/dev/null", G_URI_FLAGS_NONE,
     { "file", NULL, NULL, -1, "/dev/null", NULL, NULL }
   },
-  { "file:///dev/null",
+  { "file:///dev/null", G_URI_FLAGS_NONE,
     { "file", NULL, "", -1, "/dev/null", NULL, NULL }
   },
-  { "ftp://user@host/path",
+  { "ftp://user@host/path", G_URI_FLAGS_NONE,
     { "ftp", "user", "host", -1, "/path", NULL, NULL }
   },
-  { "ftp://user@host:9999/path",
+  { "ftp://user@host:9999/path", G_URI_FLAGS_NONE,
     { "ftp", "user", "host", 9999, "/path", NULL, NULL }
   },
-  { "ftp://user:password@host/path",
+  { "ftp://user:password@host/path", G_URI_FLAGS_NONE,
     { "ftp", "user:password", "host", -1, "/path", NULL, NULL }
   },
-  { "ftp://user:password@host:9999/path",
+  { "ftp://user:password@host:9999/path", G_URI_FLAGS_NONE,
     { "ftp", "user:password", "host", 9999, "/path", NULL, NULL }
   },
-  { "ftp://user:password@host",
+  { "ftp://user:password@host", G_URI_FLAGS_NONE,
     { "ftp", "user:password", "host", -1, "", NULL, NULL }
   },
-  { "http://us%65r@host",
+  { "http://us%65r@host", G_URI_FLAGS_NONE,
     { "http", "user", "host", -1, "", NULL, NULL }
   },
-  { "http://us%40r@host",
+  { "http://us%40r@host", G_URI_FLAGS_NONE,
     { "http", "us@r", "host", -1, "", NULL, NULL }
   },
-  { "http://us%3ar@host",
+  { "http://us%3ar@host", G_URI_FLAGS_NONE,
     { "http", "us:r", "host", -1, "", NULL, NULL }
   },
-  { "http://us%2fr@host",
+  { "http://us%2fr@host", G_URI_FLAGS_NONE,
     { "http", "us/r", "host", -1, "", NULL, NULL }
   },
-  { "http://us%3fr@host",
+  { "http://us%3fr@host", G_URI_FLAGS_NONE,
     { "http", "us?r", "host", -1, "", NULL, NULL }
   },
-  { "http://host?query",
+  { "http://host?query", G_URI_FLAGS_NONE,
     { "http", NULL, "host", -1, "", "query", NULL }
   },
-  { "http://host/path?query=http%3A%2F%2Fhost%2Fpath%3Fchildparam%3Dchildvalue&param=value",
+  { "http://host/path?query=http%3A%2F%2Fhost%2Fpath%3Fchildparam%3Dchildvalue&param=value", G_URI_FLAGS_NONE,
     { "http", NULL, "host", -1, "/path", "query=http://host/path?childparam=childvalue&param=value", NULL }
   },
-  { "http://control-chars/%01%02%03%04%05%06%07%08%09%0A%0B%0C%0D%0E%0F%10%11%12%13%14%15%16%17%18%19%1A%1B%1C%1D%1E%1F%7F",
+  { "http://control-chars/%01%02%03%04%05%06%07%08%09%0A%0B%0C%0D%0E%0F%10%11%12%13%14%15%16%17%18%19%1A%1B%1C%1D%1E%1F%7F", G_URI_FLAGS_NONE,
     { "http", NULL, "control-chars", -1, "/\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0A\x0B\x0C\x0D\x0E\x0F\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1D\x1E\x1F\x7F", NULL, NULL }
   },
-  { "http://space/%20",
+  { "http://space/%20", G_URI_FLAGS_NONE,
     { "http", NULL, "space", -1, "/ ", NULL, NULL }
   },
-  { "http://delims/%3C%3E%23%25%22",
+  { "http://delims/%3C%3E%23%25%22", G_URI_FLAGS_NONE,
     { "http", NULL, "delims", -1, "/<>#%\"", NULL, NULL }
   },
-  { "http://unwise-chars/%7B%7D%7C%5C%5E%5B%5D%60",
+  { "http://unwise-chars/%7B%7D%7C%5C%5E%5B%5D%60", G_URI_FLAGS_NONE,
     { "http", NULL, "unwise-chars", -1, "/{}|\\^[]`", NULL, NULL }
   },
 
   /* From RFC 2732 */
-  { "http://[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]:80/index.html",
+  { "http://[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]:80/index.html", G_URI_FLAGS_NONE,
     { "http", NULL, "FEDC:BA98:7654:3210:FEDC:BA98:7654:3210", 80, "/index.html", NULL, NULL }
   },
-  { "http://[1080:0:0:0:8:800:200C:417A]/index.html",
+  { "http://[1080:0:0:0:8:800:200C:417A]/index.html", G_URI_FLAGS_NONE,
     { "http", NULL, "1080:0:0:0:8:800:200C:417A", -1, "/index.html", NULL, NULL }
   },
-  { "http://[3ffe:2a00:100:7031::1]",
+  { "http://[3ffe:2a00:100:7031::1]", G_URI_FLAGS_NONE,
     { "http", NULL, "3ffe:2a00:100:7031::1", -1, "", NULL, NULL }
   },
-  { "http://[1080::8:800:200C:417A]/foo",
+  { "http://[1080::8:800:200C:417A]/foo", G_URI_FLAGS_NONE,
     { "http", NULL, "1080::8:800:200C:417A", -1, "/foo", NULL, NULL }
   },
-  { "http://[::192.9.5.5]/ipng",
+  { "http://[::192.9.5.5]/ipng", G_URI_FLAGS_NONE,
     { "http", NULL, "::192.9.5.5", -1, "/ipng", NULL, NULL }
   },
-  { "http://[::FFFF:129.144.52.38]:80/index.html",
+  { "http://[::FFFF:129.144.52.38]:80/index.html", G_URI_FLAGS_NONE,
     { "http", NULL, "::FFFF:129.144.52.38", 80, "/index.html", NULL, NULL }
   },
-  { "http://[2010:836B:4179::836B:4179]",
+  { "http://[2010:836B:4179::836B:4179]", G_URI_FLAGS_NONE,
     { "http", NULL, "2010:836B:4179::836B:4179", -1, "", NULL, NULL }
   },
 
   /* some problematic URIs that are handled differently in libsoup */
-  { "http://host/path with spaces",
+  { "http://host/path with spaces", G_URI_FLAGS_PARSE_RELAXED,
     { "http", NULL, "host", -1, "/path with spaces", NULL, NULL }
   },
-  { "  http://host/path",
+  { "  http://host/path", G_URI_FLAGS_PARSE_RELAXED,
     { "http", NULL, "host", -1, "/path", NULL, NULL }
   },
-  { "http://host/path  ",
+  { "http://host/path  ", G_URI_FLAGS_PARSE_RELAXED,
     { "http", NULL, "host", -1, "/path", NULL, NULL }
   },
-  { "http://host  ",
+  { "http://host  ", G_URI_FLAGS_PARSE_RELAXED,
     { "http", NULL, "host", -1, "", NULL, NULL }
   },
-  { "http://host:999  ",
+  { "http://host:999  ", G_URI_FLAGS_PARSE_RELAXED,
     { "http", NULL, "host", 999, "", NULL, NULL }
   },
-  { "http://host/pa\nth",
+  { "http://host/pa\nth", G_URI_FLAGS_PARSE_RELAXED,
     { "http", NULL, "host", -1, "/path", NULL, NULL }
   },
-  { "http:\r\n//host/path",
+  { "http:\r\n//host/path", G_URI_FLAGS_PARSE_RELAXED,
     { "http", NULL, "host", -1, "/path", NULL, NULL }
   },
-  { "http://\thost/path",
+  { "http://\thost/path", G_URI_FLAGS_PARSE_RELAXED,
     { "http", NULL, "host", -1, "/path", NULL, NULL }
   },
 
   /* Bug 594405; 0-length is different from not-present */
-  { "http://host/path?",
+  { "http://host/path?", G_URI_FLAGS_NONE,
     { "http", NULL, "host", -1, "/path", "", NULL }
   },
-  { "http://host/path#",
+  { "http://host/path#", G_URI_FLAGS_NONE,
     { "http", NULL, "host", -1, "/path", NULL, "" },
   },
 
   /* Bug 590524; ignore bad %-encoding */
-  { "http://host/path%",
+  { "http://host/path%", G_URI_FLAGS_PARSE_RELAXED,
     { "http", NULL, "host", -1, "/path%", NULL, NULL }
   },
-  { "http://h%ost/path",
+  { "http://h%ost/path", G_URI_FLAGS_PARSE_RELAXED,
     { "http", NULL, "h%ost", -1, "/path", NULL, NULL }
   },
-  { "http://host/path%%",
+  { "http://host/path%%", G_URI_FLAGS_PARSE_RELAXED,
     { "http", NULL, "host", -1, "/path%%", NULL, NULL }
   },
-  { "http://host/path%%%",
+  { "http://host/path%%%", G_URI_FLAGS_PARSE_RELAXED,
     { "http", NULL, "host", -1, "/path%%%", NULL, NULL }
   },
-  { "http://host/path%/x/",
+  { "http://host/path%/x/", G_URI_FLAGS_PARSE_RELAXED,
     { "http", NULL, "host", -1, "/path%/x/", NULL, NULL }
   },
-  { "http://host/path%0x/",
+  { "http://host/path%0x/", G_URI_FLAGS_PARSE_RELAXED,
     { "http", NULL, "host", -1, "/path%0x/", NULL, NULL }
   },
-  { "http://host/path%ax",
+  { "http://host/path%ax", G_URI_FLAGS_PARSE_RELAXED,
     { "http", NULL, "host", -1, "/path%ax", NULL, NULL }
   },
 
   /* GUri doesn't %-encode non-ASCII characters */
-  { "http://host/p\xc3\xa4th/",
+  { "http://host/p\xc3\xa4th/", G_URI_FLAGS_NONE,
     { "http", NULL, "host", -1, "/p\xc3\xa4th/", NULL, NULL }
   },
 
-  { "HTTP:////////////////",
+  { "HTTP:////////////////", G_URI_FLAGS_NONE,
     { "http", NULL, "", -1, "//////////////", NULL, NULL }
   },
 
-  { "http://@host",
+  { "http://@host", G_URI_FLAGS_NONE,
     { "http", "", "host", -1, "", NULL, NULL }
   },
-  { "http://:@host",
+  { "http://:@host", G_URI_FLAGS_NONE,
     { "http", ":", "host", -1, "", NULL, NULL }
   },
-  { "scheme://foo%3Abar._webdav._tcp.local",
+  { "scheme://foo%3Abar._webdav._tcp.local", G_URI_FLAGS_NONE,
     { "scheme", NULL, "foo:bar._webdav._tcp.local", -1, "", NULL, NULL}
   },
 
   /* IPv6 scope ID parsing (both correct and incorrect) */
-  { "http://[fe80::dead:beef%em1]/",
+  { "http://[fe80::dead:beef%em1]/", G_URI_FLAGS_NONE,
     { "http", NULL, "fe80::dead:beef%em1", -1, "/", NULL, NULL }
   },
-  { "http://[fe80::dead:beef%25em1]/",
+  { "http://[fe80::dead:beef%25em1]/", G_URI_FLAGS_NONE,
     { "http", NULL, "fe80::dead:beef%em1", -1, "/", NULL, NULL }
   },
-  { "http://[fe80::dead:beef%10]/",
+  { "http://[fe80::dead:beef%10]/", G_URI_FLAGS_NONE,
     { "http", NULL, "fe80::dead:beef%10", -1, "/", NULL, NULL }
   },
 
   /* ".." past top */
-  { "http://example.com/..",
+  { "http://example.com/..", G_URI_FLAGS_NONE,
     { "http", NULL, "example.com", -1, "/..", NULL, NULL }
   },
 
   /* scheme parsing */
-  { "foo0://host/path",
+  { "foo0://host/path", G_URI_FLAGS_NONE,
     { "foo0", NULL, "host", -1, "/path", NULL, NULL } },
-  { "f0.o://host/path",
+  { "f0.o://host/path", G_URI_FLAGS_NONE,
     { "f0.o", NULL, "host", -1, "/path", NULL, NULL } },
-  { "http++://host/path",
+  { "http++://host/path", G_URI_FLAGS_NONE,
     { "http++", NULL, "host", -1, "/path", NULL, NULL } },
-  { "http-ish://host/path",
+  { "http-ish://host/path", G_URI_FLAGS_NONE,
     { "http-ish", NULL, "host", -1, "/path", NULL, NULL } },
 
   /* IPv6 scope ID parsing (both correct and incorrect) */
-  { "http://[fe80::dead:beef%em1]/",
+  { "http://[fe80::dead:beef%em1]/", G_URI_FLAGS_NONE,
     { "http", NULL, "fe80::dead:beef%em1", -1, "/", NULL, NULL } },
-  { "http://[fe80::dead:beef%25em1]/",
+  { "http://[fe80::dead:beef%25em1]/", G_URI_FLAGS_NONE,
     { "http", NULL, "fe80::dead:beef%em1", -1, "/", NULL, NULL } },
-  { "http://[fe80::dead:beef%10]/",
+  { "http://[fe80::dead:beef%10]/", G_URI_FLAGS_NONE,
     { "http", NULL, "fe80::dead:beef%10", -1, "/", NULL, NULL } },
-  { "http://[fe80::dead:beef%25]/",
+  { "http://[fe80::dead:beef%25]/", G_URI_FLAGS_NONE,
     { "http", NULL, "fe80::dead:beef%25", -1, "/", NULL, NULL } },
 };
 static int num_absolute_tests = G_N_ELEMENTS (absolute_tests);
@@ -722,7 +730,9 @@ test_uri_parsing_absolute (void)
       GError *error = NULL;
       GUri *uri;
 
-      uri = g_uri_parse (test->orig, G_URI_FLAGS_NONE, &error);
+      g_test_message ("Test %d: %s", i, test->orig);
+
+      uri = g_uri_parse (test->orig, test->flags, &error);
       g_assert_no_error (error);
 
       g_assert_cmpstr (g_uri_get_scheme (uri),   ==, test->parts.scheme);
@@ -872,7 +882,7 @@ test_uri_parsing_relative (void)
       g_assert_cmpstr (resolved, ==, test->resolved);
       g_free (resolved);
     }
-  uri = g_uri_parse_relative (base, "%%", G_URI_FLAGS_PARSE_STRICT, &error);
+  uri = g_uri_parse_relative (base, "%%", G_URI_FLAGS_NONE, &error);
   g_assert_null (uri);
   g_assert_error (error, G_URI_ERROR, G_URI_ERROR_BAD_PATH);
   g_clear_error (&error);
@@ -891,17 +901,17 @@ test_uri_parsing_relative (void)
 
   resolved = g_uri_resolve_relative (NULL, "a", G_URI_FLAGS_NONE, &error);
   g_assert_null (resolved);
-  g_assert_error (error, G_URI_ERROR, G_URI_ERROR_MISC);
+  g_assert_error (error, G_URI_ERROR, G_URI_ERROR_FAILED);
   g_clear_error (&error);
 
   resolved = g_uri_resolve_relative ("../b", "a", G_URI_FLAGS_NONE, &error);
   g_assert_null (resolved);
-  g_assert_error (error, G_URI_ERROR, G_URI_ERROR_MISC);
+  g_assert_error (error, G_URI_ERROR, G_URI_ERROR_FAILED);
   g_clear_error (&error);
 
-  resolved = g_uri_resolve_relative ("%%", "a", G_URI_FLAGS_NONE, &error);
+  resolved = g_uri_resolve_relative ("%%", "a", G_URI_FLAGS_PARSE_RELAXED, &error);
   g_assert_null (resolved);
-  g_assert_error (error, G_URI_ERROR, G_URI_ERROR_MISC);
+  g_assert_error (error, G_URI_ERROR, G_URI_ERROR_FAILED);
   g_clear_error (&error);
 }
 
@@ -933,6 +943,9 @@ test_uri_to_string (void)
   tostring = g_uri_to_string_partial (uri, G_URI_HIDE_USERINFO);
   g_assert_cmpstr (tostring, ==, "scheme://host:1234/path?query#fragment");
   g_free (tostring);
+  tostring = g_uri_to_string_partial (uri, G_URI_HIDE_QUERY);
+  g_assert_cmpstr (tostring, ==, "scheme://user:pass;auth@host:1234/path#fragment");
+  g_free (tostring);
   tostring = g_uri_to_string_partial (uri, G_URI_HIDE_FRAGMENT);
   g_assert_cmpstr (tostring, ==, "scheme://user:pass;auth@host:1234/path?query");
   g_free (tostring);
@@ -949,6 +962,9 @@ test_uri_to_string (void)
   g_free (tostring);
   tostring = g_uri_to_string_partial (uri, G_URI_HIDE_AUTH_PARAMS);
   g_assert_cmpstr (tostring, ==, "scheme://us%3Aer:pass@host:1234/path?query#fragment");
+  g_free (tostring);
+  tostring = g_uri_to_string_partial (uri, G_URI_HIDE_QUERY);
+  g_assert_cmpstr (tostring, ==, "scheme://us%3Aer:pass;auth@host:1234/path#fragment");
   g_free (tostring);
   g_uri_unref (uri);
 }
@@ -1011,6 +1027,12 @@ test_uri_build (void)
                                "/path", "query", "fragment");
   g_assert_null (g_uri_get_userinfo (uri));
   g_uri_unref (uri);
+
+  uri = g_uri_build_with_user (G_URI_FLAGS_NONE, "scheme", "user", NULL, NULL,
+                               "host", 1234,
+                               "/path", "query", "fragment");
+  g_assert_cmpstr (g_uri_get_userinfo (uri), ==, "user");
+  g_uri_unref (uri);
 }
 
 static void
@@ -1068,7 +1090,7 @@ test_uri_split (void)
   g_free (host);
 
   g_uri_split ("scheme://@@@host:1234/path?query#fragment",
-               G_URI_FLAGS_ENCODED,
+               G_URI_FLAGS_ENCODED | G_URI_FLAGS_PARSE_RELAXED,
                NULL,
                &userinfo,
                NULL,
@@ -1083,7 +1105,7 @@ test_uri_split (void)
 
 
   g_uri_split ("http://f;oo/",
-               G_URI_FLAGS_NONE,
+               G_URI_FLAGS_NONE | G_URI_FLAGS_PARSE_RELAXED,
                NULL,
                NULL,
                NULL,
@@ -1263,7 +1285,7 @@ test_uri_split (void)
   g_clear_error (&error);
 
   g_uri_split_with_user ("scheme://user:pa%x0s;auth@host:1234/path?query#fragment",
-                         G_URI_FLAGS_HAS_PASSWORD|G_URI_FLAGS_PARSE_STRICT,
+                         G_URI_FLAGS_HAS_PASSWORD,
                          &scheme,
                          &user,
                          &pass,
@@ -1310,8 +1332,8 @@ test_uri_is_valid (void)
   g_assert_true (g_uri_is_valid ("http://127.127.127.b/", G_URI_FLAGS_NONE, NULL));
   g_assert_true (g_uri_is_valid ("http://\xc3\x89XAMPLE.COM/", G_URI_FLAGS_NONE, NULL));
 
-  g_assert_true (g_uri_is_valid ("  \r http\t://f oo  \t\n ", G_URI_FLAGS_NONE, NULL));
-  g_assert_false (g_uri_is_valid ("  \r http\t://f oo  \t\n ", G_URI_FLAGS_PARSE_STRICT, &error));
+  g_assert_true (g_uri_is_valid ("  \r http\t://f oo  \t\n ", G_URI_FLAGS_PARSE_RELAXED, NULL));
+  g_assert_false (g_uri_is_valid ("  \r http\t://f oo  \t\n ", G_URI_FLAGS_NONE, &error));
   g_assert_error (error, G_URI_ERROR, G_URI_ERROR_BAD_SCHEME);
   g_clear_error (&error);
 
@@ -1349,6 +1371,8 @@ test_uri_is_valid (void)
   g_assert_false (g_uri_is_valid ("http://host:6553l", G_URI_FLAGS_NONE, &error));
   g_assert_error (error, G_URI_ERROR, G_URI_ERROR_BAD_PORT);
   g_clear_error (&error);
+
+  g_assert_true (g_uri_is_valid ("data:,Hello", G_URI_FLAGS_NONE, &error));
 }
 
 static const struct
@@ -1386,7 +1410,7 @@ static const struct
     { "p1=foo&P1=bar", "&", G_URI_PARAMS_CASE_INSENSITIVE,
       2, { "p1", "foo", "P1", "bar" },
       1, { "p1", "bar", NULL, }},
-    { "=%", "&", G_URI_PARAMS_NONE,
+    { "=%", "&", G_URI_PARAMS_PARSE_RELAXED,
       1, { "", "%", NULL, },
       1, { "", "%", NULL, }},
     { "=", "&", G_URI_PARAMS_NONE,
@@ -1436,6 +1460,19 @@ test_uri_iter_params (gconstpointer test_data)
           uri = g_memdup (params_tests[i].uri, uri_len);
         }
 
+      /* Run once without extracting the attr or value, just to check the numbers. */
+      n = 0;
+      g_uri_params_iter_init (&iter, params_tests[i].uri, -1, params_tests[i].separators, params_tests[i].flags);
+      while (g_uri_params_iter_next (&iter, NULL, NULL, &err))
+        n++;
+      g_assert_cmpint (n, ==, params_tests[i].expected_n_iter);
+      if (err)
+        {
+          g_assert_error (err, G_URI_ERROR, G_URI_ERROR_FAILED);
+          g_clear_error (&err);
+        }
+
+      /* Run again and check the strings too. */
       n = 0;
       g_uri_params_iter_init (&iter, params_tests[i].uri, -1, params_tests[i].separators, params_tests[i].flags);
       while (g_uri_params_iter_next (&iter, &attr, &value, &err))
@@ -1449,9 +1486,10 @@ test_uri_iter_params (gconstpointer test_data)
       g_assert_cmpint (n, ==, params_tests[i].expected_n_iter);
       if (err)
         {
-          g_assert_error (err, G_URI_ERROR, G_URI_ERROR_MISC);
+          g_assert_error (err, G_URI_ERROR, G_URI_ERROR_FAILED);
           g_clear_error (&err);
         }
+
       g_free (uri);
     }
 }
@@ -1494,7 +1532,7 @@ test_uri_parse_params (gconstpointer test_data)
       if (params_tests[i].expected_n_params < 0)
         {
           g_assert_null (params);
-          g_assert_error (err, G_URI_ERROR, G_URI_ERROR_MISC);
+          g_assert_error (err, G_URI_ERROR, G_URI_ERROR_FAILED);
           g_clear_error (&err);
         }
       else
@@ -1527,6 +1565,10 @@ test_uri_join (void)
   g_assert_cmpstr (uri, ==, "/foo?abc");
   g_free (uri);
 
+  uri = g_uri_join (G_URI_FLAGS_NONE, NULL, NULL, "hostname", -1, "/foo", "abc", NULL);
+  g_assert_cmpstr (uri, ==, "//hostname/foo?abc");
+  g_free (uri);
+
   uri = g_uri_join_with_user (G_URI_FLAGS_NONE, "scheme", "user\001", "pass\002", "authparams\003",
                               "host", 9876, "/path", "query", "fragment");
   g_assert_cmpstr (uri, ==, "scheme://user%01:pass%02;authparams%03@host:9876/path?query#fragment");
@@ -1547,6 +1589,74 @@ test_uri_join (void)
   uri = g_uri_join (G_URI_FLAGS_NONE, "scheme", NULL, "foo:bar._webdav._tcp.local", -1, "", NULL, NULL);
   g_assert_cmpstr (uri, ==, "scheme://foo%3Abar._webdav._tcp.local");
   g_free (uri);
+}
+
+static void
+test_uri_join_split_round_trip (void)
+{
+  GUriFlags flags = G_URI_FLAGS_HAS_PASSWORD | G_URI_FLAGS_HAS_AUTH_PARAMS;
+  guint i;
+
+  g_test_summary ("Test that joining different URI components survives a round trip");
+
+  /* Each bit in @i indicates whether the corresponding URI field should be set
+   * or %NULL. */
+  for (i = 0; i < (1 << 8); i++)
+    {
+      gchar *uri = NULL;
+      const gchar *scheme, *user, *password, *auth_params, *host, *path, *query, *fragment;
+      gint port;
+      gchar *scheme_out = NULL, *user_out = NULL, *password_out = NULL;
+      gchar *auth_params_out = NULL, *host_out = NULL, *path_out = NULL;
+      gchar *query_out = NULL, *fragment_out = NULL;
+      gint port_out = -1;
+      gboolean split_success;
+      GError *local_error = NULL;
+
+      g_test_message ("Combination %u", i);
+
+      scheme = (i & (1 << 8)) ? "scheme" : NULL;
+      host = (i & (1 << 4)) ? "host" : NULL;
+      user = (host != NULL && i & (1 << 7)) ? "user" : NULL;  /* only supported if host is also set */
+      password = (host != NULL && user != NULL && i & (1 << 6)) ? "password" : NULL;  /* only supported if host and user are also set */
+      auth_params = (host != NULL && user != NULL && i & (1 << 5)) ? "auth_params" : NULL;  /* only supported if host and user are also set */
+      port = (host != NULL && i & (1 << 3)) ? 123 : -1;  /* only supported if host is also set */
+      path = (i & (1 << 2)) ? "/path" : "";  /* the only mandatory component */
+      query = (i & (1 << 1)) ? "query" : NULL;
+      fragment = (i & (1 << 0)) ? "fragment" : NULL;
+
+      uri = g_uri_join_with_user (flags, scheme, user, password, auth_params,
+                                  host, port, path, query, fragment);
+      g_assert_nonnull (uri);
+
+      split_success = g_uri_split_with_user (uri, flags, &scheme_out, &user_out,
+                                             &password_out, &auth_params_out,
+                                             &host_out, &port_out, &path_out,
+                                             &query_out, &fragment_out,
+                                             &local_error);
+      g_assert_no_error (local_error);
+      g_assert_true (split_success);
+
+      g_assert_cmpstr (scheme, ==, scheme_out);
+      g_assert_cmpstr (user, ==, user_out);
+      g_assert_cmpstr (password, ==, password_out);
+      g_assert_cmpstr (auth_params, ==, auth_params_out);
+      g_assert_cmpstr (host, ==, host_out);
+      g_assert_cmpint (port, ==, port_out);
+      g_assert_cmpstr (path, ==, path_out);
+      g_assert_cmpstr (query, ==, query_out);
+      g_assert_cmpstr (fragment, ==, fragment_out);
+
+      g_free (uri);
+      g_free (scheme_out);
+      g_free (user_out);
+      g_free (password_out);
+      g_free (auth_params_out);
+      g_free (host_out);
+      g_free (path_out);
+      g_free (query_out);
+      g_free (fragment_out);
+    }
 }
 
 int
@@ -1572,6 +1682,7 @@ main (int   argc,
   g_test_add_func ("/uri/is_valid", test_uri_is_valid);
   g_test_add_func ("/uri/to-string", test_uri_to_string);
   g_test_add_func ("/uri/join", test_uri_join);
+  g_test_add_func ("/uri/join-split-round-trip", test_uri_join_split_round_trip);
   g_test_add_data_func ("/uri/iter-params/nul-terminated", GINT_TO_POINTER (TRUE), test_uri_iter_params);
   g_test_add_data_func ("/uri/iter-params/length", GINT_TO_POINTER (FALSE), test_uri_iter_params);
   g_test_add_data_func ("/uri/parse-params/nul-terminated", GINT_TO_POINTER (TRUE), test_uri_parse_params);
