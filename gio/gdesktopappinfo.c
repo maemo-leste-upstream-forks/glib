@@ -2727,7 +2727,7 @@ g_desktop_app_info_launch_uris_with_spawn (GDesktopAppInfo            *info,
    * internally by expand_macro(), so we need to pass a copy of it instead,
    * and also use that copy to control the exit condition of the loop below.
    */
-  dup_uris = g_list_copy (uris);
+  dup_uris = uris;
   do
     {
       GPid pid;
@@ -2864,7 +2864,6 @@ g_desktop_app_info_launch_uris_with_spawn (GDesktopAppInfo            *info,
   completed = TRUE;
 
  out:
-  g_list_free (dup_uris);
   g_strfreev (argv);
   g_strfreev (envp);
 
@@ -3631,7 +3630,9 @@ update_mimeapps_list (const char  *desktop_id,
   data = g_key_file_to_data (key_file, &data_size, error);
   g_key_file_free (key_file);
 
-  res = g_file_set_contents (filename, data, data_size, error);
+  res = g_file_set_contents_full (filename, data, data_size,
+                                  G_FILE_SET_CONTENTS_CONSISTENT | G_FILE_SET_CONTENTS_ONLY_EXISTING,
+                                  0600, error);
 
   desktop_file_dirs_invalidate_user_config ();
 
@@ -3775,7 +3776,9 @@ g_desktop_app_info_set_as_default_for_extension (GAppInfo    *appinfo,
                          " </mime-type>\n"
                          "</mime-info>\n", mimetype, extension, extension);
 
-      g_file_set_contents (filename, contents, -1, NULL);
+      g_file_set_contents_full (filename, contents, -1,
+                                G_FILE_SET_CONTENTS_CONSISTENT | G_FILE_SET_CONTENTS_ONLY_EXISTING,
+                                0600, NULL);
       g_free (contents);
 
       run_update_command ("update-mime-database", "mime");
@@ -3924,7 +3927,9 @@ g_desktop_app_info_ensure_saved (GDesktopAppInfo  *info,
   /* FIXME - actually handle error */
   (void) g_close (fd, NULL);
 
-  res = g_file_set_contents (filename, data, data_size, error);
+  res = g_file_set_contents_full (filename, data, data_size,
+                                  G_FILE_SET_CONTENTS_CONSISTENT | G_FILE_SET_CONTENTS_ONLY_EXISTING,
+                                  0600, error);
   g_free (data);
   if (!res)
     {
