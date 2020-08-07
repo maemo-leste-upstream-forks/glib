@@ -630,13 +630,25 @@ g_once_impl (GOnce       *once,
 
   if (once->status != G_ONCE_STATUS_READY)
     {
+      gpointer retval;
+
       once->status = G_ONCE_STATUS_PROGRESS;
       g_mutex_unlock (&g_once_mutex);
 
-      once->retval = func (arg);
+      retval = func (arg);
 
       g_mutex_lock (&g_once_mutex);
+/* We prefer the new C11-style atomic extension of GCC if available. If not,
+ * fall back to always locking. */
+#if defined(G_ATOMIC_LOCK_FREE) && defined(__GCC_HAVE_SYNC_COMPARE_AND_SWAP_4) && defined(__ATOMIC_SEQ_CST)
+      /* Only the second store needs to be atomic, as the two writes are related
+       * by a happens-before relationship here. */
+      once->retval = retval;
+      __atomic_store_n (&once->status, G_ONCE_STATUS_READY, __ATOMIC_RELEASE);
+#else
+      once->retval = retval;
       once->status = G_ONCE_STATUS_READY;
+#endif
       g_cond_broadcast (&g_once_cond);
     }
 
@@ -739,7 +751,7 @@ void
  *
  * Increase the reference count on @thread.
  *
- * Returns: a new reference to @thread
+ * Returns: (transfer full): a new reference to @thread
  *
  * Since: 2.32
  */
@@ -755,7 +767,7 @@ g_thread_ref (GThread *thread)
 
 /**
  * g_thread_unref:
- * @thread: a #GThread
+ * @thread: (transfer full): a #GThread
  *
  * Decrease the reference count on @thread, possibly freeing all
  * resources associated with it.
@@ -818,8 +830,8 @@ g_thread_n_created (void)
 /**
  * g_thread_new:
  * @name: (nullable): an (optional) name for the new thread
- * @func: a function to execute in the new thread
- * @data: an argument to supply to the new thread
+ * @func: (closure data) (scope async): a function to execute in the new thread
+ * @data: (nullable): an argument to supply to the new thread
  *
  * This function creates a new thread. The new thread starts by invoking
  * @func with the argument data. The thread will run until @func returns
@@ -849,7 +861,7 @@ g_thread_n_created (void)
  * Starting with GLib 2.64 the behaviour is now consistent between Windows and
  * POSIX and all threads inherit their parent thread's priority.
  *
- * Returns: the new #GThread
+ * Returns: (transfer full): the new #GThread
  *
  * Since: 2.32
  */
@@ -872,8 +884,8 @@ g_thread_new (const gchar *name,
 /**
  * g_thread_try_new:
  * @name: (nullable): an (optional) name for the new thread
- * @func: a function to execute in the new thread
- * @data: an argument to supply to the new thread
+ * @func: (closure data) (scope async): a function to execute in the new thread
+ * @data: (nullable): an argument to supply to the new thread
  * @error: return location for error, or %NULL
  *
  * This function is the same as g_thread_new() except that
@@ -882,7 +894,7 @@ g_thread_new (const gchar *name,
  * If a thread can not be created (due to resource limits),
  * @error is set and %NULL is returned.
  *
- * Returns: the new #GThread, or %NULL if an error occurred
+ * Returns: (transfer full): the new #GThread, or %NULL if an error occurred
  *
  * Since: 2.32
  */
@@ -953,7 +965,7 @@ g_thread_exit (gpointer retval)
 
 /**
  * g_thread_join:
- * @thread: a #GThread
+ * @thread: (transfer full): a #GThread
  *
  * Waits until @thread finishes, i.e. the function @func, as
  * given to g_thread_new(), returns or g_thread_exit() is called.
@@ -972,7 +984,7 @@ g_thread_exit (gpointer retval)
  * to be freed. Use g_thread_ref() to obtain an extra reference if you
  * want to keep the GThread alive beyond the g_thread_join() call.
  *
- * Returns: the return value of the thread
+ * Returns: (transfer full): the return value of the thread
  */
 gpointer
 g_thread_join (GThread *thread)
@@ -1008,7 +1020,7 @@ g_thread_join (GThread *thread)
  * (i.e. comparisons) but you must not use GLib functions (such
  * as g_thread_join()) on these threads.
  *
- * Returns: the #GThread representing the current thread
+ * Returns: (transfer none): the #GThread representing the current thread
  */
 GThread*
 g_thread_self (void)

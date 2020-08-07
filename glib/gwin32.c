@@ -386,7 +386,7 @@ get_package_directory_from_module (const gchar *module_name)
  * installations of different versions of some GLib-using library, or
  * GLib itself, is desirable for various reasons.
  *
- * For this reason it is recommeded to always pass %NULL as
+ * For this reason it is recommended to always pass %NULL as
  * @package to this function, to avoid the temptation to use the
  * Registry. In version 2.20 of GLib the @package parameter
  * will be ignored and this function won't look in the Registry at all.
@@ -624,7 +624,7 @@ g_win32_get_windows_version (void)
  * gettext initialization.
  */
 static gchar *
-special_wchar_to_locale_enoding (wchar_t *wstring)
+special_wchar_to_locale_encoding (wchar_t *wstring)
 {
   int sizeof_output;
   int wctmb_result;
@@ -701,7 +701,7 @@ g_win32_locale_filename_from_utf8 (const gchar *utf8filename)
   if (wname == NULL)
     return NULL;
 
-  retval = special_wchar_to_locale_enoding (wname);
+  retval = special_wchar_to_locale_encoding (wname);
 
   if (retval == NULL)
     {
@@ -709,7 +709,7 @@ g_win32_locale_filename_from_utf8 (const gchar *utf8filename)
       wchar_t wshortname[MAX_PATH + 1];
 
       if (GetShortPathNameW (wname, wshortname, G_N_ELEMENTS (wshortname)))
-        retval = special_wchar_to_locale_enoding (wshortname);
+        retval = special_wchar_to_locale_encoding (wshortname);
     }
 
   g_free (wname);
@@ -1049,7 +1049,7 @@ static void *WinVEH_handle = NULL;
  * * EXCEPTION_STACK_OVERFLOW
  * * EXCEPTION_ILLEGAL_INSTRUCTION
  * To make it stop at other exceptions one should set the G_VEH_CATCH
- * environment variable to a list of comma-separated hexademical numbers,
+ * environment variable to a list of comma-separated hexadecimal numbers,
  * where each number is the code of an exception that should be caught.
  * This is done to prevent GLib from breaking when Windows uses
  * exceptions to shuttle information (SetThreadName(), OutputDebugString())

@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: glib\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/glib/issues\n"
-"POT-Creation-Date: 2020-03-06 13:00+0000\n"
-"PO-Revision-Date: 2020-03-06 15:23+0100\n"
+"POT-Creation-Date: 2020-03-06 12:58+0000\n"
+"PO-Revision-Date: 2020-03-06 15:30+0100\n"
 "Last-Translator: Milo Casagrande <milo@milo.name>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
 "Language: it\n"
@@ -3086,101 +3086,141 @@ msgstr "Spostamento tra oggetti mount non supportato"
 msgid "Could not determine the disk usage of %s: %s"
 msgstr "Impossibile determinare l'utilizzo del disco di %s: %s"
 
-#: gio/glocalfileinfo.c:755
+#: gio/glocalfileinfo.c:760
 msgid "Attribute value must be non-NULL"
 msgstr "Il valore dell'attributo deve essere non-NULL"
 
-#: gio/glocalfileinfo.c:762
+#: gio/glocalfileinfo.c:767
 msgid "Invalid attribute type (string expected)"
 msgstr "Tipo di attributo non valido (attesa stringa)"
 
-#: gio/glocalfileinfo.c:769
+#: gio/glocalfileinfo.c:774
 msgid "Invalid extended attribute name"
 msgstr "Nome di attributo esteso non valido"
 
-#: gio/glocalfileinfo.c:809
+#: gio/glocalfileinfo.c:814
 #, c-format
 msgid "Error setting extended attribute “%s”: %s"
 msgstr "Errore nell'impostare l'attributo esteso «%s»: %s"
 
-#: gio/glocalfileinfo.c:1637
+#: gio/glocalfileinfo.c:1650
 msgid " (invalid encoding)"
 msgstr " (codifica non valida)"
 
-#: gio/glocalfileinfo.c:1801 gio/glocalfileoutputstream.c:909
+#: gio/glocalfileinfo.c:1814 gio/glocalfileoutputstream.c:909
 #, c-format
 msgid "Error when getting information for file “%s”: %s"
 msgstr "Errore nel recuperare informazioni per il file «%s»: %s"
 
-#: gio/glocalfileinfo.c:2071
+#: gio/glocalfileinfo.c:2084
 #, c-format
 msgid "Error when getting information for file descriptor: %s"
 msgstr "Errore nel recuperare informazioni per il descrittore di file: %s"
 
-#: gio/glocalfileinfo.c:2116
+#: gio/glocalfileinfo.c:2129
 msgid "Invalid attribute type (uint32 expected)"
 msgstr "Tipo di attributo non valido (atteso unit32)"
 
-#: gio/glocalfileinfo.c:2134
+#: gio/glocalfileinfo.c:2147
 msgid "Invalid attribute type (uint64 expected)"
 msgstr "Tipo di attributo non valido (atteso uint64)"
 
-#: gio/glocalfileinfo.c:2153 gio/glocalfileinfo.c:2172
+#: gio/glocalfileinfo.c:2166 gio/glocalfileinfo.c:2185
 msgid "Invalid attribute type (byte string expected)"
 msgstr "Tipo di attributo non valido (attesa stringa di byte)"
 
-#: gio/glocalfileinfo.c:2219
+#: gio/glocalfileinfo.c:2232
 msgid "Cannot set permissions on symlinks"
 msgstr "Impossibile impostare i permessi sui collegamenti simbolici"
 
-#: gio/glocalfileinfo.c:2235
+#: gio/glocalfileinfo.c:2248
 #, c-format
 msgid "Error setting permissions: %s"
 msgstr "Errore nell'impostare i permessi: %s"
 
-#: gio/glocalfileinfo.c:2286
+#: gio/glocalfileinfo.c:2299
 #, c-format
 msgid "Error setting owner: %s"
 msgstr "Errore nell'impostare il proprietario: %s"
 
-#: gio/glocalfileinfo.c:2309
+#: gio/glocalfileinfo.c:2322
 msgid "symlink must be non-NULL"
 msgstr "il collegamento simbolico deve essere non-NULL"
 
-#: gio/glocalfileinfo.c:2319 gio/glocalfileinfo.c:2338
-#: gio/glocalfileinfo.c:2349
+#: gio/glocalfileinfo.c:2332 gio/glocalfileinfo.c:2351
+#: gio/glocalfileinfo.c:2362
 #, c-format
 msgid "Error setting symlink: %s"
 msgstr "Errore nell'impostare il collegamento simbolico: %s"
 
-#: gio/glocalfileinfo.c:2328
+#: gio/glocalfileinfo.c:2341
 msgid "Error setting symlink: file is not a symlink"
 msgstr ""
 "Errore nell'impostare il collegamento simbolico: il file non è un "
 "collegamento"
 
-#: gio/glocalfileinfo.c:2454
+#: gio/glocalfileinfo.c:2413
+#, c-format
+msgid "Extra nanoseconds %d for UNIX timestamp %lld are negative"
+msgstr ""
+"%d nanosecondi aggiuntivi per la marcatura temporale UNIX %lld sono negativi"
+
+#: gio/glocalfileinfo.c:2422
+#, c-format
+msgid "Extra nanoseconds %d for UNIX timestamp %lld reach 1 second"
+msgstr ""
+"%d nanosecondi aggiuntivi per la marcatura temporale UNIX %lld raggiungono 1 "
+"secondo"
+
+#: gio/glocalfileinfo.c:2432
+#, c-format
+msgid "UNIX timestamp %lld does not fit into 64 bits"
+msgstr "La marcatura temporale UNIX %lld non può essere contenuta in 64-bit"
+
+#: gio/glocalfileinfo.c:2443
+#, c-format
+msgid "UNIX timestamp %lld is outside of the range supported by Windows"
+msgstr ""
+"La marcatura temporale %lld è al di fuori dell'intervallo supportato da "
+"Windows"
+
+#: gio/glocalfileinfo.c:2507
+#, c-format
+msgid "File name “%s” cannot be converted to UTF-16"
+msgstr "Impossibile convertire il nome file «%s» a UTF-16"
+
+#: gio/glocalfileinfo.c:2526
+#, c-format
+msgid "File “%s” cannot be opened: Windows Error %lu"
+msgstr "Impossibile aprire il file «%s»: Errore Windows %lu"
+
+#: gio/glocalfileinfo.c:2539
+#, c-format
+msgid "Error setting modification or access time for file “%s”: %lu"
+msgstr "Errore nell'impostare l'ora di modifica o accesso del file «%s»: %lu"
+
+#: gio/glocalfileinfo.c:2640
 #, c-format
 msgid "Error setting modification or access time: %s"
 msgstr "Errore nell'impostare l'ora di modifica o accesso: %s"
 
 # lasciata minuscola come per precedente messaggio
 #   "symlink must be non-NULL"
-#: gio/glocalfileinfo.c:2477
+#: gio/glocalfileinfo.c:2663
 msgid "SELinux context must be non-NULL"
 msgstr "il contesto SELinux deve essere non-NULL"
 
-#: gio/glocalfileinfo.c:2492
+#: gio/glocalfileinfo.c:2678
 #, c-format
 msgid "Error setting SELinux context: %s"
 msgstr "Errore nell'impostare il contesto SELinux: %s"
 
-#: gio/glocalfileinfo.c:2499
+#: gio/glocalfileinfo.c:2685
 msgid "SELinux is not enabled on this system"
 msgstr "SELinux non è abilitato su questo sistema"
 
 # %s è l'attributo
-#: gio/glocalfileinfo.c:2591
+#: gio/glocalfileinfo.c:2777
 #, c-format
 msgid "Setting attribute %s not supported"
 msgstr "Impostazione dell'attributo %s non supportata"
@@ -4209,12 +4249,12 @@ msgstr "Messaggio di controllo inatteso, ottenuti %d"
 msgid "Error while disabling SO_PASSCRED: %s"
 msgstr "Errore durante la disabilitazione di SO_PASSCRED: %s"
 
-#: gio/gunixinputstream.c:372 gio/gunixinputstream.c:393
+#: gio/gunixinputstream.c:362 gio/gunixinputstream.c:383
 #, c-format
 msgid "Error reading from file descriptor: %s"
 msgstr "Errore nel leggere dal descrittore di file: %s"
 
-#: gio/gunixinputstream.c:426 gio/gunixoutputstream.c:535
+#: gio/gunixinputstream.c:416 gio/gunixoutputstream.c:525
 #: gio/gwin32inputstream.c:217 gio/gwin32outputstream.c:204
 #, c-format
 msgid "Error closing file descriptor: %s"
@@ -4224,9 +4264,9 @@ msgstr "Errore nel chiudere il descrittore di file: %s"
 msgid "Filesystem root"
 msgstr "File system radice"
 
-#: gio/gunixoutputstream.c:372 gio/gunixoutputstream.c:392
-#: gio/gunixoutputstream.c:479 gio/gunixoutputstream.c:499
-#: gio/gunixoutputstream.c:676
+#: gio/gunixoutputstream.c:362 gio/gunixoutputstream.c:382
+#: gio/gunixoutputstream.c:469 gio/gunixoutputstream.c:489
+#: gio/gunixoutputstream.c:635
 #, c-format
 msgid "Error writing to file descriptor: %s"
 msgstr "Errore nello scrivere sul descrittore di file: %s"
