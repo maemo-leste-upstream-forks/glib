@@ -1,4 +1,4 @@
-glib2.0 (2.64.4-2) UNRELEASED; urgency=medium
+glib2.0 (2.65.0-1) UNRELEASED; urgency=medium
 
   [ Sebastien Bacher ]
   * debian/control.in:
@@ -14,8 +14,9 @@ glib2.0 (2.64.4-2) UNRELEASED; urgency=medium
     dependencies whenever one of our binary packages depends on our shared
     libraries.
   * d/watch, d/control.in, d/gbp.conf: Branch for experimental
+  * New upstream release
 
- -- Simon McVittie <smcv@debian.org>  Fri, 07 Aug 2020 10:25:20 +0100
+ -- Simon McVittie <smcv@debian.org>  Fri, 07 Aug 2020 10:31:49 +0100
 
 glib2.0 (2.64.4-1) unstable; urgency=medium
 
