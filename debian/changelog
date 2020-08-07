@@ -1,4 +1,4 @@
-glib2.0 (2.65.0-1) UNRELEASED; urgency=medium
+glib2.0 (2.65.0+230+g13ad6ab83-1) UNRELEASED; urgency=medium
 
   [ Sebastien Bacher ]
   * debian/control.in:
@@ -17,8 +17,9 @@ glib2.0 (2.65.0-1) UNRELEASED; urgency=medium
   * New upstream development release
   * Require the experimental version of gtk-doc-tools.
     GLib 2.50.0 requires a version that hasn't been released yet.
+  * New upstream release
 
- -- Simon McVittie <smcv@debian.org>  Fri, 07 Aug 2020 10:48:18 +0100
+ -- Simon McVittie <smcv@debian.org>  Fri, 07 Aug 2020 13:57:34 +0100
 
 glib2.0 (2.64.4-1) unstable; urgency=medium
 
