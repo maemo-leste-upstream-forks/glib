@@ -14,9 +14,11 @@ glib2.0 (2.65.0-1) UNRELEASED; urgency=medium
     dependencies whenever one of our binary packages depends on our shared
     libraries.
   * d/watch, d/control.in, d/gbp.conf: Branch for experimental
-  * New upstream release
+  * New upstream development release
+  * Require the experimental version of gtk-doc-tools.
+    GLib 2.50.0 requires a version that hasn't been released yet.
 
- -- Simon McVittie <smcv@debian.org>  Fri, 07 Aug 2020 10:31:49 +0100
+ -- Simon McVittie <smcv@debian.org>  Fri, 07 Aug 2020 10:48:18 +0100
 
 glib2.0 (2.64.4-1) unstable; urgency=medium
 
