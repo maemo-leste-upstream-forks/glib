@@ -35,6 +35,7 @@
 #include <string.h>
 #include <locale.h>
 #include <errno.h>
+#include <garray.h>
 #include <ctype.h>              /* For tolower() */
 
 #ifdef HAVE_XLOCALE_H
@@ -1768,7 +1769,7 @@ g_ascii_digit_value (gchar c)
  * g_ascii_xdigit_value:
  * @c: an ASCII character.
  *
- * Determines the numeric value of a character as a hexidecimal
+ * Determines the numeric value of a character as a hexadecimal
  * digit. Differs from g_unichar_xdigit_value() because it takes
  * a char, so there's no worry about sign extension if characters
  * are signed.
@@ -2352,10 +2353,9 @@ g_strsplit (const gchar *string,
             const gchar *delimiter,
             gint         max_tokens)
 {
-  GSList *string_list = NULL, *slist;
-  gchar **str_array, *s;
-  guint n = 0;
+  char *s;
   const gchar *remainder;
+  GPtrArray *string_list;
 
   g_return_val_if_fail (string != NULL, NULL);
   g_return_val_if_fail (delimiter != NULL, NULL);
@@ -2364,6 +2364,7 @@ g_strsplit (const gchar *string,
   if (max_tokens < 1)
     max_tokens = G_MAXINT;
 
+  string_list = g_ptr_array_new ();
   remainder = string;
   s = strstr (remainder, delimiter);
   if (s)
@@ -2375,28 +2376,17 @@ g_strsplit (const gchar *string,
           gsize len;
 
           len = s - remainder;
-          string_list = g_slist_prepend (string_list,
-                                         g_strndup (remainder, len));
-          n++;
+          g_ptr_array_add (string_list, g_strndup (remainder, len));
           remainder = s + delimiter_len;
           s = strstr (remainder, delimiter);
         }
     }
   if (*string)
-    {
-      n++;
-      string_list = g_slist_prepend (string_list, g_strdup (remainder));
-    }
+    g_ptr_array_add (string_list, g_strdup (remainder));
 
-  str_array = g_new (gchar*, n + 1);
+  g_ptr_array_add (string_list, NULL);
 
-  str_array[n--] = NULL;
-  for (slist = string_list; slist; slist = slist->next)
-    str_array[n--] = slist->data;
-
-  g_slist_free (string_list);
-
-  return str_array;
+  return (char **) g_ptr_array_free (string_list, FALSE);
 }
 
 /**

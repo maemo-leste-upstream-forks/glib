@@ -660,6 +660,24 @@
  */
 
 /**
+ * g_assert_no_errno:
+ * @expr: the expression to check
+ *
+ * Debugging macro to check that an expression has a non-negative return value,
+ * as used by traditional POSIX functions (such as `rmdir()`) to indicate
+ * success.
+ *
+ * If the assertion fails (i.e. the @expr returns a negative value), an error
+ * message is logged and the testcase is marked as failed. The error message
+ * will contain the value of `errno` and its human-readable message from
+ * g_strerror().
+ *
+ * This macro will clear the value of `errno` before executing @expr.
+ *
+ * Since: 2.66
+ */
+
+/**
  * g_assert_cmpmem:
  * @m1: (nullable): pointer to a buffer
  * @l1: length of @m1
@@ -2309,16 +2327,14 @@ g_test_failed (void)
 /**
  * g_test_set_nonfatal_assertions:
  *
- * Changes the behaviour of g_assert_cmpstr(), g_assert_cmpint(),
- * g_assert_cmpuint(), g_assert_cmphex(), g_assert_cmpfloat(),
- * g_assert_true(), g_assert_false(), g_assert_null(), g_assert_no_error(),
- * g_assert_error(), g_test_assert_expected_messages() and the various
- * g_test_trap_assert_*() macros to not abort to program, but instead
+ * Changes the behaviour of the various `g_assert_*()` macros,
+ * g_test_assert_expected_messages() and the various
+ * `g_test_trap_assert_*()` macros to not abort to program, but instead
  * call g_test_fail() and continue. (This also changes the behavior of
  * g_test_fail() so that it will not cause the test program to abort
  * after completing the failed test.)
  *
- * Note that the g_assert_not_reached() and g_assert() are not
+ * Note that the g_assert_not_reached() and g_assert() macros are not
  * affected by this.
  *
  * This function can only be called after g_test_init().
@@ -3067,7 +3083,7 @@ test_trap_clear (void)
 #ifdef G_OS_UNIX
 
 static int
-safe_dup2 (int fd1,
+sane_dup2 (int fd1,
            int fd2)
 {
   int ret;
@@ -3319,7 +3335,7 @@ g_test_trap_fork (guint64        usec_timeout,
           if (fd0 < 0)
             g_error ("failed to open /dev/null for stdin redirection");
         }
-      if (safe_dup2 (stdout_pipe[1], 1) < 0 || safe_dup2 (stderr_pipe[1], 2) < 0 || (fd0 >= 0 && safe_dup2 (fd0, 0) < 0))
+      if (sane_dup2 (stdout_pipe[1], 1) < 0 || sane_dup2 (stderr_pipe[1], 2) < 0 || (fd0 >= 0 && sane_dup2 (fd0, 0) < 0))
         {
           errsv = errno;
           g_error ("failed to dup2() in forked test program: %s", g_strerror (errsv));

@@ -795,7 +795,7 @@ g_variant_ref_sink (GVariant *value)
  *
  * Using this function on the return value of the user's callback allows
  * the user to do whichever is more convenient for them.  The caller
- * will alway receives exactly one full reference to the value: either
+ * will always receives exactly one full reference to the value: either
  * the one that was returned in the first place, or a floating reference
  * that has been converted to a full reference.
  *
@@ -1025,6 +1025,12 @@ g_variant_n_children (GVariant *value)
  *
  * The returned value is never floating.  You should free it with
  * g_variant_unref() when you're done with it.
+ *
+ * Note that values borrowed from the returned child are not guaranteed to
+ * still be valid after the child is freed even if you still hold a reference
+ * to @value, if @value has not been serialised at the time this function is
+ * called. To avoid this, you can serialize @value by calling
+ * g_variant_get_data() and optionally ignoring the return value.
  *
  * There may be implementation specific restrictions on deeply nested values,
  * which would result in the unit tuple being returned as the child value,

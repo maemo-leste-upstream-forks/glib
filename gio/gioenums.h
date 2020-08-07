@@ -117,7 +117,7 @@ typedef enum {
 
 /**
  * GFileAttributeType:
- * @G_FILE_ATTRIBUTE_TYPE_INVALID: indicates an invalid or uninitalized type.
+ * @G_FILE_ATTRIBUTE_TYPE_INVALID: indicates an invalid or uninitialized type.
  * @G_FILE_ATTRIBUTE_TYPE_STRING: a null terminated UTF8 string.
  * @G_FILE_ATTRIBUTE_TYPE_BYTE_STRING: a zero terminated string of non-zero bytes.
  * @G_FILE_ATTRIBUTE_TYPE_BOOLEAN: a boolean value.
@@ -1423,11 +1423,12 @@ typedef enum
 /**
  * GCredentialsType:
  * @G_CREDENTIALS_TYPE_INVALID: Indicates an invalid native credential type.
- * @G_CREDENTIALS_TYPE_LINUX_UCRED: The native credentials type is a struct ucred.
- * @G_CREDENTIALS_TYPE_FREEBSD_CMSGCRED: The native credentials type is a struct cmsgcred.
- * @G_CREDENTIALS_TYPE_OPENBSD_SOCKPEERCRED: The native credentials type is a struct sockpeercred. Added in 2.30.
- * @G_CREDENTIALS_TYPE_SOLARIS_UCRED: The native credentials type is a ucred_t. Added in 2.40.
- * @G_CREDENTIALS_TYPE_NETBSD_UNPCBID: The native credentials type is a struct unpcbid.
+ * @G_CREDENTIALS_TYPE_LINUX_UCRED: The native credentials type is a `struct ucred`.
+ * @G_CREDENTIALS_TYPE_FREEBSD_CMSGCRED: The native credentials type is a `struct cmsgcred`.
+ * @G_CREDENTIALS_TYPE_OPENBSD_SOCKPEERCRED: The native credentials type is a `struct sockpeercred`. Added in 2.30.
+ * @G_CREDENTIALS_TYPE_SOLARIS_UCRED: The native credentials type is a `ucred_t`. Added in 2.40.
+ * @G_CREDENTIALS_TYPE_NETBSD_UNPCBID: The native credentials type is a `struct unpcbid`. Added in 2.42.
+ * @G_CREDENTIALS_TYPE_APPLE_XUCRED: The native credentials type is a `struct xucred`. Added in 2.66.
  *
  * Enumeration describing different kinds of native credential types.
  *
@@ -1440,7 +1441,8 @@ typedef enum
   G_CREDENTIALS_TYPE_FREEBSD_CMSGCRED,
   G_CREDENTIALS_TYPE_OPENBSD_SOCKPEERCRED,
   G_CREDENTIALS_TYPE_SOLARIS_UCRED,
-  G_CREDENTIALS_TYPE_NETBSD_UNPCBID
+  G_CREDENTIALS_TYPE_NETBSD_UNPCBID,
+  G_CREDENTIALS_TYPE_APPLE_XUCRED,
 } GCredentialsType;
 
 /**

@@ -7,19 +7,19 @@
 # Andre Klapper <ak-47@gmx.net>, 2007, 2008.
 # Philipp Kerling <k.philipp@gmail.com>, 2008.
 # Mario Blättermann <mario.blaettermann@gmail.com>, 2010-2013, 2015-2018.
-# Wolfgang Stöggl <c72578@yahoo.de>, 2011, 2015-2016, 2020.
+# Wolfgang Stöggl <c72578@yahoo.de>, 2011, 2015-2016.
 # Christian Kirbach <Christian.Kirbach@gmail.com>, 2009, 2010, 2012.
 # Tobias Endrigkeit <tobiasendrigkeit@googlemail.com>, 2012.
 # Bernd Homuth <dev@hmt.im>, 2015.
-# Tim Sabsch <tim@sabsch.com>, 2019.
+# Tim Sabsch <tim@sabsch.com>, 2019-2020.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: glib master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/glib/issues\n"
-"POT-Creation-Date: 2020-04-03 16:42+0000\n"
-"PO-Revision-Date: 2020-04-07 21:17+0200\n"
-"Last-Translator: Wolfgang Stoeggl <c72578@yahoo.de>\n"
+"POT-Creation-Date: 2020-03-04 15:36+0000\n"
+"PO-Revision-Date: 2020-03-05 20:30+0100\n"
+"Last-Translator: Tim Sabsch <tim@sabsch.com>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -984,7 +984,7 @@ msgid ""
 "Cannot invoke method; proxy is for the well-known name %s without an owner, "
 "and proxy was constructed with the G_DBUS_PROXY_FLAGS_DO_NOT_AUTO_START flag"
 msgstr ""
-"Die Methode kann nicht aufgerufen werden; Der Proxy ist für den allgemein "
+"Die Methode kann nicht aufgerufen werden; Der Proxy ist fürden allgemein "
 "bekannten Namen %s ohne Besitzer, und der Proxy wurde mit dem Flag "
 "»G_DBUS_PROXY_FLAGS_DO_NOT_AUTO_START« erstellt"
 
@@ -1352,12 +1352,12 @@ msgstr "Laufwerk unterstützt keinen Startvorgang"
 msgid "drive doesn’t implement stop"
 msgstr "Laufwerk unterstützt keinen Stoppvorgang"
 
-#: gio/gdummytlsbackend.c:195 gio/gdummytlsbackend.c:321
-#: gio/gdummytlsbackend.c:513
+#: gio/gdummytlsbackend.c:195 gio/gdummytlsbackend.c:317
+#: gio/gdummytlsbackend.c:509
 msgid "TLS support is not available"
 msgstr "TLS-Unterstützung ist nicht verfügbar"
 
-#: gio/gdummytlsbackend.c:423
+#: gio/gdummytlsbackend.c:419
 msgid "DTLS support is not available"
 msgstr "DTLS-Unterstützung ist nicht verfügbar"
 
@@ -1769,7 +1769,7 @@ msgstr "Niemals symbolischen Verknüpfungen folgen"
 
 #: gio/gio-tool-copy.c:49
 msgid "Use default permissions for the destination"
-msgstr "Voreingestellte Berechtigungen für das Ziel verwenden"
+msgstr "Standardberechtigungen für das Ziel verwenden"
 
 #: gio/gio-tool-copy.c:74 gio/gio-tool-move.c:67
 #, c-format
@@ -1872,12 +1872,12 @@ msgstr "Adresse: %s\n"
 #: gio/gio-tool-info.c:172
 #, c-format
 msgid "local path: %s\n"
-msgstr "lokaler Pfad: %s\n"
+msgstr "Lokaler Pfad: %s\n"
 
 #: gio/gio-tool-info.c:199
 #, c-format
 msgid "unix mount: %s%s %s %s %s\n"
-msgstr "Unix-Einbindung: %s%s %s %s %s\n"
+msgstr "Unix-Einhängepunkt: %s%s %s %s %s\n"
 
 #: gio/gio-tool-info.c:279
 msgid "Settable attributes:\n"
@@ -2060,11 +2060,11 @@ msgstr "Als einhängbar einbinden"
 
 #: gio/gio-tool-mount.c:64
 msgid "Mount volume with device file, or other identifier"
-msgstr "Datenträger über Gerätedatei, oder anderem Bezeichner einhängen"
+msgstr "Datenträger über Gerätedatei oder anderen Bezeichner einhängen"
 
 #: gio/gio-tool-mount.c:64
 msgid "ID"
-msgstr "KENNUNG"
+msgstr "Kennung"
 
 #: gio/gio-tool-mount.c:65
 msgid "Unmount"
@@ -2139,7 +2139,7 @@ msgstr "Kein Laufwerk für Gerätedatei"
 
 #: gio/gio-tool-mount.c:1014
 msgid "No volume for given ID"
-msgstr "Kein Datenträger für die genannte KENNUG"
+msgstr "Kein Datenträger für angegebene Kennung"
 
 #: gio/gio-tool-mount.c:1203
 msgid "Mount or unmount the locations."
@@ -2424,7 +2424,7 @@ msgid ""
 "Don’t embed resource data in the C file; assume it's linked externally "
 "instead"
 msgstr ""
-"Ressourcendaten nicht in der C-Datei einbetten; stattdessen externe "
+"Ressourcendaten nicht in der C-Datei einbetten; stattdesssen externe "
 "Verlinkung voraussetzen"
 
 #: gio/glib-compile-resources.c:749
@@ -2509,7 +2509,7 @@ msgstr "<range> ist für Schlüssel des Typs »%s« nicht erlaubt"
 #: gio/glib-compile-schemas.c:407
 #, c-format
 msgid "<range> specified minimum is greater than maximum"
-msgstr "<range> angegebenes Minimum ist größer als das Maximum"
+msgstr "<range> angebenenes Minimum ist größer als das Maximum"
 
 #: gio/glib-compile-schemas.c:432
 #, c-format
@@ -2550,7 +2550,7 @@ msgstr "<choices> ist für Schlüssel des Typs »%s« nicht erlaubt"
 #: gio/glib-compile-schemas.c:528
 #, c-format
 msgid "<choice value='%s'/> already given"
-msgstr "<choice value='%s'> wurde bereits angegeben"
+msgstr "<choice value='%s'/> wurde bereits angegeben"
 
 #: gio/glib-compile-schemas.c:543
 #, c-format
@@ -2588,7 +2588,7 @@ msgstr ""
 #: gio/glib-compile-schemas.c:594
 #, c-format
 msgid "<alias value='%s'/> already specified"
-msgstr "<alias value='%s'> bereits angegeben"
+msgstr "<alias value='%s'/> bereits angegeben"
 
 #: gio/glib-compile-schemas.c:604
 #, c-format
@@ -4009,15 +4009,15 @@ msgstr "Der Server ist kein SOCKSv4-Proxy-Server."
 msgid "Connection through SOCKSv4 server was rejected"
 msgstr "Verbindung durch SOCKSv4-Server wurde abgewiesen"
 
-#: gio/gsocks5proxy.c:153 gio/gsocks5proxy.c:338 gio/gsocks5proxy.c:348
+#: gio/gsocks5proxy.c:153 gio/gsocks5proxy.c:324 gio/gsocks5proxy.c:334
 msgid "The server is not a SOCKSv5 proxy server."
 msgstr "Der Server ist kein SOCKSv5-Proxy-Server."
 
-#: gio/gsocks5proxy.c:167 gio/gsocks5proxy.c:184
+#: gio/gsocks5proxy.c:167
 msgid "The SOCKSv5 proxy requires authentication."
 msgstr "Der SOCKSv5-Proxy erfordert Legitimierung."
 
-#: gio/gsocks5proxy.c:191
+#: gio/gsocks5proxy.c:177
 msgid ""
 "The SOCKSv5 proxy requires an authentication method that is not supported by "
 "GLib."
@@ -4025,54 +4025,54 @@ msgstr ""
 "Der SOCKSv5 erfordert eine Legitimierungsmethode, die durch GLib nicht "
 "unterstützt wird."
 
-#: gio/gsocks5proxy.c:220
+#: gio/gsocks5proxy.c:206
 msgid "Username or password is too long for SOCKSv5 protocol."
 msgstr "Benutzername oder Passwort ist zu lang für das SOCKSv5-Protokoll."
 
-#: gio/gsocks5proxy.c:250
+#: gio/gsocks5proxy.c:236
 msgid "SOCKSv5 authentication failed due to wrong username or password."
 msgstr ""
 "SOCKSv5-Legitimierung scheiterte wegen falschen Benutzernamens oder "
 "Passworts."
 
-#: gio/gsocks5proxy.c:300
+#: gio/gsocks5proxy.c:286
 #, c-format
 msgid "Hostname “%s” is too long for SOCKSv5 protocol"
 msgstr "Rechnername »%s« ist zu lang für das SOCKSv5-Protokoll"
 
-#: gio/gsocks5proxy.c:362
+#: gio/gsocks5proxy.c:348
 msgid "The SOCKSv5 proxy server uses unknown address type."
 msgstr "Der SOCKSv5-Proxy-Server verwendet einen unbekannten Adresstyp."
 
-#: gio/gsocks5proxy.c:369
+#: gio/gsocks5proxy.c:355
 msgid "Internal SOCKSv5 proxy server error."
 msgstr "Interner Fehler des SOCKSv5-Proxy-Servers."
 
-#: gio/gsocks5proxy.c:375
+#: gio/gsocks5proxy.c:361
 msgid "SOCKSv5 connection not allowed by ruleset."
 msgstr "SOCKSv5-Verbindung ist aufgrund des Regelwerks nicht erlaubt."
 
-#: gio/gsocks5proxy.c:382
+#: gio/gsocks5proxy.c:368
 msgid "Host unreachable through SOCKSv5 server."
 msgstr "Rechner ist über den SOCKSv5-Server nicht erreichbar."
 
-#: gio/gsocks5proxy.c:388
+#: gio/gsocks5proxy.c:374
 msgid "Network unreachable through SOCKSv5 proxy."
 msgstr "Das Netzwerk ist durch den SOCKSv5-Proxy nicht erreichbar."
 
-#: gio/gsocks5proxy.c:394
+#: gio/gsocks5proxy.c:380
 msgid "Connection refused through SOCKSv5 proxy."
 msgstr "Verbindung wurde durch SOCKSv5-Proxy abgewiesen."
 
-#: gio/gsocks5proxy.c:400
+#: gio/gsocks5proxy.c:386
 msgid "SOCKSv5 proxy does not support “connect” command."
 msgstr "SOCKSv5-Proxy unterstützt den Befehl »connect« nicht."
 
-#: gio/gsocks5proxy.c:406
+#: gio/gsocks5proxy.c:392
 msgid "SOCKSv5 proxy does not support provided address type."
 msgstr "SOCKSv5-Proxy unterstützt den angegebenen Adresstyp nicht."
 
-#: gio/gsocks5proxy.c:412
+#: gio/gsocks5proxy.c:398
 msgid "Unknown SOCKSv5 proxy error."
 msgstr "Unbekannter Fehler im SOCKSv5-Proxy."
 
@@ -4203,12 +4203,12 @@ msgstr "Kontrollnachricht wurde nicht erwartet, %d wurde erhalten"
 msgid "Error while disabling SO_PASSCRED: %s"
 msgstr "Fehler beim Deaktivieren von SO_PASSCRED: %s"
 
-#: gio/gunixinputstream.c:372 gio/gunixinputstream.c:393
+#: gio/gunixinputstream.c:362 gio/gunixinputstream.c:383
 #, c-format
 msgid "Error reading from file descriptor: %s"
 msgstr "Fehler beim Lesen aus dem Dateideskriptor: %s"
 
-#: gio/gunixinputstream.c:426 gio/gunixoutputstream.c:535
+#: gio/gunixinputstream.c:416 gio/gunixoutputstream.c:525
 #: gio/gwin32inputstream.c:217 gio/gwin32outputstream.c:204
 #, c-format
 msgid "Error closing file descriptor: %s"
@@ -4218,9 +4218,9 @@ msgstr "Fehler beim Schließen des Dateideskriptors: %s"
 msgid "Filesystem root"
 msgstr "Wurzelordner des Dateisystems"
 
-#: gio/gunixoutputstream.c:372 gio/gunixoutputstream.c:392
-#: gio/gunixoutputstream.c:479 gio/gunixoutputstream.c:499
-#: gio/gunixoutputstream.c:676
+#: gio/gunixoutputstream.c:362 gio/gunixoutputstream.c:382
+#: gio/gunixoutputstream.c:469 gio/gunixoutputstream.c:489
+#: gio/gunixoutputstream.c:635
 #, c-format
 msgid "Error writing to file descriptor: %s"
 msgstr "Fehler beim Schreiben in den Dateideskriptor: %s"
@@ -5177,7 +5177,7 @@ msgstr ""
 #: glib/gmarkup.c:1346
 #, c-format
 msgid "Too many attributes in element “%s”"
-msgstr "Zu viele Attribute im Elements »%s«"
+msgstr "Zu viele Attribute im Element »%s«"
 
 #: glib/gmarkup.c:1366
 #, c-format
