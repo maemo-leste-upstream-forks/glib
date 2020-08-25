@@ -1,8 +1,18 @@
-glib2.0 (2.65.2-1) UNRELEASED; urgency=medium
+glib2.0 (2.65.2-1) experimental; urgency=medium
 
-  * New upstream release
+  * Team upload
+  * New upstream development release
+  * d/rules: Run gtk-doc checks, even if building indep-only.
+    Previously we would only run the gtk-doc checks if building
+    architecture-dependent and -independent packages in the same build,
+    which is done on Ubuntu amd64 buildds, but not on any Debian buildds.
+  * Reduce dependency to the version of gtk-doc-tools from unstable.
+    Instead of being some random snapshot from upstream git, this is the
+    last release plus some selected patches. In particular, it has enough
+    fixes to make the gtk-doc tests pass (Closes: #968975).
+  * d/libglib2.0-tests.lintian-overrides: Update
 
- -- Simon McVittie <smcv@debian.org>  Tue, 25 Aug 2020 09:51:32 +0100
+ -- Simon McVittie <smcv@debian.org>  Tue, 25 Aug 2020 12:44:02 +0100
 
 glib2.0 (2.65.1-1) experimental; urgency=medium
 
