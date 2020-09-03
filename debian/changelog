@@ -1,6 +1,12 @@
 glib2.0 (2.65.3-1) UNRELEASED; urgency=medium
 
   * New upstream release
+    + Fixes to the new `statx()` calls — note that since GLib 2.65.2 uses
+      `statx()` (if available) instead of
+      `stat()`/`fstat()`/`lstat()`/`fstatat()`, syscall sandboxing for third
+      party applications might need to be updated
+    + Also includes "Fix splice behavior on cancellation", a fix for a bug
+      which was affecting tracker - particularly its autopkgtests.
 
  -- Iain Lane <laney@debian.org>  Thu, 03 Sep 2020 18:22:10 +0100
 
