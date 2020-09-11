@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: glib 2.64\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/glib/issues\n"
-"POT-Creation-Date: 2020-05-14 14:05+0000\n"
-"PO-Revision-Date: 2020-05-18 01:10+0800\n"
+"POT-Creation-Date: 2020-05-15 13:10+0000\n"
+"PO-Revision-Date: 2020-05-18 01:07+0800\n"
 "Last-Translator: Cheng-Chia Tseng <pswo10680@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh-l10n@lists.linux.org.tw>\n"
 "Language: zh_TW\n"
@@ -337,23 +337,23 @@ msgstr "不明的類型"
 msgid "%s filetype"
 msgstr "%s 檔案類型"
 
-#: gio/gcredentials.c:289
+#: gio/gcredentials.c:323
 msgid "GCredentials contains invalid data"
 msgstr "GCredentials 有無效資料"
 
-#: gio/gcredentials.c:345 gio/gcredentials.c:609
+#: gio/gcredentials.c:383 gio/gcredentials.c:667
 msgid "GCredentials is not implemented on this OS"
 msgstr "GCredentials 沒有在這個 OS 上實作"
 
-#: gio/gcredentials.c:503
+#: gio/gcredentials.c:538 gio/gcredentials.c:556
 msgid "There is no GCredentials support for your platform"
 msgstr "您的平臺沒有 GCredentials 支援"
 
-#: gio/gcredentials.c:552
+#: gio/gcredentials.c:607
 msgid "GCredentials does not contain a process ID on this OS"
 msgstr "GCredentials 沒有包含在這個 OS 上的程序 ID"
 
-#: gio/gcredentials.c:603
+#: gio/gcredentials.c:661
 msgid "Credentials spoofing is not possible on this OS"
 msgstr "在這個 OS 無法做到憑證偽裝"
 
@@ -493,14 +493,14 @@ msgstr "產生命令列「%s」時出現錯誤："
 msgid "Cannot determine session bus address (not implemented for this OS)"
 msgstr "不能判斷作業階段匯流排位址（沒有在這個 OS 實作）"
 
-#: gio/gdbusaddress.c:1357 gio/gdbusconnection.c:7190
+#: gio/gdbusaddress.c:1357 gio/gdbusconnection.c:7192
 #, c-format
 msgid ""
 "Cannot determine bus address from DBUS_STARTER_BUS_TYPE environment variable "
 "— unknown value “%s”"
 msgstr "不能從 DBUS_STARTER_BUS_TYPE 環境變數判斷匯流排位址 — 不明的「%s」值"
 
-#: gio/gdbusaddress.c:1366 gio/gdbusconnection.c:7199
+#: gio/gdbusaddress.c:1366 gio/gdbusconnection.c:7201
 msgid ""
 "Cannot determine bus address because the DBUS_STARTER_BUS_TYPE environment "
 "variable is not set"
@@ -615,79 +615,79 @@ msgid ""
 "Unsupported flags encountered when constructing a client-side connection"
 msgstr "當建立客戶端連線時遇到不支援的旗標"
 
-#: gio/gdbusconnection.c:4161 gio/gdbusconnection.c:4508
+#: gio/gdbusconnection.c:4163 gio/gdbusconnection.c:4510
 #, c-format
 msgid ""
 "No such interface “org.freedesktop.DBus.Properties” on object at path %s"
 msgstr "在 %s 路徑的物件沒有「org.freedesktop.DBus.Properties」這個介面"
 
-#: gio/gdbusconnection.c:4303
+#: gio/gdbusconnection.c:4305
 #, c-format
 msgid "No such property “%s”"
 msgstr "沒有這個屬性「%s」"
 
-#: gio/gdbusconnection.c:4315
+#: gio/gdbusconnection.c:4317
 #, c-format
 msgid "Property “%s” is not readable"
 msgstr "無法讀取「%s」屬性"
 
-#: gio/gdbusconnection.c:4326
+#: gio/gdbusconnection.c:4328
 #, c-format
 msgid "Property “%s” is not writable"
 msgstr "無法寫入「%s」屬性"
 
-#: gio/gdbusconnection.c:4346
+#: gio/gdbusconnection.c:4348
 #, c-format
 msgid "Error setting property “%s”: Expected type “%s” but got “%s”"
 msgstr "「%s」屬性設定錯誤：預期的類型為「%s」但得到「%s」"
 
-#: gio/gdbusconnection.c:4451 gio/gdbusconnection.c:4659
-#: gio/gdbusconnection.c:6630
+#: gio/gdbusconnection.c:4453 gio/gdbusconnection.c:4661
+#: gio/gdbusconnection.c:6632
 #, c-format
 msgid "No such interface “%s”"
 msgstr "沒有這個「%s」介面"
 
-#: gio/gdbusconnection.c:4877 gio/gdbusconnection.c:7139
+#: gio/gdbusconnection.c:4879 gio/gdbusconnection.c:7141
 #, c-format
 msgid "No such interface “%s” on object at path %s"
 msgstr "在 %2$s 路徑的物件沒有「%1$s」這個介面"
 
-#: gio/gdbusconnection.c:4975
+#: gio/gdbusconnection.c:4977
 #, c-format
 msgid "No such method “%s”"
 msgstr "沒有「%s」方法"
 
-#: gio/gdbusconnection.c:5006
+#: gio/gdbusconnection.c:5008
 #, c-format
 msgid "Type of message, “%s”, does not match expected type “%s”"
 msgstr "訊息的類型，「%s」，不符合預期的類型「%s」"
 
-#: gio/gdbusconnection.c:5204
+#: gio/gdbusconnection.c:5206
 #, c-format
 msgid "An object is already exported for the interface %s at %s"
 msgstr "有物件已為介面 %s 匯出於 %s"
 
-#: gio/gdbusconnection.c:5430
+#: gio/gdbusconnection.c:5432
 #, c-format
 msgid "Unable to retrieve property %s.%s"
 msgstr "無法取回屬性 %s.%s"
 
-#: gio/gdbusconnection.c:5486
+#: gio/gdbusconnection.c:5488
 #, c-format
 msgid "Unable to set property %s.%s"
 msgstr "無法設定屬性 %s.%s"
 
-#: gio/gdbusconnection.c:5664
+#: gio/gdbusconnection.c:5666
 #, c-format
 msgid "Method “%s” returned type “%s”, but expected “%s”"
 msgstr "方法「%s」傳回類型「%s」，但預期為「%s」"
 
-#: gio/gdbusconnection.c:6741
+#: gio/gdbusconnection.c:6743
 #, c-format
 msgid "Method “%s” on interface “%s” with signature “%s” does not exist"
 msgstr "介面「%2$s」簽章「%3$s」的方法「%1$s」不存在"
 
-#: gio/gdbusconnection.c:6862
+#: gio/gdbusconnection.c:6864
 #, c-format
 msgid "A subtree is already exported for %s"
 msgstr "子樹狀目錄已為 %s 匯出"
@@ -1193,7 +1193,7 @@ msgstr "錯誤：引數太多。\n"
 msgid "Error: %s is not a valid well-known bus name.\n"
 msgstr "錯誤：%s 不是有效的已知匯流排名稱。\n"
 
-#: gio/gdesktopappinfo.c:2071 gio/gdesktopappinfo.c:4877
+#: gio/gdesktopappinfo.c:2071 gio/gdesktopappinfo.c:4886
 msgid "Unnamed"
 msgstr "未命名的"
 
@@ -1527,7 +1527,7 @@ msgstr "移動時保持檔案"
 msgid "“version” takes no arguments"
 msgstr "「version」不需要引數"
 
-#: gio/gio-tool.c:207 gio/gio-tool.c:223 glib/goption.c:864
+#: gio/gio-tool.c:207 gio/gio-tool.c:223 glib/goption.c:869
 msgid "Usage:"
 msgstr "用法："
 
@@ -2922,96 +2922,131 @@ msgstr "不支援在掛載點之間移動"
 msgid "Could not determine the disk usage of %s: %s"
 msgstr "無法決定 %s 的磁碟使用量：%s"
 
-#: gio/glocalfileinfo.c:755
+#: gio/glocalfileinfo.c:760
 msgid "Attribute value must be non-NULL"
 msgstr "特性值必須為非-NULL"
 
-#: gio/glocalfileinfo.c:762
+#: gio/glocalfileinfo.c:767
 msgid "Invalid attribute type (string expected)"
 msgstr "無效的特性類型（應為字串值）"
 
-#: gio/glocalfileinfo.c:769
+#: gio/glocalfileinfo.c:774
 msgid "Invalid extended attribute name"
 msgstr "無效的延伸特性名稱"
 
-#: gio/glocalfileinfo.c:809
+#: gio/glocalfileinfo.c:814
 #, c-format
 msgid "Error setting extended attribute “%s”: %s"
 msgstr "設定延伸特性「%s」時發生錯誤：%s"
 
-#: gio/glocalfileinfo.c:1637
+#: gio/glocalfileinfo.c:1650
 msgid " (invalid encoding)"
 msgstr "（無效的編碼）"
 
-#: gio/glocalfileinfo.c:1801 gio/glocalfileoutputstream.c:909
+#: gio/glocalfileinfo.c:1814 gio/glocalfileoutputstream.c:909
 #, c-format
 msgid "Error when getting information for file “%s”: %s"
 msgstr "取得檔案「%s」資訊時發生錯誤：%s"
 
-#: gio/glocalfileinfo.c:2071
+#: gio/glocalfileinfo.c:2084
 #, c-format
 msgid "Error when getting information for file descriptor: %s"
 msgstr "取得檔案描述狀態資訊時發生錯誤：%s"
 
-#: gio/glocalfileinfo.c:2116
+#: gio/glocalfileinfo.c:2129
 msgid "Invalid attribute type (uint32 expected)"
 msgstr "無效的特性類型（應為 uint32 值）"
 
-#: gio/glocalfileinfo.c:2134
+#: gio/glocalfileinfo.c:2147
 msgid "Invalid attribute type (uint64 expected)"
 msgstr "無效的特性類型（應為 uint64 值）"
 
-#: gio/glocalfileinfo.c:2153 gio/glocalfileinfo.c:2172
+#: gio/glocalfileinfo.c:2166 gio/glocalfileinfo.c:2185
 msgid "Invalid attribute type (byte string expected)"
 msgstr "無效的特性類型（應為 byte string 值）"
 
-#: gio/glocalfileinfo.c:2219
+#: gio/glocalfileinfo.c:2232
 msgid "Cannot set permissions on symlinks"
 msgstr "不能設定符號連結的權限"
 
-#: gio/glocalfileinfo.c:2235
+#: gio/glocalfileinfo.c:2248
 #, c-format
 msgid "Error setting permissions: %s"
 msgstr "設定權限時發生錯誤：%s"
 
-#: gio/glocalfileinfo.c:2286
+#: gio/glocalfileinfo.c:2299
 #, c-format
 msgid "Error setting owner: %s"
 msgstr "設定擁有者時發生錯誤：%s"
 
-#: gio/glocalfileinfo.c:2309
+#: gio/glocalfileinfo.c:2322
 msgid "symlink must be non-NULL"
 msgstr "符號連結必須為非-NULL"
 
-#: gio/glocalfileinfo.c:2319 gio/glocalfileinfo.c:2338
-#: gio/glocalfileinfo.c:2349
+#: gio/glocalfileinfo.c:2332 gio/glocalfileinfo.c:2351
+#: gio/glocalfileinfo.c:2362
 #, c-format
 msgid "Error setting symlink: %s"
 msgstr "設定符號連結時發生錯誤：%s"
 
-#: gio/glocalfileinfo.c:2328
+#: gio/glocalfileinfo.c:2341
 msgid "Error setting symlink: file is not a symlink"
 msgstr "設定符號連結時發生錯誤：檔案不是符號連結"
 
-#: gio/glocalfileinfo.c:2454
+#: gio/glocalfileinfo.c:2413
+#, c-format
+msgid "Extra nanoseconds %d for UNIX timestamp %lld are negative"
+msgstr "UNIX 時間戳 %2$lld 的延伸奈秒 %1$d 是負數"
+
+#: gio/glocalfileinfo.c:2422
+#, c-format
+msgid "Extra nanoseconds %d for UNIX timestamp %lld reach 1 second"
+msgstr "UNIX 時間戳 %2$lld 的延伸奈秒 %1$d 達 1 秒"
+
+#: gio/glocalfileinfo.c:2432
+#, c-format
+msgid "UNIX timestamp %lld does not fit into 64 bits"
+msgstr "UNIX 時間戳 %lld 不能完整放入 64 位元"
+
+#: gio/glocalfileinfo.c:2443
+#, c-format
+msgid "UNIX timestamp %lld is outside of the range supported by Windows"
+msgstr "UNIX 時間戳 %lld 超出 Windows 所支援的範圍"
+
+#: gio/glocalfileinfo.c:2507
+#, c-format
+msgid "File name “%s” cannot be converted to UTF-16"
+msgstr "「%s」檔名無法轉換為 UTF-16"
+
+#: gio/glocalfileinfo.c:2526
+#, c-format
+msgid "File “%s” cannot be opened: Windows Error %lu"
+msgstr "無法開啟「%s」檔案：Windows 錯誤 %lu"
+
+#: gio/glocalfileinfo.c:2539
+#, c-format
+msgid "Error setting modification or access time for file “%s”: %lu"
+msgstr "設定「%s」檔案的修改或存取時間時發生錯誤：%lu"
+
+#: gio/glocalfileinfo.c:2640
 #, c-format
 msgid "Error setting modification or access time: %s"
 msgstr "設定修改或存取時刻時發生錯誤：%s"
 
-#: gio/glocalfileinfo.c:2477
+#: gio/glocalfileinfo.c:2663
 msgid "SELinux context must be non-NULL"
 msgstr "SELinux 情境必須為非-NULL"
 
-#: gio/glocalfileinfo.c:2492
+#: gio/glocalfileinfo.c:2678
 #, c-format
 msgid "Error setting SELinux context: %s"
 msgstr "設定 SELinux 情境時發生錯誤：%s"
 
-#: gio/glocalfileinfo.c:2499
+#: gio/glocalfileinfo.c:2685
 msgid "SELinux is not enabled on this system"
 msgstr "SELinux 在這個系統上並未啟用"
 
-#: gio/glocalfileinfo.c:2591
+#: gio/glocalfileinfo.c:2777
 #, c-format
 msgid "Setting attribute %s not supported"
 msgstr "不支援設定特性 %s"
@@ -3764,12 +3799,12 @@ msgstr "視窗不支援 GSocketControlMessage"
 msgid "Error receiving message: %s"
 msgstr "取回郵件發生錯誤：%s"
 
-#: gio/gsocket.c:5995
+#: gio/gsocket.c:5983 gio/gsocket.c:6031
 #, c-format
 msgid "Unable to read socket credentials: %s"
 msgstr "無法讀取 socket 機密：%s"
 
-#: gio/gsocket.c:6004
+#: gio/gsocket.c:6040
 msgid "g_socket_get_credentials not implemented for this OS"
 msgstr "g_socket_get_credentials 沒有在這個 OS 上實作"
 
@@ -4012,12 +4047,12 @@ msgstr "不是預期的控制訊息，卻收到 %d"
 msgid "Error while disabling SO_PASSCRED: %s"
 msgstr "停用 SO_PASSCRED 時發生錯誤：%s"
 
-#: gio/gunixinputstream.c:372 gio/gunixinputstream.c:393
+#: gio/gunixinputstream.c:362 gio/gunixinputstream.c:383
 #, c-format
 msgid "Error reading from file descriptor: %s"
 msgstr "讀取檔案描述狀態時發生錯誤：%s"
 
-#: gio/gunixinputstream.c:426 gio/gunixoutputstream.c:535
+#: gio/gunixinputstream.c:416 gio/gunixoutputstream.c:525
 #: gio/gwin32inputstream.c:217 gio/gwin32outputstream.c:204
 #, c-format
 msgid "Error closing file descriptor: %s"
@@ -4027,9 +4062,9 @@ msgstr "關閉檔案描述狀態時發生錯誤：%s"
 msgid "Filesystem root"
 msgstr "根檔案系統"
 
-#: gio/gunixoutputstream.c:372 gio/gunixoutputstream.c:392
-#: gio/gunixoutputstream.c:479 gio/gunixoutputstream.c:499
-#: gio/gunixoutputstream.c:676
+#: gio/gunixoutputstream.c:362 gio/gunixoutputstream.c:382
+#: gio/gunixoutputstream.c:469 gio/gunixoutputstream.c:489
+#: gio/gunixoutputstream.c:635
 #, c-format
 msgid "Error writing to file descriptor: %s"
 msgstr "寫入檔案描述狀態時發生錯誤：%s"
@@ -5055,61 +5090,61 @@ msgstr "在未開啟「%s」元素的關閉標籤內，文件突然結束"
 msgid "Document ended unexpectedly inside a comment or processing instruction"
 msgstr "在註解或處理指示內，文件突然結束"
 
-#: glib/goption.c:868
+#: glib/goption.c:873
 msgid "[OPTION…]"
 msgstr "[選項…]"
 
-#: glib/goption.c:984
+#: glib/goption.c:989
 msgid "Help Options:"
 msgstr "說明選項："
 
-#: glib/goption.c:985
+#: glib/goption.c:990
 msgid "Show help options"
 msgstr "顯示說明的選項"
 
-#: glib/goption.c:991
+#: glib/goption.c:996
 msgid "Show all help options"
 msgstr "顯示所有的說明選項"
 
-#: glib/goption.c:1054
+#: glib/goption.c:1059
 msgid "Application Options:"
 msgstr "應用程式選項："
 
-#: glib/goption.c:1056
+#: glib/goption.c:1061
 msgid "Options:"
 msgstr "選項："
 
-#: glib/goption.c:1120 glib/goption.c:1190
+#: glib/goption.c:1125 glib/goption.c:1195
 #, c-format
 msgid "Cannot parse integer value “%s” for %s"
 msgstr "無法給 %2$s 解析整數值「%1$s」"
 
-#: glib/goption.c:1130 glib/goption.c:1198
+#: glib/goption.c:1135 glib/goption.c:1203
 #, c-format
 msgid "Integer value “%s” for %s out of range"
 msgstr "%2$s 的整數值「%1$s」超出範圍"
 
-#: glib/goption.c:1155
+#: glib/goption.c:1160
 #, c-format
 msgid "Cannot parse double value “%s” for %s"
 msgstr "無法給 %2$s 解析雙精度浮點數「%1$s」"
 
-#: glib/goption.c:1163
+#: glib/goption.c:1168
 #, c-format
 msgid "Double value “%s” for %s out of range"
 msgstr "%2$s 的雙精度浮點數「%1$s」超出範圍"
 
-#: glib/goption.c:1455 glib/goption.c:1534
+#: glib/goption.c:1460 glib/goption.c:1539
 #, c-format
 msgid "Error parsing option %s"
 msgstr "解析 %s 選項時發生錯誤"
 
-#: glib/goption.c:1565 glib/goption.c:1678
+#: glib/goption.c:1570 glib/goption.c:1683
 #, c-format
 msgid "Missing argument for %s"
 msgstr "缺少 %s 的參數"
 
-#: glib/goption.c:2189
+#: glib/goption.c:2194
 #, c-format
 msgid "Unknown option %s"
 msgstr "不明的選項 %s"
@@ -5976,31 +6011,3 @@ msgstr "%.1f EB"
 
 #~ msgid "Key file does not have key '%s'"
 #~ msgstr "設定鍵檔案沒有設定鍵‘%s’"
-
-#, c-format
-#~ msgid "Extra nanoseconds %d for UNIX timestamp %lld are negative"
-#~ msgstr "UNIX 時間戳 %2$lld 的延伸奈秒 %1$d 是負數"
-
-#, c-format
-#~ msgid "Extra nanoseconds %d for UNIX timestamp %lld reach 1 second"
-#~ msgstr "UNIX 時間戳 %2$lld 的延伸奈秒 %1$d 達 1 秒"
-
-#, c-format
-#~ msgid "UNIX timestamp %lld does not fit into 64 bits"
-#~ msgstr "UNIX 時間戳 %lld 不能完整放入 64 位元"
-
-#, c-format
-#~ msgid "UNIX timestamp %lld is outside of the range supported by Windows"
-#~ msgstr "UNIX 時間戳 %lld 超出 Windows 所支援的範圍"
-
-#, c-format
-#~ msgid "File name “%s” cannot be converted to UTF-16"
-#~ msgstr "「%s」檔名無法轉換為 UTF-16"
-
-#, c-format
-#~ msgid "File “%s” cannot be opened: Windows Error %lu"
-#~ msgstr "無法開啟「%s」檔案：Windows 錯誤 %lu"
-
-#, c-format
-#~ msgid "Error setting modification or access time for file “%s”: %lu"
-#~ msgstr "設定「%s」檔案的修改或存取時間時發生錯誤：%lu"

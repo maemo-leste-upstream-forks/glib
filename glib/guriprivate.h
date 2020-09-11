@@ -1,6 +1,5 @@
-/* GIO - GLib Input, Output and Streaming Library
- *
- * Copyright (C) 2016 Red Hat, Inc.
+/*
+ * Copyright © 2020 Red Hat, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -12,19 +11,26 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General
- * Public License along with this library; if not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, see <http://www.gnu.org/licenses/>.
  *
- * Author: Ondrej Holy <oholy@redhat.com>
+ * Author: Marc-André Lureau <marcandre.lureau@redhat.com>
  */
 
-#ifndef __G_LOCAL_FILE_PRIVATE_H__
-#define __G_LOCAL_FILE_PRIVATE_H__
+#ifndef __G_URI_PRIVATE_H__
+#define __G_URI_PRIVATE_H__
+
+#include "gtypes.h"
 
 G_BEGIN_DECLS
 
-gchar *_g_local_file_find_topdir_for (const char *file_path);
+void
+_uri_encoder (GString      *out,
+              const guchar *start,
+              gsize         length,
+              const gchar  *reserved_chars_allowed,
+              gboolean      allow_utf8);
 
 G_END_DECLS
 
-#endif /* __G_LOCAL_FILE_PRIVATE_H__ */
+#endif /* __G_URI_PRIVATE_H__ */

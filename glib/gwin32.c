@@ -109,7 +109,7 @@ g_win32_getlocale (void)
 {
   LCID lcid;
   LANGID langid;
-  gchar *ev;
+  const gchar *ev;
   gint primary, sub;
   char iso639[10];
   char iso3166[10];
@@ -120,9 +120,9 @@ g_win32_getlocale (void)
    * since GTK+ 2.10.7 setting either LC_ALL or LANG also sets the
    * Win32 locale and C library locale through code in gtkmain.c.
    */
-  if (((ev = getenv ("LC_ALL")) != NULL && ev[0] != '\0')
-      || ((ev = getenv ("LC_MESSAGES")) != NULL && ev[0] != '\0')
-      || ((ev = getenv ("LANG")) != NULL && ev[0] != '\0'))
+  if (((ev = g_getenv ("LC_ALL")) != NULL && ev[0] != '\0')
+      || ((ev = g_getenv ("LC_MESSAGES")) != NULL && ev[0] != '\0')
+      || ((ev = g_getenv ("LANG")) != NULL && ev[0] != '\0'))
     return g_strdup (ev);
 
   lcid = GetThreadLocale ();
@@ -386,7 +386,7 @@ get_package_directory_from_module (const gchar *module_name)
  * installations of different versions of some GLib-using library, or
  * GLib itself, is desirable for various reasons.
  *
- * For this reason it is recommeded to always pass %NULL as
+ * For this reason it is recommended to always pass %NULL as
  * @package to this function, to avoid the temptation to use the
  * Registry. In version 2.20 of GLib the @package parameter
  * will be ignored and this function won't look in the Registry at all.
@@ -624,7 +624,7 @@ g_win32_get_windows_version (void)
  * gettext initialization.
  */
 static gchar *
-special_wchar_to_locale_enoding (wchar_t *wstring)
+special_wchar_to_locale_encoding (wchar_t *wstring)
 {
   int sizeof_output;
   int wctmb_result;
@@ -701,7 +701,7 @@ g_win32_locale_filename_from_utf8 (const gchar *utf8filename)
   if (wname == NULL)
     return NULL;
 
-  retval = special_wchar_to_locale_enoding (wname);
+  retval = special_wchar_to_locale_encoding (wname);
 
   if (retval == NULL)
     {
@@ -709,7 +709,7 @@ g_win32_locale_filename_from_utf8 (const gchar *utf8filename)
       wchar_t wshortname[MAX_PATH + 1];
 
       if (GetShortPathNameW (wname, wshortname, G_N_ELEMENTS (wshortname)))
-        retval = special_wchar_to_locale_enoding (wshortname);
+        retval = special_wchar_to_locale_encoding (wshortname);
     }
 
   g_free (wname);
@@ -1049,7 +1049,7 @@ static void *WinVEH_handle = NULL;
  * * EXCEPTION_STACK_OVERFLOW
  * * EXCEPTION_ILLEGAL_INSTRUCTION
  * To make it stop at other exceptions one should set the G_VEH_CATCH
- * environment variable to a list of comma-separated hexademical numbers,
+ * environment variable to a list of comma-separated hexadecimal numbers,
  * where each number is the code of an exception that should be caught.
  * This is done to prevent GLib from breaking when Windows uses
  * exceptions to shuttle information (SetThreadName(), OutputDebugString())
@@ -1084,7 +1084,7 @@ g_win32_veh_handler (PEXCEPTION_POINTERS ExceptionInfo)
     case EXCEPTION_ILLEGAL_INSTRUCTION:
       break;
     default:
-      catch_list = getenv ("G_VEH_CATCH");
+      catch_list = g_getenv ("G_VEH_CATCH");
 
       while (!catch &&
              catch_list != NULL &&
@@ -1143,7 +1143,7 @@ g_win32_veh_handler (PEXCEPTION_POINTERS ExceptionInfo)
 
   fflush (stderr);
 
-  debugger_env = getenv ("G_DEBUGGER");
+  debugger_env = g_getenv ("G_DEBUGGER");
 
   if (debugger_env == NULL)
     return EXCEPTION_CONTINUE_SEARCH;
@@ -1173,7 +1173,7 @@ g_win32_veh_handler (PEXCEPTION_POINTERS ExceptionInfo)
                            NULL,
                            NULL,
                            TRUE,
-                           getenv ("G_DEBUGGER_OLD_CONSOLE") != NULL ? 0 : CREATE_NEW_CONSOLE,
+                           g_getenv ("G_DEBUGGER_OLD_CONSOLE") != NULL ? 0 : CREATE_NEW_CONSOLE,
                            NULL,
                            NULL,
                            &si,
@@ -1213,7 +1213,7 @@ g_crash_handler_win32_init (void)
    * break advanced exception handling such as in CLRs like C# or other managed
    * code. See: https://blogs.msdn.microsoft.com/jmstall/2006/05/24/beware-of-the-vectored-exception-handler-and-managed-code/
    */
-  if (getenv ("G_DEBUGGER") == NULL && getenv("G_VEH_CATCH") == NULL)
+  if (g_getenv ("G_DEBUGGER") == NULL && g_getenv("G_VEH_CATCH") == NULL)
     return;
 
   WinVEH_handle = AddVectoredExceptionHandler (0, &g_win32_veh_handler);

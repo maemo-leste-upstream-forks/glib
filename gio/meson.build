@@ -10,15 +10,9 @@ gio_c_args += glib_hidden_visibility_args
 
 gnetworking_h_conf = configuration_data()
 
-gnetworking_h_wspiapi_include = ''
 gnetworking_h_nameser_compat_include = ''
 
-if host_system == 'windows'
-  # <wspiapi.h> in the Windows SDK and in mingw-w64 has wrappers for
-  # inline workarounds for getaddrinfo, getnameinfo and freeaddrinfo if
-  # they aren't present at run-time (on Windows 2000).
-  gnetworking_h_wspiapi_include = '#include <wspiapi.h>'
-elif not host_system.contains('android')
+if host_system != 'windows' and not host_system.contains('android')
   # Don't check for C_IN on Android since it does not define it in public
   # headers, we define it ourselves wherever necessary
   if not cc.compiles('''#include <sys/types.h>
@@ -168,7 +162,6 @@ if host_system.contains('android')
   endif
 endif
 
-gnetworking_h_conf.set('WSPIAPI_INCLUDE', gnetworking_h_wspiapi_include)
 gnetworking_h_conf.set('NAMESER_COMPAT_INCLUDE', gnetworking_h_nameser_compat_include)
 
 gnetworking_h = configure_file(input : 'gnetworking.h.in',
@@ -813,6 +806,10 @@ endif
 
 schemas_subdir = join_paths('glib-2.0', 'schemas')
 
+libgio_dep = declare_dependency(link_with : libgio,
+  dependencies : [libgmodule_dep, libgobject_dep, gioenumtypes_dep],
+  include_directories : [gioinc])
+
 pkg.generate(libgio,
   libraries_private : [osx_ldflags],
   requires : ['glib-2.0', 'gobject-2.0'],
@@ -835,6 +832,11 @@ pkg.generate(libgio,
   description : 'glib I/O library',
 )
 
+if meson.version().version_compare('>=0.54.0')
+  meson.override_dependency('gio-2.0', libgio_dep)
+endif
+
+
 if host_system == 'windows'
   pkg.generate(requires : ['gobject-2.0', 'gmodule-no-export-2.0', 'gio-2.0'],
     subdirs : ['gio-win32-2.0'],
@@ -844,6 +846,9 @@ if host_system == 'windows'
     name : 'GIO Windows specific APIs',
     description : 'Windows specific headers for glib I/O library',
   )
+  if meson.version().version_compare('>=0.54.0')
+    meson.override_dependency('gio-win32-2.0', libgio_dep)
+  endif
 else
   pkg.generate(requires : ['gobject-2.0', 'gio-2.0'],
     subdirs : ['gio-unix-2.0'],
@@ -853,11 +858,10 @@ else
     name : 'GIO unix specific APIs',
     description : 'unix specific headers for glib I/O library',
   )
+  if meson.version().version_compare('>=0.54.0')
+    meson.override_dependency('gio-unix-2.0', libgio_dep)
+  endif
 endif
-
-libgio_dep = declare_dependency(link_with : libgio,
-  dependencies : [libgmodule_dep, libgobject_dep, gioenumtypes_dep],
-  include_directories : [gioinc])
 
 if host_system == 'windows'
   # Hack till https://github.com/mesonbuild/meson/issues/2324 is fixed

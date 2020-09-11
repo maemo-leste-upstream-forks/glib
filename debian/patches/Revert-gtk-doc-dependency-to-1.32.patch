@@ -1,0 +1,24 @@
+From: Simon McVittie <smcv@debian.org>
+Date: Tue, 25 Aug 2020 11:35:16 +0100
+Subject: Revert gtk-doc dependency to 1.32
+
+Our patched gtk-doc has the right patches for this GLib version.
+
+Forwarded: not-needed, Debian-specific
+---
+ docs/reference/meson.build | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/docs/reference/meson.build b/docs/reference/meson.build
+index a676af1..7c3e589 100644
+--- a/docs/reference/meson.build
++++ b/docs/reference/meson.build
+@@ -52,7 +52,7 @@ if get_option('gtk_doc')
+   endif
+   # Check we have the minimum gtk-doc version required. Older versions won't
+   # generate correct documentation.
+-  dependency('gtk-doc', version : '>=1.32.1',
++  dependency('gtk-doc', version : '>=1.32',
+     fallback : ['gtk-doc', 'dummy_dep'],
+     default_options : ['tests=false'])
+ endif

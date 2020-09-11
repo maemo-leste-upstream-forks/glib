@@ -26,6 +26,7 @@
 #include "gsocket.h"
 #include "gtlsbackend.h"
 #include "gtlscertificate.h"
+#include "gtlsconnection.h"
 #include "gdtlsclientconnection.h"
 #include "gtlsdatabase.h"
 #include "gtlsinteraction.h"
@@ -109,7 +110,7 @@ g_dtls_connection_default_init (GDtlsConnectionInterface *iface)
                                                             G_PARAM_CONSTRUCT_ONLY |
                                                             G_PARAM_STATIC_STRINGS));
   /**
-   * GDtlsConnection:database:
+   * GDtlsConnection:database: (nullable)
    *
    * The certificate database to use when verifying this TLS connection.
    * If no certificate database is set, then the default database will be
@@ -125,7 +126,7 @@ g_dtls_connection_default_init (GDtlsConnectionInterface *iface)
                                                             G_PARAM_READWRITE |
                                                             G_PARAM_STATIC_STRINGS));
   /**
-   * GDtlsConnection:interaction:
+   * GDtlsConnection:interaction: (nullable)
    *
    * A #GTlsInteraction object to be used when the connection or certificate
    * database need to interact with the user. This will be used to prompt the
@@ -192,12 +193,11 @@ g_dtls_connection_default_init (GDtlsConnectionInterface *iface)
                                                             G_PARAM_READWRITE |
                                                             G_PARAM_STATIC_STRINGS));
   /**
-   * GDtlsConnection:peer-certificate:
+   * GDtlsConnection:peer-certificate: (nullable)
    *
    * The connection's peer's certificate, after the TLS handshake has
-   * completed and the certificate has been accepted. Note in
-   * particular that this is not yet set during the emission of
-   * #GDtlsConnection::accept-certificate.
+   * completed or failed. Note in particular that this is not yet set
+   * during the emission of #GDtlsConnection::accept-certificate.
    *
    * (You can watch for a #GObject::notify signal on this property to
    * detect when a handshake has occurred.)
@@ -214,7 +214,7 @@ g_dtls_connection_default_init (GDtlsConnectionInterface *iface)
   /**
    * GDtlsConnection:peer-certificate-errors:
    *
-   * The errors noticed-and-ignored while verifying
+   * The errors noticed while verifying
    * #GDtlsConnection:peer-certificate. Normally this should be 0, but
    * it may not be if #GDtlsClientConnection:validation-flags is not
    * %G_TLS_CERTIFICATE_VALIDATE_ALL, or if
@@ -232,7 +232,7 @@ g_dtls_connection_default_init (GDtlsConnectionInterface *iface)
                                                            G_PARAM_READABLE |
                                                            G_PARAM_STATIC_STRINGS));
   /**
-   * GDtlsConnection:advertised-protocols:
+   * GDtlsConnection:advertised-protocols: (nullable)
    *
    * The list of application-layer protocols that the connection
    * advertises that it is willing to speak. See
@@ -328,7 +328,7 @@ g_dtls_connection_default_init (GDtlsConnectionInterface *iface)
 /**
  * g_dtls_connection_set_database:
  * @conn: a #GDtlsConnection
- * @database: a #GTlsDatabase
+ * @database: (nullable): a #GTlsDatabase
  *
  * Sets the certificate database that is used to verify peer certificates.
  * This is set to the default database by default. See
@@ -360,7 +360,7 @@ g_dtls_connection_set_database (GDtlsConnection *conn,
  * Gets the certificate database that @conn uses to verify
  * peer certificates. See g_dtls_connection_set_database().
  *
- * Returns: (transfer none): the certificate database that @conn uses or %NULL
+ * Returns: (transfer none) (nullable): the certificate database that @conn uses or %NULL
  *
  * Since: 2.48
  */
@@ -422,7 +422,7 @@ g_dtls_connection_set_certificate (GDtlsConnection *conn,
  * Gets @conn's certificate, as set by
  * g_dtls_connection_set_certificate().
  *
- * Returns: (transfer none): @conn's certificate, or %NULL
+ * Returns: (transfer none) (nullable): @conn's certificate, or %NULL
  *
  * Since: 2.48
  */
@@ -472,7 +472,7 @@ g_dtls_connection_set_interaction (GDtlsConnection *conn,
  * for things like prompting the user for passwords. If %NULL is returned, then
  * no user interaction will occur for this connection.
  *
- * Returns: (transfer none): The interaction object.
+ * Returns: (transfer none) (nullable): The interaction object.
  *
  * Since: 2.48
  */
@@ -494,11 +494,11 @@ g_dtls_connection_get_interaction (GDtlsConnection       *conn)
  * g_dtls_connection_get_peer_certificate:
  * @conn: a #GDtlsConnection
  *
- * Gets @conn's peer's certificate after the handshake has completed.
- * (It is not set during the emission of
+ * Gets @conn's peer's certificate after the handshake has completed
+ * or failed. (It is not set during the emission of
  * #GDtlsConnection::accept-certificate.)
  *
- * Returns: (transfer none): @conn's peer's certificate, or %NULL
+ * Returns: (transfer none) (nullable): @conn's peer's certificate, or %NULL
  *
  * Since: 2.48
  */
@@ -521,8 +521,8 @@ g_dtls_connection_get_peer_certificate (GDtlsConnection *conn)
  * @conn: a #GDtlsConnection
  *
  * Gets the errors associated with validating @conn's peer's
- * certificate, after the handshake has completed. (It is not set
- * during the emission of #GDtlsConnection::accept-certificate.)
+ * certificate, after the handshake has completed or failed. (It is
+ * not set during the emission of #GDtlsConnection::accept-certificate.)
  *
  * Returns: @conn's peer's certificate errors
  *
@@ -1073,4 +1073,53 @@ g_dtls_connection_get_negotiated_protocol (GDtlsConnection *conn)
     return NULL;
 
   return iface->get_negotiated_protocol (conn);
+}
+
+/**
+ * g_dtls_connection_get_channel_binding_data:
+ * @conn: a #GDtlsConnection
+ * @type: #GTlsChannelBindingType type of data to fetch
+ * @data: (out callee-allocates)(optional)(transfer none): #GByteArray is
+ *        filled with the binding data, or %NULL
+ * @error: a #GError pointer, or %NULL
+ *
+ * Query the TLS backend for TLS channel binding data of @type for @conn.
+ *
+ * This call retrieves TLS channel binding data as specified in RFC
+ * [5056](https://tools.ietf.org/html/rfc5056), RFC
+ * [5929](https://tools.ietf.org/html/rfc5929), and related RFCs.  The
+ * binding data is returned in @data.  The @data is resized by the callee
+ * using #GByteArray buffer management and will be freed when the @data
+ * is destroyed by g_byte_array_unref(). If @data is %NULL, it will only
+ * check whether TLS backend is able to fetch the data (e.g. whether @type
+ * is supported by the TLS backend). It does not guarantee that the data
+ * will be available though.  That could happen if TLS connection does not
+ * support @type or the binding data is not available yet due to additional
+ * negotiation or input required.
+ *
+ * Returns: %TRUE on success, %FALSE otherwise
+ *
+ * Since: 2.66
+ */
+gboolean
+g_dtls_connection_get_channel_binding_data (GDtlsConnection         *conn,
+                                            GTlsChannelBindingType   type,
+                                            GByteArray              *data,
+                                            GError                 **error)
+{
+  GDtlsConnectionInterface *iface;
+
+  g_return_val_if_fail (G_IS_DTLS_CONNECTION (conn), FALSE);
+  g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+
+  iface = G_DTLS_CONNECTION_GET_INTERFACE (conn);
+  if (iface->get_binding_data == NULL)
+    {
+      g_set_error_literal (error, G_TLS_CHANNEL_BINDING_ERROR,
+          G_TLS_CHANNEL_BINDING_ERROR_NOT_IMPLEMENTED,
+          _("TLS backend does not implement TLS binding retrieval"));
+      return FALSE;
+    }
+
+  return iface->get_binding_data (conn, type, data, error);
 }

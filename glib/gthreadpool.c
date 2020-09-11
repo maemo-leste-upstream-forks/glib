@@ -528,6 +528,10 @@ g_thread_pool_start_thread (GRealThreadPool  *pool,
  * with the two arguments. The first one is the parameter to
  * g_thread_pool_push() and the second one is @user_data.
  *
+ * Pass g_get_num_processors() to @max_threads to create as many threads as
+ * there are logical processors on the system. This will not pin each thread to
+ * a specific processor.
+ *
  * The parameter @exclusive determines whether the thread pool owns
  * all threads exclusive or shares them with other thread pools.
  * If @exclusive is %TRUE, @max_threads threads are started
@@ -861,10 +865,10 @@ g_thread_pool_unprocessed (GThreadPool *pool)
  * processing a task. Instead at least all still running threads
  * can finish their tasks before the @pool is freed.
  *
- * If @wait_ is %TRUE, the functions does not return before all
+ * If @wait_ is %TRUE, this function does not return before all
  * tasks to be processed (dependent on @immediate, whether all
  * or only the currently running) are ready.
- * Otherwise the function returns immediately.
+ * Otherwise this function returns immediately.
  *
  * After calling this function @pool must not be used anymore.
  */

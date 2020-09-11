@@ -644,6 +644,7 @@ libgio-2.0.so.0 libglib2.0-0 #MINVER#
  g_dtls_connection_close_finish@Base 2.47.5
  g_dtls_connection_emit_accept_certificate@Base 2.47.5
  g_dtls_connection_get_certificate@Base 2.47.5
+ g_dtls_connection_get_channel_binding_data@Base 2.65.1
  g_dtls_connection_get_database@Base 2.47.5
  g_dtls_connection_get_interaction@Base 2.47.5
  g_dtls_connection_get_negotiated_protocol@Base 2.59.0
@@ -1820,6 +1821,9 @@ libgio-2.0.so.0 libglib2.0-0 #MINVER#
  g_tls_certificate_new_from_pem@Base 2.28.0
  g_tls_certificate_request_flags_get_type@Base 2.39.4
  g_tls_certificate_verify@Base 2.28.0
+ g_tls_channel_binding_error_get_type@Base 2.65.1
+ g_tls_channel_binding_error_quark@Base 2.65.1
+ g_tls_channel_binding_type_get_type@Base 2.65.1
  g_tls_client_connection_copy_session_state@Base 2.45.1
  g_tls_client_connection_get_accepted_cas@Base 2.28.0
  g_tls_client_connection_get_server_identity@Base 2.28.0
@@ -1832,6 +1836,7 @@ libgio-2.0.so.0 libglib2.0-0 #MINVER#
  g_tls_client_connection_set_validation_flags@Base 2.28.0
  g_tls_connection_emit_accept_certificate@Base 2.28.0
  g_tls_connection_get_certificate@Base 2.28.0
+ g_tls_connection_get_channel_binding_data@Base 2.65.1
  g_tls_connection_get_database@Base 2.30.0
  g_tls_connection_get_interaction@Base 2.30.0
  g_tls_connection_get_negotiated_protocol@Base 2.59.0
@@ -1954,6 +1959,7 @@ libgio-2.0.so.0 libglib2.0-0 #MINVER#
  g_unix_mount_monitor_get_type@Base 2.16.0
  g_unix_mount_monitor_new@Base 2.16.0
  g_unix_mount_monitor_set_rate_limit@Base 2.18.0
+ g_unix_mount_point_at@Base 2.65.1
  g_unix_mount_point_compare@Base 2.16.0
  g_unix_mount_point_copy@Base 2.53.1
  g_unix_mount_point_free@Base 2.16.0
@@ -2157,7 +2163,9 @@ libglib-2.0.so.0 libglib2.0-0 #MINVER#
  g_bookmark_file_error_quark@Base 2.12.0
  g_bookmark_file_free@Base 2.12.0
  g_bookmark_file_get_added@Base 2.12.0
+ g_bookmark_file_get_added_date_time@Base 2.65.1
  g_bookmark_file_get_app_info@Base 2.12.0
+ g_bookmark_file_get_application_info@Base 2.65.1
  g_bookmark_file_get_applications@Base 2.12.0
  g_bookmark_file_get_description@Base 2.12.0
  g_bookmark_file_get_groups@Base 2.12.0
@@ -2165,10 +2173,12 @@ libglib-2.0.so.0 libglib2.0-0 #MINVER#
  g_bookmark_file_get_is_private@Base 2.12.0
  g_bookmark_file_get_mime_type@Base 2.12.0
  g_bookmark_file_get_modified@Base 2.12.0
+ g_bookmark_file_get_modified_date_time@Base 2.65.1
  g_bookmark_file_get_size@Base 2.12.0
  g_bookmark_file_get_title@Base 2.12.0
  g_bookmark_file_get_uris@Base 2.12.0
  g_bookmark_file_get_visited@Base 2.12.0
+ g_bookmark_file_get_visited_date_time@Base 2.65.1
  g_bookmark_file_has_application@Base 2.12.0
  g_bookmark_file_has_group@Base 2.12.0
  g_bookmark_file_has_item@Base 2.12.0
@@ -2181,15 +2191,19 @@ libglib-2.0.so.0 libglib2.0-0 #MINVER#
  g_bookmark_file_remove_group@Base 2.12.0
  g_bookmark_file_remove_item@Base 2.12.0
  g_bookmark_file_set_added@Base 2.12.0
+ g_bookmark_file_set_added_date_time@Base 2.65.1
  g_bookmark_file_set_app_info@Base 2.12.0
+ g_bookmark_file_set_application_info@Base 2.65.1
  g_bookmark_file_set_description@Base 2.12.0
  g_bookmark_file_set_groups@Base 2.12.0
  g_bookmark_file_set_icon@Base 2.12.0
  g_bookmark_file_set_is_private@Base 2.12.0
  g_bookmark_file_set_mime_type@Base 2.12.0
  g_bookmark_file_set_modified@Base 2.12.0
+ g_bookmark_file_set_modified_date_time@Base 2.65.1
  g_bookmark_file_set_title@Base 2.12.0
  g_bookmark_file_set_visited@Base 2.12.0
+ g_bookmark_file_set_visited_date_time@Base 2.65.1
  g_bookmark_file_to_data@Base 2.12.0
  g_bookmark_file_to_file@Base 2.12.0
  g_build_filename@Base 2.12.0
@@ -2427,6 +2441,7 @@ libglib-2.0.so.0 libglib2.0-0 #MINVER#
  g_file_open_tmp@Base 2.12.0
  g_file_read_link@Base 2.12.0
  g_file_set_contents@Base 2.12.0
+ g_file_set_contents_full@Base 2.65.1
  g_file_test@Base 2.12.0
  g_filename_display_basename@Base 2.12.0
  g_filename_display_name@Base 2.12.0
@@ -3524,11 +3539,44 @@ libglib-2.0.so.0 libglib2.0-0 #MINVER#
  g_unix_signal_source_new@Base 2.30.0
  g_unlink@Base 2.12.0
  g_unsetenv@Base 2.12.0
+ g_uri_build@Base 2.65.1
+ g_uri_build_with_user@Base 2.65.1
+ g_uri_error_quark@Base 2.65.1
+ g_uri_escape_bytes@Base 2.65.1
  g_uri_escape_string@Base 2.16.0
+ g_uri_get_auth_params@Base 2.65.1
+ g_uri_get_flags@Base 2.65.1
+ g_uri_get_fragment@Base 2.65.1
+ g_uri_get_host@Base 2.65.1
+ g_uri_get_password@Base 2.65.1
+ g_uri_get_path@Base 2.65.1
+ g_uri_get_port@Base 2.65.1
+ g_uri_get_query@Base 2.65.1
+ g_uri_get_scheme@Base 2.65.1
+ g_uri_get_user@Base 2.65.1
+ g_uri_get_userinfo@Base 2.65.1
+ g_uri_is_valid@Base 2.65.1
+ g_uri_join@Base 2.65.1
+ g_uri_join_with_user@Base 2.65.1
  g_uri_list_extract_uris@Base 2.12.0
+ g_uri_params_iter_init@Base 2.65.1
+ g_uri_params_iter_next@Base 2.65.1
+ g_uri_parse@Base 2.65.1
+ g_uri_parse_params@Base 2.65.1
+ g_uri_parse_relative@Base 2.65.1
  g_uri_parse_scheme@Base 2.16.0
+ g_uri_peek_scheme@Base 2.65.1
+ g_uri_ref@Base 2.65.1
+ g_uri_resolve_relative@Base 2.65.1
+ g_uri_split@Base 2.65.1
+ g_uri_split_network@Base 2.65.1
+ g_uri_split_with_user@Base 2.65.1
+ g_uri_to_string@Base 2.65.1
+ g_uri_to_string_partial@Base 2.65.1
+ g_uri_unescape_bytes@Base 2.65.1
  g_uri_unescape_segment@Base 2.16.0
  g_uri_unescape_string@Base 2.16.0
+ g_uri_unref@Base 2.65.1
  g_usleep@Base 2.12.0
  g_utf16_to_ucs4@Base 2.12.0
  g_utf16_to_utf8@Base 2.12.0
@@ -3951,6 +3999,7 @@ libgobject-2.0.so.0 libglib2.0-0 #MINVER#
  g_param_spec_int64@Base 2.12.0
  g_param_spec_int@Base 2.12.0
  g_param_spec_internal@Base 2.12.0
+ g_param_spec_is_valid_name@Base 2.65.1
  g_param_spec_long@Base 2.12.0
  g_param_spec_object@Base 2.12.0
  g_param_spec_override@Base 2.12.0
@@ -4012,6 +4061,7 @@ libgobject-2.0.so.0 libglib2.0-0 #MINVER#
  g_signal_handlers_disconnect_matched@Base 2.12.0
  g_signal_handlers_unblock_matched@Base 2.12.0
  g_signal_has_handler_pending@Base 2.12.0
+ g_signal_is_valid_name@Base 2.65.1
  g_signal_list_ids@Base 2.12.0
  g_signal_lookup@Base 2.12.0
  g_signal_name@Base 2.12.0
@@ -4117,6 +4167,7 @@ libgobject-2.0.so.0 libglib2.0-0 #MINVER#
  g_unicode_break_type_get_type@Base 2.59.2
  g_unicode_script_get_type@Base 2.59.2
  g_unicode_type_get_type@Base 2.59.2
+ g_uri_get_type@Base 2.65.1
  g_value_array_append@Base 2.12.0
  g_value_array_copy@Base 2.12.0
  g_value_array_free@Base 2.12.0
@@ -4174,6 +4225,7 @@ libgobject-2.0.so.0 libglib2.0-0 #MINVER#
  g_value_set_instance@Base 2.12.0
  g_value_set_int64@Base 2.12.0
  g_value_set_int@Base 2.12.0
+ g_value_set_interned_string@Base 2.65.1
  g_value_set_long@Base 2.12.0
  g_value_set_object@Base 2.12.0
  g_value_set_object_take_ownership@Base 2.12.0

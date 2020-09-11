@@ -1,5 +1,5 @@
 project('glib', 'c', 'cpp',
-  version : '2.64.4',
+  version : '2.66.0',
   # NOTE: We keep this pinned at 0.49 because that's what Debian 10 ships
   meson_version : '>= 0.49.2',
   default_options : [
@@ -32,6 +32,16 @@ else
 endif
 
 host_system = host_machine.system()
+
+if host_system == 'darwin'
+  ios_test_code = '''#include <TargetConditionals.h>
+  #if ! TARGET_OS_IPHONE
+  #error "Not iOS/tvOS/watchOS/iPhoneSimulator"
+  #endif'''
+  if cc.compiles(ios_test_code, name : 'building for iOS')
+    host_system = 'ios'
+  endif
+endif
 
 glib_version = meson.project_version()
 glib_api_version = '2.0'
@@ -210,15 +220,37 @@ else
 endif
 glibconfig_conf.set('glib_os', glib_os)
 
-# We need to know the build type to determine what .lib files we need on Visual Studio
-# for dependencies that don't normally come with pkg-config files for Visual Studio builds
-buildtype = get_option('buildtype')
+# We need to know the CRT being used to determine what .lib files we need on
+# Visual Studio for dependencies that don't normally come with pkg-config files
+vs_crt = 'release'
+vs_crt_opt = get_option('b_vscrt')
+if vs_crt_opt in ['mdd', 'mtd']
+  vs_crt = 'debug'
+elif vs_crt_opt == 'from_buildtype'
+  if get_option('buildtype') == 'debug'
+    vs_crt = 'debug'
+  endif
+endif
 
+# Use debug/optimization flags to determine whether to enable debug or disable
+# cast checks
 glib_debug_cflags = []
-if buildtype.startswith('debug')
+if get_option('debug')
   glib_debug_cflags += ['-DG_ENABLE_DEBUG']
-elif buildtype == 'release'
+  message('Enabling various debug infrastructure')
+elif get_option('optimization') in ['2', '3', 's']
   glib_debug_cflags += ['-DG_DISABLE_CAST_CHECKS']
+  message('Disabling cast checks')
+endif
+
+if not get_option('glib_assert')
+  glib_debug_cflags += ['-DG_DISABLE_ASSERT']
+  message('Disabling GLib asserts')
+endif
+
+if not get_option('glib_checks')
+  glib_debug_cflags += ['-DG_DISABLE_CHECKS']
+  message('Disabling GLib checks')
 endif
 
 add_project_arguments(glib_debug_cflags, language: 'c')
@@ -294,6 +326,23 @@ endif
 
 if cc.has_header('linux/netlink.h')
   glib_conf.set('HAVE_NETLINK', 1)
+endif
+
+# Is statx() supported? Android systems don’t reliably support it as of August 2020.
+statx_code = '''
+  #ifndef _GNU_SOURCE
+  #define _GNU_SOURCE
+  #endif
+  #include <sys/stat.h>
+  #include <fcntl.h>
+  int main (void)
+  {
+    struct statx stat_buf;
+    return statx (AT_FDCWD, "/", AT_SYMLINK_NOFOLLOW, STATX_BASIC_STATS | STATX_BTIME, &stat_buf);
+  }
+  '''
+if host_system != 'android' and cc.compiles(statx_code, name : 'statx() test')
+  glib_conf.set('HAVE_STATX', 1)
 endif
 
 if glib_conf.has('HAVE_LOCALE_H')
@@ -480,8 +529,13 @@ functions = [
   'wcslen',
   'wcsnlen',
   'sysctlbyname',
-  '_NSGetEnviron',
 ]
+
+# _NSGetEnviron is available on iOS too, but its usage gets apps rejected from
+# the app store since it's considered 'private API'
+if host_system == 'darwin'
+  functions += ['_NSGetEnviron']
+endif
 
 if glib_conf.has('HAVE_SYS_STATVFS_H')
   functions += ['statvfs']
@@ -546,6 +600,19 @@ endforeach
 if host_system != 'windows' and cc.has_function('stpcpy', prefix : '#include <string.h>')
   glib_conf.set('HAVE_STPCPY', 1)
 endif
+
+# When building for Android-20 and earlier, require Meson 0.54.2 or newer.
+# This is needed, because Meson build versions prior to 0.54.2 return false
+# positive for stpcpy has_function check when building for legacy Android.
+if host_system.startswith('android-')
+    android_is_older = cc.compiles('''#if __ANDROID_API__ >= 21
+                                        #error Android is 21 or newer
+                                    #endif''')
+    if android_is_older and meson.version().version_compare('< 0.54.2')
+      error('Compiling for <Android-21 requires Meson 0.54.2 or newer')
+    endif
+endif
+
 
 # Check that posix_memalign() is usable; must use header
 if host_system != 'windows' and cc.has_function('posix_memalign', prefix : '#include <stdlib.h>')
@@ -722,6 +789,17 @@ if cc.links('''#include <sys/eventfd.h>
   glib_conf.set('HAVE_EVENTFD', 1)
 endif
 
+# Check for __uint128_t (gcc) by checking for 128-bit division
+uint128_t_src = '''int main() {
+static __uint128_t v1 = 100;
+static __uint128_t v2 = 10;
+static __uint128_t u;
+u = v1 / v2;
+}'''
+if cc.compiles(uint128_t_src, name : '__uint128_t available')
+  glib_conf.set('HAVE_UINT128_T', 1)
+endif
+
 clock_gettime_test_code = '''
   #include <time.h>
   struct timespec t;
@@ -814,6 +892,17 @@ if cc.compiles('''#include <fcntl.h>
   glib_conf.set('HAVE_OPEN_O_DIRECTORY', 1)
 endif
 
+# fcntl takes F_FULLFSYNC as an option
+# See https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man2/fsync.2.html
+if cc.compiles('''#include <fcntl.h>
+                  #include <sys/types.h>
+                  #include <sys/stat.h>
+                  void some_func (void) {
+                    fcntl(0, F_FULLFSYNC, 0);
+                  }''', name : 'fcntl() option F_FULLFSYNC')
+  glib_conf.set('HAVE_FCNTL_F_FULLFSYNC', 1)
+endif
+
 # Check whether there is a vsnprintf() function with C99 semantics installed.
 # (similar tests to AC_FUNC_VSNPRINTF_C99)
 # Check whether there is a snprintf() function with C99 semantics installed.
@@ -834,6 +923,15 @@ if host_system == 'windows' and (cc.get_id() == 'msvc' or cc.get_id() == 'clang-
   glib_conf.set('HAVE_C99_SNPRINTF', false)
   glib_conf.set('HAVE_C99_VSNPRINTF', false)
   glib_conf.set('HAVE_UNIX98_PRINTF', false)
+elif not cc_can_run and host_system in ['ios', 'darwin']
+  # All these are true when compiling natively on macOS, so we should use good
+  # defaults when building for iOS and tvOS.
+  glib_conf.set('HAVE_C99_SNPRINTF', true)
+  glib_conf.set('HAVE_C99_VSNPRINTF', true)
+  glib_conf.set('HAVE_UNIX98_PRINTF', true)
+  have_good_vsnprintf = true
+  have_good_snprintf = true
+  have_good_printf = true
 else
   vsnprintf_c99_test_code = '''
 #include <stdio.h>
@@ -1654,18 +1752,6 @@ foreach d : inet_defines
   glibconfig_conf.set(d[1], val)
 endforeach
 
-# We need a more robust approach here...
-host_cpu_family = host_machine.cpu_family()
-if host_cpu_family == 'x86' or host_cpu_family == 'x86_64' or host_cpu_family == 's390' or host_cpu_family == 's390x' or host_cpu_family.startswith('arm') or host_cpu_family == 'aarch64' or host_cpu_family.startswith('crisv32') or host_cpu_family.startswith('etrax')
-  glib_memory_barrier_needed = false
-elif host_cpu_family.startswith('sparc') or host_cpu_family.startswith('alpha') or host_cpu_family.startswith('powerpc') or host_cpu_family == 'ia64'
-  glib_memory_barrier_needed = true
-else
-  warning('Unknown host cpu: ' + host_cpu_family)
-  glib_memory_barrier_needed = true
-endif
-glibconfig_conf.set('G_ATOMIC_OP_MEMORY_BARRIER_NEEDED', glib_memory_barrier_needed)
-
 # We need to decide at configure time if GLib will use real atomic
 # operations ("lock free") or emulated ones with a mutex.  This is
 # because we must put this information in glibconfig.h so we know if
@@ -1860,7 +1946,7 @@ else
     # MSVC: Search for the PCRE library by the configuration, which corresponds
     # to the output of CMake builds of PCRE.  Note that debugoptimized
     # is really a Release build with .PDB files.
-      if buildtype == 'debug'
+      if vs_crt == 'debug'
         pcre = cc.find_library('pcred', required : false)
       else
         pcre = cc.find_library('pcre', required : false)
@@ -1916,17 +2002,40 @@ endif
 # proxy-libintl subproject.
 # FIXME: glib-gettext.m4 has much more checks to detect broken/uncompatible
 # implementations. This could be extended if issues are found in some platforms.
+libintl_deps = []
 if cc.has_function('ngettext')
-  libintl = []
   have_bind_textdomain_codeset = cc.has_function('bind_textdomain_codeset')
 else
+  # First just find the bare library.
   libintl = cc.find_library('intl', required : false)
+  # The bare library probably won't link without help if it's static.
+  if libintl.found() and not cc.has_function('ngettext', dependencies : libintl)
+     libintl_iconv = cc.find_library('iconv', required : false)
+     # libintl supports different threading APIs, which may not
+     # require additional flags, but it defaults to using pthreads if
+     # found. Meson's "threads" dependency does not allow you to
+     # prefer pthreads. We may not be using pthreads for glib itself
+     # either so just link the library to satisfy libintl rather than
+     # also defining the macros with the -pthread flag.
+     libintl_pthread = cc.find_library('pthread', required : false)
+     # Try linking with just libiconv.
+     if libintl_iconv.found() and cc.has_function('ngettext', dependencies : [libintl, libintl_iconv])
+       libintl_deps += [libintl_iconv]
+     # Then also try linking with pthreads.
+     elif libintl_iconv.found() and libintl_pthread.found() and cc.has_function('ngettext', dependencies : [libintl, libintl_iconv, libintl_pthread])
+       libintl_deps += [libintl_iconv, libintl_pthread]
+     else
+       libintl = disabler()
+     endif
+  endif
   if not libintl.found()
     libintl = subproject('proxy-libintl').get_variable('intl_dep')
+    libintl_deps = [libintl] + libintl_deps
     have_bind_textdomain_codeset = true  # proxy-libintl supports it
   else
+    libintl_deps = [libintl] + libintl_deps
     have_bind_textdomain_codeset = cc.has_function('bind_textdomain_codeset',
-                                                   dependencies : libintl)
+                                                   dependencies : libintl_deps)
   endif
 endif
 
@@ -2025,8 +2134,6 @@ cmdline_test_code = '''
 #include <sys/stat.h>
 #include <stdio.h>
 #include <stdlib.h>
-#undef NDEBUG
-#include <assert.h>
 
 static int
 __getcmdline (void)
@@ -2040,16 +2147,24 @@ __getcmdline (void)
   struct stat stat_buf;
 
   int fd = open ("/proc/self/cmdline", O_RDONLY|O_BINARY);
-  assert (fd >= 0);
-  assert (fstat (fd, &stat_buf) == 0);
+  if (fd < 0)
+    exit (1);
+  if (fstat (fd, &stat_buf))
+    exit (1);
 
   if (stat_buf.st_size > 0 && S_ISREG (stat_buf.st_mode))
-    assert (read (fd, result, BUFSIZE) > 0);
+    {
+      if (read (fd, result, BUFSIZE) <= 0)
+        exit (1);
+    }
   else
     {
       FILE *f = fdopen (fd, "r");
-      assert (f != NULL);
-      assert (fread (result, 1, BUFSIZE, f) > 0);
+      if (f == NULL)
+        exit (1);
+
+      if (fread (result, 1, BUFSIZE, f) <= 0)
+        exit (1);
     }
 
   return 0;
@@ -2103,7 +2218,7 @@ if host_system == 'windows'
   export_dynamic_ldflags = []
 elif host_system == 'cygwin'
   export_dynamic_ldflags = ['-Wl,--export-all-symbols']
-elif host_system == 'darwin'
+elif host_system in ['darwin', 'ios']
   export_dynamic_ldflags = []
 elif host_system == 'sunos'
   export_dynamic_ldflags = []

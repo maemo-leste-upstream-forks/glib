@@ -47,7 +47,10 @@ glib_tests = {
   'markup-collect' : {},
   'markup-escape' : {},
   'markup-subparser' : {},
-  'mem-overflow' : {},
+  'mem-overflow' : {
+    'link_args' : cc.get_id() == 'gcc' and cc.version().version_compare('> 6')
+      ? ['-Wno-alloc-size-larger-than'] : [],
+  },
   'mutex' : {},
   'node' : {},
   'once' : {},
@@ -186,6 +189,7 @@ if installed_tests_enabled
   )
   install_subdir('bookmarks', install_dir : installed_tests_execdir)
   install_subdir('markups', install_dir : installed_tests_execdir)
+  install_subdir('time-zones', install_dir : installed_tests_execdir)
 endif
 
 # Not entirely random of course, but at least it changes over time
@@ -220,6 +224,7 @@ foreach test_name, extra_args : glib_tests
 
   exe = executable(test_name, source,
     c_args : test_cargs + extra_args.get('c_args', []),
+    link_args : extra_args.get('link_args', []),
     dependencies : test_deps + extra_args.get('dependencies', []),
     install_dir: installed_tests_execdir,
     install: install,

@@ -153,10 +153,18 @@ ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
 	|| true
 endif
 
-# Skip build-time tests if all we are building is documentation; running
-# them once per architecture is plenty
+# Skip most build-time tests if all we are building is documentation;
+# running them once per architecture is plenty. As an exception, do run the
+# documentation completeness checks, which won't normally be run on
+# architecture-specific buildds (except in Ubuntu).
 override_dh_auto_test-indep:
-	@:
+	meson test -C debian/build/deb \
+		--no-rebuild \
+		--num-processes 1 \
+		--timeout-multiplier $(test_timeout_multiplier) \
+		--verbose \
+		gio-doc-check glib-doc-check gobject-doc-check \
+	|| $(handle_test_failure)
 
 # The tests assume this directory exists and is writable
 export XDG_RUNTIME_DIR=$(CURDIR)/debian/tmp-xdg-runtime-dir

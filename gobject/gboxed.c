@@ -20,7 +20,9 @@
 #include <string.h>
 
 /* for GValueArray */
+#ifndef GLIB_DISABLE_DEPRECATION_WARNINGS
 #define GLIB_DISABLE_DEPRECATION_WARNINGS
+#endif
 
 #include "gboxed.h"
 #include "gclosure.h"
@@ -169,6 +171,7 @@ G_DEFINE_BOXED_TYPE (GMarkupParseContext, g_markup_parse_context, g_markup_parse
 
 G_DEFINE_BOXED_TYPE (GThread, g_thread, g_thread_ref, g_thread_unref)
 G_DEFINE_BOXED_TYPE (GChecksum, g_checksum, g_checksum_copy, g_checksum_free)
+G_DEFINE_BOXED_TYPE (GUri, g_uri, g_uri_ref, g_uri_unref)
 
 G_DEFINE_BOXED_TYPE (GOptionGroup, g_option_group, g_option_group_ref, g_option_group_unref)
 
@@ -256,8 +259,7 @@ boxed_proxy_lcopy_value (const GValue *value,
 {
   gpointer *boxed_p = collect_values[0].v_pointer;
 
-  if (!boxed_p)
-    return g_strdup_printf ("value location for '%s' passed as NULL", G_VALUE_TYPE_NAME (value));
+  g_return_val_if_fail (boxed_p != NULL, g_strdup_printf ("value location for '%s' passed as NULL", G_VALUE_TYPE_NAME (value)));
 
   if (!value->data[0].v_pointer)
     *boxed_p = NULL;
