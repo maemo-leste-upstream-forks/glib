@@ -1,5 +1,6 @@
-glib2.0 (2.66.0-1) UNRELEASED; urgency=medium
+glib2.0 (2.66.0-1) unstable; urgency=medium
 
+  * Team upload
   * New upstream stable release
    - Fix missing tab in makefile rule
    - guri: Fix user passed to g_uri_split_with_user() not being NULL'd
@@ -9,7 +10,7 @@ glib2.0 (2.66.0-1) UNRELEASED; urgency=medium
     Add patch to fix intermittent test failures on slower architectures.
     This narrowly missed the upstream code freeze, and should be in 2.66.1.
 
- -- Simon McVittie <smcv@debian.org>  Fri, 11 Sep 2020 09:17:33 +0100
+ -- Simon McVittie <smcv@debian.org>  Fri, 11 Sep 2020 09:18:58 +0100
 
 glib2.0 (2.65.3-1) experimental; urgency=medium
 
