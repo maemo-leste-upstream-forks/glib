@@ -1,5 +1,6 @@
 gdbusauthmechanismsha1-Use-the-same-timeouts-as-libdbus.patch
 glocalfile-Never-require-G_LOCAL_FILE_STAT_FIELD_ATIME.patch
+gdbus-server-auth-Don-t-usually-test-non-EXTERNAL-repeate.patch
 01_gettext-desktopfiles.patch
 0001-timer-test-use-volatile-for-locals.patch
 gwakeuptest-Be-less-parallel-unless-invoked-with-m-slow.patch
