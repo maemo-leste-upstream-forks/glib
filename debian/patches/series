@@ -14,4 +14,4 @@ debian/gmenumodel-test-Mark-as-flaky.patch
 debian/gvariant-test-Don-t-run-at-build-time-on-mips.patch
 debian/taptestrunner-Stop-looking-like-an-executable-script.patch
 debian/testfilemonitor-Skip-if-we-are-avoiding-flaky-tests.patch
-Revert-gtk-doc-dependency-to-1.32.patch
+debian/Revert-gtk-doc-dependency-to-1.32.patch
