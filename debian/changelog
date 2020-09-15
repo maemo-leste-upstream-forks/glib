@@ -1,3 +1,15 @@
+glib2.0 (2.66.0-2) unstable; urgency=medium
+
+  * Team upload
+  * d/p/glocalfile-Never-require-G_LOCAL_FILE_STAT_FIELD_ATIME.patch:
+    Add proposed patch to fix file copying on ZFS and CIFS (Closes: #970228)
+  * d/p/gdbus-server-auth-Don-t-usually-test-non-EXTERNAL-repeate.patch:
+    Add proposed patch to work around DBUS_COOKIE_SHA1 test failures
+  * d/p/Revert-gtk-doc-dependency-to-1.32.patch: Move to debian subdirectory.
+    This patch is not intended to go upstream.
+
+ -- Simon McVittie <smcv@debian.org>  Tue, 15 Sep 2020 22:12:49 +0100
+
 glib2.0 (2.66.0-1) unstable; urgency=medium
 
   * Team upload
