@@ -1,3 +1,12 @@
+glib2.0 (2.66.2-1+exp1) experimental; urgency=medium
+
+  * Branch for experimental
+  * postinst: Clean up outdated copies of GLib to avoid infrequent
+    upgrade issues on non-merged-/usr systems
+    (Closes: #896019, #954960, #955331)
+
+ -- Simon McVittie <smcv@debian.org>  Sun, 01 Nov 2020 13:11:00 +0000
+
 glib2.0 (2.66.2-1) unstable; urgency=medium
 
   * Team upload
