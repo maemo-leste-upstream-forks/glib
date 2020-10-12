@@ -1,5 +1,6 @@
-glib2.0 (2.66.1-1) UNRELEASED; urgency=medium
+glib2.0 (2.66.1-1) unstable; urgency=medium
 
+  * Team upload
   * New upstream release
     - A performance problem where timezones were reloaded from disk
       every time a GTimeZone was created has been fixed (upstream issue
@@ -19,7 +20,7 @@ glib2.0 (2.66.1-1) UNRELEASED; urgency=medium
     d/p/gdbusauthmechanismsha1-Use-the-same-timeouts-as-libdbus.patch:
     Drop patches that were applied upstream
 
- -- Simon McVittie <smcv@debian.org>  Mon, 12 Oct 2020 09:17:48 +0100
+ -- Simon McVittie <smcv@debian.org>  Mon, 12 Oct 2020 09:31:27 +0100
 
 glib2.0 (2.66.0-2) unstable; urgency=medium
 
