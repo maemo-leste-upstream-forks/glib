@@ -1,0 +1,28 @@
+From: Benjamin Berg <bberg@redhat.com>
+Date: Tue, 13 Oct 2020 15:09:43 +0200
+Subject: gmain: Fix possible locking issue in source unref
+
+When unref'ing child sources, the lock is already held. But instead of
+passing TRUE to g_source_unref_internal it currently passes whether the
+lock was already held outside of the current invocation. Just pass TRUE
+to fix this possible issue.
+
+Origin: upstream, commit:077ec3efa83163d83754b8014826d5da6c6cd70
+Applied-Upstream: 2.66.2
+---
+ glib/gmain.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/glib/gmain.c b/glib/gmain.c
+index cae6e48..9871d6b 100644
+--- a/glib/gmain.c
++++ b/glib/gmain.c
+@@ -2293,7 +2293,7 @@ g_source_unref_internal (GSource      *source,
+             g_slist_remove (source->priv->child_sources, child_source);
+           child_source->priv->parent_source = NULL;
+ 
+-          g_source_unref_internal (child_source, context, have_lock);
++          g_source_unref_internal (child_source, context, TRUE);
+         }
+ 
+       g_slice_free (GSourcePrivate, source->priv);

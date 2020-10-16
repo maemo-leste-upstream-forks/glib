@@ -1,0 +1,43 @@
+From: Philip Withnall <pwithnall@endlessos.org>
+Date: Tue, 6 Oct 2020 10:25:02 +0100
+Subject: glocalfileinfo: Fix use of fstatat() on macOS < 10.10
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+`g_local_file_fstatat()` needs to fall back to returning an error if
+`fstatat()` isn’t defined, which is the case on older versions of macOS
+(as well as Windows, which was already handled). Callers shouldn’t call
+`g_local_file_fstatat()` in these cases. (That’s already the case.)
+
+Signed-off-by: Philip Withnall <pwithnall@endlessos.org>
+
+Fixes: #2203
+
+Origin: upstream, commit:96a455b91737181d4730f6dc581d35e2b779f4d
+Applied-Upstream: 2.66.2
+---
+ gio/glocalfileinfo.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/gio/glocalfileinfo.h b/gio/glocalfileinfo.h
+index f2beb70..ff3e499 100644
+--- a/gio/glocalfileinfo.h
++++ b/gio/glocalfileinfo.h
+@@ -236,12 +236,12 @@ g_local_file_fstatat (int                  fd,
+       return -1;
+     }
+ 
+-#ifdef G_OS_WIN32
+-  /* Currently not supported on Windows */
++#if !defined(G_OS_WIN32) && defined(AT_FDCWD)
++  return fstatat (fd, path, stat_buf, flags);
++#else
++  /* Currently not supported on Windows or macOS < 10.10 */
+   errno = ENOSYS;
+   return -1;
+-#else
+-  return fstatat (fd, path, stat_buf, flags);
+ #endif
+ }
+ 
