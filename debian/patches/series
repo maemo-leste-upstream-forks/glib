@@ -14,6 +14,8 @@ gtimezone-Cache-default-timezone-indefinitely.patch
 Revert-gtimezone-Cache-timezones-based-on-the-identifier-.patch
 tests-Add-a-basic-test-for-GTimeZone-caching.patch
 gslice-Inline-win32-implementation-of-g_getenv-to-avoid-d.patch
+Add-a-test-for-the-6-days-until-EOM-bug.patch
+Fix-the-6-days-until-the-end-of-the-month-bug.patch
 gdbus-server-auth-Don-t-usually-test-non-EXTERNAL-repeate.patch
 01_gettext-desktopfiles.patch
 0001-timer-test-use-volatile-for-locals.patch
