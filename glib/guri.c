@@ -420,8 +420,13 @@ _uri_encoder (GString      *out,
 
   while (p < end)
     {
-      if (allow_utf8 && *p >= 0x80 &&
-          g_utf8_get_char_validated ((gchar *)p, end - p) > 0)
+      gunichar multibyte_utf8_char = 0;
+
+      if (allow_utf8 && *p >= 0x80)
+        multibyte_utf8_char = g_utf8_get_char_validated ((gchar *)p, end - p);
+
+      if (multibyte_utf8_char > 0 &&
+          multibyte_utf8_char != (gunichar) -1 && multibyte_utf8_char != (gunichar) -2)
         {
           gint len = g_utf8_skip [*p];
           g_string_append_len (out, (gchar *)p, len);
@@ -1265,7 +1270,7 @@ remove_dot_segments (gchar *path)
  * valid [absolute URI][relative-absolute-uris], it will be discarded, and an
  * error returned.
  *
- * Return value: (transfer full): a new #GUri.
+ * Return value: (transfer full): a new #GUri, or NULL on error.
  *
  * Since: 2.66
  */
@@ -1292,7 +1297,7 @@ g_uri_parse (const gchar  *uri_string,
  * If the result is not a valid absolute URI, it will be discarded, and an error
  * returned.
  *
- * Return value: (transfer full): a new #GUri.
+ * Return value: (transfer full): a new #GUri, or NULL on error.
  *
  * Since: 2.66
  */
@@ -1409,7 +1414,8 @@ g_uri_parse_relative (GUri         *base_uri,
  * (If @base_uri_string is %NULL, this just returns @uri_ref, or
  * %NULL if @uri_ref is invalid or not absolute.)
  *
- * Return value: (transfer full): the resolved URI string.
+ * Return value: (transfer full): the resolved URI string,
+ * or NULL on error.
  *
  * Since: 2.66
  */
@@ -1603,7 +1609,7 @@ g_uri_join_internal (GUriFlags    flags,
  * %G_URI_FLAGS_HAS_PASSWORD and %G_URI_FLAGS_HAS_AUTH_PARAMS are ignored if set
  * in @flags.
  *
- * Return value: (transfer full): an absolute URI string
+ * Return value: (not nullable) (transfer full): an absolute URI string
  *
  * Since: 2.66
  */
@@ -1655,7 +1661,7 @@ g_uri_join (GUriFlags    flags,
  * %G_URI_FLAGS_HAS_PASSWORD and %G_URI_FLAGS_HAS_AUTH_PARAMS are ignored if set
  * in @flags.
  *
- * Return value: (transfer full): an absolute URI string
+ * Return value: (not nullable) (transfer full): an absolute URI string
  *
  * Since: 2.66
  */
@@ -1700,7 +1706,7 @@ g_uri_join_with_user (GUriFlags    flags,
  * See also g_uri_build_with_user(), which allows specifying the
  * components of the "userinfo" separately.
  *
- * Return value: (transfer full): a new #GUri
+ * Return value: (not nullable) (transfer full): a new #GUri
  *
  * Since: 2.66
  */
@@ -1755,7 +1761,7 @@ g_uri_build (GUriFlags    flags,
  * of the ‘userinfo’ field separately. Note that @user must be non-%NULL
  * if either @password or @auth_params is non-%NULL.
  *
- * Return value: (transfer full): a new #GUri
+ * Return value: (not nullable) (transfer full): a new #GUri
  *
  * Since: 2.66
  */
@@ -1828,8 +1834,8 @@ g_uri_build_with_user (GUriFlags    flags,
  * or private data in its query string, and the returned string is going to be
  * logged, then consider using g_uri_to_string_partial() to redact parts.
  *
- * Return value: (transfer full): a string representing @uri, which the caller
- *     must free.
+ * Return value: (not nullable) (transfer full): a string representing @uri,
+ *     which the caller must free.
  *
  * Since: 2.66
  */
@@ -1849,8 +1855,8 @@ g_uri_to_string (GUri *uri)
  * Returns a string representing @uri, subject to the options in
  * @flags. See g_uri_to_string() and #GUriHideFlags for more details.
  *
- * Return value: (transfer full): a string representing @uri, which the caller
- *     must free.
+ * Return value: (not nullable) (transfer full): a string representing
+ *     @uri, which the caller must free.
  *
  * Since: 2.66
  */
@@ -2146,9 +2152,9 @@ g_uri_params_iter_next (GUriParamsIter *iter,
  * If @params cannot be parsed (for example, it contains two @separators
  * characters in a row), then @error is set and %NULL is returned.
  *
- * Return value: (transfer full) (element-type utf8 utf8): A hash table of
- *     attribute/value pairs, with both names and values fully-decoded; or %NULL
- *     on error.
+ * Return value: (transfer full) (element-type utf8 utf8):
+ *     A hash table of attribute/value pairs, with both names and values
+ *     fully-decoded; or %NULL on error.
  *
  * Since: 2.66
  */
@@ -2441,10 +2447,10 @@ g_uri_get_flags (GUri *uri)
  * Note: `NUL` byte is not accepted in the output, in contrast to
  * g_uri_unescape_bytes().
  *
- * Returns: an unescaped version of @escaped_string or %NULL on error.
- * The returned string should be freed when no longer needed.  As a
- * special case if %NULL is given for @escaped_string, this function
- * will return %NULL.
+ * Returns: (nullable): an unescaped version of @escaped_string,
+ * or %NULL on error. The returned string should be freed when no longer
+ * needed.  As a special case if %NULL is given for @escaped_string, this
+ * function will return %NULL.
  *
  * Since: 2.16
  **/
@@ -2497,8 +2503,8 @@ g_uri_unescape_segment (const gchar *escaped_string,
  * want to avoid for instance having a slash being expanded in an
  * escaped path element, which might confuse pathname handling.
  *
- * Returns: an unescaped version of @escaped_string. The returned string
- * should be freed when no longer needed.
+ * Returns: (nullable): an unescaped version of @escaped_string.
+ * The returned string should be freed when no longer needed.
  *
  * Since: 2.16
  **/
@@ -2525,8 +2531,8 @@ g_uri_unescape_string (const gchar *escaped_string,
  * in the URI specification, since those are allowed unescaped in some
  * portions of a URI.
  *
- * Returns: an escaped version of @unescaped. The returned string
- * should be freed when no longer needed.
+ * Returns: (not nullable): an escaped version of @unescaped. The
+ * returned string should be freed when no longer needed.
  *
  * Since: 2.16
  **/
@@ -2566,9 +2572,9 @@ g_uri_escape_string (const gchar *unescaped,
  * being expanded in an escaped path element, which might confuse pathname
  * handling.
  *
- * Returns: (transfer full): an unescaped version of @escaped_string or %NULL on
- *     error (if decoding failed, using %G_URI_ERROR_FAILED error code). The
- *     returned #GBytes should be unreffed when no longer needed.
+ * Returns: (transfer full): an unescaped version of @escaped_string
+ *     or %NULL on error (if decoding failed, using %G_URI_ERROR_FAILED error
+ *     code). The returned #GBytes should be unreffed when no longer needed.
  *
  * Since: 2.66
  **/
@@ -2619,8 +2625,8 @@ g_uri_unescape_bytes (const gchar *escaped_string,
  * Though technically incorrect, this will also allow escaping nul
  * bytes as `%``00`.
  *
- * Returns: (transfer full): an escaped version of @unescaped. The returned
- *     string should be freed when no longer needed.
+ * Returns: (not nullable) (transfer full): an escaped version of @unescaped.
+ *     The returned string should be freed when no longer needed.
  *
  * Since: 2.66
  */
