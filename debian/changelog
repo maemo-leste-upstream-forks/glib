@@ -1,3 +1,14 @@
+glib2.0 (2.66.1-3) UNRELEASED; urgency=medium
+
+  * d/rules: Remove migration path from legacy -dbg package.
+    This was most recently shipped in Debian 9, and we don't support
+    upgrades from anything older than Debian 10.
+  * Drop obsolete workaround for #887629.
+    We don't support upgrades from versions older than Debian 10, so we can
+    drop workarounds that were only relevant for the upgrade from 9 to 10.
+
+ -- Simon McVittie <smcv@debian.org>  Wed, 28 Oct 2020 09:52:32 +0000
+
 glib2.0 (2.66.1-2) unstable; urgency=medium
 
   * Cherry-pick patches from the glib-2-66 branch upstream
