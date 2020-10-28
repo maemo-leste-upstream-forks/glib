@@ -1,12 +1,14 @@
 glib2.0 (2.66.2-1) UNRELEASED; urgency=medium
 
+  * New upstream release
+    - Add some missing (nullable) and (not nullable) annotations
+  * Drop patches that were cherry-picked from upstream
   * d/rules: Remove migration path from legacy -dbg package.
     This was most recently shipped in Debian 9, and we don't support
     upgrades from anything older than Debian 10.
   * Drop obsolete workaround for #887629.
     We don't support upgrades from versions older than Debian 10, so we can
     drop workarounds that were only relevant for the upgrade from 9 to 10.
-  * New upstream release
 
  -- Simon McVittie <smcv@debian.org>  Wed, 28 Oct 2020 09:54:19 +0000
 
