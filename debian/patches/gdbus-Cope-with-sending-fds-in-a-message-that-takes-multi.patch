@@ -1,0 +1,46 @@
+From: Simon McVittie <smcv@collabora.com>
+Date: Wed, 28 Oct 2020 11:04:47 +0000
+Subject: gdbus: Cope with sending fds in a message that takes multiple writes
+
+Suppose we are sending a 5K message with fds (so data->blob points
+to 5K of data, data->blob_size is 5K, and fd_list is non-null), but
+the kernel is only accepting up to 4K with each sendmsg().
+
+The first time we get into write_message_continue_writing(),
+data->total_written will be 0. We will try to write the entire message,
+plus the attached file descriptors; or if the stream doesn't support
+fd-passing (not a socket), we need to fail with
+"Tried sending a file descriptor on unsupported stream".
+
+Because the kernel didn't accept the entire message, we come back in.
+This time, we won't enter the Unix-specific block that involves sending
+fds, because now data->total_written is 4K, and it would be wrong to try
+to attach the same fds again. However, we also need to avoid failing
+with "Tried sending a file descriptor on unsupported stream" in this
+case. We just want to write out the data of the rest of the message,
+starting from (blob + total_written) (in this exaple, the last 1K).
+
+Bug: https://gitlab.gnome.org/GNOME/glib/-/issues/2074
+Signed-off-by: Simon McVittie <smcv@collabora.com>
+Origin: upstream, 2.66.3, commit:40cd84d9e4cee20b61e03f2150264747135fc24e
+---
+ gio/gdbusprivate.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/gio/gdbusprivate.c b/gio/gdbusprivate.c
+index 5c980b4..2551e47 100644
+--- a/gio/gdbusprivate.c
++++ b/gio/gdbusprivate.c
+@@ -1085,8 +1085,11 @@ write_message_continue_writing (MessageToWriteData *data)
+   else
+     {
+ #ifdef G_OS_UNIX
+-      if (fd_list != NULL)
++      if (data->total_written == 0 && fd_list != NULL)
+         {
++          /* We were trying to write byte 0 of the message, which needs
++           * the fd list to be attached to it, but this connection doesn't
++           * support doing that. */
+           g_task_return_new_error (task,
+                                    G_IO_ERROR,
+                                    G_IO_ERROR_FAILED,

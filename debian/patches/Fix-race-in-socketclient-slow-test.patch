@@ -1,0 +1,113 @@
+From: Michael Catanzaro <mcatanzaro@gnome.org>
+Date: Mon, 19 Oct 2020 08:57:46 -0500
+Subject: Fix race in socketclient-slow test
+
+This test ensures that g_socket_client_connect_to_host_async() fails if
+it is cancelled, but it's not cancelled until after 1 millisecond. Our
+CI testers are hitting that race window, and Milan is able to reproduce
+the crash locally as well. Switching it from 1ms to 0ms is enough for
+Milan to avoid the crash, but not enough for our CI, so let's move the
+cancellation to a GSocketClientEvent callback where the timing is
+completely deterministic.
+
+Hopefully fixes #2221
+
+Origin: upstream, 2.66.3, commit:832d09ad4b0e162a3b1157598eed24b81c007156
+---
+ gio/tests/gsocketclient-slow.c | 39 ++++++++++++++++++++-------------------
+ 1 file changed, 20 insertions(+), 19 deletions(-)
+
+diff --git a/gio/tests/gsocketclient-slow.c b/gio/tests/gsocketclient-slow.c
+index 34410f4..803ed90 100644
+--- a/gio/tests/gsocketclient-slow.c
++++ b/gio/tests/gsocketclient-slow.c
+@@ -79,23 +79,26 @@ on_connected_cancelled (GObject      *source_object,
+   g_main_loop_quit (user_data);
+ }
+ 
+-static int
+-on_timer (GCancellable *cancel)
++typedef struct
+ {
+-  g_cancellable_cancel (cancel);
+-  return G_SOURCE_REMOVE;
+-}
++  GCancellable *cancellable;
++  gboolean completed;
++} EventCallbackData;
+ 
+ static void
+ on_event (GSocketClient      *client,
+           GSocketClientEvent  event,
+           GSocketConnectable *connectable,
+           GIOStream          *connection,
+-          gboolean           *got_completed_event)
++          EventCallbackData  *data)
+ {
+-  if (event == G_SOCKET_CLIENT_COMPLETE)
++  if (data->cancellable && event == G_SOCKET_CLIENT_CONNECTED)
++    {
++      g_cancellable_cancel (data->cancellable);
++    }
++  else if (event == G_SOCKET_CLIENT_COMPLETE)
+     {
+-      *got_completed_event = TRUE;
++      data->completed = TRUE;
+       g_assert_null (connection);
+     }
+ }
+@@ -108,8 +111,7 @@ test_happy_eyeballs_cancel_delayed (void)
+   GError *error = NULL;
+   guint16 port;
+   GMainLoop *loop;
+-  GCancellable *cancel;
+-  gboolean got_completed_event = FALSE;
++  EventCallbackData data = { NULL, FALSE };
+ 
+   /* This just tests that cancellation works as expected, still emits the completed signal,
+    * and never returns a connection */
+@@ -122,17 +124,16 @@ test_happy_eyeballs_cancel_delayed (void)
+   g_socket_service_start (service);
+ 
+   client = g_socket_client_new ();
+-  cancel = g_cancellable_new ();
+-  g_socket_client_connect_to_host_async (client, "localhost", port, cancel, on_connected_cancelled, loop);
+-  g_timeout_add (1, (GSourceFunc) on_timer, cancel);
+-  g_signal_connect (client, "event", G_CALLBACK (on_event), &got_completed_event);
++  data.cancellable = g_cancellable_new ();
++  g_socket_client_connect_to_host_async (client, "localhost", port, data.cancellable, on_connected_cancelled, loop);
++  g_signal_connect (client, "event", G_CALLBACK (on_event), &data);
+   g_main_loop_run (loop);
+ 
+-  g_assert_true (got_completed_event);
++  g_assert_true (data.completed);
+   g_main_loop_unref (loop);
+   g_object_unref (service);
+   g_object_unref (client);
+-  g_object_unref (cancel);
++  g_object_unref (data.cancellable);
+ }
+ 
+ static void
+@@ -144,7 +145,7 @@ test_happy_eyeballs_cancel_instant (void)
+   guint16 port;
+   GMainLoop *loop;
+   GCancellable *cancel;
+-  gboolean got_completed_event = FALSE;
++  EventCallbackData data = { NULL, FALSE };
+ 
+   /* This tests the same things as above, test_happy_eyeballs_cancel_delayed(), but
+    * with different timing since it sends an already cancelled cancellable */
+@@ -160,10 +161,10 @@ test_happy_eyeballs_cancel_instant (void)
+   cancel = g_cancellable_new ();
+   g_cancellable_cancel (cancel);
+   g_socket_client_connect_to_host_async (client, "localhost", port, cancel, on_connected_cancelled, loop);
+-  g_signal_connect (client, "event", G_CALLBACK (on_event), &got_completed_event);
++  g_signal_connect (client, "event", G_CALLBACK (on_event), &data);
+   g_main_loop_run (loop);
+ 
+-  g_assert_true (got_completed_event);
++  g_assert_true (data.completed);
+   g_main_loop_unref (loop);
+   g_object_unref (service);
+   g_object_unref (client);

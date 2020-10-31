@@ -1,0 +1,28 @@
+From: Philip Withnall <pwithnall@endlessos.org>
+Date: Fri, 23 Oct 2020 12:07:02 +0100
+Subject: gtrace: Add G_GNUC_PRINTF annotation
+
+This allows compilers to check the format placeholders properly. It
+fixes compilation on clang, which gives a warning about untrusted
+strings being passed on to subsequent functions which require format
+placeholders.
+
+Signed-off-by: Philip Withnall <pwithnall@endlessos.org>
+Origin: upstream, 2.66.3, commit:848a53438529777051eac0ecf55edb2d2c96f3be
+---
+ glib/gtrace-private.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/glib/gtrace-private.h b/glib/gtrace-private.h
+index 2455015..78bf04a 100644
+--- a/glib/gtrace-private.h
++++ b/glib/gtrace-private.h
+@@ -54,7 +54,7 @@ void (g_trace_mark) (gint64       begin_time_nsec,
+                      const gchar *group,
+                      const gchar *name,
+                      const gchar *message_format,
+-                     ...);
++                     ...) G_GNUC_PRINTF (5, 6);
+ 
+ #ifndef HAVE_SYSPROF
+ /* Optimise the whole call out */

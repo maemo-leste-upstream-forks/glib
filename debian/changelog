@@ -3,6 +3,11 @@ glib2.0 (2.66.2-1) UNRELEASED; urgency=medium
   * New upstream release
     - Add some missing (nullable) and (not nullable) annotations
   * Drop patches that were cherry-picked from upstream
+  * Update patch series to upstream 2.66.2-9-g4daaf303a
+    - Fix race in socketclient-slow test
+    - Cope with sending fds in a D-Bus message that takes multiple writes
+    - Don't skip updating polled fd sources
+    - Add G_GNUC_PRINTF annotation to g_trace_mark()
   * d/rules: Remove migration path from legacy -dbg package.
     This was most recently shipped in Debian 9, and we don't support
     upgrades from anything older than Debian 10.

@@ -1,3 +1,8 @@
+gtrace-Add-G_GNUC_PRINTF-annotation.patch
+gmain-g_main_context_check-can-skip-updating-polled-FD-so.patch
+Fix-race-in-socketclient-slow-test.patch
+gdbus-Cope-with-sending-fds-in-a-message-that-takes-multi.patch
+gio-tests-gdbus-peer-Exercise-fds-attached-to-a-large-mes.patch
 gdbus-server-auth-Don-t-usually-test-non-EXTERNAL-repeate.patch
 01_gettext-desktopfiles.patch
 0001-timer-test-use-volatile-for-locals.patch
