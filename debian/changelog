@@ -8,6 +8,10 @@ glib2.0 (2.66.2-1) UNRELEASED; urgency=medium
     - Cope with sending fds in a D-Bus message that takes multiple writes
     - Don't skip updating polled fd sources
     - Add G_GNUC_PRINTF annotation to g_trace_mark()
+  * d/p/glib-tests-fileutils-Make-more-use-of-g_assert_no_errno.patch,
+    d/p/glib-tests-fileutils-Fix-expectations-when-running-as-roo.patch:
+    Add proposed patch to fix a test failure when running as root
+    (Closes: #973271)
   * d/rules: Remove migration path from legacy -dbg package.
     This was most recently shipped in Debian 9, and we don't support
     upgrades from anything older than Debian 10.
