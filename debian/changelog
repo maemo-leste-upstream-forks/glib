@@ -1,11 +1,24 @@
-glib2.0 (2.66.3-1) UNRELEASED; urgency=medium
+glib2.0 (2.66.3-1) unstable; urgency=medium
 
+  * Team upload
   * New upstream release
     - Improve performance of processing files hidden via ./.hidden
     - All other changes were already included in 2.66.2-1
   * Drop patches that were cherry-picked from upstream
+  * Stop reverting gtk-doc dependency version.
+    We now have a suitable gtk-doc in Debian.
+  * Drop a patch that was not applied upstream.
+    This was hoped to be a workaround for intermittent test failures, but
+    doesn't seem to have had the desired effect in practice.
+  * Mark the DBUS_COOKIE_SHA1 parts of gdbus-server-auth test as flaky.
+    This is not reliable enough to always pass on buildds, but is too
+    intermittent to be able to reproduce the failure in a development
+    environment, and DBUS_COOKIE_SHA1 is not an important enough feature
+    to justify failing the build for this.
+    As with other flaky tests, we still run this as an autopkgtest in an
+    attempt to get more useful information, but we ignore failure.
 
- -- Simon McVittie <smcv@debian.org>  Thu, 19 Nov 2020 10:22:10 +0000
+ -- Simon McVittie <smcv@debian.org>  Thu, 19 Nov 2020 11:11:06 +0000
 
 glib2.0 (2.66.2-1) unstable; urgency=medium
 
