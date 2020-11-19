@@ -25,6 +25,7 @@ env | LC_ALL=C sort -u
 
 exec dbus-run-session -- xvfb-run -a gnome-desktop-testing-runner \
 	glib/closure-refcount.test \
+	glib/gdbus-server-auth.test \
 	glib/gdbus-threading.test \
 	glib/gmenumodel.test \
 	glib/mainloop.test \
