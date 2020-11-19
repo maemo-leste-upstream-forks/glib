@@ -1,6 +1,9 @@
 glib2.0 (2.66.3-1) UNRELEASED; urgency=medium
 
   * New upstream release
+    - Improve performance of processing files hidden via ./.hidden
+    - All other changes were already included in 2.66.2-1
+  * Drop patches that were cherry-picked from upstream
 
  -- Simon McVittie <smcv@debian.org>  Thu, 19 Nov 2020 10:22:10 +0000
 
