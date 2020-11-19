@@ -33,7 +33,7 @@ Build-Depends: dbus <!nocheck>,
                xsltproc,
                xterm <!nocheck>,
                zlib1g-dev
-Build-Depends-Indep: gtk-doc-tools (>= 1.32-4~),
+Build-Depends-Indep: gtk-doc-tools (>= 1.32.1),
 Rules-Requires-Root: no
 Standards-Version: 4.5.0
 Homepage: http://www.gtk.org/
