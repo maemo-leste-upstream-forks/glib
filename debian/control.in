@@ -35,7 +35,7 @@ Build-Depends: dbus <!nocheck>,
                zlib1g-dev
 Build-Depends-Indep: gtk-doc-tools (>= 1.32.1),
 Rules-Requires-Root: no
-Standards-Version: 4.5.0
+Standards-Version: 4.5.1
 Homepage: http://www.gtk.org/
 Vcs-Browser: https://salsa.debian.org/gnome-team/glib
 Vcs-Git: https://salsa.debian.org/gnome-team/glib.git -b debian/experimental
