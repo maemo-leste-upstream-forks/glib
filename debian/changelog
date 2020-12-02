@@ -1,12 +1,18 @@
-glib2.0 (2.66.3-2) UNRELEASED; urgency=medium
+glib2.0 (2.66.3-2) unstable; urgency=medium
 
   * Apply packaging changes from experimental to unstable:
     - postinst: Clean up outdated copies of GLib if present, to avoid
       infrequent upgrade issues on non-merged-/usr systems.
       See #911225 and #949395 for more information.
       (Closes: #896019, #954960, #955331)
+  * Add myself to Uploaders
+  * Standards-Version: 4.5.1 (no changes required)
+  * Swap Homepage field to something more GLib-specific
+  * d/gbp.conf: Change upstream branch to upstream/2.66.x.
+    2.67.0 was already released, so it's inaccurate to say that 2.66.x
+    is the latest.
 
- -- Simon McVittie <smcv@debian.org>  Wed, 02 Dec 2020 12:04:03 +0000
+ -- Simon McVittie <smcv@debian.org>  Wed, 02 Dec 2020 12:28:42 +0000
 
 glib2.0 (2.66.3-1+exp1) experimental; urgency=medium
 
