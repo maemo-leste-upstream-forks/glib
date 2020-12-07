@@ -231,9 +231,11 @@
  *
  * This symbol is private.
  */
-#undef g_has_typeof
-#if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8)) && !defined(__cplusplus)
-#define g_has_typeof
+#undef glib_typeof
+#if !defined(__cplusplus) && \
+     ((defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8))) || \
+      defined(__clang__))
+#define glib_typeof(t) __typeof__ (t)
 #endif
 
 /*
