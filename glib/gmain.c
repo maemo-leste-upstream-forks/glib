@@ -3733,10 +3733,7 @@ g_main_context_prepare (GMainContext *context,
  *       store #GPollFD records that need to be polled.
  * @n_fds: (in): length of @fds.
  *
- * Determines information necessary to poll this main loop. You should
- * be careful to pass the resulting @fds array and its length @n_fds
- * as is when calling g_main_context_check(), as this function relies
- * on assumptions made when the array is filled.
+ * Determines information necessary to poll this main loop.
  *
  * You must have successfully acquired the context with
  * g_main_context_acquire() before you may call this function.
@@ -3760,10 +3757,6 @@ g_main_context_query (GMainContext *context,
 
   TRACE (GLIB_MAIN_CONTEXT_BEFORE_QUERY (context, max_priority));
 
-  /* fds is filled sequentially from poll_records. Since poll_records
-   * are incrementally sorted by file descriptor identifier, fds will
-   * also be incrementally sorted.
-   */
   n_poll = 0;
   lastpollrec = NULL;
   for (pollrec = context->poll_records; pollrec; pollrec = pollrec->next)
@@ -3778,10 +3771,6 @@ g_main_context_query (GMainContext *context,
        */
       events = pollrec->fd->events & ~(G_IO_ERR|G_IO_HUP|G_IO_NVAL);
 
-      /* This optimization --using the same GPollFD to poll for more
-       * than one poll record-- relies on the poll records being
-       * incrementally sorted.
-       */
       if (lastpollrec && pollrec->fd->fd == lastpollrec->fd->fd)
         {
           if (n_poll - 1 < n_fds)
@@ -3827,10 +3816,7 @@ g_main_context_query (GMainContext *context,
  *       the last call to g_main_context_query()
  * @n_fds: return value of g_main_context_query()
  *
- * Passes the results of polling back to the main loop. You should be
- * careful to pass @fds and its length @n_fds as received from
- * g_main_context_query(), as this functions relies on assumptions
- * on how @fds is filled.
+ * Passes the results of polling back to the main loop.
  *
  * You must have successfully acquired the context with
  * g_main_context_acquire() before you may call this function.
@@ -3885,22 +3871,10 @@ g_main_context_check (GMainContext *context,
       return FALSE;
     }
 
-  /* The linear iteration below relies on the assumption that both
-   * poll records and the fds array are incrementally sorted by file
-   * descriptor identifier.
-   */
   pollrec = context->poll_records;
   i = 0;
   while (pollrec && i < n_fds)
     {
-      /* Make sure that fds is sorted by file descriptor identifier. */
-      g_assert (i <= 0 || fds[i - 1].fd < fds[i].fd);
-
-      /* Skip until finding the first GPollRec matching the current GPollFD. */
-      while (pollrec && pollrec->fd->fd != fds[i].fd)
-        pollrec = pollrec->next;
-
-      /* Update all consecutive GPollRecs that match. */
       while (pollrec && pollrec->fd->fd == fds[i].fd)
         {
           if (pollrec->priority <= max_priority)
@@ -3911,7 +3885,6 @@ g_main_context_check (GMainContext *context,
           pollrec = pollrec->next;
         }
 
-      /* Iterate to next GPollFD. */
       i++;
     }
 
@@ -4522,7 +4495,6 @@ g_main_context_add_poll_unlocked (GMainContext *context,
   newrec->fd = fd;
   newrec->priority = priority;
 
-  /* Poll records are incrementally sorted by file descriptor identifier. */
   prevrec = NULL;
   nextrec = context->poll_records;
   while (nextrec)
@@ -5646,7 +5618,7 @@ g_unix_signal_handler (int signum)
  * * the application must not wait for @pid to exit by any other
  *   mechanism, including `waitpid(pid, ...)` or a second child-watch
  *   source for the same @pid
- * * the application must not ignore SIGCHILD
+ * * the application must not ignore `SIGCHLD`
  *
  * If any of those conditions are not met, this and related APIs will
  * not work correctly. This can often be diagnosed via a GLib warning
