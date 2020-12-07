@@ -1,3 +1,9 @@
+glib2.0 (2.66.3-3) UNRELEASED; urgency=medium
+
+  * Branch for experimental and 2.67.x
+
+ -- Simon McVittie <smcv@debian.org>  Mon, 07 Dec 2020 18:23:42 +0000
+
 glib2.0 (2.66.3-2) unstable; urgency=medium
 
   * Apply packaging changes from experimental to unstable:
