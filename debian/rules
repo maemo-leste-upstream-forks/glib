@@ -192,6 +192,7 @@ DEB_CONFIGURE_FLAGS_deb := \
 	--default-library both \
 	-Dfam=$(use_fam) \
 	-Dinstalled_tests=true \
+	-Dlibelf=enabled \
 	-Dlibmount=$(enable_libmount) \
 	-Dman=true \
 	-Dselinux=$(enable_selinux) \
