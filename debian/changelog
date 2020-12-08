@@ -1,10 +1,12 @@
 glib2.0 (2.67.1-1) UNRELEASED; urgency=medium
 
   * Branch for experimental and 2.67.x
-  * New upstream release
-  * New upstream release
+  * New upstream development release
+  * Temporarily use git to fetch upstream release.
+    The official tarball release doesn't seem to have made it onto mirrors.
+  * d/rules: Explicitly enable libelf dependency for gresource tool
 
- -- Simon McVittie <smcv@debian.org>  Tue, 08 Dec 2020 09:29:54 +0000
+ -- Simon McVittie <smcv@debian.org>  Tue, 08 Dec 2020 10:57:00 +0000
 
 glib2.0 (2.66.3-2) unstable; urgency=medium
 
