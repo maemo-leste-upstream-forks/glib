@@ -1,9 +1,10 @@
-glib2.0 (2.67.0-1) UNRELEASED; urgency=medium
+glib2.0 (2.67.1-1) UNRELEASED; urgency=medium
 
   * Branch for experimental and 2.67.x
   * New upstream release
+  * New upstream release
 
- -- Simon McVittie <smcv@debian.org>  Mon, 07 Dec 2020 18:24:16 +0000
+ -- Simon McVittie <smcv@debian.org>  Tue, 08 Dec 2020 09:29:54 +0000
 
 glib2.0 (2.66.3-2) unstable; urgency=medium
 
