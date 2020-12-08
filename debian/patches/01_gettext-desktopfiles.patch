@@ -16,7 +16,7 @@ Applied-upstream: no, rejected because "this will be solved soon" (in 2013)
  1 file changed, 83 insertions(+)
 
 diff --git a/glib/gkeyfile.c b/glib/gkeyfile.c
-index 9d02153..dcf1962 100644
+index bbe638b..49aa311 100644
 --- a/glib/gkeyfile.c
 +++ b/glib/gkeyfile.c
 @@ -488,6 +488,17 @@
@@ -43,7 +43,7 @@ index 9d02153..dcf1962 100644
    gchar **locales;
 +  gchar  *gettext_domain;
  
-   volatile gint ref_count;
+   gint ref_count;  /* (atomic) */
  };
 @@ -636,6 +648,7 @@ g_key_file_init (GKeyFile *key_file)
    key_file->list_separator = ';';
