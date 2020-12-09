@@ -1,7 +1,6 @@
 From: Philip Withnall <withnall@endlessm.com>
 Date: Thu, 23 Nov 2017 18:48:58 +0000
-Subject: [PATCH] Call gettext if .desktop file does not have inline
- translations
+Subject: Call gettext if .desktop file does not have inline translations
 
 Patch from OpenSUSE via Ubuntu, original author unknown. Martin Pitt and
 Vincent Untz appear to be the main authors.

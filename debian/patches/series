@@ -1,3 +1,7 @@
+glib-compile-resources-Fix-exporting-on-Visual-Studio.patch
+gdesktopappinfo-Fix-unnecessarily-copied-and-leaked-URI-l.patch
+tests-Use-g_assert_-in-cancellable-test-rather-than-g_ass.patch
+gcancellable-Fix-minor-race-between-GCancellable-and-GCan.patch
 01_gettext-desktopfiles.patch
 0001-timer-test-use-volatile-for-locals.patch
 gwakeuptest-Be-less-parallel-unless-invoked-with-m-slow.patch
@@ -13,4 +17,3 @@ debian/gmenumodel-test-Mark-as-flaky.patch
 debian/gvariant-test-Don-t-run-at-build-time-on-mips.patch
 debian/taptestrunner-Stop-looking-like-an-executable-script.patch
 debian/testfilemonitor-Skip-if-we-are-avoiding-flaky-tests.patch
-git_gsource_segfault.patch

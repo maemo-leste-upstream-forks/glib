@@ -1,50 +1,9 @@
-From 4093321c9a831ae0be49e0aea70b6ef9ae906d46 Mon Sep 17 00:00:00 2001
-From: Philip Withnall <withnall@endlessm.com>
-Date: Fri, 28 Feb 2020 15:15:02 +0000
-Subject: [PATCH 1/2] tests: Use g_assert_*() in cancellable test rather than
- g_assert()
-
-`g_assert()` is compiled out if `G_DISABLE_ASSERT` is defined, and
-`g_assert_*()` gives more detailed failure messages.
-
-Signed-off-by: Philip Withnall <withnall@endlessm.com>
----
- gio/tests/cancellable.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/gio/tests/cancellable.c b/gio/tests/cancellable.c
-index cd349a8f3..4ba9f6326 100644
---- a/gio/tests/cancellable.c
-+++ b/gio/tests/cancellable.c
-@@ -138,7 +138,7 @@ mock_operation_finish (GAsyncResult  *result,
-   MockOperationData *data;
-   GTask *task;
- 
--  g_assert (g_task_is_valid (result, NULL));
-+  g_assert_true (g_task_is_valid (result, NULL));
- 
-   /* This test expects the return value to be iterations_done even
-    * when an error is set.
-@@ -212,7 +212,7 @@ test_cancel_multiple_concurrent (void)
-   if (g_test_verbose ())
-     g_printerr ("CANCEL: %d operations\n", num_async_operations);
-   g_cancellable_cancel (cancellable);
--  g_assert (g_cancellable_is_cancelled (cancellable));
-+  g_assert_true (g_cancellable_is_cancelled (cancellable));
- 
-   /* Wait for all operations to be cancelled */
-   g_main_loop_run (loop);
--- 
-2.24.1
-
-
-From e4a690f5dd959e74b2d6054826f61509892c8aa7 Mon Sep 17 00:00:00 2001
 From: Philip Withnall <withnall@endlessm.com>
 Date: Fri, 21 Feb 2020 14:44:44 +0000
-Subject: [PATCH 2/2] gcancellable: Fix minor race between GCancellable and
+Subject: gcancellable: Fix minor race between GCancellable and
  GCancellableSource
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 There’s a minor race condition between cancellation of a `GCancellable`,
@@ -77,15 +36,16 @@ affect performance too much, as it only happens during cancellation or
 disposal of a `GCancellableSource`.
 
 Signed-off-by: Philip Withnall <withnall@endlessm.com>
-
-Fixes: #1841
+Bug: https://gitlab.gnome.org/GNOME/glib/-/issues/1841
+Bug-Ubuntu: https://launchpad.net/bugs/1872153
+Origin: upstream, 2.65.0, commit:e4a690f5dd959e74b2d6054826f61509892c8aa7
 ---
- gio/gcancellable.c      | 43 +++++++++++++++++++++++
- gio/tests/cancellable.c | 77 +++++++++++++++++++++++++++++++++++++++++
+ gio/gcancellable.c      | 43 +++++++++++++++++++++++++++
+ gio/tests/cancellable.c | 77 +++++++++++++++++++++++++++++++++++++++++++++++++
  2 files changed, 120 insertions(+)
 
 diff --git a/gio/gcancellable.c b/gio/gcancellable.c
-index d9e58b8e8..e687cca23 100644
+index d9e58b8..e687cca 100644
 --- a/gio/gcancellable.c
 +++ b/gio/gcancellable.c
 @@ -643,6 +643,8 @@ typedef struct {
@@ -161,7 +121,7 @@ index d9e58b8e8..e687cca23 100644
  
  static gboolean
 diff --git a/gio/tests/cancellable.c b/gio/tests/cancellable.c
-index 4ba9f6326..002bdccca 100644
+index 4ba9f63..002bdcc 100644
 --- a/gio/tests/cancellable.c
 +++ b/gio/tests/cancellable.c
 @@ -228,6 +228,82 @@ test_cancel_null (void)
@@ -255,6 +215,3 @@ index 4ba9f6326..002bdccca 100644
  
    return g_test_run ();
  }
--- 
-2.24.1
-

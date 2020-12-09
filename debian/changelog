@@ -1,3 +1,44 @@
+glib2.0 (2.64.4-1) unstable; urgency=medium
+
+  * Team upload
+  * New upstream release
+    - Improve async-signal-safety
+  * d/tests/build: Don't exercise static linking for GIO.
+    libmount will no longer support being linked statically from 2.35.2-8
+    onwards. For now I'm continuing to test that the other libraries can
+    still be statically linked, but please consider them to be "at risk".
+    (Closes: #963933)
+  * Re-enable libmount support.
+    libmount no longer depends on libcryptsetup, avoiding the various
+    crashes that we are working around. Future versions will dlopen it
+    on-demand, which should also avoid those crashes. Bump the
+    build-dependency to a suitable version.
+  * d/p/tests-Use-g_assert_-in-cancellable-test-rather-than-g_ass.patch,
+    d/p/gcancellable-Fix-minor-race-between-GCancellable-and-GCan.patch:
+    Split combined d/p/git_gsource_segfault.patch into its two component
+    upstream commits, and add metadata
+  * d/p/glib-compile-resources-Fix-exporting-on-Visual-Studio.patch,
+    d/p/gdesktopappinfo-Fix-unnecessarily-copied-and-leaked-URI-l.patch:
+    Add post-release bugfixes from upstream
+
+ -- Simon McVittie <smcv@debian.org>  Tue, 07 Jul 2020 13:33:01 +0100
+
+glib2.0 (2.64.3-2) unstable; urgency=medium
+
+  * Team upload
+  * Temporarily disable libmount support.
+    Recent Debian revisions of libmount pull in libcryptsetup as a
+    dependency, for dm-verity support. libcryptsetup depends on json-c
+    and OpenSSL, causing crashes due to symbol conflicts with other
+    JSON libraries (jansson and json-glib, for example in firewalld and
+    virt-manager) and with statically-linked copies of OpenSSL (for
+    example in Steam and Minecraft). Until this is resolved in some
+    other way, disable libmount and parse /etc/fstab and /proc/mounts
+    ourselves, as we do in libglib2.0-udeb.
+    Mitigates: #963933, #963932, #963525, #963721
+
+ -- Simon McVittie <smcv@debian.org>  Thu, 02 Jul 2020 10:05:03 +0100
+
 glib2.0 (2.64.3-1~ubuntu20.04.1) focal; urgency=medium
 
   * No-change backport from unstable / groovy to focal (LP: #1883694)
