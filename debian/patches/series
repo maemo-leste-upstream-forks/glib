@@ -1,5 +1,3 @@
-glib-compile-resources-Fix-exporting-on-Visual-Studio.patch
-gdesktopappinfo-Fix-unnecessarily-copied-and-leaked-URI-l.patch
 tests-Use-g_assert_-in-cancellable-test-rather-than-g_ass.patch
 gcancellable-Fix-minor-race-between-GCancellable-and-GCan.patch
 01_gettext-desktopfiles.patch
