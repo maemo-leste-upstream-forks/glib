@@ -1,3 +1,9 @@
+glib2.0 (2.64.6-1) UNRELEASED; urgency=medium
+
+  * New upstream release
+
+ -- Iain Lane <iain.lane@canonical.com>  Wed, 09 Dec 2020 10:11:37 +0000
+
 glib2.0 (2.64.4-1) unstable; urgency=medium
 
   * Team upload
