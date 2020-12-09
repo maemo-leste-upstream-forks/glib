@@ -1,8 +1,26 @@
-glib2.0 (2.64.6-1) UNRELEASED; urgency=medium
+glib2.0 (2.64.6-1~ubuntu20.04.1) UNRELEASED; urgency=medium
 
-  * New upstream release
+  [ Iain Lane ]
+  * New upstream release, fixing bugs:
+    - Ensure g_subprocess_communicate_async() never blocks
+    - Fix large writes in gfileutils
+    - Fix splice behavior on cancellation
+    - gdatetime: Avoid integer overflow creating dates too far in the past
+    - gdesktopappinfo: Fix unnecessarily copied and leaked URI list
+    - gthreadedresolver: faulty logic in parse_res_txt
+    - gtk3/glib crash on gimp
+    - gvariant: Ensure GVS.depth is initialised
+    - trash portal: Handle portal failures
+  * gbp.conf: Set upstream branch to upstream/2.64.x
+  * Drop patches applied upstream:
+    - glib-compile-resources-Fix-exporting-on-Visual-Studio.patch
+    - gdesktopappinfo-Fix-unnecessarily-copied-and-leaked-URI-l.patch
+  * Revert changes from Debian which we don't need in this SRU:
+    + Revert "d/tests/build: Don't exercise static linking for GIO"
+    + control{,.in}: Re-lower libmount BD version.
+      The problems that prompted this to be raised happened post-focal.
 
- -- Iain Lane <iain.lane@canonical.com>  Wed, 09 Dec 2020 10:11:37 +0000
+ -- Iain Lane <iain.lane@canonical.com>  Wed, 09 Dec 2020 11:13:49 +0000
 
 glib2.0 (2.64.4-1) unstable; urgency=medium
 
