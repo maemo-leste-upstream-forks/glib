@@ -1,5 +1,5 @@
 project('glib', 'c', 'cpp',
-  version : '2.64.4',
+  version : '2.64.6',
   # NOTE: We keep this pinned at 0.49 because that's what Debian 10 ships
   meson_version : '>= 0.49.2',
   default_options : [
@@ -834,6 +834,15 @@ if host_system == 'windows' and (cc.get_id() == 'msvc' or cc.get_id() == 'clang-
   glib_conf.set('HAVE_C99_SNPRINTF', false)
   glib_conf.set('HAVE_C99_VSNPRINTF', false)
   glib_conf.set('HAVE_UNIX98_PRINTF', false)
+elif not cc_can_run and host_system in ['ios', 'darwin']
+  # All these are true when compiling natively on macOS, so we should use good
+  # defaults when building for iOS and tvOS.
+  glib_conf.set('HAVE_C99_SNPRINTF', true)
+  glib_conf.set('HAVE_C99_VSNPRINTF', true)
+  glib_conf.set('HAVE_UNIX98_PRINTF', true)
+  have_good_vsnprintf = true
+  have_good_snprintf = true
+  have_good_printf = true
 else
   vsnprintf_c99_test_code = '''
 #include <stdio.h>

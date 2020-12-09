@@ -1,3 +1,40 @@
+Overview of changes in GLib 2.64.6
+==================================
+
+* This is expected to be the last release in the 2.64 series; the new stable
+  series is 2.66, and maintenance efforts will shift to that
+
+* Bugs fixed:
+ - #2194 gtk3/glib crash on gimp
+ - #2209 gthreadedresolver: faulty logic in parse_res_txt
+ - !1633 Backport !1632 Fix large writes in gfileutils to glib-2-64
+ - !1634 Backport !1631 “Fix splice behavior on cancellation” to glib-2-64
+ - !1656 Backport !1187 “Define G_MSVC_SYMBOL_PREFIX correctly for ARM32” to glib-2-64
+ - !1659 Backport !1652 “trash portal: Handle portal failures” to glib-2-64
+ - !1666 Backport !1665 “Fix g_module_symbol() under Windows sometimes not succeeding” to glib-2-64
+ - !1672 Backport !1671 “gdatetime: Avoid integer overflow creating dates too far in the past” to glib-2-64
+
+* Translation updates:
+ - Croatian
+ - Portuguese
+
+
+Overview of changes in GLib 2.64.5
+==================================
+
+* Fix deadlock in `g_subprocess_communicate_async()` (work by Alexander Larsson) (#2182)
+
+* Fix cross-compilation on iOS (work by Nirbheek Chauhan) (#1868)
+
+* Bugs fixed:
+ - !1519 Backport !1468 “glib-compile-resources: Fix exporting on Visual Studio” to glib-2-64
+ - !1520 Backport !1517 “GWin32RegistryKey: Move assertions” to glib-2-64
+ - !1565 Backport !1563 “gdesktopappinfo: Fix unnecessarily copied and leaked URI list” to glib-2-64
+ - !1608 Backport !1607 “meson: Don't use gnulib for printf on iOS” to glib-2-64
+ - !1618 Backport !1617 “Ensure g_subprocess_communicate_async() never blocks” to glib-2-64
+ - !1621 Backport !1620 “gvariant: Ensure GVS.depth is initialised” to glib-2-64
+
+
 Overview of changes in GLib 2.64.4
 ==================================
 
