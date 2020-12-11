@@ -1,4 +1,4 @@
-glib2.0 (2.67.1-1) UNRELEASED; urgency=medium
+glib2.0 (2.67.1-1) experimental; urgency=medium
 
   * Branch for experimental and 2.67.x
   * New upstream development release
@@ -9,7 +9,7 @@ glib2.0 (2.67.1-1) UNRELEASED; urgency=medium
     Add patch from upstream to fix a regression in GBinding that caused
     gnome-terminal-server to crash on startup
 
- -- Simon McVittie <smcv@debian.org>  Tue, 08 Dec 2020 10:57:00 +0000
+ -- Simon McVittie <smcv@debian.org>  Fri, 11 Dec 2020 11:16:25 +0000
 
 glib2.0 (2.66.3-2) unstable; urgency=medium
 
