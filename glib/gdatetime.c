@@ -52,6 +52,7 @@
 #define _GNU_SOURCE 1
 #endif
 
+#include <math.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -1180,7 +1181,7 @@ static gboolean
 get_iso8601_seconds (const gchar *text, gsize length, gdouble *value)
 {
   gsize i;
-  gdouble divisor = 1, v = 0;
+  guint64 divisor = 1, v = 0;
 
   if (length < 2)
     return FALSE;
@@ -1207,13 +1208,15 @@ get_iso8601_seconds (const gchar *text, gsize length, gdouble *value)
   for (; i < length; i++)
     {
       const gchar c = text[i];
-      if (c < '0' || c > '9')
+      if (c < '0' || c > '9' ||
+          v > (G_MAXUINT64 - (c - '0')) / 10 ||
+          divisor > G_MAXUINT64 / 10)
         return FALSE;
       v = v * 10 + (c - '0');
       divisor *= 10;
     }
 
-  *value = v / divisor;
+  *value = (gdouble) v / divisor;
   return TRUE;
 }
 
@@ -1585,6 +1588,7 @@ g_date_time_new (GTimeZone *tz,
       day < 1 || day > days_in_months[GREGORIAN_LEAP (year)][month] ||
       hour < 0 || hour > 23 ||
       minute < 0 || minute > 59 ||
+      isnan (seconds) ||
       seconds < 0.0 || seconds >= 60.0)
     return NULL;
 
