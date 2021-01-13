@@ -1,7 +1,7 @@
 glib2.0 (2.64.6-1~ubuntu20.04.1) focal; urgency=medium
 
   [ Iain Lane ]
-  * New upstream release (LP: #1883694), fixing bugs:
+  * New upstream release (LP: #1907433), fixing bugs:
     - Ensure g_subprocess_communicate_async() never blocks
     - Fix large writes in gfileutils
     - Fix splice behavior on cancellation
