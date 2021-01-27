@@ -9,6 +9,7 @@ gresource-Ignore-G_RESOURCE_OVERLAYS-when-running-as-setu.patch
 gsettingsschema-Ignore-GSETTINGS_SCHEMA_DIR-when-running-.patch
 gdesktopappinfo-Fix-validation-of-XDG_CURRENT_DESKTOP.patch
 tests-Update-the-expected-count-in-file-test.patch
+spawn-Don-t-set-a-search-path-if-we-don-t-want-to-search-.patch
 glib-tests-fileutils-Make-more-use-of-g_assert_no_errno.patch
 glib-tests-fileutils-Fix-expectations-when-running-as-roo.patch
 01_gettext-desktopfiles.patch
