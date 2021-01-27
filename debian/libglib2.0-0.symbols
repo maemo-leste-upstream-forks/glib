@@ -2434,6 +2434,8 @@ libglib-2.0.so.0 libglib2.0-0 #MINVER#
  g_environ_setenv@Base 2.31.8
  g_environ_unsetenv@Base 2.31.8
  g_error_copy@Base 2.12.0
+ g_error_domain_register@Base 2.67.2
+ g_error_domain_register_static@Base 2.67.2
  g_error_free@Base 2.12.0
  g_error_matches@Base 2.12.0
  g_error_new@Base 2.12.0
