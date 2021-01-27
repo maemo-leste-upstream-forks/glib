@@ -30,6 +30,7 @@
 #include "gdbusaddress.h"
 #include "gdbuserror.h"
 #include "gioenumtypes.h"
+#include "glib-private.h"
 #include "gnetworkaddress.h"
 #include "gsocketclient.h"
 #include "giostream.h"
@@ -903,10 +904,13 @@ g_dbus_address_get_stream (const gchar         *address,
 /**
  * g_dbus_address_get_stream_finish:
  * @res: A #GAsyncResult obtained from the GAsyncReadyCallback passed to g_dbus_address_get_stream().
- * @out_guid: (optional) (out): %NULL or return location to store the GUID extracted from @address, if any.
+ * @out_guid: (optional) (out) (nullable): %NULL or return location to store the GUID extracted from @address, if any.
  * @error: Return location for error or %NULL.
  *
  * Finishes an operation started with g_dbus_address_get_stream().
+ *
+ * A server is not required to set a GUID, so @out_guid may be set to %NULL
+ * even on success.
  *
  * Returns: (transfer full): A #GIOStream or %NULL if @error is set.
  *
@@ -940,7 +944,7 @@ g_dbus_address_get_stream_finish (GAsyncResult        *res,
 /**
  * g_dbus_address_get_stream_sync:
  * @address: A valid D-Bus address.
- * @out_guid: (optional) (out): %NULL or return location to store the GUID extracted from @address, if any.
+ * @out_guid: (optional) (out) (nullable): %NULL or return location to store the GUID extracted from @address, if any.
  * @cancellable: (nullable): A #GCancellable or %NULL.
  * @error: Return location for error or %NULL.
  *
@@ -948,6 +952,9 @@ g_dbus_address_get_stream_finish (GAsyncResult        *res,
  * sets up the connection so it is in a state to run the client-side
  * of the D-Bus authentication conversation. @address must be in the
  * [D-Bus address format](https://dbus.freedesktop.org/doc/dbus-specification.html#addresses).
+ *
+ * A server is not required to set a GUID, so @out_guid may be set to %NULL
+ * even on success.
  *
  * This is a synchronous failable function. See
  * g_dbus_address_get_stream() for the asynchronous version.
@@ -1279,6 +1286,7 @@ g_dbus_address_get_for_bus_sync (GBusType       bus_type,
                                  GCancellable  *cancellable,
                                  GError       **error)
 {
+  gboolean is_setuid = GLIB_PRIVATE_CALL (g_check_setuid) ();
   gchar *ret, *s = NULL;
   const gchar *starter_bus;
   GError *local_error;
@@ -1317,10 +1325,12 @@ g_dbus_address_get_for_bus_sync (GBusType       bus_type,
       _g_dbus_debug_print_unlock ();
     }
 
+  /* Don’t load the addresses from the environment if running as setuid, as they
+   * come from an unprivileged caller. */
   switch (bus_type)
     {
     case G_BUS_TYPE_SYSTEM:
-      ret = g_strdup (g_getenv ("DBUS_SYSTEM_BUS_ADDRESS"));
+      ret = !is_setuid ? g_strdup (g_getenv ("DBUS_SYSTEM_BUS_ADDRESS")) : NULL;
       if (ret == NULL)
         {
           ret = g_strdup ("unix:path=/var/run/dbus/system_bus_socket");
@@ -1328,7 +1338,7 @@ g_dbus_address_get_for_bus_sync (GBusType       bus_type,
       break;
 
     case G_BUS_TYPE_SESSION:
-      ret = g_strdup (g_getenv ("DBUS_SESSION_BUS_ADDRESS"));
+      ret = !is_setuid ? g_strdup (g_getenv ("DBUS_SESSION_BUS_ADDRESS")) : NULL;
       if (ret == NULL)
         {
           ret = get_session_address_platform_specific (&local_error);

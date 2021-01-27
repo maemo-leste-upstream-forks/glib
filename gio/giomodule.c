@@ -30,6 +30,7 @@
 
 #include "giomodule.h"
 #include "giomodule-priv.h"
+#include "glib-private.h"
 #include "glocalfilemonitor.h"
 #include "gnativevolumemonitor.h"
 #include "gproxyresolver.h"
@@ -477,9 +478,7 @@ g_io_modules_scan_all_in_directory_with_scope (const char     *dirname,
 
   filename = g_build_filename (dirname, "giomodule.cache", NULL);
 
-  cache = g_hash_table_new_full (g_str_hash, g_str_equal,
-				 g_free, (GDestroyNotify)g_strfreev);
-
+  cache = NULL;
   cache_time = 0;
   if (g_stat (filename, &statbuf) == 0 &&
       g_file_get_contents (filename, &data, NULL, NULL))
@@ -523,6 +522,10 @@ g_io_modules_scan_all_in_directory_with_scope (const char     *dirname,
 	  while (g_ascii_isspace (*colon))
 	    colon++;
 
+          if (G_UNLIKELY (!cache))
+            cache = g_hash_table_new_full (g_str_hash, g_str_equal,
+                                           g_free, (GDestroyNotify)g_strfreev);
+
 	  extension_points = g_strsplit (colon, ",", -1);
 	  g_hash_table_insert (cache, file, extension_points);
 	}
@@ -536,13 +539,15 @@ g_io_modules_scan_all_in_directory_with_scope (const char     *dirname,
 	  GIOExtensionPoint *extension_point;
 	  GIOModule *module;
 	  gchar *path;
-	  char **extension_points;
+	  char **extension_points = NULL;
 	  int i;
 
 	  path = g_build_filename (dirname, name, NULL);
 	  module = g_io_module_new (path);
 
-	  extension_points = g_hash_table_lookup (cache, name);
+          if (cache)
+            extension_points = g_hash_table_lookup (cache, name);
+
 	  if (extension_points != NULL &&
 	      g_stat (path, &statbuf) == 0 &&
 	      statbuf.st_ctime <= cache_time)
@@ -577,7 +582,8 @@ g_io_modules_scan_all_in_directory_with_scope (const char     *dirname,
 
   g_dir_close (dir);
 
-  g_hash_table_destroy (cache);
+  if (cache)
+    g_hash_table_destroy (cache);
 
   g_free (filename);
 }
@@ -807,6 +813,9 @@ _g_io_module_get_default_type (const gchar *extension_point,
       return G_TYPE_INVALID;
     }
 
+  /* It’s OK to query the environment here, even when running as setuid, because
+   * it only allows a choice between existing already-loaded modules. No new
+   * code is loaded based on the environment variable value. */
   use_this = envvar ? g_getenv (envvar) : NULL;
   if (g_strcmp0 (use_this, "help") == 0)
     {
@@ -956,6 +965,9 @@ _g_io_module_get_default (const gchar         *extension_point,
       return NULL;
     }
 
+  /* It’s OK to query the environment here, even when running as setuid, because
+   * it only allows a choice between existing already-loaded modules. No new
+   * code is loaded based on the environment variable value. */
   use_this = envvar ? g_getenv (envvar) : NULL;
   if (g_strcmp0 (use_this, "help") == 0)
     {
@@ -1154,8 +1166,16 @@ static gchar *
 get_gio_module_dir (void)
 {
   gchar *module_dir;
+  gboolean is_setuid = GLIB_PRIVATE_CALL (g_check_setuid) ();
 
-  module_dir = g_strdup (g_getenv ("GIO_MODULE_DIR"));
+  /* If running as setuid, loading modules from an arbitrary directory
+   * controlled by the unprivileged user who is running the program could allow
+   * for execution of arbitrary code (in constructors in modules).
+   * Don’t allow it.
+   *
+   * If a setuid program somehow needs to load additional GIO modules, it should
+   * explicitly call g_io_modules_scan_all_in_directory(). */
+  module_dir = !is_setuid ? g_strdup (g_getenv ("GIO_MODULE_DIR")) : NULL;
   if (module_dir == NULL)
     {
 #ifdef G_OS_WIN32
@@ -1187,13 +1207,14 @@ _g_io_modules_ensure_loaded (void)
 
   if (!loaded_dirs)
     {
+      gboolean is_setuid = GLIB_PRIVATE_CALL (g_check_setuid) ();
       gchar *module_dir;
 
       loaded_dirs = TRUE;
       scope = g_io_module_scope_new (G_IO_MODULE_SCOPE_BLOCK_DUPLICATES);
 
-      /* First load any overrides, extras */
-      module_path = g_getenv ("GIO_EXTRA_MODULES");
+      /* First load any overrides, extras (but not if running as setuid!) */
+      module_path = !is_setuid ? g_getenv ("GIO_EXTRA_MODULES") : NULL;
       if (module_path)
 	{
 	  gchar **paths;
