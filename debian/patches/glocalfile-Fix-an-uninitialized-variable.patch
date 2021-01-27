@@ -1,0 +1,40 @@
+From: =?utf-8?q?Timm_B=C3=A4der?= <mail@baedert.org>
+Date: Wed, 6 Jan 2021 17:36:32 +0100
+Subject: glocalfile: Fix an uninitialized variable
+
+Clang says:
+
+../gio/glocalfile.c:2090:11: warning: variable 'success' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+      if (trashdir == NULL)
+          ^~~~~~~~~~~~~~~~
+../gio/glocalfile.c:2133:12: note: uninitialized use occurs here
+      if (!success)
+           ^~~~~~~
+../gio/glocalfile.c:2090:7: note: remove the 'if' if its condition is always true
+      if (trashdir == NULL)
+      ^~~~~~~~~~~~~~~~~~~~~
+../gio/glocalfile.c:2041:23: note: initialize the variable 'success' to silence this warning
+      gboolean success;
+                      ^
+                       = 0
+
+So just do that.
+
+Origin: upstream, 2.67.3, commit:c983ded09fcafac172d518e073ef73b66a9e53cc
+---
+ gio/glocalfile.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gio/glocalfile.c b/gio/glocalfile.c
+index f9603e0..d3d68ec 100644
+--- a/gio/glocalfile.c
++++ b/gio/glocalfile.c
+@@ -2038,7 +2038,7 @@ g_local_file_trash (GFile         *file,
+     {
+       uid_t uid;
+       char uid_str[32];
+-      gboolean success;
++      gboolean success = FALSE;
+ 
+       uid = geteuid ();
+       g_snprintf (uid_str, sizeof (uid_str), "%lu", (unsigned long)uid);
