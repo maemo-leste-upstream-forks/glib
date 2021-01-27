@@ -624,6 +624,16 @@ g_socket (gint     domain,
 	fcntl (fd, F_SETFD, flags);
       }
   }
+#else
+  if ((domain == AF_INET || domain == AF_INET6) && type == SOCK_DGRAM)
+    {
+      BOOL new_behavior = FALSE;
+      DWORD bytes_returned = 0;
+
+      /* Disable connection reset error on ICMP port unreachable. */
+      WSAIoctl (fd, SIO_UDP_CONNRESET, &new_behavior, sizeof (new_behavior),
+                NULL, 0, &bytes_returned, NULL, NULL);
+    }
 #endif
 
   return fd;
@@ -3790,6 +3800,9 @@ update_select_events (GSocket *socket)
   GList *l;
   WSAEVENT event;
 
+  if (socket->priv->closed)
+    return;
+
   ensure_event (socket);
 
   event_mask = 0;
@@ -3848,7 +3861,8 @@ update_condition_unlocked (GSocket *socket)
   WSANETWORKEVENTS events;
   GIOCondition condition;
 
-  if (WSAEnumNetworkEvents (socket->priv->fd,
+  if (!socket->priv->closed &&
+      WSAEnumNetworkEvents (socket->priv->fd,
 			    socket->priv->event,
 			    &events) == 0)
     {
@@ -5475,10 +5489,10 @@ g_socket_receive_message_with_timeout (GSocket                 *socket,
 	    if (errsv == WSAEINTR)
 	      continue;
 
+	    win32_unset_event_mask (socket, FD_READ);
+
             if (errsv == WSAEWOULDBLOCK)
               {
-                win32_unset_event_mask (socket, FD_READ);
-
                 if (timeout_us != 0)
                   {
                     if (!block_on_timeout (socket, G_IO_IN, timeout_us,
@@ -5965,10 +5979,11 @@ g_socket_get_credentials (GSocket   *socket,
     socklen_t optlen = sizeof (cred);
 
     if (getsockopt (socket->priv->fd,
-                    0,
+                    SOL_LOCAL,
                     LOCAL_PEERCRED,
                     &cred,
-                    &optlen) == 0)
+                    &optlen) == 0
+        && optlen != 0)
       {
         if (cred.cr_version == XUCRED_VERSION)
           {
@@ -5992,6 +6007,15 @@ g_socket_get_credentials (GSocket   *socket,
 
             return NULL;
           }
+      }
+    else if (optlen == 0 || errno == EINVAL)
+      {
+        g_set_error (error,
+                     G_IO_ERROR,
+                     G_IO_ERROR_NOT_SUPPORTED,
+                     _("Unable to read socket credentials: %s"),
+                     "unsupported socket type");
+        return NULL;
       }
   }
 #elif G_CREDENTIALS_USE_NETBSD_UNPCBID
