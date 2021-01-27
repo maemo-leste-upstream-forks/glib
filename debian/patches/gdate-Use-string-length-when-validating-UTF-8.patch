@@ -1,0 +1,25 @@
+From: Philip Withnall <pwithnall@endlessos.org>
+Date: Mon, 21 Dec 2020 16:50:53 +0000
+Subject: gdate: Use string length when validating UTF-8
+
+Makes the validation a tiny bit faster.
+
+Signed-off-by: Philip Withnall <pwithnall@endlessos.org>
+Origin: upstream, 2.66.5, commit:59999737c9980e3c3ea84a7320dd17f5499501ef
+---
+ glib/gdate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/glib/gdate.c b/glib/gdate.c
+index 0e03a6e..253ab65 100644
+--- a/glib/gdate.c
++++ b/glib/gdate.c
+@@ -1243,7 +1243,7 @@ g_date_set_parse (GDate       *d,
+     return;
+ 
+   /* The input has to be valid UTF-8. */
+-  if (!g_utf8_validate (str, -1, NULL))
++  if (!g_utf8_validate_len (str, str_len, NULL))
+     return;
+ 
+   G_LOCK (g_date_global);
