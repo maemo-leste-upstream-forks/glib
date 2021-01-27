@@ -1,6 +1,6 @@
-glib2.0 (2.66.4-2) UNRELEASED; urgency=medium
+glib2.0 (2.66.4-2) unstable; urgency=medium
 
-  * Update patch series to upstream commit 2.66.4-18-g872181c4f
+  * d/patches: Update patch series to upstream commit 2.66.4-18-g872181c4f
     (excluding Windows-specific changes)
     - Security hardening: in GIO, ignore various environment variables
       if GIO is (inadvisably) used in a setuid process without sanitizing
@@ -8,8 +8,14 @@ glib2.0 (2.66.4-2) UNRELEASED; urgency=medium
     - Reject very long date strings early, instead of spending time
       normalizing and parsing them
     - Fix recursion in GPrivate
+  * d/p/spawn-Don-t-set-a-search-path-if-we-don-t-want-to-search-.patch:
+    Make the g_spawn family only search PATH if G_SPAWN_SEARCH_PATH is used.
+    Previously, they would sometimes search /usr/bin:/bin:. for an
+    executable they should have only loaded from the current working
+    directory. In particular, this made gtk+3.0 fail its build-time tests
+    if ImageMagick display(1) happened to be installed. (Closes: #977961)
 
- -- Simon McVittie <smcv@debian.org>  Wed, 27 Jan 2021 11:23:16 +0000
+ -- Simon McVittie <smcv@debian.org>  Wed, 27 Jan 2021 11:33:06 +0000
 
 glib2.0 (2.66.4-1) unstable; urgency=medium
 
