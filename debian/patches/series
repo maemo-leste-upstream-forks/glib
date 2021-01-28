@@ -10,6 +10,7 @@ gsettingsschema-Ignore-GSETTINGS_SCHEMA_DIR-when-running-.patch
 gdesktopappinfo-Fix-validation-of-XDG_CURRENT_DESKTOP.patch
 tests-Update-the-expected-count-in-file-test.patch
 spawn-Don-t-set-a-search-path-if-we-don-t-want-to-search-.patch
+Add-test-coverage-for-G_SPAWN_SEARCH_PATH.patch
 glib-tests-fileutils-Make-more-use-of-g_assert_no_errno.patch
 glib-tests-fileutils-Fix-expectations-when-running-as-roo.patch
 01_gettext-desktopfiles.patch

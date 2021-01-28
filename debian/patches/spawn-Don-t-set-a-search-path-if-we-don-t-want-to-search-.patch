@@ -25,11 +25,11 @@ Fixes: 62ce66d4 "gspawn: Don’t use getenv() in async-signal-safe context"
 Bug-Debian: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=977961
 Forwarded: https://gitlab.gnome.org/GNOME/glib/-/merge_requests/1902
 ---
- glib/gspawn.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ glib/gspawn.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
 diff --git a/glib/gspawn.c b/glib/gspawn.c
-index c37ac7c..f1b9053 100644
+index c37ac7c..0b94730 100644
 --- a/glib/gspawn.c
 +++ b/glib/gspawn.c
 @@ -1819,7 +1819,7 @@ fork_exec_with_fds (gboolean              intermediate_child,
@@ -37,11 +37,22 @@ index c37ac7c..f1b9053 100644
      chosen_search_path = g_getenv ("PATH");
  
 -  if (chosen_search_path == NULL)
-+  if (search_path && chosen_search_path == NULL)
++  if ((search_path || search_path_from_envp) && chosen_search_path == NULL)
      {
        /* There is no 'PATH' in the environment.  The default
         * * search path in libc is the current directory followed by
-@@ -1840,8 +1840,11 @@ fork_exec_with_fds (gboolean              intermediate_child,
+@@ -1834,14 +1834,27 @@ fork_exec_with_fds (gboolean              intermediate_child,
+       chosen_search_path = "/bin:/usr/bin:.";
+     }
+ 
++  if (search_path || search_path_from_envp)
++    g_assert (chosen_search_path != NULL);
++  else
++    g_assert (chosen_search_path == NULL);
++
+   /* Allocate a buffer which the fork()ed child can use to assemble potential
+    * paths for the binary to exec(), combining the argv[0] and elements from
+    * the chosen_search_path. This can’t be done in the child because malloc()
     * (or alloca()) are not async-signal-safe (see `man 7 signal-safety`).
     *
     * Add 2 for the nul terminator and a leading `/`. */
@@ -52,6 +63,11 @@ index c37ac7c..f1b9053 100644
 +      search_path_buffer_len = strlen (chosen_search_path) + strlen (argv[0]) + 2;
 +      search_path_buffer = g_malloc (search_path_buffer_len);
 +    }
++
++  if (search_path || search_path_from_envp)
++    g_assert (search_path_buffer != NULL);
++  else
++    g_assert (search_path_buffer == NULL);
  
    /* And allocate a buffer which is 2 elements longer than @argv, so that if
     * script_execute() has to be called later on, it can build a wrapper argv
