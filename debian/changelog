@@ -1,4 +1,4 @@
-glib2.0 (2.66.4-4) UNRELEASED; urgency=medium
+glib2.0 (2.66.4-4) unstable; urgency=medium
 
   * d/patches: Update patch series to upstream commit 2.66.4-27-g0051c0635
     - Improve test coverage for #977961
@@ -12,7 +12,7 @@ glib2.0 (2.66.4-4) UNRELEASED; urgency=medium
       better hardening. The D-Bus session bus is not designed to be used
       by processes that have elevated privileges.
 
- -- Simon McVittie <smcv@debian.org>  Wed, 03 Feb 2021 13:06:11 +0000
+ -- Simon McVittie <smcv@debian.org>  Wed, 03 Feb 2021 13:55:41 +0000
 
 glib2.0 (2.66.4-3) unstable; urgency=medium
 
