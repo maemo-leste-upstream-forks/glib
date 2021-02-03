@@ -305,6 +305,55 @@ desktop_file_dir_app_name_is_masked (DesktopFileDir *dir,
   return FALSE;
 }
 
+/* Not much to go on from https://specifications.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html
+ * so validate it as a non-empty alphanumeric ASCII string with `-` and `_` allowed.
+ *
+ * Validation is important as the desktop IDs are used to construct filenames,
+ * and may be set by an unprivileged caller if running in a setuid program. */
+static gboolean
+validate_xdg_desktop (const gchar *desktop)
+{
+  gsize i;
+
+  for (i = 0; desktop[i] != '\0'; i++)
+    if (desktop[i] != '-' && desktop[i] != '_' &&
+        !g_ascii_isalnum (desktop[i]))
+      return FALSE;
+
+  if (i == 0)
+    return FALSE;
+
+  return TRUE;
+}
+
+static char **
+get_valid_current_desktops (const char *value)
+{
+  char **tmp;
+  gsize i;
+  GPtrArray *valid_desktops;
+
+  if (value == NULL)
+    value = g_getenv ("XDG_CURRENT_DESKTOP");
+  if (value == NULL)
+    value = "";
+
+  tmp = g_strsplit (value, G_SEARCHPATH_SEPARATOR_S, 0);
+  valid_desktops = g_ptr_array_new_full (g_strv_length (tmp) + 1, g_free);
+  for (i = 0; tmp[i]; i++)
+    {
+      if (validate_xdg_desktop (tmp[i]))
+        g_ptr_array_add (valid_desktops, tmp[i]);
+      else
+        g_free (tmp[i]);
+    }
+  g_ptr_array_add (valid_desktops, NULL);
+  g_free (tmp);
+  tmp = (char **) g_ptr_array_steal (valid_desktops, NULL);
+  g_ptr_array_unref (valid_desktops);
+  return tmp;
+}
+
 static const gchar * const *
 get_lowercase_current_desktops (void)
 {
@@ -312,23 +361,15 @@ get_lowercase_current_desktops (void)
 
   if (g_once_init_enter (&result))
     {
-      const gchar *envvar;
-      gchar **tmp;
+      char **tmp = get_valid_current_desktops (NULL);
+      gsize i, j;
 
-      envvar = g_getenv ("XDG_CURRENT_DESKTOP");
-
-      if (envvar)
+      for (i = 0; tmp[i]; i++)
         {
-          gint i, j;
-
-          tmp = g_strsplit (envvar, G_SEARCHPATH_SEPARATOR_S, 0);
-
-          for (i = 0; tmp[i]; i++)
-            for (j = 0; tmp[i][j]; j++)
-              tmp[i][j] = g_ascii_tolower (tmp[i][j]);
+          /* Convert to lowercase. */
+          for (j = 0; tmp[i][j]; j++)
+            tmp[i][j] = g_ascii_tolower (tmp[i][j]);
         }
-      else
-        tmp = g_new0 (gchar *, 0 + 1);
 
       g_once_init_leave (&result, tmp);
     }
@@ -343,15 +384,7 @@ get_current_desktops (const gchar *value)
 
   if (g_once_init_enter (&result))
     {
-      gchar **tmp;
-
-      if (!value)
-        value = g_getenv ("XDG_CURRENT_DESKTOP");
-
-      if (!value)
-        value = "";
-
-      tmp = g_strsplit (value, ":", 0);
+      char **tmp = get_valid_current_desktops (value);
 
       g_once_init_leave (&result, tmp);
     }
