@@ -23,7 +23,7 @@ run display(1) instead of testsuite/gdk/display.
 
 Fixes: 62ce66d4 "gspawn: Don’t use getenv() in async-signal-safe context"
 Bug-Debian: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=977961
-Forwarded: https://gitlab.gnome.org/GNOME/glib/-/merge_requests/1902
+Applied-upstream: 2.66.5, commit:0d50c6bbe6be4ccc145452e8c8d2a8f853073870
 ---
  glib/gspawn.c | 19 ++++++++++++++++---
  1 file changed, 16 insertions(+), 3 deletions(-)

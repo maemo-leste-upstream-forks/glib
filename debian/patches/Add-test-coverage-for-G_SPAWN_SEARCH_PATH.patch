@@ -7,8 +7,7 @@ copy /bin/true (or any other harmless executable) to
 /usr/bin/spawn-test-helper.
 
 Signed-off-by: Simon McVittie <smcv@collabora.com>
-Bug-Debian: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=977961
-Forwarded: https://gitlab.gnome.org/GNOME/glib/-/merge_requests/1902
+Applied-upstream: 2.66.5, commit:136a9d7ffd5b46e5c65fcc40ed3ca4dd9a0de5d1
 ---
  glib/tests/meson.build                          |  17 ++
  glib/tests/path-test-subdir/meson.build         |   6 +

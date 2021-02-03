@@ -11,6 +11,11 @@ gdesktopappinfo-Fix-validation-of-XDG_CURRENT_DESKTOP.patch
 tests-Update-the-expected-count-in-file-test.patch
 spawn-Don-t-set-a-search-path-if-we-don-t-want-to-search-.patch
 Add-test-coverage-for-G_SPAWN_SEARCH_PATH.patch
+spawn-prefer-allocating-buffers-on-stack-for-small-sizes-.patch
+Expand-test-coverage-for-G_SPAWN_SEARCH_PATH.patch
+gdbus-Improve-readability-by-avoiding-ternary-operator.patch
+gdbus-Rename-a-variable-to-be-less-misleading.patch
+gdbus-Use-DBUS_SESSION_BUS_ADDRESS-if-AT_SECURE-but-not-s.patch
 glib-tests-fileutils-Make-more-use-of-g_assert_no_errno.patch
 glib-tests-fileutils-Fix-expectations-when-running-as-roo.patch
 01_gettext-desktopfiles.patch

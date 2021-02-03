@@ -1,0 +1,40 @@
+From: Simon McVittie <smcv@collabora.com>
+Date: Tue, 2 Feb 2021 10:25:40 +0000
+Subject: gdbus: Improve readability by avoiding ternary operator
+
+Signed-off-by: Simon McVittie <smcv@collabora.com>
+Applied-upstream: 2.66.5, commit:72eadbde6b4be81132f99076df564ac3314d5a56
+---
+ gio/gdbusaddress.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/gio/gdbusaddress.c b/gio/gdbusaddress.c
+index 4ec81ef..f1795cd 100644
+--- a/gio/gdbusaddress.c
++++ b/gio/gdbusaddress.c
+@@ -1324,7 +1324,11 @@ g_dbus_address_get_for_bus_sync (GBusType       bus_type,
+   switch (bus_type)
+     {
+     case G_BUS_TYPE_SYSTEM:
+-      ret = !is_setuid ? g_strdup (g_getenv ("DBUS_SYSTEM_BUS_ADDRESS")) : NULL;
++      if (is_setuid)
++        ret = NULL;
++      else
++        ret = g_strdup (g_getenv ("DBUS_SYSTEM_BUS_ADDRESS"));
++
+       if (ret == NULL)
+         {
+           ret = g_strdup ("unix:path=/var/run/dbus/system_bus_socket");
+@@ -1332,7 +1336,11 @@ g_dbus_address_get_for_bus_sync (GBusType       bus_type,
+       break;
+ 
+     case G_BUS_TYPE_SESSION:
+-      ret = !is_setuid ? g_strdup (g_getenv ("DBUS_SESSION_BUS_ADDRESS")) : NULL;
++      if (is_setuid)
++        ret = NULL;
++      else
++        ret = g_strdup (g_getenv ("DBUS_SESSION_BUS_ADDRESS"));
++
+       if (ret == NULL)
+         {
+           ret = get_session_address_platform_specific (&local_error);

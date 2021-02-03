@@ -1,3 +1,19 @@
+glib2.0 (2.66.4-4) UNRELEASED; urgency=medium
+
+  * d/patches: Update patch series to upstream commit 2.66.4-27-g0051c0635
+    - Improve test coverage for #977961
+    - Stop valgrind reporting memory leaks in GSpawn in most cases
+    - Partially revert security hardening from 2.66.4-2: allow
+      DBUS_SESSION_BUS_ADDRESS to be taken from the environment by
+      setcap executables (to avoid regressing gnome-keyring) and by
+      setgid executables (to avoid regressing msmtp).
+      (Closes: #981420, #981555)
+      Note that this is likely to be reverted in GLib 2.70.x to provide
+      better hardening. The D-Bus session bus is not designed to be used
+      by processes that have elevated privileges.
+
+ -- Simon McVittie <smcv@debian.org>  Wed, 03 Feb 2021 13:06:11 +0000
+
 glib2.0 (2.66.4-3) unstable; urgency=medium
 
   * Improve patch for #977961, and add basic test coverage
