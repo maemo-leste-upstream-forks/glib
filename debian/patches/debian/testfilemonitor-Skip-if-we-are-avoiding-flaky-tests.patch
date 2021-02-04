@@ -11,10 +11,10 @@ Forwarded: no
  1 file changed, 33 insertions(+), 1 deletion(-)
 
 diff --git a/gio/tests/testfilemonitor.c b/gio/tests/testfilemonitor.c
-index b74dc2b..79b5776 100644
+index 44c7080..24e2cd4 100644
 --- a/gio/tests/testfilemonitor.c
 +++ b/gio/tests/testfilemonitor.c
-@@ -21,6 +21,12 @@ setup (Fixture       *fixture,
+@@ -23,6 +23,12 @@ setup (Fixture       *fixture,
    gchar *path = NULL;
    GError *local_error = NULL;
  
@@ -27,7 +27,7 @@ index b74dc2b..79b5776 100644
    path = g_dir_make_tmp ("gio-test-testfilemonitor_XXXXXX", &local_error);
    g_assert_no_error (local_error);
  
-@@ -37,7 +43,9 @@ teardown (Fixture       *fixture,
+@@ -39,7 +45,9 @@ teardown (Fixture       *fixture,
  {
    GError *local_error = NULL;
  
@@ -38,7 +38,7 @@ index b74dc2b..79b5776 100644
    g_assert_no_error (local_error);
    g_clear_object (&fixture->tmp_dir);
  }
-@@ -360,6 +368,10 @@ test_atomic_replace (Fixture       *fixture,
+@@ -362,6 +370,10 @@ test_atomic_replace (Fixture       *fixture,
    GError *error = NULL;
    TestData data;
  
@@ -49,7 +49,7 @@ index b74dc2b..79b5776 100644
    data.step = 0;
    data.events = NULL;
  
-@@ -465,6 +477,10 @@ test_file_changes (Fixture       *fixture,
+@@ -467,6 +479,10 @@ test_file_changes (Fixture       *fixture,
    GError *error = NULL;
    TestData data;
  
@@ -60,7 +60,7 @@ index b74dc2b..79b5776 100644
    data.step = 0;
    data.events = NULL;
  
-@@ -582,6 +598,10 @@ test_dir_monitor (Fixture       *fixture,
+@@ -584,6 +600,10 @@ test_dir_monitor (Fixture       *fixture,
    GError *error = NULL;
    TestData data;
  
@@ -71,7 +71,7 @@ index b74dc2b..79b5776 100644
    data.step = 0;
    data.events = NULL;
  
-@@ -679,6 +699,10 @@ test_dir_non_existent (Fixture       *fixture,
+@@ -681,6 +701,10 @@ test_dir_non_existent (Fixture       *fixture,
    TestData data;
    GError *error = NULL;
  
@@ -82,7 +82,7 @@ index b74dc2b..79b5776 100644
    data.step = 0;
    data.events = NULL;
  
-@@ -788,6 +812,10 @@ test_cross_dir_moves (Fixture       *fixture,
+@@ -790,6 +814,10 @@ test_cross_dir_moves (Fixture       *fixture,
    GError *error = NULL;
    TestData data[2];
  
@@ -93,7 +93,7 @@ index b74dc2b..79b5776 100644
    data[0].step = 0;
    data[0].events = NULL;
  
-@@ -957,6 +985,10 @@ test_file_hard_links (Fixture       *fixture,
+@@ -964,6 +992,10 @@ test_file_hard_links (Fixture       *fixture,
    GError *error = NULL;
    TestData data;
  
