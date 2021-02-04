@@ -138,6 +138,8 @@ GLIB_VERSION_2_62
 GLIB_VERSION_2_64
 GLIB_VERSION_2_66
 GLIB_VERSION_2_68
+GLIB_VERSION_CUR_STABLE
+GLIB_VERSION_PREV_STABLE
 GLIB_VERSION_MIN_REQUIRED
 GLIB_VERSION_MAX_ALLOWED
 GLIB_DISABLE_DEPRECATION_WARNINGS
@@ -733,6 +735,7 @@ G_ANALYZER_ANALYZING
 G_ANALYZER_NORETURN
 g_autoptr_cleanup_generic_gfree
 glib_typeof
+glib_typeof_2_68
 g_macro__has_attribute
 g_macro__has_builtin
 g_macro__has_feature
@@ -1338,6 +1341,7 @@ g_newa
 <SUBSECTION>
 g_memmove
 g_memdup
+g_memdup2
 
 <SUBSECTION>
 GMemVTable
@@ -3506,6 +3510,7 @@ GTestDataFunc
 g_test_add_data_func
 g_test_add_data_func_full
 g_test_add
+g_test_get_path
 
 GTestFileType
 g_test_build_filename

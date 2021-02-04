@@ -4016,7 +4016,7 @@ _g_dbus_interface_vtable_copy (const GDBusInterfaceVTable *vtable)
   /* Don't waste memory by copying padding - remember to update this
    * when changing struct _GDBusInterfaceVTable in gdbusconnection.h
    */
-  return g_memdup ((gconstpointer) vtable, 3 * sizeof (gpointer));
+  return g_memdup2 ((gconstpointer) vtable, 3 * sizeof (gpointer));
 }
 
 static void
@@ -4033,7 +4033,7 @@ _g_dbus_subtree_vtable_copy (const GDBusSubtreeVTable *vtable)
   /* Don't waste memory by copying padding - remember to update this
    * when changing struct _GDBusSubtreeVTable in gdbusconnection.h
    */
-  return g_memdup ((gconstpointer) vtable, 3 * sizeof (gpointer));
+  return g_memdup2 ((gconstpointer) vtable, 3 * sizeof (gpointer));
 }
 
 static void
@@ -5530,7 +5530,8 @@ g_dbus_connection_register_object_with_closures (GDBusConnection     *connection
     {
       method_call_closure != NULL  ? register_with_closures_on_method_call  : NULL,
       get_property_closure != NULL ? register_with_closures_on_get_property : NULL,
-      set_property_closure != NULL ? register_with_closures_on_set_property : NULL
+      set_property_closure != NULL ? register_with_closures_on_set_property : NULL,
+      { 0 }
     };
 
   data = register_object_data_new (method_call_closure, get_property_closure, set_property_closure);
