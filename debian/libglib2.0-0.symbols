@@ -366,6 +366,8 @@ libgio-2.0.so.0 libglib2.0-0 #MINVER#
  g_dbus_error_set_dbus_error_valist@Base 2.26.0
  g_dbus_error_strip_remote_error@Base 2.26.0
  g_dbus_error_unregister_error@Base 2.26.0
+ g_dbus_escape_object_path@Base 2.67.3
+ g_dbus_escape_object_path_bytestring@Base 2.67.3
  g_dbus_generate_guid@Base 2.26.0
  g_dbus_gvalue_to_gvariant@Base 2.30.0
  g_dbus_gvariant_to_gvalue@Base 2.30.0
@@ -574,6 +576,7 @@ libgio-2.0.so.0 libglib2.0-0 #MINVER#
  g_dbus_signal_info_ref@Base 2.26.0
  g_dbus_signal_info_unref@Base 2.26.0
  g_dbus_subtree_flags_get_type@Base 2.26.0
+ g_dbus_unescape_object_path@Base 2.67.3
  g_desktop_app_info_get_action_name@Base 2.37.5
  g_desktop_app_info_get_boolean@Base 2.35.8
  g_desktop_app_info_get_categories@Base 2.30.0
@@ -2815,6 +2818,7 @@ libglib-2.0.so.0 libglib2.0-0 #MINVER#
  g_mem_is_system_malloc@Base 2.12.0
  g_mem_profile@Base 2.12.0
  g_mem_set_vtable@Base 2.12.0
+ g_memdup2@Base 2.67.3
  g_memdup@Base 2.12.0
  g_mkdir@Base 2.12.0
  g_mkdir_with_parents@Base 2.12.0
@@ -3372,6 +3376,7 @@ libglib-2.0.so.0 libglib2.0-0 #MINVER#
  g_test_failed@Base 2.37.6
  g_test_get_dir@Base 2.37.2
  g_test_get_filename@Base 2.37.2
+ g_test_get_path@Base 2.67.3
  g_test_get_root@Base 2.16.0
  g_test_incomplete@Base 2.37.6
  g_test_init@Base 2.16.0
