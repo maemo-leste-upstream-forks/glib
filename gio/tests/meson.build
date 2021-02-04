@@ -59,7 +59,7 @@ gio_tests = {
   'network-monitor' : {},
   'network-monitor-race' : {},
   'permission' : {},
-  'pollable' : {},
+  'pollable' : {'dependencies' : [libdl_dep]},
   'proxy-test' : {},
   'readwrite' : {},
   'simple-async-result' : {},
@@ -152,7 +152,8 @@ if host_machine.system() != 'windows'
     'trash' : {},
   }
 
-  if have_rtld_next
+  # LD_PRELOAD modules don't work so well with AddressSanitizer
+  if have_rtld_next and get_option('b_sanitize') == 'none'
     gio_tests += {
       'gsocketclient-slow' : {
         'depends' : [
@@ -350,6 +351,7 @@ if host_machine.system() != 'windows'
       'fake-document-portal' : {
         'extra_sources': fake_document_portal_generated,
       },
+      'fake-service-name' : {}
     }
   endif # have_dbus_daemon
 

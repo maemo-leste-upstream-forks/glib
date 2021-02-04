@@ -326,6 +326,34 @@ validate_xdg_desktop (const gchar *desktop)
   return TRUE;
 }
 
+static char **
+get_valid_current_desktops (const char *value)
+{
+  char **tmp;
+  gsize i;
+  GPtrArray *valid_desktops;
+
+  if (value == NULL)
+    value = g_getenv ("XDG_CURRENT_DESKTOP");
+  if (value == NULL)
+    value = "";
+
+  tmp = g_strsplit (value, G_SEARCHPATH_SEPARATOR_S, 0);
+  valid_desktops = g_ptr_array_new_full (g_strv_length (tmp) + 1, g_free);
+  for (i = 0; tmp[i]; i++)
+    {
+      if (validate_xdg_desktop (tmp[i]))
+        g_ptr_array_add (valid_desktops, tmp[i]);
+      else
+        g_free (tmp[i]);
+    }
+  g_ptr_array_add (valid_desktops, NULL);
+  g_free (tmp);
+  tmp = (char **) g_ptr_array_steal (valid_desktops, NULL);
+  g_ptr_array_unref (valid_desktops);
+  return tmp;
+}
+
 static const gchar * const *
 get_lowercase_current_desktops (void)
 {
@@ -333,33 +361,15 @@ get_lowercase_current_desktops (void)
 
   if (g_once_init_enter (&result))
     {
-      const gchar *envvar;
-      gchar **tmp;
+      char **tmp = get_valid_current_desktops (NULL);
+      gsize i, j;
 
-      envvar = g_getenv ("XDG_CURRENT_DESKTOP");
-
-      if (envvar)
+      for (i = 0; tmp[i]; i++)
         {
-          gint i, j;
-          gsize tmp_len;
-
-          tmp = g_strsplit (envvar, G_SEARCHPATH_SEPARATOR_S, 0);
-          tmp_len = g_strv_length (tmp);
-
-          for (i = 0; tmp[i]; i++)
-            {
-              /* If the desktop is invalid, drop it and shift the following
-               * ones (and trailing %NULL) up. */
-              if (!validate_xdg_desktop (tmp[i]))
-                memmove (tmp + i, tmp + i + 1, tmp_len - i);
-
-              /* Convert to lowercase. */
-              for (j = 0; tmp[i][j]; j++)
-                tmp[i][j] = g_ascii_tolower (tmp[i][j]);
-            }
+          /* Convert to lowercase. */
+          for (j = 0; tmp[i][j]; j++)
+            tmp[i][j] = g_ascii_tolower (tmp[i][j]);
         }
-      else
-        tmp = g_new0 (gchar *, 0 + 1);
 
       g_once_init_leave (&result, tmp);
     }
@@ -374,25 +384,7 @@ get_current_desktops (const gchar *value)
 
   if (g_once_init_enter (&result))
     {
-      gchar **tmp;
-      gsize tmp_len, i;
-
-      if (!value)
-        value = g_getenv ("XDG_CURRENT_DESKTOP");
-
-      if (!value)
-        value = "";
-
-      tmp = g_strsplit (value, ":", 0);
-      tmp_len = g_strv_length (tmp);
-
-      for (i = 0; tmp[i]; i++)
-        {
-          /* If the desktop is invalid, drop it and shift the following
-           * ones (and trailing %NULL) up. */
-          if (!validate_xdg_desktop (tmp[i]))
-            memmove (tmp + i, tmp + i + 1, tmp_len - i);
-        }
+      char **tmp = get_valid_current_desktops (value);
 
       g_once_init_leave (&result, tmp);
     }
@@ -1150,7 +1142,7 @@ desktop_file_dir_unindexed_setup_search (DesktopFileDir *dir)
         {
           /* Index the interesting keys... */
           gchar **implements;
-          gint i;
+          gsize i;
 
           for (i = 0; i < G_N_ELEMENTS (desktop_key_match_category); i++)
             {
@@ -1229,7 +1221,7 @@ static gboolean
 array_contains (GPtrArray *array,
                 const gchar *str)
 {
-  gint i;
+  guint i;
 
   for (i = 0; i < array->len; i++)
     if (g_str_equal (array->pdata[i], str))
@@ -1553,7 +1545,7 @@ desktop_file_dir_get_implementations (DesktopFileDir  *dir,
 static void
 desktop_file_dirs_lock (void)
 {
-  gint i;
+  guint i;
   const gchar *user_config_dir = g_get_user_config_dir ();
 
   g_mutex_lock (&desktop_file_dir_lock);
@@ -2779,6 +2771,7 @@ g_desktop_app_info_launch_uris_with_spawn (GDesktopAppInfo            *info,
       char *sn_id = NULL;
       char **wrapped_argv;
       int i;
+      gsize j;
       const gchar * const wrapper_argv[] =
         {
           "/bin/sh",
@@ -2842,8 +2835,8 @@ g_desktop_app_info_launch_uris_with_spawn (GDesktopAppInfo            *info,
        * resurrected). */
       wrapped_argv = g_new (char *, argc + G_N_ELEMENTS (wrapper_argv) + 1);
 
-      for (i = 0; i < G_N_ELEMENTS (wrapper_argv); i++)
-        wrapped_argv[i] = g_strdup (wrapper_argv[i]);
+      for (j = 0; j < G_N_ELEMENTS (wrapper_argv); j++)
+        wrapped_argv[j] = g_strdup (wrapper_argv[j]);
       for (i = 0; i < argc; i++)
         wrapped_argv[i + G_N_ELEMENTS (wrapper_argv)] = g_steal_pointer (&argv[i]);
 
@@ -4150,7 +4143,7 @@ get_list_of_mimetypes (const gchar *content_type,
 
   if (include_fallback)
     {
-      gint i;
+      guint i;
 
       /* Iterate the array as we grow it, until we have nothing more to add */
       for (i = 0; i < array->len; i++)
@@ -4181,7 +4174,7 @@ g_desktop_app_info_get_desktop_ids_for_content_type (const gchar *content_type,
 {
   GPtrArray *hits, *blocklist;
   gchar **types;
-  gint i, j;
+  guint i, j;
 
   hits = g_ptr_array_new ();
   blocklist = g_ptr_array_new ();
@@ -4379,7 +4372,7 @@ g_app_info_get_default_for_type (const char *content_type,
   GPtrArray *results;
   GAppInfo *info;
   gchar **types;
-  gint i, j, k;
+  guint i, j, k;
 
   g_return_val_if_fail (content_type != NULL, NULL);
 
@@ -4484,7 +4477,7 @@ g_desktop_app_info_get_implementations (const gchar *interface)
 {
   GList *result = NULL;
   GList **ptr;
-  gint i;
+  guint i;
 
   desktop_file_dirs_lock ();
 
@@ -4547,6 +4540,7 @@ g_desktop_app_info_search (const gchar *search_string)
   gint n_categories = 0;
   gint start_of_category;
   gint i, j;
+  guint k;
 
   search_tokens = g_str_tokenize_and_fold (search_string, NULL, NULL);
 
@@ -4554,11 +4548,11 @@ g_desktop_app_info_search (const gchar *search_string)
 
   reset_total_search_results ();
 
-  for (i = 0; i < desktop_file_dirs->len; i++)
+  for (k = 0; k < desktop_file_dirs->len; k++)
     {
       for (j = 0; search_tokens[j]; j++)
         {
-          desktop_file_dir_search (g_ptr_array_index (desktop_file_dirs, i), search_tokens[j]);
+          desktop_file_dir_search (g_ptr_array_index (desktop_file_dirs, k), search_tokens[j]);
           merge_token_results (j == 0);
         }
       merge_directory_results ();
@@ -4626,7 +4620,7 @@ g_app_info_get_all (void)
   GHashTable *apps;
   GHashTableIter iter;
   gpointer value;
-  int i;
+  guint i;
   GList *infos;
 
   apps = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);

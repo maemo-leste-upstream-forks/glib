@@ -1,5 +1,5 @@
 project('glib', 'c', 'cpp',
-  version : '2.67.2',
+  version : '2.67.3',
   # NOTE: We keep this pinned at 0.49 because that's what Debian 10 ships
   meson_version : '>= 0.49.2',
   default_options : [
@@ -97,6 +97,10 @@ installed_tests_template_tap = files('template-tap.test.in')
 build_tests = get_option('tests') and (not meson.is_cross_build() or (meson.is_cross_build() and meson.has_exe_wrapper()) or installed_tests_enabled)
 
 add_project_arguments('-D_GNU_SOURCE', language: 'c')
+
+if host_system == 'qnx'
+  add_project_arguments('-D_QNX_SOURCE', language: 'c')
+endif
 
 # Disable strict aliasing;
 # see https://bugzilla.gnome.org/show_bug.cgi?id=791622
@@ -235,7 +239,8 @@ endif
 # Use debug/optimization flags to determine whether to enable debug or disable
 # cast checks
 glib_debug_cflags = []
-if get_option('debug')
+glib_debug = get_option('glib_debug')
+if glib_debug.enabled() or (glib_debug.auto() and get_option('debug'))
   glib_debug_cflags += ['-DG_ENABLE_DEBUG']
   message('Enabling various debug infrastructure')
 elif get_option('optimization') in ['2', '3', 's']
@@ -480,6 +485,7 @@ functions = [
   'close_range',
   'endmntent',
   'endservent',
+  'epoll_create',
   'fallocate',
   'fchmod',
   'fchown',
@@ -771,6 +777,10 @@ if host_system == 'darwin'
   # know which language flags it's going to use to link. Add to both languages
   # for now. See https://github.com/mesonbuild/meson/issues/3585.
   add_project_link_arguments(osx_ldflags, language : ['objc', 'c'])
+endif
+
+if host_system == 'qnx'
+  glib_conf.set('HAVE_QNX', 1)
 endif
 
 # Check for futex(2)
@@ -1757,6 +1767,13 @@ foreach d : inet_defines
   glibconfig_conf.set(d[1], val)
 endforeach
 
+if host_system == 'windows'
+  have_ipv6 = true
+else
+  have_ipv6 = cc.has_type('struct in6_addr', prefix: '#include <netinet/in.h>')
+endif
+glib_conf.set('HAVE_IPV6', have_ipv6)
+
 # We need to decide at configure time if GLib will use real atomic
 # operations ("lock free") or emulated ones with a mutex.  This is
 # because we must put this information in glibconfig.h so we know if
@@ -2203,6 +2220,7 @@ endif
 
 # Determine which user environment-dependent files that we want to install
 have_bash = find_program('bash', required : false).found() # For completion scripts
+bash_comp_dep = dependency('bash-completion', version: '>=2.0', required: false)
 have_sh = find_program('sh', required : false).found() # For glib-gettextize
 
 # Some installed tests require a custom environment

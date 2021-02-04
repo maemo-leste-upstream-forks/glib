@@ -35,6 +35,20 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
+
+/*
+ * We duplicate the following Linux kernel header defines here so we can still
+ * run at full speed on modern kernels in cases where an old toolchain was used
+ * to build GLib. This is often done deliberately to allow shipping binaries
+ * that need to run on a wide range of systems.
+ */
+#ifndef F_SETPIPE_SZ
+#define F_SETPIPE_SZ 1031
+#endif
+#ifndef F_GETPIPE_SZ
+#define F_GETPIPE_SZ 1032
+#endif
+
 #endif
 
 #include <string.h>
@@ -479,7 +493,7 @@ g_file_get_uri_scheme (GFile *file)
 
 
 /**
- * g_file_get_basename:
+ * g_file_get_basename: (virtual get_basename)
  * @file: input #GFile
  *
  * Gets the base name (the last component of the path) for a given #GFile.
@@ -513,7 +527,7 @@ g_file_get_basename (GFile *file)
 }
 
 /**
- * g_file_get_path:
+ * g_file_get_path: (virtual get_path)
  * @file: input #GFile
  *
  * Gets the local pathname for #GFile, if one exists. If non-%NULL, this is
@@ -932,7 +946,7 @@ g_file_has_prefix (GFile *file,
 }
 
 /**
- * g_file_get_relative_path:
+ * g_file_get_relative_path: (virtual get_relative_path)
  * @parent: input #GFile
  * @descendant: input #GFile
  *
@@ -3015,31 +3029,22 @@ splice_stream_with_progress (GInputStream           *in,
   if (!g_unix_open_pipe (buffer, FD_CLOEXEC, error))
     return FALSE;
 
-#if defined(F_SETPIPE_SZ) && defined(F_GETPIPE_SZ)
   /* Try a 1MiB buffer for improved throughput. If that fails, use the default
    * pipe size. See: https://bugzilla.gnome.org/791457 */
   buffer_size = fcntl (buffer[1], F_SETPIPE_SZ, 1024 * 1024);
   if (buffer_size <= 0)
     {
-      int errsv;
       buffer_size = fcntl (buffer[1], F_GETPIPE_SZ);
-      errsv = errno;
-
       if (buffer_size <= 0)
         {
-          g_set_error (error, G_IO_ERROR, g_io_error_from_errno (errsv),
-                       _("Error splicing file: %s"), g_strerror (errsv));
-          res = FALSE;
-          goto out;
+          /* If #F_GETPIPE_SZ isn’t available, assume we’re on Linux < 2.6.35,
+           * but ≥ 2.6.11, meaning the pipe capacity is 64KiB. Ignore the
+           * possibility of running on Linux < 2.6.11 (where the capacity was
+           * the system page size, typically 4KiB) because it’s ancient.
+           * See pipe(7). */
+          buffer_size = 1024 * 64;
         }
     }
-#else
-  /* If #F_GETPIPE_SZ isn’t available, assume we’re on Linux < 2.6.35,
-   * but ≥ 2.6.11, meaning the pipe capacity is 64KiB. Ignore the possibility of
-   * running on Linux < 2.6.11 (where the capacity was the system page size,
-   * typically 4KiB) because it’s ancient. See pipe(7). */
-  buffer_size = 1024 * 64;
-#endif
 
   g_assert (buffer_size > 0);
 
@@ -7898,7 +7903,7 @@ measure_disk_usage_progress (gboolean reporting,
   g_main_context_invoke_full (g_task_get_context (task),
                               g_task_get_priority (task),
                               measure_disk_usage_invoke_progress,
-                              g_memdup (&progress, sizeof progress),
+                              g_memdup2 (&progress, sizeof progress),
                               g_free);
 }
 
@@ -7916,7 +7921,7 @@ measure_disk_usage_thread (GTask        *task,
                                  data->progress_callback ? measure_disk_usage_progress : NULL, task,
                                  &result.disk_usage, &result.num_dirs, &result.num_files,
                                  &error))
-    g_task_return_pointer (task, g_memdup (&result, sizeof result), g_free);
+    g_task_return_pointer (task, g_memdup2 (&result, sizeof result), g_free);
   else
     g_task_return_error (task, error);
 }
@@ -7940,7 +7945,7 @@ g_file_real_measure_disk_usage_async (GFile                        *file,
 
   task = g_task_new (file, cancellable, callback, user_data);
   g_task_set_source_tag (task, g_file_real_measure_disk_usage_async);
-  g_task_set_task_data (task, g_memdup (&data, sizeof data), g_free);
+  g_task_set_task_data (task, g_memdup2 (&data, sizeof data), g_free);
   g_task_set_priority (task, io_priority);
 
   g_task_run_in_thread (task, measure_disk_usage_thread);

@@ -50,6 +50,9 @@ if host_system != 'windows'
     elif cc.links(res_query_test, args : '-lbind', name : 'res_query() in -lbind')
       network_libs += [ cc.find_library('bind') ]
       network_args += [ '-lbind' ]
+    elif cc.links(res_query_test, args : '-lsocket', name : 'res_query() in -lsocket')
+      network_libs += [ cc.find_library('socket') ]
+      network_args += [ '-lsocket' ]
     else
       error('Could not find res_query()')
     endif
@@ -358,6 +361,7 @@ gdbus_daemon_sources = [
 if host_system != 'windows'
   unix_sources = files(
     'gfiledescriptorbased.c',
+    'giounix-private.c',
     'gunixconnection.c',
     'gunixcredentialsmessage.c',
     'gunixfdlist.c',
@@ -766,6 +770,17 @@ if host_system == 'windows'
 endif
 
 if have_bash
+  bash_comp_inst_dir = ''
+  if bash_comp_dep.found()
+    bash_comp_dir_override = bash_comp_dep.version().version_compare('>= 2.10') ? ['datadir', get_option('datadir')] : ['prefix', get_option('prefix')]
+    bash_comp_inst_dir = bash_comp_dep.get_pkgconfig_variable('completionsdir', define_variable: bash_comp_dir_override)
+  endif
+
+  if bash_comp_inst_dir == ''
+    message('Found bash-completion but the .pc file did not set \'completionsdir\', fallback to a predefined path')
+    bash_comp_inst_dir = join_paths(get_option('datadir'), 'bash-completion/completions')
+  endif
+
   install_data([
     'completion/gapplication',
     'completion/gdbus',
@@ -773,7 +788,7 @@ if have_bash
     'completion/gsettings',
     'completion/gresource'
   ],
-  install_dir: join_paths(get_option('datadir'), 'bash-completion/completions'))
+  install_dir: bash_comp_inst_dir)
 endif
 
 if enable_dtrace
@@ -969,6 +984,7 @@ glib_compile_resources = executable('glib-compile-resources',
 if not meson.is_cross_build()
   meson.override_find_program('glib-compile-schemas', glib_compile_schemas)
   meson.override_find_program('glib-compile-resources', glib_compile_resources)
+  meson.override_find_program('gio-querymodules', gio_querymodules)
 endif
 
 executable('gsettings', 'gsettings-tool.c',
