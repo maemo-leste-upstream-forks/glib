@@ -8,6 +8,7 @@ Fixes: 0cc11f74 "giochannel: Forbid very long line terminator strings"
 Bug: https://gitlab.gnome.org/GNOME/glib/-/issues/2323
 Forwarded: https://gitlab.gnome.org/GNOME/glib/-/merge_requests/1931
 Signed-off-by: Simon McVittie <smcv@collabora.com>
+Applied-upstream: 2.66.7, commit:e069c50467712e6d607822afd6b6c15c2c343dff
 ---
  glib/giochannel.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)

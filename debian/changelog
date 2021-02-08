@@ -1,3 +1,16 @@
+glib2.0 (2.66.6-2) unstable; urgency=high
+
+  * d/patches: Add proposed fixes for regressions in 2.66.6.
+    Two functions that took either a positive length, or -1 to indicate
+    strlen(), had assertions with the wrong sense in 2.66.6, causing some
+    valid uses of those functions to regress.
+  * d/p/debian/61_glib-compile-binaries-path.patch: Remove.
+    This patch turns out to be unnecessary, and is harmful for
+    cross-compiling. Thanks to Helmut Grohne (Closes: #982213)
+  * Set high urgency to get the regression fixes into bullseye
+
+ -- Simon McVittie <smcv@debian.org>  Mon, 08 Feb 2021 19:43:08 +0000
+
 glib2.0 (2.66.6-1) unstable; urgency=high
 
   * New upstream release

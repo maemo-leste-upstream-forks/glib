@@ -6,6 +6,7 @@ The inverted condition is an obvious error introduced by ecdf91400e9a.
 
 Bug: https://gitlab.gnome.org/GNOME/glib/-/issues/2323
 Forwarded: https://gitlab.gnome.org/GNOME/glib/-/merge_requests/1931
+Applied-upstream: 2.66.7, commit:f8273b9aded135fe07094faebd527e43851aaf6e
 ---
  glib/giochannel.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)

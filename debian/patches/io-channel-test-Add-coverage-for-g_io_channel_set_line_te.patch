@@ -6,6 +6,7 @@ Subject: io-channel test: Add coverage for g_io_channel_set_line_term(., .,
 Bug: https://gitlab.gnome.org/GNOME/glib/-/issues/2323
 Forwarded: https://gitlab.gnome.org/GNOME/glib/-/merge_requests/1931
 Signed-off-by: Simon McVittie <smcv@collabora.com>
+Applied-upstream: 2.66.7, commit:d9db1faac565beac55582488583fad0a82992319
 ---
  glib/tests/io-channel.c | 6 ++++--
  1 file changed, 4 insertions(+), 2 deletions(-)

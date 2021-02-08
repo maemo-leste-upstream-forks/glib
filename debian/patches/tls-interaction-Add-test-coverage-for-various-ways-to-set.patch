@@ -5,6 +5,7 @@ Subject: tls-interaction: Add test coverage for various ways to set the
 
 Forwarded: https://gitlab.gnome.org/GNOME/glib/-/merge_requests/1932
 Signed-off-by: Simon McVittie <smcv@collabora.com>
+Applied-upstream: 2.66.7, commit:3d1550354c3c6a8491c39881752d51cb7515f2c2
 ---
  gio/tests/tls-interaction.c | 55 +++++++++++++++++++++++++++++++++++++++++++++
  1 file changed, 55 insertions(+)
