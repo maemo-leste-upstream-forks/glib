@@ -1,3 +1,8 @@
+giochannel-Fix-length_size-bounds-check.patch
+giochannel-Don-t-store-negative-line_term_len-in-GIOChann.patch
+io-channel-test-Add-coverage-for-g_io_channel_set_line_te.patch
+gtlspassword-Fix-inverted-assertion.patch
+tls-interaction-Add-test-coverage-for-various-ways-to-set.patch
 glib-tests-fileutils-Make-more-use-of-g_assert_no_errno.patch
 glib-tests-fileutils-Fix-expectations-when-running-as-roo.patch
 01_gettext-desktopfiles.patch
