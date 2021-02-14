@@ -3330,6 +3330,7 @@ libglib-2.0.so.0 libglib2.0-0 #MINVER#
  g_string_prepend_len@Base 2.12.0
  g_string_prepend_unichar@Base 2.12.0
  g_string_printf@Base 2.12.0
+ g_string_replace@Base 2.67.3+git20210214
  g_string_set_size@Base 2.12.0
  g_string_sized_new@Base 2.12.0
  g_string_truncate@Base 2.12.0
