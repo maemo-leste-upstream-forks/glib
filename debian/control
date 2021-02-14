@@ -7,7 +7,8 @@ Section: libs
 Priority: optional
 Maintainer: Debian GNOME Maintainers <pkg-gnome-maintainers@lists.alioth.debian.org>
 Uploaders: Iain Lane <laney@debian.org>, Simon McVittie <smcv@debian.org>
-Build-Depends: debhelper-compat (= 12),
+Build-Depends: dbus <!nocheck> <!noinsttest>,
+               debhelper-compat (= 12),
                dh-exec,
                dh-python,
                docbook-xml,
@@ -30,8 +31,7 @@ Build-Depends: debhelper-compat (= 12),
                python3:any (>= 2.7.5-5~),
                xsltproc,
                zlib1g-dev
-Build-Depends-Arch: dbus <!nocheck>,
-                    desktop-file-utils <!nocheck>,
+Build-Depends-Arch: desktop-file-utils <!nocheck>,
                     locales <!nocheck> | locales-all <!nocheck>,
                     python3-dbus <!nocheck>,
                     python3-gi <!nocheck>,
