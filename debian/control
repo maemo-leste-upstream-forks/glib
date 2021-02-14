@@ -7,9 +7,7 @@ Section: libs
 Priority: optional
 Maintainer: Debian GNOME Maintainers <pkg-gnome-maintainers@lists.alioth.debian.org>
 Uploaders: Iain Lane <laney@debian.org>, Simon McVittie <smcv@debian.org>
-Build-Depends: dbus <!nocheck>,
-               debhelper-compat (= 12),
-               desktop-file-utils <!nocheck>,
+Build-Depends: debhelper-compat (= 12),
                dh-exec,
                dh-python,
                docbook-xml,
@@ -26,18 +24,20 @@ Build-Depends: dbus <!nocheck>,
                libselinux1-dev [linux-any],
                libxml2-utils,
                linux-libc-dev [linux-any],
-               locales <!nocheck> | locales-all <!nocheck>,
                meson (>= 0.52.0),
                pkg-config (>= 0.16.0),
-               python3-dbus <!nocheck>,
                python3-distutils,
-               python3-gi <!nocheck>,
                python3:any (>= 2.7.5-5~),
-               shared-mime-info <!nocheck>,
-               tzdata <!nocheck>,
                xsltproc,
-               xterm <!nocheck>,
                zlib1g-dev
+Build-Depends-Arch: dbus <!nocheck>,
+                    desktop-file-utils <!nocheck>,
+                    locales <!nocheck> | locales-all <!nocheck>,
+                    python3-dbus <!nocheck>,
+                    python3-gi <!nocheck>,
+                    shared-mime-info <!nocheck>,
+                    tzdata <!nocheck>,
+                    xterm <!nocheck>
 Build-Depends-Indep: gtk-doc-tools (>= 1.32.1),
 Rules-Requires-Root: no
 Standards-Version: 4.5.1
