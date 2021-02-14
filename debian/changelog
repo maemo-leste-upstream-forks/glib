@@ -3,7 +3,8 @@ glib2.0 (2.66.7-1) unstable; urgency=high
   * New upstream release
     - Fix another regression caused by the GHSL-2021-045 fixes in 2.66.6
     - Warn and fail on integer overflow in g_byte_array_new_take()
-      for arrays larger than G_MAXUINT (similar to GHSL-2021-045)
+      for arrays larger than G_MAXUINT
+      (Closes: #982779; similar to GHSL-2021-045)
     - Disallow using currently-undefined D-Bus connection or server flags,
       to prevent forward-compatibility problems with new security-sensitive
       flags that are likely to be introduced in GLib 2.68
@@ -28,7 +29,7 @@ glib2.0 (2.66.6-1) unstable; urgency=high
 
   * New upstream release
     - Fix various integer overflows, some of them potentially exploitable
-      (GHSL-2021-045)
+      (Closes: #982778, GHSL-2021-045)
 
  -- Simon McVittie <smcv@debian.org>  Thu, 04 Feb 2021 20:24:20 +0000
 
