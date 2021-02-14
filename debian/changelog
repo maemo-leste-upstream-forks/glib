@@ -1,9 +1,24 @@
-glib2.0 (2.67.3+git20210214-1) UNRELEASED; urgency=medium
+glib2.0 (2.67.3+git20210214-1) experimental; urgency=medium
 
   * d/changelog: Add bug reference for GHSL-2021-045 to previous entry
-  * New upstream git snapshot
+  * New upstream git snapshot; among other changes:
+    - Fix regressions caused by the GHSL-2021-045 fixes in 2.67.3
+    - Warn and fail on integer overflow in g_byte_array_new_take()
+      for arrays larger than G_MAXUINT
+      (Closes: #982779; similar to GHSL-2021-045)
+  * d/libglib2.0-0.symbols: Add g_string_replace()
+  * Refresh patch series
+  * d/rules, d/tests: Generate various locales mentioned in the tests
+  * Mark dbus as <!nocheck> <!noinsttest>.
+    Several of the installed-tests won't be built unless dbus-daemon is
+    available, so <!nocheck> is insufficient.
+  * Move test-dependencies to Build-Depends-Arch.
+    We don't run the majority of the tests when we're only building the
+    documentation.
+  * Remove an unused Lintian override
+  * Add more Lintian overrides for test data
 
- -- Simon McVittie <smcv@debian.org>  Sun, 14 Feb 2021 13:10:47 +0000
+ -- Simon McVittie <smcv@debian.org>  Sun, 14 Feb 2021 17:27:54 +0000
 
 glib2.0 (2.67.3-1) experimental; urgency=medium
 
