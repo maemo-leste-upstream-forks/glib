@@ -2,7 +2,7 @@ glib2.0 (2.67.3-1) experimental; urgency=medium
 
   * New upstream release
     - Fix various integer overflows, some of them potentially exploitable
-      (GHSL-2021-045)
+      (Closes: #982778; GHSL-2021-045)
   * Drop patches that came from upstream or were applied upstream
 
  -- Simon McVittie <smcv@debian.org>  Thu, 04 Feb 2021 22:38:42 +0000
