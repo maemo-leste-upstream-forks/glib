@@ -1,8 +1,10 @@
-glib2.0 (2.67.4-1) UNRELEASED; urgency=medium
+glib2.0 (2.67.4-1) experimental; urgency=medium
 
   * New upstream release
+    - Among other changes, this should fix FTBFS on armel
+  * d/libglib2.0-0.symbols: Add g_spawn_async_with_pipes_and_fds
 
- -- Simon McVittie <smcv@debian.org>  Wed, 17 Feb 2021 09:42:31 +0000
+ -- Simon McVittie <smcv@debian.org>  Wed, 17 Feb 2021 09:58:25 +0000
 
 glib2.0 (2.67.3+git20210214-1) experimental; urgency=medium
 
