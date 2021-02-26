@@ -1,0 +1,75 @@
+From: Philip Withnall <pwithnall@endlessos.org>
+Date: Fri, 19 Feb 2021 18:20:25 +0000
+Subject: =?utf-8?q?gsubprocesslauncher=3A_Don=E2=80=99t_close_target_FDs_in?=
+ =?utf-8?q?_close=28=29_method?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+This is a regression introduced in commit 67a589e505311. Previously, the
+source/target FD pairs were stored in `needdup_fd_assignments`, in
+consecutive entries, so source FDs had even indices and target FDs had
+odd indices.
+
+I didn’t notice that the array index was being incremented by 2 when
+closing FDs, when porting from the old code. So previously the code was
+only closing the source FDs; after the port, it was closing source and
+target FDs.
+
+That’s incorrect, as the target FDs are just integers in the parent
+process. It’s only in the child process where they are actually FDs —
+and `g_subprocess_launcher_close()` is never called in the child
+process.
+
+This resulted in some strange misbehaviours in any process which used
+`g_subprocess_launcher_take_fd()` with target FDs which could have
+possibly aliased with other FDs in the parent process (and which weren’t
+equal to their mapped source FDs).
+
+Thanks to Olivier Fourdan for the detailed bug report.
+
+Signed-off-by: Philip Withnall <pwithnall@endlessos.org>
+
+Fixes: #2332
+
+Origin: https://gitlab.gnome.org/GNOME/glib/-/commit/55a75590
+---
+ gio/gsubprocesslauncher-private.h | 4 ++--
+ gio/gsubprocesslauncher.c         | 8 ++++----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/gio/gsubprocesslauncher-private.h b/gio/gsubprocesslauncher-private.h
+index f8a6516..d6fe0d7 100644
+--- a/gio/gsubprocesslauncher-private.h
++++ b/gio/gsubprocesslauncher-private.h
+@@ -42,8 +42,8 @@ struct _GSubprocessLauncher
+   gint stderr_fd;
+   gchar *stderr_path;
+ 
+-  GArray *source_fds;
+-  GArray *target_fds;  /* always the same length as source_fds */
++  GArray *source_fds;  /* GSubprocessLauncher has ownership of the FD elements */
++  GArray *target_fds;  /* always the same length as source_fds; elements are just integers and not FDs in this process */
+   gboolean closed_fd;
+ 
+   GSpawnChildSetupFunc child_setup_func;
+diff --git a/gio/gsubprocesslauncher.c b/gio/gsubprocesslauncher.c
+index b7257f4..7808cad 100644
+--- a/gio/gsubprocesslauncher.c
++++ b/gio/gsubprocesslauncher.c
+@@ -661,11 +661,11 @@ g_subprocess_launcher_close (GSubprocessLauncher *self)
+       g_assert (self->target_fds != NULL);
+       g_assert (self->source_fds->len == self->target_fds->len);
+ 
++      /* Note: Don’t close the target_fds, as they’re only valid FDs in the
++       * child process. This code never executes in the child process. */
+       for (i = 0; i < self->source_fds->len; i++)
+-        {
+-          (void) close (g_array_index (self->source_fds, int, i));
+-          (void) close (g_array_index (self->target_fds, int, i));
+-        }
++        (void) close (g_array_index (self->source_fds, int, i));
++
+       g_clear_pointer (&self->source_fds, g_array_unref);
+       g_clear_pointer (&self->target_fds, g_array_unref);
+     }
