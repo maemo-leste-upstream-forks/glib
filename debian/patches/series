@@ -14,5 +14,3 @@ debian/gvariant-test-Don-t-run-at-build-time-on-mips.patch
 debian/taptestrunner-Stop-looking-like-an-executable-script.patch
 debian/testfilemonitor-Skip-if-we-are-avoiding-flaky-tests.patch
 debian/gdbus-server-auth-Normally-skip-flaky-DBUS_COOKIE_SHA1-te.patch
-gsubprocesslauncher-Don-t-close-target-FDs-in-close-metho.patch
-tests-Test-g_subprocess_launcher_close-doesn-t-close-too-.patch
