@@ -1,4 +1,4 @@
-glib2.0 (2.67.5-1) UNRELEASED; urgency=medium
+glib2.0 (2.67.5-1) experimental; urgency=medium
 
   * New upstream release
     + Fix more issues with `glib_typeof` macro from 2.67.3–2.67.4 (LP:
@@ -10,7 +10,7 @@ glib2.0 (2.67.5-1) UNRELEASED; urgency=medium
     target is `..`. Expect 1+ digits to begin the version number.
 
 
- -- Iain Lane <laney@debian.org>  Mon, 01 Mar 2021 16:22:54 +0000
+ -- Iain Lane <laney@debian.org>  Mon, 01 Mar 2021 17:18:36 +0000
 
 glib2.0 (2.67.4-1) experimental; urgency=medium
 
