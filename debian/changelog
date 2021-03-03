@@ -1,6 +1,6 @@
 glib2.0 (2.67.5-2) experimental; urgency=medium
 
-  * debian/tests/control: Build-Depend on libc6-dev; the `pollable` test
+  * debian/tests/control: Test-Depend on libc6-dev; the `pollable` test
     requires it.  See [upstream MR !1977][0]. The upstream tests now rely on
     finding "libutil.so", which is in libc6-dev. Once that MR, or something
     like it, is merged, we can remove this test-dep as the runtime library
