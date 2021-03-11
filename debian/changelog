@@ -1,3 +1,15 @@
+glib2.0 (2.66.7-2) unstable; urgency=medium
+
+  * d/changelog: Add bug numbers for integer overflows in previous versions
+  * Add patches to fix a symlink attack affecting file-roller.
+    When g_file_replace() is used with G_FILE_CREATE_REPLACE_DESTINATION to
+    replace a path that is a dangling symlink, previously it would have also
+    created the target of the symlink as an empty file, which could
+    conceivably be security-sensitive if the symlink is attacker-controlled.
+    (Closes: #984969)
+
+ -- Simon McVittie <smcv@debian.org>  Thu, 11 Mar 2021 10:23:38 +0000
+
 glib2.0 (2.66.7-1) unstable; urgency=high
 
   * New upstream release
