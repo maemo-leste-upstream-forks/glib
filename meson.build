@@ -1,5 +1,5 @@
 project('glib', 'c', 'cpp',
-  version : '2.67.5',
+  version : '2.67.6',
   # NOTE: We keep this pinned at 0.49 because that's what Debian 10 ships
   meson_version : '>= 0.49.2',
   default_options : [
@@ -85,6 +85,12 @@ if get_option('charsetalias_dir') != ''
   glib_charsetaliasdir = join_paths(glib_prefix, get_option('charsetalias_dir'))
 else
   glib_charsetaliasdir = glib_libdir
+endif
+
+glib_localstatedir = get_option('localstatedir')
+if not glib_localstatedir.startswith('/')
+  # See https://mesonbuild.com/Builtin-options.html#directories
+  glib_localstatedir = join_paths(glib_prefix, glib_localstatedir)
 endif
 
 installed_tests_metadir = join_paths(glib_datadir, 'installed-tests', meson.project_name())
