@@ -1,5 +1,5 @@
 project('glib', 'c', 'cpp',
-  version : '2.67.4',
+  version : '2.67.6',
   # NOTE: We keep this pinned at 0.49 because that's what Debian 10 ships
   meson_version : '>= 0.49.2',
   default_options : [
@@ -85,6 +85,12 @@ if get_option('charsetalias_dir') != ''
   glib_charsetaliasdir = join_paths(glib_prefix, get_option('charsetalias_dir'))
 else
   glib_charsetaliasdir = glib_libdir
+endif
+
+glib_localstatedir = get_option('localstatedir')
+if not glib_localstatedir.startswith('/')
+  # See https://mesonbuild.com/Builtin-options.html#directories
+  glib_localstatedir = join_paths(glib_prefix, glib_localstatedir)
 endif
 
 installed_tests_metadir = join_paths(glib_datadir, 'installed-tests', meson.project_name())
@@ -662,7 +668,7 @@ elif cc.has_function('_snprintf') or cc.has_header_symbol('stdio.h', '_snprintf'
   glib_conf_prefix = glib_conf_prefix + '#define HAVE_SNPRINTF ' + hack_define
 endif
 
-if cc.has_function('strcasecmp')
+if cc.has_function('strcasecmp', prefix: '#include <strings.h>')
   glib_conf.set('HAVE_STRCASECMP', 1)
   glib_conf_prefix = glib_conf_prefix + '#define HAVE_STRCASECMP 1\n'
 elif cc.has_function('_stricmp')
@@ -671,7 +677,7 @@ elif cc.has_function('_stricmp')
   glib_conf_prefix = glib_conf_prefix + '#define HAVE_STRCASECMP ' + hack_define
 endif
 
-if cc.has_function('strncasecmp')
+if cc.has_function('strncasecmp', prefix: '#include <strings.h>')
   glib_conf.set('HAVE_STRNCASECMP', 1)
   glib_conf_prefix = glib_conf_prefix + '#define HAVE_STRNCASECMP 1\n'
 elif cc.has_function('_strnicmp')
@@ -2004,9 +2010,15 @@ endif
 libm = cc.find_library('m', required : false)
 libffi_dep = dependency('libffi', version : '>= 3.0.0', fallback : ['libffi', 'ffi_dep'])
 
-# Don't use the bundled ZLib sources until we are sure that we can't find it on
-# the system
-libz_dep = dependency('zlib', required : false)
+if get_option('wrap_mode') == 'forcefallback'
+  # Respects "wrap_mode=forcefallback" option
+  libz_dep = subproject('zlib').get_variable('zlib_dep')
+else
+  # Don't use the bundled ZLib sources until we are sure that we can't find it on
+  # the system
+  libz_dep = dependency('zlib', required : false)
+endif
+
 if not libz_dep.found()
   if cc.get_id() != 'msvc' and cc.get_id() != 'clang-cl'
     libz_dep = cc.find_library('z', required : false)
