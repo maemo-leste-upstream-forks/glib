@@ -1,4 +1,4 @@
-glib2.0 (2.67.6-1) UNRELEASED; urgency=medium
+glib2.0 (2.67.6-1) experimental; urgency=medium
 
   * New upstream release
     - This fixes a symlink attack affecting file-roller.
@@ -7,8 +7,10 @@ glib2.0 (2.67.6-1) UNRELEASED; urgency=medium
       have also created the target of the symlink as an empty file, which
       could conceivably be security-sensitive if the symlink is
       attacker-controlled. (Closes: #984969; CVE-2021-28153)
+  * Revert test-dependency on libc6-dev, which should no longer be
+    necessary with the new upstream release.
 
- -- Simon McVittie <smcv@debian.org>  Mon, 15 Mar 2021 17:57:58 +0000
+ -- Simon McVittie <smcv@debian.org>  Mon, 15 Mar 2021 18:18:48 +0000
 
 glib2.0 (2.67.5-2) experimental; urgency=medium
 
