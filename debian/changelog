@@ -1,6 +1,12 @@
 glib2.0 (2.67.6-1) UNRELEASED; urgency=medium
 
   * New upstream release
+    - This fixes a symlink attack affecting file-roller.
+      When g_file_replace() is used with G_FILE_CREATE_REPLACE_DESTINATION
+      to replace a path that is a dangling symlink, previously it would
+      have also created the target of the symlink as an empty file, which
+      could conceivably be security-sensitive if the symlink is
+      attacker-controlled. (Closes: #984969; CVE-2021-28153)
 
  -- Simon McVittie <smcv@debian.org>  Mon, 15 Mar 2021 17:57:58 +0000
 
