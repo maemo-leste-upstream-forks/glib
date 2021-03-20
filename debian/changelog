@@ -1,9 +1,10 @@
-glib2.0 (2.66.7-3) UNRELEASED; urgency=medium
+glib2.0 (2.66.8-1) UNRELEASED; urgency=medium
 
   * d/watch: Only watch for 2.66.x versions.
     2.68.0 has been released but will not be in bullseye.
+  * New upstream release
 
- -- Simon McVittie <smcv@debian.org>  Sat, 20 Mar 2021 15:22:36 +0000
+ -- Simon McVittie <smcv@debian.org>  Sat, 20 Mar 2021 15:25:27 +0000
 
 glib2.0 (2.66.7-2) unstable; urgency=medium
 
