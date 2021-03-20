@@ -1,8 +1,3 @@
-glocalfileoutputstream-Fix-a-typo-in-a-comment.patch
-tests-Stop-using-g_test_bug_base-in-file-tests.patch
-glocalfileoutputstream-Factor-out-a-flag-check.patch
-glocalfileoutputstream-Fix-CREATE_REPLACE_DESTINATION-wit.patch
-glocalfileoutputstream-Add-a-missing-O_CLOEXEC-flag-to-re.patch
 glib-tests-fileutils-Make-more-use-of-g_assert_no_errno.patch
 glib-tests-fileutils-Fix-expectations-when-running-as-roo.patch
 01_gettext-desktopfiles.patch
