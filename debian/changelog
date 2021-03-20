@@ -7,6 +7,9 @@ glib2.0 (2.68.0-1) UNRELEASED; urgency=medium
     - Avoid close(-1) during error handling
     - Fix copy/paste error in queue test
     - Translation updates
+  * Add CVE ID references to previous changelog entries.
+    CVE IDs were not yet available at the time these vulnerabilities were
+    initially fixed.
 
  -- Simon McVittie <smcv@debian.org>  Sat, 20 Mar 2021 15:22:03 +0000
 
@@ -64,7 +67,7 @@ glib2.0 (2.67.3+git20210214-1) experimental; urgency=medium
     - Fix regressions caused by the GHSL-2021-045 fixes in 2.67.3
     - Warn and fail on integer overflow in g_byte_array_new_take()
       for arrays larger than G_MAXUINT
-      (Closes: #982779; similar to GHSL-2021-045)
+      (Closes: #982779; CVE-2021-27218)
   * d/libglib2.0-0.symbols: Add g_string_replace()
   * Refresh patch series
   * d/rules, d/tests: Generate various locales mentioned in the tests
@@ -83,7 +86,7 @@ glib2.0 (2.67.3-1) experimental; urgency=medium
 
   * New upstream release
     - Fix various integer overflows, some of them potentially exploitable
-      (Closes: #982778; GHSL-2021-045)
+      (Closes: #982778; CVE-2021-27219, GHSL-2021-045)
   * Drop patches that came from upstream or were applied upstream
 
  -- Simon McVittie <smcv@debian.org>  Thu, 04 Feb 2021 22:38:42 +0000
