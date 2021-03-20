@@ -17,7 +17,7 @@ glib2.0 (2.66.7-2) unstable; urgency=medium
     replace a path that is a dangling symlink, previously it would have also
     created the target of the symlink as an empty file, which could
     conceivably be security-sensitive if the symlink is attacker-controlled.
-    (Closes: #984969)
+    (Closes: #984969; CVE-2021-28153)
 
  -- Simon McVittie <smcv@debian.org>  Thu, 11 Mar 2021 10:23:38 +0000
 
@@ -27,7 +27,7 @@ glib2.0 (2.66.7-1) unstable; urgency=high
     - Fix another regression caused by the GHSL-2021-045 fixes in 2.66.6
     - Warn and fail on integer overflow in g_byte_array_new_take()
       for arrays larger than G_MAXUINT
-      (Closes: #982779; similar to GHSL-2021-045)
+      (Closes: #982779; CVE-2021-27218)
     - Disallow using currently-undefined D-Bus connection or server flags,
       to prevent forward-compatibility problems with new security-sensitive
       flags that are likely to be introduced in GLib 2.68
@@ -52,7 +52,7 @@ glib2.0 (2.66.6-1) unstable; urgency=high
 
   * New upstream release
     - Fix various integer overflows, some of them potentially exploitable
-      (Closes: #982778, GHSL-2021-045)
+      (Closes: #982778; CVE-2021-27219, GHSL-2021-045)
 
  -- Simon McVittie <smcv@debian.org>  Thu, 04 Feb 2021 20:24:20 +0000
 
