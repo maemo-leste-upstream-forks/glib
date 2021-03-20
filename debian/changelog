@@ -1,6 +1,12 @@
 glib2.0 (2.68.0-1) UNRELEASED; urgency=medium
 
-  * New upstream release
+  * New upstream stable release
+    - Drop dead code from glib-compile-schemas
+    - Improve valgrind suppressions
+    - Fix error in g_bytes_icon_new() documentation
+    - Avoid close(-1) during error handling
+    - Fix copy/paste error in queue test
+    - Translation updates
 
  -- Simon McVittie <smcv@debian.org>  Sat, 20 Mar 2021 15:22:03 +0000
 
