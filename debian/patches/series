@@ -1,5 +1,6 @@
 glib-tests-fileutils-Make-more-use-of-g_assert_no_errno.patch
 glib-tests-fileutils-Fix-expectations-when-running-as-roo.patch
+glocalfileoutputstream-Tidy-up-error-handling.patch
 01_gettext-desktopfiles.patch
 0001-timer-test-use-volatile-for-locals.patch
 gwakeuptest-Be-less-parallel-unless-invoked-with-m-slow.patch
