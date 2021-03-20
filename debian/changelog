@@ -3,8 +3,11 @@ glib2.0 (2.66.8-1) UNRELEASED; urgency=medium
   * d/watch: Only watch for 2.66.x versions.
     2.68.0 has been released but will not be in bullseye.
   * New upstream release
+    - Functionally equivalent to 2.66.7-2, except for the version number
+      and a change to Windows-specific code that is not used in Debian
+  * Drop patches that were included in the new upstream release
 
- -- Simon McVittie <smcv@debian.org>  Sat, 20 Mar 2021 15:25:27 +0000
+ -- Simon McVittie <smcv@debian.org>  Sat, 20 Mar 2021 15:27:01 +0000
 
 glib2.0 (2.66.7-2) unstable; urgency=medium
 
