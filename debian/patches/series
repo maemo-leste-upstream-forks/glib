@@ -17,6 +17,12 @@ gvariant-test-Use-g_memdup2.patch
 gwinhttpfile-Avoid-arithmetic-overflow-when-calculating-a.patch
 gwin32-Use-gsize-internally-in-g_wcsdup.patch
 gbytearray-Do-not-accept-too-large-byte-arrays.patch
+glocalfileoutputstream-Fix-a-typo-in-a-comment.patch
+tests-Stop-using-g_test_bug_base-in-file-tests.patch
+glocalfileoutputstream-Factor-out-a-flag-check.patch
+glocalfileoutputstream-Fix-CREATE_REPLACE_DESTINATION-wit.patch
+glocalfileoutputstream-Add-a-missing-O_CLOEXEC-flag-to-re.patch
+glocalfileoutputstream-Tidy-up-error-handling.patch
 01_gettext-desktopfiles.patch
 81-skip-monitor-test-on-non-linux.patch
 0001-timer-test-use-volatile-for-locals.patch
