@@ -16,6 +16,7 @@ gio-Use-g_memdup2-instead-of-g_memdup-in-obvious-places.patch
 gvariant-test-Use-g_memdup2.patch
 gwinhttpfile-Avoid-arithmetic-overflow-when-calculating-a.patch
 gwin32-Use-gsize-internally-in-g_wcsdup.patch
+gbytearray-Do-not-accept-too-large-byte-arrays.patch
 01_gettext-desktopfiles.patch
 81-skip-monitor-test-on-non-linux.patch
 0001-timer-test-use-volatile-for-locals.patch
