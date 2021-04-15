@@ -84,6 +84,11 @@ generate () {
         return
     fi
 
+    if ! [ -d /usr/share/i18n/charmaps ]; then
+        echo "$me: $locale not in locales-all and /usr/share/i18n/charmaps not found" >&2
+        return
+    fi
+
     case "$locale" in
         (*.utf8 | *.UTF-8)
             charset="UTF-8"
