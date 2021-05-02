@@ -57,13 +57,13 @@ fi
 
 #DEBHELPER#
 
-# Also handle the initial installation
-if [ -d /usr/share/glib-2.0/schemas ]; then
-    "/usr/lib/#MULTIARCH#/glib-2.0/glib-compile-schemas" /usr/share/glib-2.0/schemas || true
-fi
-if [ -d "/usr/lib/#MULTIARCH#/gio/modules" ]; then
-    "/usr/lib/#MULTIARCH#/glib-2.0/gio-querymodules" "/usr/lib/#MULTIARCH#/gio/modules" || true
-fi
+# This is shipped in the .deb (see debian/libglib2.0-0.dirs) but would
+# be removed if empty during upgrade by old versions of the postrm (#987913).
+install -d "/usr/lib/#MULTIARCH#/gio/modules"
+
+"/usr/lib/#MULTIARCH#/glib-2.0/glib-compile-schemas" /usr/share/glib-2.0/schemas || true
+"/usr/lib/#MULTIARCH#/glib-2.0/gio-querymodules" "/usr/lib/#MULTIARCH#/gio/modules" || true
+
 if [ -d /usr/lib/gio/modules ] && [ $(dpkg --print-architecture) = "#ARCH#" ]; then
     "/usr/lib/#MULTIARCH#/glib-2.0/gio-querymodules" /usr/lib/gio/modules || true
 fi
