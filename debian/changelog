@@ -1,3 +1,21 @@
+glib2.0 (2.68.1-2) experimental; urgency=medium
+
+  * Fix maintainer scripts' handling of /usr/lib/MULTIARCH/gio/modules:
+    - postrm: Only delete GIO module cache on remove or purge.
+      Despite its name, the postrm can be invoked for reasons other than
+      package removal: in particular, the old version's postrm is run
+      during upgrades.
+    - postinst: Recreate GIO module directory if deleted by an older
+      postrm, to recover from the bug fixed here.
+    - postinst: Don't guard glib-compile-schemas or gio-querymodules with
+      a check for existence of a directory that is shipped in the .deb.
+      If such a directory has somehow gone missing, we want to see
+      a warning. This won't make the postinst fail, because we're ignoring
+      exit status anyway.
+    (Closes: #987913)
+
+ -- Simon McVittie <smcv@debian.org>  Sun, 02 May 2021 14:45:36 +0100
+
 glib2.0 (2.68.1-1) experimental; urgency=medium
 
   * New upstream stable release
