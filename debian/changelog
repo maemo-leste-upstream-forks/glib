@@ -1,9 +1,9 @@
-glib2.0 (2.68.1-1~ubuntu21.04.1) UNRELEASED; urgency=medium
+glib2.0 (2.68.1-1~ubuntu21.04.1) hirsute; urgency=medium
 
   * debian/{control,gbp.conf}: Update branch refs for hirsute
   * Backport from Debian to hirsute for SRU (LP: #1928001)
 
- -- Iain Lane <iain.lane@canonical.com>  Mon, 10 May 2021 18:13:26 +0100
+ -- Iain Lane <iain.lane@canonical.com>  Mon, 10 May 2021 18:14:07 +0100
 
 glib2.0 (2.68.1-1) experimental; urgency=medium
 
