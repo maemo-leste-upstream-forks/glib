@@ -1,3 +1,19 @@
+glib2.0 (2.68.3-1) UNRELEASED; urgency=medium
+
+  * New upstream release 2.68.3, fixing bugs:
+    - GFile: `g_file_replace_contents()` reports `G_IO_ERROR_WRONG_ETAG` when
+      saving from a symlink
+    - glocalfileoutputstream: Fix ETag check when replacing through a symlink
+    - gmacros: check that __cplusplus or _MSC_VER is defined
+    - gmacros: missing check if __STDC_VERSION__ is defined
+    - gthreadedresolver: don't ignore flags in lookup_by_name_with_flags
+    - inotify: Fix a memory leak
+    - json-glib does not build with glib 2.68.1
+    - testfilemonitor test leaks ip_watched_file_t struct
+    - tlscertificate: Avoid possible invalid read
+
+ -- Iain Lane <laney@debian.org>  Tue, 29 Jun 2021 11:20:32 +0100
+
 glib2.0 (2.68.1-2) experimental; urgency=medium
 
   * Fix maintainer scripts' handling of /usr/lib/MULTIARCH/gio/modules:
