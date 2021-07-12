@@ -1,0 +1,36 @@
+From: Philip Withnall <withnall@endlessm.com>
+Date: Wed, 18 Mar 2020 09:15:59 +0000
+Subject: gvdb-builder: Initialise some memory to zero in the bloom filter
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+Until a bloom filter is implemented, we need to ensure that all the
+memory returned by `file_builder_allocate()` is initialised, since it’s
+not initialised at allocation time.
+
+Signed-off-by: Philip Withnall <withnall@endlessm.com>
+
+Fixes: #2
+
+Bug: https://gitlab.gnome.org/GNOME/gvdb/-/issues/2
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/1930359
+Origin: backport, https://github.com/GNOME/glib/commit/ea64c739239faea463f3cb9154a12cc4532ba525
+Last-Update: 2021-07-12
+---
+ gio/gvdb/gvdb-builder.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/gio/gvdb/gvdb-builder.c b/gio/gvdb/gvdb-builder.c
+index 2383e60..aa29d22 100644
+--- a/gio/gvdb/gvdb-builder.c
++++ b/gio/gvdb/gvdb-builder.c
+@@ -339,6 +339,8 @@ file_builder_allocate_for_hash (FileBuilder            *fb,
+ #undef chunk
+ 
+   memset (*bloom_filter, 0, n_bloom_words * sizeof (guint32_le));
++  memset (*hash_buckets, 0, n_buckets * sizeof (guint32_le));
++  memset (*hash_items, 0, n_items * sizeof (struct gvdb_hash_item));
+ 
+   /* NOTE - the code to actually fill in the bloom filter here is missing.
+    * Patches welcome! 
