@@ -1,3 +1,14 @@
+glib2.0 (2.64.6-1~ubuntu20.04.4) UNRELEASED; urgency=medium
+
+  * Initialise memory used for file builder buffers to zero, since memory
+    artifacts found themseleves into gschema.compiled files, leading to glib
+    being unable to parse the gschema.compiled files, causing gdm, gnome-shell
+    and various gnome applications to fail to
+    start. (LP: #1930359)
+      - d/p/gvdb-builder-Initialise-some-memory-to-zero-in-the-bloom-.patch
+
+ -- Matthew Ruffell <matthew.ruffell@canonical.com>  Mon, 12 Jul 2021 12:44:01 +0100
+
 glib2.0 (2.64.6-1~ubuntu20.04.3) focal-security; urgency=medium
 
   * SECURITY UPDATE: incorrect g_file_replace() symlink handling
