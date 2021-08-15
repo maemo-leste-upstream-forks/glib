@@ -19,6 +19,7 @@ glib2.0 (2.68.3-2) UNRELEASED; urgency=medium
     - Remove an unused Lintian override
     - Add more Lintian overrides for test data
     - Use d/tests/run-with-locales for better locale-sensitive test coverage
+  * d/rules: Fix dead link when documenting why we use -Wl,--no-as-needed
 
  -- Simon McVittie <smcv@debian.org>  Sun, 15 Aug 2021 10:54:42 +0100
 
