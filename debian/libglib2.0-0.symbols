@@ -568,7 +568,7 @@ libgio-2.0.so.0 libglib2.0-0 #MINVER#
  g_dbus_server_get_guid@Base 2.26.0
  g_dbus_server_get_type@Base 2.26.0
  g_dbus_server_is_active@Base 2.26.0
- g_dbus_server_new_sync@Base 2.26.0
+ g_dbus_server_new_sync@Base 2.68.0
  g_dbus_server_start@Base 2.26.0
  g_dbus_server_stop@Base 2.26.0
  g_dbus_signal_flags_get_type@Base 2.26.0
