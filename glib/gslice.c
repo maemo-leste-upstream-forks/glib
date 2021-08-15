@@ -41,7 +41,6 @@
 #include "gmain.h"
 #include "gmem.h"               /* gslice.h */
 #include "gstrfuncs.h"
-#include "gstrfuncsprivate.h"
 #include "gutils.h"
 #include "gtrashstack.h"
 #include "gtestutils.h"

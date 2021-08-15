@@ -34,8 +34,6 @@
 
 #include <string.h>
 
-#include "gstrfuncsprivate.h"
-
 /**
  * GBytes:
  *

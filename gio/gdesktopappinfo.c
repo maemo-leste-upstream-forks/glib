@@ -1142,7 +1142,7 @@ desktop_file_dir_unindexed_setup_search (DesktopFileDir *dir)
         {
           /* Index the interesting keys... */
           gchar **implements;
-          gint i;
+          gsize i;
 
           for (i = 0; i < G_N_ELEMENTS (desktop_key_match_category); i++)
             {
@@ -1221,7 +1221,7 @@ static gboolean
 array_contains (GPtrArray *array,
                 const gchar *str)
 {
-  gint i;
+  guint i;
 
   for (i = 0; i < array->len; i++)
     if (g_str_equal (array->pdata[i], str))
@@ -1545,7 +1545,7 @@ desktop_file_dir_get_implementations (DesktopFileDir  *dir,
 static void
 desktop_file_dirs_lock (void)
 {
-  gint i;
+  guint i;
   const gchar *user_config_dir = g_get_user_config_dir ();
 
   g_mutex_lock (&desktop_file_dir_lock);
@@ -2140,7 +2140,7 @@ g_desktop_app_info_get_is_hidden (GDesktopAppInfo *info)
  * situations such as the #GDesktopAppInfo returned from
  * g_desktop_app_info_new_from_keyfile(), this function will return %NULL.
  *
- * Returns: (type filename): The full path to the file for @info,
+ * Returns: (nullable) (type filename): The full path to the file for @info,
  *     or %NULL if not known.
  * Since: 2.24
  */
@@ -2188,7 +2188,7 @@ g_desktop_app_info_get_icon (GAppInfo *appinfo)
  *
  * Gets the categories from the desktop file.
  *
- * Returns: The unparsed Categories key from the desktop file;
+ * Returns: (nullable): The unparsed Categories key from the desktop file;
  *     i.e. no attempt is made to split it by ';' or validate it.
  */
 const char *
@@ -2217,9 +2217,9 @@ g_desktop_app_info_get_keywords (GDesktopAppInfo *info)
  * g_desktop_app_info_get_generic_name:
  * @info: a #GDesktopAppInfo
  *
- * Gets the generic name from the destkop file.
+ * Gets the generic name from the desktop file.
  *
- * Returns: The value of the GenericName key
+ * Returns: (nullable): The value of the GenericName key
  */
 const char *
 g_desktop_app_info_get_generic_name (GDesktopAppInfo *info)
@@ -2601,6 +2601,10 @@ prepend_terminal_to_vector (int    *argc,
       else
         {
           if (check == NULL)
+            check = g_find_program_in_path ("tilix");
+          if (check == NULL)
+            check = g_find_program_in_path ("konsole");
+          if (check == NULL)
             check = g_find_program_in_path ("nxterm");
           if (check == NULL)
             check = g_find_program_in_path ("color-xterm");
@@ -2771,6 +2775,7 @@ g_desktop_app_info_launch_uris_with_spawn (GDesktopAppInfo            *info,
       char *sn_id = NULL;
       char **wrapped_argv;
       int i;
+      gsize j;
       const gchar * const wrapper_argv[] =
         {
           "/bin/sh",
@@ -2834,8 +2839,8 @@ g_desktop_app_info_launch_uris_with_spawn (GDesktopAppInfo            *info,
        * resurrected). */
       wrapped_argv = g_new (char *, argc + G_N_ELEMENTS (wrapper_argv) + 1);
 
-      for (i = 0; i < G_N_ELEMENTS (wrapper_argv); i++)
-        wrapped_argv[i] = g_strdup (wrapper_argv[i]);
+      for (j = 0; j < G_N_ELEMENTS (wrapper_argv); j++)
+        wrapped_argv[j] = g_strdup (wrapper_argv[j]);
       for (i = 0; i < argc; i++)
         wrapped_argv[i + G_N_ELEMENTS (wrapper_argv)] = g_steal_pointer (&argv[i]);
 
@@ -4142,7 +4147,7 @@ get_list_of_mimetypes (const gchar *content_type,
 
   if (include_fallback)
     {
-      gint i;
+      guint i;
 
       /* Iterate the array as we grow it, until we have nothing more to add */
       for (i = 0; i < array->len; i++)
@@ -4173,7 +4178,7 @@ g_desktop_app_info_get_desktop_ids_for_content_type (const gchar *content_type,
 {
   GPtrArray *hits, *blocklist;
   gchar **types;
-  gint i, j;
+  guint i, j;
 
   hits = g_ptr_array_new ();
   blocklist = g_ptr_array_new ();
@@ -4371,7 +4376,7 @@ g_app_info_get_default_for_type (const char *content_type,
   GPtrArray *results;
   GAppInfo *info;
   gchar **types;
-  gint i, j, k;
+  guint i, j, k;
 
   g_return_val_if_fail (content_type != NULL, NULL);
 
@@ -4476,7 +4481,7 @@ g_desktop_app_info_get_implementations (const gchar *interface)
 {
   GList *result = NULL;
   GList **ptr;
-  gint i;
+  guint i;
 
   desktop_file_dirs_lock ();
 
@@ -4539,6 +4544,7 @@ g_desktop_app_info_search (const gchar *search_string)
   gint n_categories = 0;
   gint start_of_category;
   gint i, j;
+  guint k;
 
   search_tokens = g_str_tokenize_and_fold (search_string, NULL, NULL);
 
@@ -4546,11 +4552,11 @@ g_desktop_app_info_search (const gchar *search_string)
 
   reset_total_search_results ();
 
-  for (i = 0; i < desktop_file_dirs->len; i++)
+  for (k = 0; k < desktop_file_dirs->len; k++)
     {
       for (j = 0; search_tokens[j]; j++)
         {
-          desktop_file_dir_search (g_ptr_array_index (desktop_file_dirs, i), search_tokens[j]);
+          desktop_file_dir_search (g_ptr_array_index (desktop_file_dirs, k), search_tokens[j]);
           merge_token_results (j == 0);
         }
       merge_directory_results ();
@@ -4618,7 +4624,7 @@ g_app_info_get_all (void)
   GHashTable *apps;
   GHashTableIter iter;
   gpointer value;
-  int i;
+  guint i;
   GList *infos;
 
   apps = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
@@ -4712,7 +4718,7 @@ G_GNUC_END_IGNORE_DEPRECATIONS
  * WM_CLASS property of the main window of the application, if launched
  * through @info.
  *
- * Returns: (transfer none): the startup WM class, or %NULL if none is set
+ * Returns: (nullable) (transfer none): the startup WM class, or %NULL if none is set
  * in the desktop file.
  *
  * Since: 2.34
@@ -4734,7 +4740,7 @@ g_desktop_app_info_get_startup_wm_class (GDesktopAppInfo *info)
  *
  * The @key is looked up in the "Desktop Entry" group.
  *
- * Returns: a newly allocated string, or %NULL if the key
+ * Returns: (nullable): a newly allocated string, or %NULL if the key
  *     is not found
  *
  * Since: 2.36

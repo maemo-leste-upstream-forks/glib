@@ -14,7 +14,7 @@ Forwarded: no
  1 file changed, 1 deletion(-)
 
 diff --git a/gobject/tests/taptestrunner.py b/gobject/tests/taptestrunner.py
-index 2614961..7baceb5 100644
+index 9ce3b43..c472ade 100644
 --- a/gobject/tests/taptestrunner.py
 +++ b/gobject/tests/taptestrunner.py
 @@ -1,4 +1,3 @@

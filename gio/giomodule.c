@@ -50,6 +50,7 @@
 #include "gmemorymonitordbus.h"
 #ifdef G_OS_WIN32
 #include "gregistrysettingsbackend.h"
+#include "giowin32-priv.h"
 #endif
 #include <glib/gstdio.h>
 
@@ -477,9 +478,7 @@ g_io_modules_scan_all_in_directory_with_scope (const char     *dirname,
 
   filename = g_build_filename (dirname, "giomodule.cache", NULL);
 
-  cache = g_hash_table_new_full (g_str_hash, g_str_equal,
-				 g_free, (GDestroyNotify)g_strfreev);
-
+  cache = NULL;
   cache_time = 0;
   if (g_stat (filename, &statbuf) == 0 &&
       g_file_get_contents (filename, &data, NULL, NULL))
@@ -523,6 +522,10 @@ g_io_modules_scan_all_in_directory_with_scope (const char     *dirname,
 	  while (g_ascii_isspace (*colon))
 	    colon++;
 
+          if (G_UNLIKELY (!cache))
+            cache = g_hash_table_new_full (g_str_hash, g_str_equal,
+                                           g_free, (GDestroyNotify)g_strfreev);
+
 	  extension_points = g_strsplit (colon, ",", -1);
 	  g_hash_table_insert (cache, file, extension_points);
 	}
@@ -536,13 +539,15 @@ g_io_modules_scan_all_in_directory_with_scope (const char     *dirname,
 	  GIOExtensionPoint *extension_point;
 	  GIOModule *module;
 	  gchar *path;
-	  char **extension_points;
+	  char **extension_points = NULL;
 	  int i;
 
 	  path = g_build_filename (dirname, name, NULL);
 	  module = g_io_module_new (path);
 
-	  extension_points = g_hash_table_lookup (cache, name);
+          if (cache)
+            extension_points = g_hash_table_lookup (cache, name);
+
 	  if (extension_points != NULL &&
 	      g_stat (path, &statbuf) == 0 &&
 	      statbuf.st_ctime <= cache_time)
@@ -577,7 +582,8 @@ g_io_modules_scan_all_in_directory_with_scope (const char     *dirname,
 
   g_dir_close (dir);
 
-  g_hash_table_destroy (cache);
+  if (cache)
+    g_hash_table_destroy (cache);
 
   g_free (filename);
 }
@@ -887,6 +893,13 @@ try_implementation (const char           *extension_point,
     }
 }
 
+static void
+weak_ref_free (GWeakRef *weak_ref)
+{
+  g_weak_ref_clear (weak_ref);
+  g_free (weak_ref);
+}
+
 /**
  * _g_io_module_get_default:
  * @extension_point: the name of an extension point
@@ -908,10 +921,11 @@ try_implementation (const char           *extension_point,
  * be called on each candidate implementation after construction, to
  * check if it is actually usable or not.
  *
- * The result is cached after it is generated the first time, and
+ * The result is cached after it is generated the first time (but the cache does
+ * not keep a strong reference to the object), and
  * the function is thread-safe.
  *
- * Returns: (transfer none): an object implementing
+ * Returns: (transfer full) (nullable): an object implementing
  *     @extension_point, or %NULL if there are no usable
  *     implementations.
  */
@@ -926,25 +940,33 @@ _g_io_module_get_default (const gchar         *extension_point,
   GList *l;
   GIOExtensionPoint *ep;
   GIOExtension *extension = NULL, *preferred;
-  gpointer impl;
+  gpointer impl, value;
+  GWeakRef *impl_weak_ref = NULL;
 
   g_rec_mutex_lock (&default_modules_lock);
   if (default_modules)
     {
-      gpointer key;
-
       if (g_hash_table_lookup_extended (default_modules, extension_point,
-					&key, &impl))
-	{
+                                        NULL, &value))
+        {
           /* Don’t debug here, since we’re returning a cached object which was
            * already printed earlier. */
-	  g_rec_mutex_unlock (&default_modules_lock);
-	  return impl;
-	}
+          impl_weak_ref = value;
+          impl = g_weak_ref_get (impl_weak_ref);
+
+          /* If the object has been finalised (impl == NULL), fall through and
+           * instantiate a new one. */
+          if (impl != NULL)
+            {
+              g_rec_mutex_unlock (&default_modules_lock);
+              return g_steal_pointer (&impl);
+            }
+        }
     }
   else
     {
-      default_modules = g_hash_table_new (g_str_hash, g_str_equal);
+      default_modules = g_hash_table_new_full (g_str_hash, g_str_equal,
+                                               g_free, (GDestroyNotify) weak_ref_free);
     }
 
   _g_io_modules_ensure_loaded ();
@@ -999,9 +1021,18 @@ _g_io_module_get_default (const gchar         *extension_point,
   impl = NULL;
 
  done:
-  g_hash_table_insert (default_modules,
-		       g_strdup (extension_point),
-		       impl ? g_object_ref (impl) : NULL);
+  if (impl_weak_ref == NULL)
+    {
+      impl_weak_ref = g_new0 (GWeakRef, 1);
+      g_weak_ref_init (impl_weak_ref, impl);
+      g_hash_table_insert (default_modules, g_strdup (extension_point),
+                           g_steal_pointer (&impl_weak_ref));
+    }
+  else
+    {
+      g_weak_ref_set (impl_weak_ref, impl);
+    }
+
   g_rec_mutex_unlock (&default_modules_lock);
 
   if (impl != NULL)
@@ -1015,7 +1046,7 @@ _g_io_module_get_default (const gchar         *extension_point,
     g_debug ("%s: Failed to find default implementation for ‘%s’",
              G_STRFUNC, extension_point);
 
-  return impl;
+  return g_steal_pointer (&impl);
 }
 
 G_LOCK_DEFINE_STATIC (registered_extensions);
@@ -1075,7 +1106,10 @@ DllMain (HINSTANCE hinstDLL,
 	 LPVOID    lpvReserved)
 {
   if (fdwReason == DLL_PROCESS_ATTACH)
+    {
       gio_dll = hinstDLL;
+      gio_win32_appinfo_init (FALSE);
+    }
 
   return TRUE;
 }
@@ -1086,7 +1120,8 @@ void *
 _g_io_win32_get_module (void)
 {
   if (!gio_dll)
-    GetModuleHandleExA (GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS,
+    GetModuleHandleExA (GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS |
+                        GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
                         (const char *) _g_io_win32_get_module,
                         &gio_dll);
   return gio_dll;

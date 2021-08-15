@@ -30,7 +30,6 @@
 #include "gio/gfileattribute.h"
 #include "gio/gfileinfo.h"
 #include "gio/gfileinfo-priv.h"
-#include "gstrfuncsprivate.h"
 #include "gwinhttpfile.h"
 #include "gwinhttpfileinputstream.h"
 #include "gwinhttpfileoutputstream.h"

@@ -28,8 +28,6 @@
 #include <ntstatus.h>
 #include <winternl.h>
 
-#include "gstrfuncsprivate.h"
-
 #ifndef _WDMDDK_
 typedef enum _KEY_INFORMATION_CLASS {
   KeyBasicInformation,
@@ -966,7 +964,7 @@ g_win32_registry_subkey_iter_next (GWin32RegistrySubkeyIter  *iter,
  **/
 gboolean
 g_win32_registry_subkey_iter_get_name_w (GWin32RegistrySubkeyIter  *iter,
-                                         gunichar2                **subkey_name,
+                                         const gunichar2          **subkey_name,
                                          gsize                     *subkey_name_len,
                                          GError                   **error)
 {
@@ -1008,7 +1006,7 @@ g_win32_registry_subkey_iter_get_name_w (GWin32RegistrySubkeyIter  *iter,
  **/
 gboolean
 g_win32_registry_subkey_iter_get_name (GWin32RegistrySubkeyIter  *iter,
-                                       gchar                    **subkey_name,
+                                       const gchar              **subkey_name,
                                        gsize                     *subkey_name_len,
                                        GError                   **error)
 {
@@ -1033,13 +1031,15 @@ g_win32_registry_subkey_iter_get_name (GWin32RegistrySubkeyIter  *iter,
                                           &subkey_name_len_glong,
                                           error);
 
-  if (iter->subkey_name_u8 != NULL)
-    {
-      *subkey_name_len = subkey_name_len_glong;
-      return TRUE;
-    }
+  if (iter->subkey_name_u8 == NULL)
+    return FALSE;
 
-  return FALSE;
+  *subkey_name = iter->subkey_name_u8;
+
+  if (subkey_name_len)
+    *subkey_name_len = subkey_name_len_glong;
+
+  return TRUE;
 }
 
 /**
@@ -2502,7 +2502,7 @@ g_win32_registry_key_watch (GWin32RegistryKey                   *key,
   if (g_once_init_enter (&nt_notify_change_multiple_keys))
   {
     NtNotifyChangeMultipleKeysFunc func;
-    HMODULE ntdll = GetModuleHandle ("ntdll.dll");
+    HMODULE ntdll = GetModuleHandleW (L"ntdll.dll");
 
     if (ntdll != NULL)
       func = (NtNotifyChangeMultipleKeysFunc) GetProcAddress (ntdll, "NtNotifyChangeMultipleKeys");

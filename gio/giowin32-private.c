@@ -16,7 +16,6 @@
  * along with this library; if not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "gstrfuncsprivate.h"
 
 static gsize
 g_utf16_len (const gunichar2 *str)

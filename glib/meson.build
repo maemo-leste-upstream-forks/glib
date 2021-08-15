@@ -8,7 +8,7 @@ if not use_system_pcre
 endif
 
 # libsysprof-capture support
-libsysprof_capture_dep = dependency('sysprof-capture-4',
+libsysprof_capture_dep = dependency('sysprof-capture-4', version: '>= 3.38.0',
   required: get_option('sysprof'),
   default_options: [
     'enable_examples=false',
@@ -198,6 +198,7 @@ glib_sub_headers = files(
   'gspawn.h',
   'gstdio.h',
   'gstrfuncs.h',
+  'gstrvbuilder.h',
   'gtestutils.h',
   'gstring.h',
   'gstringchunk.h',
@@ -284,9 +285,9 @@ glib_sources = files(
   'gslist.c',
   'gstdio.c',
   'gstrfuncs.c',
-  'gstrfuncsprivate.h',
   'gstring.c',
   'gstringchunk.c',
+  'gstrvbuilder.c',
   'gtestutils.c',
   'gthread.c',
   'gthreadpool.c',
@@ -376,7 +377,7 @@ libglib = library('glib-2.0',
   # intl.lib is not compatible with SAFESEH
   link_args : [noseh_link_args, glib_link_flags, win32_ldflags],
   include_directories : configinc,
-  dependencies : pcre_deps + [thread_dep, librt] + libintl_deps + libiconv + platform_deps + gnulib_libm_dependency + [libsysprof_capture_dep],
+  dependencies : pcre_deps + [thread_dep, librt] + libintl_deps + libiconv + platform_deps + [gnulib_libm_dependency, libm] + [libsysprof_capture_dep],
   c_args : glib_c_args,
   objc_args : glib_c_args,
 )

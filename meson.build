@@ -1,5 +1,5 @@
 project('glib', 'c', 'cpp',
-  version : '2.66.8',
+  version : '2.68.3',
   # NOTE: We keep this pinned at 0.49 because that's what Debian 10 ships
   meson_version : '>= 0.49.2',
   default_options : [
@@ -87,6 +87,12 @@ else
   glib_charsetaliasdir = glib_libdir
 endif
 
+glib_localstatedir = get_option('localstatedir')
+if not glib_localstatedir.startswith('/')
+  # See https://mesonbuild.com/Builtin-options.html#directories
+  glib_localstatedir = join_paths(glib_prefix, glib_localstatedir)
+endif
+
 installed_tests_metadir = join_paths(glib_datadir, 'installed-tests', meson.project_name())
 installed_tests_execdir = join_paths(glib_libexecdir, 'installed-tests', meson.project_name())
 installed_tests_enabled = get_option('installed_tests')
@@ -94,9 +100,13 @@ installed_tests_template = files('template.test.in')
 installed_tests_template_tap = files('template-tap.test.in')
 
 # Don’t build the tests unless we can run them (either natively, in an exe wrapper, or by installing them for later use)
-build_tests = not meson.is_cross_build() or (meson.is_cross_build() and meson.has_exe_wrapper()) or installed_tests_enabled
+build_tests = get_option('tests') and (not meson.is_cross_build() or (meson.is_cross_build() and meson.has_exe_wrapper()) or installed_tests_enabled)
 
 add_project_arguments('-D_GNU_SOURCE', language: 'c')
+
+if host_system == 'qnx'
+  add_project_arguments('-D_QNX_SOURCE', language: 'c')
+endif
 
 # Disable strict aliasing;
 # see https://bugzilla.gnome.org/show_bug.cgi?id=791622
@@ -235,7 +245,8 @@ endif
 # Use debug/optimization flags to determine whether to enable debug or disable
 # cast checks
 glib_debug_cflags = []
-if get_option('debug')
+glib_debug = get_option('glib_debug')
+if glib_debug.enabled() or (glib_debug.auto() and get_option('debug'))
   glib_debug_cflags += ['-DG_ENABLE_DEBUG']
   message('Enabling various debug infrastructure')
 elif get_option('optimization') in ['2', '3', 's']
@@ -275,6 +286,7 @@ headers = [
   'pwd.h',
   'sched.h',
   'spawn.h',
+  'stdatomic.h',
   'stdint.h',
   'stdlib.h',
   'string.h',
@@ -466,15 +478,20 @@ if host_system == 'windows'
     glib_conf.set('G_WINAPI_ONLY_APP', true)
     # We require Windows 10+ on WinRT
     glib_conf.set('_WIN32_WINNT', '0x0A00')
+    uwp_gio_deps = [cc.find_library('shcore'),
+                    cc.find_library('runtimeobject')]
   else
     # We require Windows 7+ on Win32
     glib_conf.set('_WIN32_WINNT', '0x0601')
+    uwp_gio_deps = []
   endif
 endif
 
 functions = [
+  'close_range',
   'endmntent',
   'endservent',
+  'epoll_create',
   'fallocate',
   'fchmod',
   'fchown',
@@ -604,7 +621,7 @@ endif
 # When building for Android-20 and earlier, require Meson 0.54.2 or newer.
 # This is needed, because Meson build versions prior to 0.54.2 return false
 # positive for stpcpy has_function check when building for legacy Android.
-if host_system.startswith('android-')
+if host_system == 'android'
     android_is_older = cc.compiles('''#if __ANDROID_API__ >= 21
                                         #error Android is 21 or newer
                                     #endif''')
@@ -651,7 +668,7 @@ elif cc.has_function('_snprintf') or cc.has_header_symbol('stdio.h', '_snprintf'
   glib_conf_prefix = glib_conf_prefix + '#define HAVE_SNPRINTF ' + hack_define
 endif
 
-if cc.has_function('strcasecmp')
+if cc.has_function('strcasecmp', prefix: '#include <strings.h>')
   glib_conf.set('HAVE_STRCASECMP', 1)
   glib_conf_prefix = glib_conf_prefix + '#define HAVE_STRCASECMP 1\n'
 elif cc.has_function('_stricmp')
@@ -660,7 +677,7 @@ elif cc.has_function('_stricmp')
   glib_conf_prefix = glib_conf_prefix + '#define HAVE_STRCASECMP ' + hack_define
 endif
 
-if cc.has_function('strncasecmp')
+if cc.has_function('strncasecmp', prefix: '#include <strings.h>')
   glib_conf.set('HAVE_STRNCASECMP', 1)
   glib_conf_prefix = glib_conf_prefix + '#define HAVE_STRNCASECMP 1\n'
 elif cc.has_function('_strnicmp')
@@ -766,6 +783,10 @@ if host_system == 'darwin'
   # know which language flags it's going to use to link. Add to both languages
   # for now. See https://github.com/mesonbuild/meson/issues/3585.
   add_project_link_arguments(osx_ldflags, language : ['objc', 'c'])
+endif
+
+if host_system == 'qnx'
+  glib_conf.set('HAVE_QNX', 1)
 endif
 
 # Check for futex(2)
@@ -1269,7 +1290,7 @@ sizet_size = cc.sizeof('size_t')
 if cc.get_id() == 'msvc' or cc.get_id() == 'clang-cl'
   ssizet_size = cc.sizeof('SSIZE_T', prefix : '#include <BaseTsd.h>')
 else
-  ssizet_size = cc.sizeof('ssize_t')
+  ssizet_size = cc.sizeof('ssize_t', prefix : '#include <unistd.h>')
 endif
 
 # Some platforms (Apple) hard-code int64_t to long long instead of
@@ -1752,6 +1773,13 @@ foreach d : inet_defines
   glibconfig_conf.set(d[1], val)
 endforeach
 
+if host_system == 'windows'
+  have_ipv6 = true
+else
+  have_ipv6 = cc.has_type('struct in6_addr', prefix: '#include <netinet/in.h>')
+endif
+glib_conf.set('HAVE_IPV6', have_ipv6)
+
 # We need to decide at configure time if GLib will use real atomic
 # operations ("lock free") or emulated ones with a mutex.  This is
 # because we must put this information in glibconfig.h so we know if
@@ -1772,7 +1800,7 @@ endforeach
 # that then to silently fall back on emulated atomic ops just because
 # the user had the wrong build environment.
 atomictest = '''int main() {
-  volatile int atomic = 2;
+  int atomic = 2;
   __sync_bool_compare_and_swap (&atomic, 2, 3);
   return 0;
 }
@@ -1882,6 +1910,7 @@ endif
 
 # FIXME: we should make it print the result and always return 0, so that
 # the output in meson shows up as green
+# volatile is needed here to avoid optimisations in the test
 stack_grows_check_prog = '''
   volatile int *a = 0, *b = 0;
   void f (int i) {
@@ -1981,9 +2010,15 @@ endif
 libm = cc.find_library('m', required : false)
 libffi_dep = dependency('libffi', version : '>= 3.0.0', fallback : ['libffi', 'ffi_dep'])
 
-# Don't use the bundled ZLib sources until we are sure that we can't find it on
-# the system
-libz_dep = dependency('zlib', required : false)
+if get_option('wrap_mode') == 'forcefallback'
+  # Respects "wrap_mode=forcefallback" option
+  libz_dep = subproject('zlib').get_variable('zlib_dep')
+else
+  # Don't use the bundled ZLib sources until we are sure that we can't find it on
+  # the system
+  libz_dep = dependency('zlib', required : false)
+endif
+
 if not libz_dep.found()
   if cc.get_id() != 'msvc' and cc.get_id() != 'clang-cl'
     libz_dep = cc.find_library('z', required : false)
@@ -2061,7 +2096,7 @@ endif
 
 selinux_dep = []
 if host_system == 'linux'
-  selinux_dep = dependency('libselinux', required: get_option('selinux'))
+  selinux_dep = dependency('libselinux', version: '>=2.2', required: get_option('selinux'))
 
   glib_conf.set('HAVE_SELINUX', selinux_dep.found())
 endif
@@ -2197,6 +2232,7 @@ endif
 
 # Determine which user environment-dependent files that we want to install
 have_bash = find_program('bash', required : false).found() # For completion scripts
+bash_comp_dep = dependency('bash-completion', version: '>=2.0', required: false)
 have_sh = find_program('sh', required : false).found() # For glib-gettextize
 
 # Some installed tests require a custom environment

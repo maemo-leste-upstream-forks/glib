@@ -251,6 +251,16 @@ watcher_init (void)
           g_assert_not_reached ();
         }
 
+      /* flush streams to avoid buffers being duplicated in the child and
+       * flushed by both the child and parent later
+       *
+       * FIXME: This is a workaround for the fact that watch_parent() uses
+       * non-async-signal-safe API. See
+       * https://gitlab.gnome.org/GNOME/glib/-/issues/2322#note_1034330
+       */
+      fflush (stdout);
+      fflush (stderr);
+
       switch (fork ())
         {
         case -1:
@@ -282,10 +292,13 @@ watcher_send_command (const gchar *command)
 {
   GIOChannel *channel;
   GError *error = NULL;
+  GIOStatus status;
 
   channel = watcher_init ();
 
-  g_io_channel_write_chars (channel, command, -1, NULL, &error);
+  do
+   status = g_io_channel_write_chars (channel, command, -1, NULL, &error);
+  while (status == G_IO_STATUS_AGAIN);
   g_assert_no_error (error);
 
   g_io_channel_flush (channel, &error);

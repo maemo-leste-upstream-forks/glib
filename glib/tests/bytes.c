@@ -15,7 +15,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "glib.h"
-#include "glib/gstrfuncsprivate.h"
 
 /* Keep in sync with glib/gbytes.c */
 struct _GBytes

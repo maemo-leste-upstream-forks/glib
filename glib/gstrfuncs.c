@@ -380,10 +380,45 @@ g_strdup (const gchar *str)
  *
  * Returns: a pointer to the newly-allocated copy of the memory, or %NULL if @mem
  *  is %NULL.
+ * Deprecated: 2.68: Use g_memdup2() instead, as it accepts a #gsize argument
+ *     for @byte_size, avoiding the possibility of overflow in a #gsize → #guint
+ *     conversion
  */
 gpointer
 g_memdup (gconstpointer mem,
           guint         byte_size)
+{
+  gpointer new_mem;
+
+  if (mem && byte_size != 0)
+    {
+      new_mem = g_malloc (byte_size);
+      memcpy (new_mem, mem, byte_size);
+    }
+  else
+    new_mem = NULL;
+
+  return new_mem;
+}
+
+/**
+ * g_memdup2:
+ * @mem: (nullable): the memory to copy.
+ * @byte_size: the number of bytes to copy.
+ *
+ * Allocates @byte_size bytes of memory, and copies @byte_size bytes into it
+ * from @mem. If @mem is %NULL it returns %NULL.
+ *
+ * This replaces g_memdup(), which was prone to integer overflows when
+ * converting the argument from a #gsize to a #guint.
+ *
+ * Returns: (nullable): a pointer to the newly-allocated copy of the memory,
+ *    or %NULL if @mem is %NULL.
+ * Since: 2.68
+ */
+gpointer
+g_memdup2 (gconstpointer mem,
+           gsize         byte_size)
 {
   gpointer new_mem;
 
@@ -2689,10 +2724,9 @@ g_strjoin (const gchar *separator,
 
 /**
  * g_strstr_len:
- * @haystack: a string
- * @haystack_len: the maximum length of @haystack. Note that -1 is
- *     a valid length, if @haystack is nul-terminated, meaning it will
- *     search through the whole string.
+ * @haystack: a nul-terminated string
+ * @haystack_len: the maximum length of @haystack in bytes. A length of -1
+ *     can be used to mean "search the entire string", like `strstr()`.
  * @needle: the string to search for
  *
  * Searches the string @haystack for the first occurrence
@@ -2796,7 +2830,8 @@ g_strrstr (const gchar *haystack,
 /**
  * g_strrstr_len:
  * @haystack: a nul-terminated string
- * @haystack_len: the maximum length of @haystack
+ * @haystack_len: the maximum length of @haystack in bytes. A length of -1
+ *     can be used to mean "search the entire string", like g_strrstr().
  * @needle: the nul-terminated string to search for
  *
  * Searches the string @haystack for the last occurrence

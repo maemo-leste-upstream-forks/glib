@@ -137,6 +137,9 @@ GLIB_VERSION_2_60
 GLIB_VERSION_2_62
 GLIB_VERSION_2_64
 GLIB_VERSION_2_66
+GLIB_VERSION_2_68
+GLIB_VERSION_CUR_STABLE
+GLIB_VERSION_PREV_STABLE
 GLIB_VERSION_MIN_REQUIRED
 GLIB_VERSION_MAX_ALLOWED
 GLIB_DISABLE_DEPRECATION_WARNINGS
@@ -164,6 +167,7 @@ GLIB_AVAILABLE_ENUMERATOR_IN_2_60
 GLIB_AVAILABLE_ENUMERATOR_IN_2_62
 GLIB_AVAILABLE_ENUMERATOR_IN_2_64
 GLIB_AVAILABLE_ENUMERATOR_IN_2_66
+GLIB_AVAILABLE_ENUMERATOR_IN_2_68
 GLIB_AVAILABLE_IN_ALL
 GLIB_AVAILABLE_IN_2_26
 GLIB_AVAILABLE_IN_2_28
@@ -186,6 +190,7 @@ GLIB_AVAILABLE_IN_2_60
 GLIB_AVAILABLE_IN_2_62
 GLIB_AVAILABLE_IN_2_64
 GLIB_AVAILABLE_IN_2_66
+GLIB_AVAILABLE_IN_2_68
 GLIB_AVAILABLE_MACRO_IN_2_26
 GLIB_AVAILABLE_MACRO_IN_2_28
 GLIB_AVAILABLE_MACRO_IN_2_30
@@ -207,11 +212,13 @@ GLIB_AVAILABLE_MACRO_IN_2_60
 GLIB_AVAILABLE_MACRO_IN_2_62
 GLIB_AVAILABLE_MACRO_IN_2_64
 GLIB_AVAILABLE_MACRO_IN_2_66
+GLIB_AVAILABLE_MACRO_IN_2_68
 GLIB_AVAILABLE_STATIC_INLINE_IN_2_44
 GLIB_AVAILABLE_STATIC_INLINE_IN_2_60
 GLIB_AVAILABLE_STATIC_INLINE_IN_2_62
 GLIB_AVAILABLE_STATIC_INLINE_IN_2_64
 GLIB_AVAILABLE_STATIC_INLINE_IN_2_66
+GLIB_AVAILABLE_STATIC_INLINE_IN_2_68
 GLIB_AVAILABLE_TYPE_IN_2_26
 GLIB_AVAILABLE_TYPE_IN_2_28
 GLIB_AVAILABLE_TYPE_IN_2_30
@@ -233,6 +240,7 @@ GLIB_AVAILABLE_TYPE_IN_2_60
 GLIB_AVAILABLE_TYPE_IN_2_62
 GLIB_AVAILABLE_TYPE_IN_2_64
 GLIB_AVAILABLE_TYPE_IN_2_66
+GLIB_AVAILABLE_TYPE_IN_2_68
 GLIB_DEPRECATED_ENUMERATOR
 GLIB_DEPRECATED_ENUMERATOR_FOR
 GLIB_DEPRECATED_ENUMERATOR_IN_2_26
@@ -277,6 +285,8 @@ GLIB_DEPRECATED_ENUMERATOR_IN_2_64
 GLIB_DEPRECATED_ENUMERATOR_IN_2_64_FOR
 GLIB_DEPRECATED_ENUMERATOR_IN_2_66
 GLIB_DEPRECATED_ENUMERATOR_IN_2_66_FOR
+GLIB_DEPRECATED_ENUMERATOR_IN_2_68
+GLIB_DEPRECATED_ENUMERATOR_IN_2_68_FOR
 GLIB_DEPRECATED_IN_2_26
 GLIB_DEPRECATED_IN_2_26_FOR
 GLIB_DEPRECATED_IN_2_28
@@ -319,6 +329,8 @@ GLIB_DEPRECATED_IN_2_64
 GLIB_DEPRECATED_IN_2_64_FOR
 GLIB_DEPRECATED_IN_2_66
 GLIB_DEPRECATED_IN_2_66_FOR
+GLIB_DEPRECATED_IN_2_68
+GLIB_DEPRECATED_IN_2_68_FOR
 GLIB_DEPRECATED_MACRO
 GLIB_DEPRECATED_MACRO_FOR
 GLIB_DEPRECATED_MACRO_IN_2_26
@@ -363,6 +375,8 @@ GLIB_DEPRECATED_MACRO_IN_2_64
 GLIB_DEPRECATED_MACRO_IN_2_64_FOR
 GLIB_DEPRECATED_MACRO_IN_2_66
 GLIB_DEPRECATED_MACRO_IN_2_66_FOR
+GLIB_DEPRECATED_MACRO_IN_2_68
+GLIB_DEPRECATED_MACRO_IN_2_68_FOR
 GLIB_DEPRECATED_TYPE
 GLIB_DEPRECATED_TYPE_FOR
 GLIB_DEPRECATED_TYPE_IN_2_26
@@ -407,6 +421,8 @@ GLIB_DEPRECATED_TYPE_IN_2_64
 GLIB_DEPRECATED_TYPE_IN_2_64_FOR
 GLIB_DEPRECATED_TYPE_IN_2_66
 GLIB_DEPRECATED_TYPE_IN_2_66_FOR
+GLIB_DEPRECATED_TYPE_IN_2_68
+GLIB_DEPRECATED_TYPE_IN_2_68_FOR
 GLIB_VERSION_CUR_STABLE
 GLIB_VERSION_PREV_STABLE
 </SECTION>
@@ -455,6 +471,8 @@ G_ALIGNOF
 
 <SUBSECTION>
 G_CONST_RETURN
+G_NORETURN
+G_NORETURN_FUNCPTR
 
 <SUBSECTION>
 G_N_ELEMENTS
@@ -716,7 +734,8 @@ GLIB_UNAVAILABLE_TYPE
 G_ANALYZER_ANALYZING
 G_ANALYZER_NORETURN
 g_autoptr_cleanup_generic_gfree
-g_has_typeof
+glib_typeof
+glib_typeof_2_68
 g_macro__has_attribute
 g_macro__has_builtin
 g_macro__has_feature
@@ -738,6 +757,13 @@ g_propagate_error
 g_clear_error
 g_prefix_error
 g_propagate_prefixed_error
+<SUBSECTION>
+GErrorInitFunc
+GErrorCopyFunc
+GErrorClearFunc
+G_DEFINE_EXTENDED_ERROR
+g_error_domain_register_static
+g_error_domain_register
 </SECTION>
 
 <SECTION>
@@ -1315,6 +1341,7 @@ g_newa
 <SUBSECTION>
 g_memmove
 g_memdup
+g_memdup2
 
 <SUBSECTION>
 GMemVTable
@@ -1470,6 +1497,8 @@ g_log_writer_format_fields
 g_log_writer_journald
 g_log_writer_standard_streams
 g_log_writer_default
+g_log_writer_default_set_use_stderr
+g_log_writer_default_would_drop
 
 <SUBSECTION Private>
 g_log_structured_standard
@@ -1498,6 +1527,7 @@ GSpawnFlags
 GSpawnChildSetupFunc
 g_spawn_async_with_fds
 g_spawn_async_with_pipes
+g_spawn_async_with_pipes_and_fds
 g_spawn_async
 g_spawn_sync
 G_SPAWN_EXIT_ERROR
@@ -1790,9 +1820,15 @@ g_strjoinv
 
 <SUBSECTION>
 GStrv
+GStrvBuilder
 g_strv_length
 g_strv_contains
 g_strv_equal
+g_strv_builder_new
+g_strv_builder_ref
+g_strv_builder_unref
+g_strv_builder_add
+g_strv_builder_end
 
 <SUBSECTION>
 g_strerror
@@ -1917,6 +1953,7 @@ g_time_zone_unref
 g_time_zone_ref
 <SUBSECTION>
 g_time_zone_new
+g_time_zone_new_identifier
 g_time_zone_new_local
 g_time_zone_new_utc
 g_time_zone_new_offset
@@ -2825,6 +2862,7 @@ g_string_insert_unichar
 g_string_insert_len
 g_string_overwrite
 g_string_overwrite_len
+g_string_replace
 g_string_erase
 g_string_truncate
 g_string_set_size
@@ -2968,21 +3006,36 @@ g_bytes_get_type
 <TITLE>Balanced Binary Trees</TITLE>
 <FILE>trees-binary</FILE>
 GTree
+GTreeNode
 g_tree_new
 g_tree_ref
 g_tree_unref
 g_tree_new_with_data
 g_tree_new_full
+g_tree_node_first
+g_tree_node_last
+g_tree_node_previous
+g_tree_node_next
+g_tree_insert_node
 g_tree_insert
+g_tree_replace_node
 g_tree_replace
+g_tree_node_key
+g_tree_node_value
 g_tree_nnodes
 g_tree_height
+g_tree_lookup_node
 g_tree_lookup
 g_tree_lookup_extended
+g_tree_foreach_node
 g_tree_foreach
 g_tree_traverse
 GTraverseFunc
+GTraverseNodeFunc
+g_tree_search_node
 g_tree_search
+g_tree_lower_bound
+g_tree_upper_bound
 g_tree_remove
 g_tree_steal
 g_tree_destroy
@@ -3459,6 +3512,7 @@ GTestDataFunc
 g_test_add_data_func
 g_test_add_data_func_full
 g_test_add
+g_test_get_path
 
 GTestFileType
 g_test_build_filename
@@ -3510,6 +3564,7 @@ g_assert
 g_assert_not_reached
 
 g_assert_cmpstr
+g_assert_cmpstrv
 g_assert_cmpint
 g_assert_cmpuint
 g_assert_cmphex

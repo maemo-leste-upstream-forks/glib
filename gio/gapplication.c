@@ -542,7 +542,7 @@ g_application_parse_command_line (GApplication   *application,
     {
       GOptionEntry entries[] = {
         { "gapplication-service", '\0', 0, G_OPTION_ARG_NONE, &become_service,
-          N_("Enter GApplication service mode (use from D-Bus service files)") },
+          N_("Enter GApplication service mode (use from D-Bus service files)"), NULL },
         { NULL }
       };
 
@@ -554,7 +554,7 @@ g_application_parse_command_line (GApplication   *application,
     {
       GOptionEntry entries[] = {
         { "gapplication-app-id", '\0', 0, G_OPTION_ARG_STRING, &app_id,
-          N_("Override the application’s ID") },
+          N_("Override the application’s ID"), NULL },
         { NULL }
       };
 
@@ -566,7 +566,7 @@ g_application_parse_command_line (GApplication   *application,
     {
       GOptionEntry entries[] = {
         { "gapplication-replace", '\0', 0, G_OPTION_ARG_NONE, &replace,
-          N_("Replace the running instance") },
+          N_("Replace the running instance"), NULL },
         { NULL }
       };
 
@@ -1091,6 +1091,7 @@ g_application_real_local_command_line (GApplication   *application,
   if (!options)
     {
       g_printerr ("%s\n", error->message);
+      g_error_free (error);
       *exit_status = 1;
       return TRUE;
     }
@@ -1793,7 +1794,7 @@ g_application_new (const gchar       *application_id,
  *
  * Gets the unique identifier for @application.
  *
- * Returns: the identifier for @application, owned by @application
+ * Returns: (nullable): the identifier for @application, owned by @application
  *
  * Since: 2.28
  **/
@@ -2084,7 +2085,7 @@ g_application_get_is_remote (GApplication *application)
  * This function must not be called before the application has been
  * registered.  See g_application_get_is_registered().
  *
- * Returns: (transfer none): a #GDBusConnection, or %NULL
+ * Returns: (nullable) (transfer none): a #GDBusConnection, or %NULL
  *
  * Since: 2.34
  **/
@@ -2116,7 +2117,7 @@ g_application_get_dbus_connection (GApplication *application)
  * This function must not be called before the application has been
  * registered.  See g_application_get_is_registered().
  *
- * Returns: the object path, or %NULL
+ * Returns: (nullable): the object path, or %NULL
  *
  * Since: 2.34
  **/
@@ -2743,7 +2744,7 @@ static GApplication *default_app;
  *
  * If there is no default application then %NULL is returned.
  *
- * Returns: (transfer none): the default application for this process, or %NULL
+ * Returns: (nullable) (transfer none): the default application for this process, or %NULL
  *
  * Since: 2.32
  **/

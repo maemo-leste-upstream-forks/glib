@@ -12,6 +12,21 @@ test_c_args = [
   '-UG_DISABLE_ASSERT',
 ]
 
+# workaround for https://github.com/mesonbuild/meson/issues/6880
+if build_machine.system() == 'linux'
+  libutil_name = 'libutil'
+  libutil = run_command('sh', '-c',
+    '''ldconfig -p | grep -o "[[:space:]]@0@\.so\(\.[0-9]\+\)\?\b"'''
+    .format(libutil_name)).stdout().strip().split('\n')
+
+  if libutil.length() > 0
+      message('Found libutil as @0@'.format(libutil[0]))
+      test_c_args += '-DLIBUTIL_SONAME="@0@"'.format(libutil[0])
+  else
+      warning('libutil not found')
+  endif # libutil.length() > 0
+endif # build_machine.system() == 'linux'
+
 if host_machine.system() == 'windows'
   common_gio_tests_deps += [iphlpapi_dep, winsock2, cc.find_library ('secur32')]
 endif
@@ -59,7 +74,7 @@ gio_tests = {
   'network-monitor' : {},
   'network-monitor-race' : {},
   'permission' : {},
-  'pollable' : {},
+  'pollable' : {'dependencies' : [libdl_dep]},
   'proxy-test' : {},
   'readwrite' : {},
   'simple-async-result' : {},
@@ -152,7 +167,8 @@ if host_machine.system() != 'windows'
     'trash' : {},
   }
 
-  if have_rtld_next
+  # LD_PRELOAD modules don't work so well with AddressSanitizer
+  if have_rtld_next and get_option('b_sanitize') == 'none'
     gio_tests += {
       'gsocketclient-slow' : {
         'depends' : [
@@ -350,6 +366,7 @@ if host_machine.system() != 'windows'
       'fake-document-portal' : {
         'extra_sources': fake_document_portal_generated,
       },
+      'fake-service-name' : {}
     }
   endif # have_dbus_daemon
 

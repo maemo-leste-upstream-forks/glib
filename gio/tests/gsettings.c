@@ -39,7 +39,7 @@ static void
 teardown (Fixture       *fixture,
           gconstpointer  user_data)
 {
-  g_assert_cmpint (g_rmdir (fixture->tmp_dir), ==, 0);
+  g_assert_no_errno (g_rmdir (fixture->tmp_dir));
   g_clear_pointer (&fixture->tmp_dir, g_free);
 }
 
@@ -1060,7 +1060,7 @@ test_object_set_property (GObject      *object,
 static GType
 test_enum_get_type (void)
 {
-  static volatile gsize define_type_id = 0;
+  static gsize define_type_id = 0;
 
   if (g_once_init_enter (&define_type_id))
     {
@@ -1082,7 +1082,7 @@ test_enum_get_type (void)
 static GType
 test_flags_get_type (void)
 {
-  static volatile gsize define_type_id = 0;
+  static gsize define_type_id = 0;
 
   if (g_once_init_enter (&define_type_id))
     {
@@ -1856,7 +1856,7 @@ test_keyfile (Fixture       *fixture,
       g_signal_connect (settings, "writable-changed::greeting",
                         G_CALLBACK (key_changed_cb), &called);
 
-      g_chmod (keyfile_path, 0500);
+      g_assert_no_errno (g_chmod (keyfile_path, 0500));
       while (!called)
         g_main_context_iteration (NULL, FALSE);
       g_signal_handlers_disconnect_by_func (settings, key_changed_cb, &called);
@@ -1871,9 +1871,9 @@ test_keyfile (Fixture       *fixture,
   g_object_unref (settings);
 
   /* Clean up the temporary directory. */
-  g_chmod (keyfile_path, 0777);
-  g_assert_cmpint (g_remove (store_path), ==, 0);
-  g_rmdir (keyfile_path);
+  g_assert_no_errno (g_chmod (keyfile_path, 0777));
+  g_assert_no_errno (g_remove (store_path));
+  g_assert_no_errno (g_rmdir (keyfile_path));
   g_free (store_path);
   g_free (keyfile_path);
 }
@@ -3168,6 +3168,20 @@ main (int argc, char *argv[])
   result = g_test_run ();
 
   g_settings_sync ();
+
+  /* FIXME: Due to the way #GSettings objects can be used without specifying a
+   * backend, the default backend is leaked. In order to be able to run this
+   * test under valgrind and get meaningful checking for real leaks, use this
+   * hack to drop the final reference to the default #GSettingsBackend.
+   *
+   * This should not be used in production code. */
+    {
+      GSettingsBackend *backend;
+
+      backend = g_settings_backend_get_default ();
+      g_object_unref (backend);  /* reference from the *_get_default() call */
+      g_assert_finalize_object (backend);  /* singleton reference owned by GLib */
+    }
 
   return result;
 }

@@ -27,6 +27,10 @@
 
 #include <gio/gio.h>
 
+#ifdef G_OS_UNIX
+#include <gio/gunixfdlist.h>
+#endif
+
 #include <gi18n.h>
 
 #ifdef G_OS_WIN32
@@ -244,6 +248,11 @@ print_paths (GDBusConnection *c,
   if (!g_dbus_is_name (name))
     {
       g_printerr (_("Error: %s is not a valid name\n"), name);
+      goto out;
+    }
+  if (!g_variant_is_object_path (path))
+    {
+      g_printerr (_("Error: %s is not a valid object path\n"), path);
       goto out;
     }
 
@@ -672,8 +681,8 @@ handle_emit (gint        *argc,
       else
         {
           g_printerr (_("Error connecting: %s\n"), error->message);
-          g_error_free (error);
         }
+      g_error_free (error);
       goto out;
     }
 
@@ -905,6 +914,10 @@ handle_call (gint        *argc,
   gchar *method_name;
   GVariant *result;
   GPtrArray *in_signature_types;
+#ifdef G_OS_UNIX
+  GUnixFDList *fd_list;
+  gint fd_id;
+#endif
   gboolean complete_names;
   gboolean complete_paths;
   gboolean complete_methods;
@@ -920,6 +933,9 @@ handle_call (gint        *argc,
   method_name = NULL;
   result = NULL;
   in_signature_types = NULL;
+#ifdef G_OS_UNIX
+  fd_list = NULL;
+#endif
 
   modify_argv0_for_command (argc, argv, "call");
 
@@ -979,8 +995,8 @@ handle_call (gint        *argc,
       else
         {
           g_printerr (_("Error connecting: %s\n"), error->message);
-          g_error_free (error);
         }
+      g_error_free (error);
       goto out;
     }
 
@@ -1164,6 +1180,23 @@ handle_call (gint        *argc,
             }
           g_free (context);
         }
+#ifdef G_OS_UNIX
+      if (g_variant_is_of_type (value, G_VARIANT_TYPE_HANDLE))
+        {
+          if (!fd_list)
+            fd_list = g_unix_fd_list_new ();
+          if ((fd_id = g_unix_fd_list_append (fd_list, g_variant_get_handle (value), &error)) == -1)
+            {
+              g_printerr (_("Error adding handle %d: %s\n"),
+                          g_variant_get_handle (value), error->message);
+              g_variant_builder_clear (&builder);
+              g_error_free (error);
+              goto out;
+            } 
+	  g_variant_unref (value);
+          value = g_variant_new_handle (fd_id);
+      	}
+#endif
       g_variant_builder_add_value (&builder, value);
       ++parm;
     }
@@ -1171,17 +1204,33 @@ handle_call (gint        *argc,
 
   if (parameters != NULL)
     parameters = g_variant_ref_sink (parameters);
+#ifdef G_OS_UNIX
+  result = g_dbus_connection_call_with_unix_fd_list_sync (c,
+                                                          opt_call_dest,
+                                                          opt_call_object_path,
+                                                          interface_name,
+                                                          method_name,
+                                                          parameters,
+                                                          NULL,
+                                                          G_DBUS_CALL_FLAGS_NONE,
+                                                          opt_call_timeout > 0 ? opt_call_timeout * 1000 : opt_call_timeout,
+                                                          fd_list,
+                                                          NULL,
+                                                          NULL,
+                                                          &error);
+#else
   result = g_dbus_connection_call_sync (c,
-                                        opt_call_dest,
-                                        opt_call_object_path,
-                                        interface_name,
-                                        method_name,
-                                        parameters,
-                                        NULL,
-                                        G_DBUS_CALL_FLAGS_NONE,
-                                        opt_call_timeout > 0 ? opt_call_timeout * 1000 : opt_call_timeout,
-                                        NULL,
-                                        &error);
+		  			opt_call_dest,
+					opt_call_object_path,
+					interface_name,
+					method_name,
+					parameters,
+					NULL,
+					G_DBUS_CALL_FLAGS_NONE,
+					opt_call_timeout > 0 ? opt_call_timeout * 1000 : opt_call_timeout,
+					NULL,
+					&error);
+#endif
   if (result == NULL)
     {
       g_printerr (_("Error: %s\n"), error->message);
@@ -1230,6 +1279,9 @@ handle_call (gint        *argc,
   g_free (interface_name);
   g_free (method_name);
   g_option_context_free (o);
+#ifdef G_OS_UNIX
+  g_clear_object (&fd_list);
+#endif
   return ret;
 }
 
@@ -1773,8 +1825,8 @@ handle_introspect (gint        *argc,
       else
         {
           g_printerr (_("Error connecting: %s\n"), error->message);
-          g_error_free (error);
         }
+      g_error_free (error);
       goto out;
     }
 
@@ -2005,8 +2057,8 @@ handle_monitor (gint        *argc,
       else
         {
           g_printerr (_("Error connecting: %s\n"), error->message);
-          g_error_free (error);
         }
+      g_error_free (error);
       goto out;
     }
 
@@ -2225,8 +2277,8 @@ handle_wait (gint        *argc,
       else
         {
           g_printerr (_("Error connecting: %s\n"), error->message);
-          g_error_free (error);
         }
+      g_error_free (error);
       goto out;
     }
 

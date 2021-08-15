@@ -19,7 +19,6 @@
 
 #include <stdlib.h>
 
-#include "gstrfuncsprivate.h"
 #include "gtypeplugin.h"
 #include "gtypemodule.h"
 
@@ -152,6 +151,7 @@ g_type_module_get_type (void)
         sizeof (GTypeModule),
         0,              /* n_preallocs */
         NULL,           /* instance_init */
+        NULL,           /* value_table */
       };
       const GInterfaceInfo iface_info = {
         (GInterfaceInitFunc) g_type_module_iface_init,

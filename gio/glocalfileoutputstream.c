@@ -943,7 +943,7 @@ handle_overwrite_open (const char    *filename,
 		   _("Error when getting information for file “%s”: %s"),
 		   display_name, g_strerror (errsv));
       g_free (display_name);
-      goto err_out;
+      goto error;
     }
   
   /* not a regular file */
@@ -955,7 +955,7 @@ handle_overwrite_open (const char    *filename,
                                G_IO_ERROR,
                                G_IO_ERROR_IS_DIRECTORY,
                                _("Target file is a directory"));
-          goto err_out;
+          goto error;
         }
       else if (!is_symlink ||
 #ifdef S_ISLNK
@@ -969,13 +969,42 @@ handle_overwrite_open (const char    *filename,
                              G_IO_ERROR,
                              G_IO_ERROR_NOT_REGULAR_FILE,
                              _("Target file is not a regular file"));
-          goto err_out;
+          goto error;
         }
     }
   
   if (etag != NULL)
     {
-      current_etag = _g_local_file_info_create_etag (&original_stat);
+      GLocalFileStat etag_stat;
+      GLocalFileStat *etag_stat_pointer;
+
+      /* The ETag is calculated on the details of the target file, for symlinks,
+       * so we might need to stat() again. */
+      if (is_symlink)
+        {
+          res = g_local_file_stat (filename,
+                                   G_LOCAL_FILE_STAT_FIELD_MTIME,
+                                   G_LOCAL_FILE_STAT_FIELD_ALL, &etag_stat);
+          errsv = errno;
+
+          if (res != 0)
+            {
+              char *display_name = g_filename_display_name (filename);
+              g_set_error (error, G_IO_ERROR,
+                           g_io_error_from_errno (errsv),
+                           _("Error when getting information for file “%s”: %s"),
+                           display_name, g_strerror (errsv));
+              g_free (display_name);
+              goto error;
+            }
+
+          etag_stat_pointer = &etag_stat;
+        }
+      else
+        etag_stat_pointer = &original_stat;
+
+      /* Compare the ETags */
+      current_etag = _g_local_file_info_create_etag (etag_stat_pointer);
       if (strcmp (etag, current_etag) != 0)
 	{
 	  g_set_error_literal (error,
@@ -983,7 +1012,7 @@ handle_overwrite_open (const char    *filename,
                                G_IO_ERROR_WRONG_ETAG,
                                _("The file was externally modified"));
 	  g_free (current_etag);
-	  goto err_out;
+          goto error;
 	}
       g_free (current_etag);
     }
@@ -1078,7 +1107,7 @@ handle_overwrite_open (const char    *filename,
                                G_IO_ERROR_CANT_CREATE_BACKUP,
                                _("Backup file creation failed"));
 	  g_free (backup_filename);
-	  goto err_out;
+          goto error;
 	}
 
       bfd = g_open (backup_filename,
@@ -1092,7 +1121,7 @@ handle_overwrite_open (const char    *filename,
                                G_IO_ERROR_CANT_CREATE_BACKUP,
                                _("Backup file creation failed"));
 	  g_free (backup_filename);
-	  goto err_out;
+          goto error;
 	}
 
       /* If needed, Try to set the group of the backup same as the
@@ -1109,7 +1138,7 @@ handle_overwrite_open (const char    *filename,
 	  g_unlink (backup_filename);
 	  g_close (bfd, NULL);
 	  g_free (backup_filename);
-	  goto err_out;
+          goto error;
 	}
       
       if ((_g_stat_gid (&original_stat) != _g_stat_gid (&tmp_statbuf))  &&
@@ -1126,7 +1155,7 @@ handle_overwrite_open (const char    *filename,
 	      g_unlink (backup_filename);
 	      g_close (bfd, NULL);
 	      g_free (backup_filename);
-	      goto err_out;
+              goto error;
 	    }
 	}
 #endif
@@ -1141,7 +1170,7 @@ handle_overwrite_open (const char    *filename,
           g_close (bfd, NULL);
 	  g_free (backup_filename);
 	  
-	  goto err_out;
+          goto error;
 	}
       
       g_close (bfd, NULL);
@@ -1156,7 +1185,7 @@ handle_overwrite_open (const char    *filename,
 		       g_io_error_from_errno (errsv),
 		       _("Error seeking in file: %s"),
 		       g_strerror (errsv));
-	  goto err_out;
+          goto error;
 	}
     }
 
@@ -1172,7 +1201,7 @@ handle_overwrite_open (const char    *filename,
 		       g_io_error_from_errno (errsv),
 		       _("Error removing old file: %s"),
 		       g_strerror (errsv));
-	  goto err_out2;
+          goto error;
 	}
 
       if (readable)
@@ -1189,7 +1218,7 @@ handle_overwrite_open (const char    *filename,
 		       _("Error opening file “%s”: %s"),
 		       display_name, g_strerror (errsv));
 	  g_free (display_name);
-	  goto err_out2;
+          goto error;
 	}
     }
   else
@@ -1207,15 +1236,16 @@ handle_overwrite_open (const char    *filename,
 			 g_io_error_from_errno (errsv),
 			 _("Error truncating file: %s"),
 			 g_strerror (errsv));
-	    goto err_out;
+            goto error;
 	  }
     }
     
   return fd;
 
- err_out:
-  g_close (fd, NULL);
- err_out2:
+error:
+  if (fd >= 0)
+    g_close (fd, NULL);
+
   return -1;
 }
 

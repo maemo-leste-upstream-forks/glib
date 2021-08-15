@@ -301,7 +301,7 @@ struct _GPrivateDestructor
   GPrivateDestructor *next;
 };
 
-static GPrivateDestructor * volatile g_private_destructors;
+static GPrivateDestructor *g_private_destructors;  /* (atomic) prepend-only */
 static CRITICAL_SECTION g_private_lock;
 
 static DWORD
@@ -329,7 +329,7 @@ g_private_get_impl (GPrivate *key)
                 g_thread_abort (errno, "malloc");
               destructor->index = impl;
               destructor->notify = key->notify;
-              destructor->next = g_private_destructors;
+              destructor->next = g_atomic_pointer_get (&g_private_destructors);
 
               /* We need to do an atomic store due to the unlocked
                * access to the destructor list from the thread exit
@@ -337,13 +337,14 @@ g_private_get_impl (GPrivate *key)
                *
                * It can double as a sanity check...
                */
-              if (InterlockedCompareExchangePointer (&g_private_destructors, destructor,
-                                                     destructor->next) != destructor->next)
+              if (!g_atomic_pointer_compare_and_exchange (&g_private_destructors,
+                                                          destructor->next,
+                                                          destructor))
                 g_thread_abort (0, "g_private_get_impl(1)");
             }
 
           /* Ditto, due to the unlocked access on the fast path */
-          if (InterlockedCompareExchangePointer (&key->p, impl, NULL) != NULL)
+          if (!g_atomic_pointer_compare_and_exchange (&key->p, NULL, impl))
             g_thread_abort (0, "g_private_get_impl(2)");
         }
       LeaveCriticalSection (&g_private_lock);
@@ -579,7 +580,8 @@ SetThreadName (DWORD  dwThreadID,
 #ifdef _MSC_VER
    __try
      {
-       RaiseException (EXCEPTION_SET_THREAD_NAME, 0, infosize, (DWORD *) &info);
+       RaiseException (EXCEPTION_SET_THREAD_NAME, 0, infosize,
+                       (const ULONG_PTR *) &info);
      }
    __except (EXCEPTION_EXECUTE_HANDLER)
      {
@@ -595,10 +597,62 @@ SetThreadName (DWORD  dwThreadID,
 #endif
 }
 
+typedef HRESULT (WINAPI *pSetThreadDescription) (HANDLE hThread,
+                                                 PCWSTR lpThreadDescription);
+static pSetThreadDescription SetThreadDescriptionFunc = NULL;
+HMODULE kernel32_module = NULL;
+
+static gboolean
+g_thread_win32_load_library (void)
+{
+  /* FIXME: Add support for UWP app */
+#if !defined(G_WINAPI_ONLY_APP)
+  static volatile gsize _init_once = 0;
+  if (g_once_init_enter (&_init_once))
+    {
+      kernel32_module = LoadLibraryW (L"kernel32.dll");
+      if (kernel32_module)
+        {
+          SetThreadDescriptionFunc =
+              (pSetThreadDescription) GetProcAddress (kernel32_module,
+                                                      "SetThreadDescription");
+          if (!SetThreadDescriptionFunc)
+            FreeLibrary (kernel32_module);
+        }
+      g_once_init_leave (&_init_once, 1);
+    }
+#endif
+
+  return !!SetThreadDescriptionFunc;
+}
+
+static gboolean
+g_thread_win32_set_thread_desc (const gchar *name)
+{
+  HRESULT hr;
+  wchar_t *namew;
+
+  if (!g_thread_win32_load_library () || !name)
+    return FALSE;
+
+  namew = g_utf8_to_utf16 (name, -1, NULL, NULL, NULL);
+  if (!namew)
+    return FALSE;
+
+  hr = SetThreadDescriptionFunc (GetCurrentThread (), namew);
+
+  g_free (namew);
+  return SUCCEEDED (hr);
+}
+
 void
 g_system_thread_set_name (const gchar *name)
 {
-  SetThreadName ((DWORD) -1, name);
+  /* Prefer SetThreadDescription over exception based way if available,
+   * since thread description set by SetThreadDescription will be preserved
+   * in dump file */
+  if (!g_thread_win32_set_thread_desc (name))
+    SetThreadName ((DWORD) -1, name);
 }
 
 /* {{{1 Epilogue */
@@ -635,7 +689,7 @@ g_thread_win32_thread_detach (void)
        */
       dtors_called = FALSE;
 
-      for (dtor = g_private_destructors; dtor; dtor = dtor->next)
+      for (dtor = g_atomic_pointer_get (&g_private_destructors); dtor; dtor = dtor->next)
         {
           gpointer value;
 

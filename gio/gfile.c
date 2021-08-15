@@ -35,6 +35,20 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
+
+/*
+ * We duplicate the following Linux kernel header defines here so we can still
+ * run at full speed on modern kernels in cases where an old toolchain was used
+ * to build GLib. This is often done deliberately to allow shipping binaries
+ * that need to run on a wide range of systems.
+ */
+#ifndef F_SETPIPE_SZ
+#define F_SETPIPE_SZ 1031
+#endif
+#ifndef F_GETPIPE_SZ
+#define F_GETPIPE_SZ 1032
+#endif
+
 #endif
 
 #include <string.h>
@@ -60,7 +74,6 @@
 #include "gasyncresult.h"
 #include "gioerror.h"
 #include "glibintl.h"
-#include "gstrfuncsprivate.h"
 
 
 /**
@@ -457,11 +470,14 @@ g_file_has_uri_scheme (GFile      *file,
  * ]|
  * Common schemes include "file", "http", "ftp", etc.
  *
+ * The scheme can be different from the one used to construct the #GFile,
+ * in that it might be replaced with one that is logically equivalent to the #GFile.
+ *
  * This call does no blocking I/O.
  *
- * Returns: a string containing the URI scheme for the given
- *     #GFile. The returned string should be freed with g_free()
- *     when no longer needed.
+ * Returns: (nullable): a string containing the URI scheme for the given
+ *     #GFile or %NULL if the #GFile was constructed with an invalid URI. The
+ *     returned string should be freed with g_free() when no longer needed.
  */
 char *
 g_file_get_uri_scheme (GFile *file)
@@ -477,7 +493,7 @@ g_file_get_uri_scheme (GFile *file)
 
 
 /**
- * g_file_get_basename:
+ * g_file_get_basename: (virtual get_basename)
  * @file: input #GFile
  *
  * Gets the base name (the last component of the path) for a given #GFile.
@@ -511,7 +527,7 @@ g_file_get_basename (GFile *file)
 }
 
 /**
- * g_file_get_path:
+ * g_file_get_path: (virtual get_path)
  * @file: input #GFile
  *
  * Gets the local pathname for #GFile, if one exists. If non-%NULL, this is
@@ -612,7 +628,8 @@ g_file_peek_path (GFile *file)
  *
  * This call does no blocking I/O.
  *
- * Returns: a string containing the #GFile's URI.
+ * Returns: a string containing the #GFile's URI. If the #GFile was constructed
+ *     with an invalid URI, an invalid URI is returned.
  *     The returned string should be freed with g_free()
  *     when no longer needed.
  */
@@ -929,7 +946,7 @@ g_file_has_prefix (GFile *file,
 }
 
 /**
- * g_file_get_relative_path:
+ * g_file_get_relative_path: (virtual get_relative_path)
  * @parent: input #GFile
  * @descendant: input #GFile
  *
@@ -2696,20 +2713,46 @@ should_copy (GFileAttributeInfo *info,
   return info->flags & G_FILE_ATTRIBUTE_INFO_COPY_WITH_FILE;
 }
 
-static gboolean
-build_attribute_list_for_copy (GFile                  *file,
-                               GFileCopyFlags          flags,
-                               char                  **out_attributes,
-                               GCancellable           *cancellable,
-                               GError                **error)
+/**
+ * g_file_build_attribute_list_for_copy:
+ * @file: a #GFile to copy attributes to
+ * @flags: a set of #GFileCopyFlags
+ * @cancellable: (nullable): optional #GCancellable object,
+ *     %NULL to ignore
+ * @error: a #GError, %NULL to ignore
+ *
+ * Prepares the file attribute query string for copying to @file.
+ *
+ * This function prepares an attribute query string to be
+ * passed to g_file_query_info() to get a list of attributes
+ * normally copied with the file (see g_file_copy_attributes()
+ * for the detailed description). This function is used by the
+ * implementation of g_file_copy_attributes() and is useful
+ * when one needs to query and set the attributes in two
+ * stages (e.g., for recursive move of a directory).
+ *
+ * Returns: an attribute query string for g_file_query_info(),
+ *     or %NULL if an error occurs.
+ *
+ * Since: 2.68
+ */
+char *
+g_file_build_attribute_list_for_copy (GFile                  *file,
+                                      GFileCopyFlags          flags,
+                                      GCancellable           *cancellable,
+                                      GError                **error)
 {
-  gboolean ret = FALSE;
+  char *ret = NULL;
   GFileAttributeInfoList *attributes = NULL, *namespaces = NULL;
   GString *s = NULL;
   gboolean first;
   int i;
   gboolean copy_all_attributes;
   gboolean skip_perms;
+
+  g_return_val_if_fail (G_IS_FILE (file), NULL);
+  g_return_val_if_fail (cancellable == NULL || G_IS_CANCELLABLE (cancellable), NULL);
+  g_return_val_if_fail (error == NULL || *error == NULL, NULL);
 
   copy_all_attributes = flags & G_FILE_COPY_ALL_METADATA;
   skip_perms = (flags & G_FILE_COPY_TARGET_DEFAULT_PERMS) != 0;
@@ -2764,8 +2807,7 @@ build_attribute_list_for_copy (GFile                  *file,
         }
     }
 
-  ret = TRUE;
-  *out_attributes = g_string_free (s, FALSE);
+  ret = g_string_free (s, FALSE);
   s = NULL;
  out:
   if (s)
@@ -2811,8 +2853,9 @@ g_file_copy_attributes (GFile           *source,
   GFileInfo *info;
   gboolean source_nofollow_symlinks;
 
-  if (!build_attribute_list_for_copy (destination, flags, &attrs_to_read,
-                                      cancellable, error))
+  attrs_to_read = g_file_build_attribute_list_for_copy (destination, flags,
+                                                        cancellable, error);
+  if (!attrs_to_read)
     return FALSE;
 
   source_nofollow_symlinks = flags & G_FILE_COPY_NOFOLLOW_SYMLINKS;
@@ -2986,31 +3029,22 @@ splice_stream_with_progress (GInputStream           *in,
   if (!g_unix_open_pipe (buffer, FD_CLOEXEC, error))
     return FALSE;
 
-#if defined(F_SETPIPE_SZ) && defined(F_GETPIPE_SZ)
   /* Try a 1MiB buffer for improved throughput. If that fails, use the default
    * pipe size. See: https://bugzilla.gnome.org/791457 */
   buffer_size = fcntl (buffer[1], F_SETPIPE_SZ, 1024 * 1024);
   if (buffer_size <= 0)
     {
-      int errsv;
       buffer_size = fcntl (buffer[1], F_GETPIPE_SZ);
-      errsv = errno;
-
       if (buffer_size <= 0)
         {
-          g_set_error (error, G_IO_ERROR, g_io_error_from_errno (errsv),
-                       _("Error splicing file: %s"), g_strerror (errsv));
-          res = FALSE;
-          goto out;
+          /* If #F_GETPIPE_SZ isn’t available, assume we’re on Linux < 2.6.35,
+           * but ≥ 2.6.11, meaning the pipe capacity is 64KiB. Ignore the
+           * possibility of running on Linux < 2.6.11 (where the capacity was
+           * the system page size, typically 4KiB) because it’s ancient.
+           * See pipe(7). */
+          buffer_size = 1024 * 64;
         }
     }
-#else
-  /* If #F_GETPIPE_SZ isn’t available, assume we’re on Linux < 2.6.35,
-   * but ≥ 2.6.11, meaning the pipe capacity is 64KiB. Ignore the possibility of
-   * running on Linux < 2.6.11 (where the capacity was the system page size,
-   * typically 4KiB) because it’s ancient. See pipe(7). */
-  buffer_size = 1024 * 64;
-#endif
 
   g_assert (buffer_size > 0);
 
@@ -3158,6 +3192,7 @@ file_copy_fallback (GFile                  *source,
   char *attrs_to_read;
   gboolean do_set_attributes = FALSE;
   GFileCreateFlags create_flags;
+  GError *tmp_error = NULL;
 
   /* need to know the file type */
   info = g_file_query_info (source,
@@ -3199,47 +3234,43 @@ file_copy_fallback (GFile                  *source,
     goto out;
   in = G_INPUT_STREAM (file_in);
 
-  if (!build_attribute_list_for_copy (destination, flags, &attrs_to_read,
-                                      cancellable, error))
+  attrs_to_read = g_file_build_attribute_list_for_copy (destination, flags,
+                                                        cancellable, error);
+  if (!attrs_to_read)
     goto out;
 
-  if (attrs_to_read != NULL)
+  /* Ok, ditch the previous lightweight info (on Unix we just
+   * called lstat()); at this point we gather all the information
+   * we need about the source from the opened file descriptor.
+   */
+  g_object_unref (info);
+
+  info = g_file_input_stream_query_info (file_in, attrs_to_read,
+                                         cancellable, &tmp_error);
+  if (!info)
     {
-      GError *tmp_error = NULL;
-
-      /* Ok, ditch the previous lightweight info (on Unix we just
-       * called lstat()); at this point we gather all the information
-       * we need about the source from the opened file descriptor.
+      /* Not all gvfs backends implement query_info_on_read(), we
+       * can just fall back to the pathname again.
+       * https://bugzilla.gnome.org/706254
        */
-      g_object_unref (info);
-
-      info = g_file_input_stream_query_info (file_in, attrs_to_read,
-                                             cancellable, &tmp_error);
-      if (!info)
+      if (g_error_matches (tmp_error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED))
         {
-          /* Not all gvfs backends implement query_info_on_read(), we
-           * can just fall back to the pathname again.
-           * https://bugzilla.gnome.org/706254
-           */
-          if (g_error_matches (tmp_error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED))
-            {
-              g_clear_error (&tmp_error);
-              info = g_file_query_info (source, attrs_to_read, G_FILE_QUERY_INFO_NOFOLLOW_SYMLINKS,
-                                        cancellable, error);
-            }
-          else
-            {
-              g_free (attrs_to_read);
-              g_propagate_error (error, tmp_error);
-              goto out;
-            }
+          g_clear_error (&tmp_error);
+          info = g_file_query_info (source, attrs_to_read, G_FILE_QUERY_INFO_NOFOLLOW_SYMLINKS,
+                                    cancellable, error);
         }
-      g_free (attrs_to_read);
-      if (!info)
-        goto out;
-
-      do_set_attributes = TRUE;
+      else
+        {
+          g_free (attrs_to_read);
+          g_propagate_error (error, tmp_error);
+          goto out;
+        }
     }
+  g_free (attrs_to_read);
+  if (!info)
+    goto out;
+
+  do_set_attributes = TRUE;
 
   /* In the local file path, we pass down the source info which
    * includes things like unix::mode, to ensure that the target file
@@ -7026,7 +7057,7 @@ g_file_query_default_handler_finish (GFile        *file,
  * @contents: (out) (transfer full) (element-type guint8) (array length=length): a location to place the contents of the file
  * @length: (out) (optional): a location to place the length of the contents of the file,
  *    or %NULL if the length is not needed
- * @etag_out: (out) (optional): a location to place the current entity tag for the file,
+ * @etag_out: (out) (optional) (nullable): a location to place the current entity tag for the file,
  *    or %NULL if the entity tag is not needed
  * @error: a #GError, or %NULL
  *
@@ -7314,7 +7345,7 @@ g_file_load_partial_contents_async (GFile                 *file,
  * @contents: (out) (transfer full) (element-type guint8) (array length=length): a location to place the contents of the file
  * @length: (out) (optional): a location to place the length of the contents of the file,
  *     or %NULL if the length is not needed
- * @etag_out: (out) (optional): a location to place the current entity tag for the file,
+ * @etag_out: (out) (optional) (nullable): a location to place the current entity tag for the file,
  *     or %NULL if the entity tag is not needed
  * @error: a #GError, or %NULL
  *
@@ -7412,7 +7443,7 @@ g_file_load_contents_async (GFile               *file,
  * @contents: (out) (transfer full) (element-type guint8) (array length=length): a location to place the contents of the file
  * @length: (out) (optional): a location to place the length of the contents of the file,
  *     or %NULL if the length is not needed
- * @etag_out: (out) (optional): a location to place the current entity tag for the file,
+ * @etag_out: (out) (optional) (nullable): a location to place the current entity tag for the file,
  *     or %NULL if the entity tag is not needed
  * @error: a #GError, or %NULL
  *
@@ -7450,7 +7481,7 @@ g_file_load_contents_finish (GFile         *file,
  *     or %NULL
  * @make_backup: %TRUE if a backup should be created
  * @flags: a set of #GFileCreateFlags
- * @new_etag: (out) (optional): a location to a new [entity tag][gfile-etag]
+ * @new_etag: (out) (optional) (nullable): a location to a new [entity tag][gfile-etag]
  *      for the document. This should be freed with g_free() when no longer
  *      needed, or %NULL
  * @cancellable: optional #GCancellable object, %NULL to ignore
@@ -7558,7 +7589,6 @@ replace_contents_close_callback (GObject      *obj,
 
   /* Ignore errors here, we're only reading anyway */
   g_output_stream_close_finish (stream, close_res, NULL);
-  g_object_unref (stream);
 
   if (!data->failed)
     {
@@ -7640,6 +7670,7 @@ replace_contents_open_callback (GObject      *obj,
                                    g_task_get_cancellable (data->task),
                                    replace_contents_write_callback,
                                    data);
+      g_object_unref (stream);  /* ownership is transferred to the write_async() call above */
     }
   else
     {
@@ -7758,7 +7789,7 @@ g_file_replace_contents_bytes_async  (GFile               *file,
  * g_file_replace_contents_finish:
  * @file: input #GFile
  * @res: a #GAsyncResult
- * @new_etag: (out) (optional): a location of a new [entity tag][gfile-etag]
+ * @new_etag: (out) (optional) (nullable): a location of a new [entity tag][gfile-etag]
  *     for the document. This should be freed with g_free() when it is no
  *     longer needed, or %NULL
  * @error: a #GError, or %NULL

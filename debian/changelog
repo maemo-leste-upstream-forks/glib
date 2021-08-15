@@ -1,3 +1,166 @@
+glib2.0 (2.68.3-1) experimental; urgency=medium
+
+  * New upstream release 2.68.3, fixing bugs:
+    - GFile: `g_file_replace_contents()` reports `G_IO_ERROR_WRONG_ETAG` when
+      saving from a symlink
+    - glocalfileoutputstream: Fix ETag check when replacing through a symlink
+    - gmacros: check that __cplusplus or _MSC_VER is defined
+    - gmacros: missing check if __STDC_VERSION__ is defined
+    - gthreadedresolver: don't ignore flags in lookup_by_name_with_flags
+    - inotify: Fix a memory leak
+    - json-glib does not build with glib 2.68.1
+    - testfilemonitor test leaks ip_watched_file_t struct
+    - tlscertificate: Avoid possible invalid read
+
+ -- Iain Lane <laney@debian.org>  Tue, 29 Jun 2021 15:24:06 +0100
+
+glib2.0 (2.68.1-2) experimental; urgency=medium
+
+  * Fix maintainer scripts' handling of /usr/lib/MULTIARCH/gio/modules:
+    - postrm: Only delete GIO module cache on remove or purge.
+      Despite its name, the postrm can be invoked for reasons other than
+      package removal: in particular, the old version's postrm is run
+      during upgrades.
+    - postinst: Recreate GIO module directory if deleted by an older
+      postrm, to recover from the bug fixed here.
+    - postinst: Don't guard glib-compile-schemas or gio-querymodules with
+      a check for existence of a directory that is shipped in the .deb.
+      If such a directory has somehow gone missing, we want to see
+      a warning. This won't make the postinst fail, because we're ignoring
+      exit status anyway.
+    (Closes: #987913)
+
+ -- Simon McVittie <smcv@debian.org>  Sun, 02 May 2021 14:45:36 +0100
+
+glib2.0 (2.68.1-1) experimental; urgency=medium
+
+  * New upstream stable release
+  * d/tests/run-with-locales: Avoid FTBFS with locales-all installed
+
+ -- Simon McVittie <smcv@debian.org>  Thu, 15 Apr 2021 09:42:05 +0100
+
+glib2.0 (2.68.0-1) experimental; urgency=medium
+
+  * New upstream stable release
+    - Drop dead code from glib-compile-schemas
+    - Improve valgrind suppressions
+    - Fix error in g_bytes_icon_new() documentation
+    - Avoid close(-1) during error handling
+    - Fix copy/paste error in queue test
+    - Translation updates
+  * Add CVE ID references to previous changelog entries.
+    CVE IDs were not yet available at the time these vulnerabilities were
+    initially fixed.
+
+ -- Simon McVittie <smcv@debian.org>  Sat, 20 Mar 2021 15:42:00 +0000
+
+glib2.0 (2.67.6-1) experimental; urgency=medium
+
+  * New upstream release
+    - This fixes a symlink attack affecting file-roller.
+      When g_file_replace() is used with G_FILE_CREATE_REPLACE_DESTINATION
+      to replace a path that is a dangling symlink, previously it would
+      have also created the target of the symlink as an empty file, which
+      could conceivably be security-sensitive if the symlink is
+      attacker-controlled. (Closes: #984969; CVE-2021-28153)
+  * Revert test-dependency on libc6-dev, which should no longer be
+    necessary with the new upstream release.
+
+ -- Simon McVittie <smcv@debian.org>  Mon, 15 Mar 2021 18:18:48 +0000
+
+glib2.0 (2.67.5-2) experimental; urgency=medium
+
+  * debian/tests/control: Test-Depend on libc6-dev; the `pollable` test
+    requires it.  See [upstream MR !1977][0]. The upstream tests now rely on
+    finding "libutil.so", which is in libc6-dev. Once that MR, or something
+    like it, is merged, we can remove this test-dep as the runtime library
+    will be being used.
+    [0]: https://gitlab.gnome.org/GNOME/glib/-/merge_requests/1977
+
+ -- Iain Lane <laney@debian.org>  Tue, 02 Mar 2021 18:29:23 +0000
+
+glib2.0 (2.67.5-1) experimental; urgency=medium
+
+  * New upstream release
+    + Fix more issues with `glib_typeof` macro from 2.67.3–2.67.4 (LP:
+      #1916705)
+    + Fix regression with some FD mappings passed to
+      `g_subprocess_launcher_spawnv()` (Closes: #983026) (LP: #1916701)
+  * debian/watch: Fix to not match `..`. The watch file was matching the
+    "Parent directory/" link and considering that the highest, since its
+    target is `..`. Expect 1+ digits to begin the version number.
+
+
+ -- Iain Lane <laney@debian.org>  Mon, 01 Mar 2021 17:18:36 +0000
+
+glib2.0 (2.67.4-1) experimental; urgency=medium
+
+  * New upstream release
+    - Among other changes, this should fix FTBFS on armel
+  * d/libglib2.0-0.symbols: Add g_spawn_async_with_pipes_and_fds
+
+ -- Simon McVittie <smcv@debian.org>  Wed, 17 Feb 2021 09:58:25 +0000
+
+glib2.0 (2.67.3+git20210214-1) experimental; urgency=medium
+
+  * d/changelog: Add bug reference for GHSL-2021-045 to previous entry
+  * New upstream git snapshot; among other changes:
+    - Fix regressions caused by the GHSL-2021-045 fixes in 2.67.3
+    - Warn and fail on integer overflow in g_byte_array_new_take()
+      for arrays larger than G_MAXUINT
+      (Closes: #982779; CVE-2021-27218)
+  * d/libglib2.0-0.symbols: Add g_string_replace()
+  * Refresh patch series
+  * d/rules, d/tests: Generate various locales mentioned in the tests
+  * Mark dbus as <!nocheck> <!noinsttest>.
+    Several of the installed-tests won't be built unless dbus-daemon is
+    available, so <!nocheck> is insufficient.
+  * Move test-dependencies to Build-Depends-Arch.
+    We don't run the majority of the tests when we're only building the
+    documentation.
+  * Remove an unused Lintian override
+  * Add more Lintian overrides for test data
+
+ -- Simon McVittie <smcv@debian.org>  Sun, 14 Feb 2021 17:27:54 +0000
+
+glib2.0 (2.67.3-1) experimental; urgency=medium
+
+  * New upstream release
+    - Fix various integer overflows, some of them potentially exploitable
+      (Closes: #982778; CVE-2021-27219, GHSL-2021-045)
+  * Drop patches that came from upstream or were applied upstream
+
+ -- Simon McVittie <smcv@debian.org>  Thu, 04 Feb 2021 22:38:42 +0000
+
+glib2.0 (2.67.2-1) experimental; urgency=medium
+
+  * New upstream release
+  * Refresh patch series
+  * d/patches: Cherry-pick some fixes from upstream git master.
+    This is mostly for parity with the update to 2.66.x that I'm preparing
+    for unstable, which also includes the XDG_CURRENT_DESKTOP fixes.
+  * d/p/spawn-Don-t-set-a-search-path-if-we-don-t-want-to-search-.patch:
+    Make the g_spawn family only search PATH if G_SPAWN_SEARCH_PATH is used.
+    Previously, they would sometimes search /usr/bin:/bin:. for an
+    executable they should have only loaded from the current working
+    directory. In particular, this made gtk+3.0 fail its build-time tests
+    if ImageMagick display(1) happened to be installed. (Closes: #977961)
+
+ -- Simon McVittie <smcv@debian.org>  Wed, 27 Jan 2021 12:57:48 +0000
+
+glib2.0 (2.67.1-1) experimental; urgency=medium
+
+  * Branch for experimental and 2.67.x
+  * New upstream development release
+  * Temporarily use git to fetch upstream release.
+    The official tarball release doesn't seem to have made it onto mirrors.
+  * d/rules: Explicitly enable libelf dependency for gresource tool
+  * d/p/Handle-the-case-of-g_object_run_dispose-in-GBinding.patch:
+    Add patch from upstream to fix a regression in GBinding that caused
+    gnome-terminal-server to crash on startup
+
+ -- Simon McVittie <smcv@debian.org>  Fri, 11 Dec 2020 11:16:25 +0000
+
 glib2.0 (2.66.8-1) unstable; urgency=medium
 
   * d/watch: Only watch for 2.66.x versions.

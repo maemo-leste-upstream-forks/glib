@@ -23,7 +23,6 @@
 #include <string.h>
 
 #include "gdbus-tests.h"
-#include "gstrfuncsprivate.h"
 
 /* all tests rely on a shared mainloop */
 static GMainLoop *loop = NULL;

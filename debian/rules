@@ -9,7 +9,8 @@ DEB_LDFLAGS_MAINT_APPEND += -Wl,-z,defs
 
 # NB: do NOT use -Wl,--as-needed to build glib; for instance the link to
 # pthread is carefully crafted to allow dlopen()ing pthread-using libs; see
-# http://mid.gmane.org/1257999019.21780.15.camel@marzipan
+# https://marc.info/?i=1257999019.21780.15.camel@marzipan aka
+# https://mail.gnome.org/archives/gtk-devel-list/2009-November/msg00096.html
 DEB_LDFLAGS_MAINT_APPEND += -Wl,--no-as-needed
 
 # Make the linker work a bit harder so dynamic loading can be done faster
@@ -129,6 +130,38 @@ ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
 		DEB_BUILD_TIME_TESTS=1 \
 		LC_ALL=C.UTF-8 \
 		MESON_TESTTHREADS=1 \
+	debian/tests/run-with-locales \
+		--generate de_DE \
+		--generate de_DE.utf8 \
+		--generate de_DE@euro.utf8 \
+		--generate el_GR.utf8 \
+		--generate en_GB \
+		--generate en_GB.utf8 \
+		--generate en_US \
+		--generate en_US.utf8 \
+		--generate es_ES.utf8 \
+		--generate fa_IR \
+		--generate fa_IR.utf8 \
+		--generate fr_FR.utf8 \
+		--generate hr_HR.utf8 \
+		--generate ja_JP.utf8 \
+		--generate ja_JP.EUC-JP \
+		--generate lt_LT.utf8 \
+		--generate pl_PL \
+		--generate pl_PL.ISO-8859-2 \
+		--generate pl_PL.utf8 \
+		--generate ru_RU \
+		--generate ru_RU.utf8 \
+		--generate sr_RS \
+		--generate sr_RS@latin \
+		--generate sv_SE \
+		--generate sv_SE.utf8 \
+		--generate tr_TR \
+		--generate tr_TR.utf8 \
+		--generate tt_RU \
+		--generate tt_RU.utf8 \
+		--generate tt_RU@iqtelif \
+		-- \
 	meson test -C debian/build/deb \
 		--no-rebuild \
 		--num-processes 1 \
@@ -192,6 +225,7 @@ DEB_CONFIGURE_FLAGS_deb := \
 	--default-library both \
 	-Dfam=$(use_fam) \
 	-Dinstalled_tests=true \
+	-Dlibelf=enabled \
 	-Dlibmount=$(enable_libmount) \
 	-Dman=true \
 	-Dselinux=$(enable_selinux) \

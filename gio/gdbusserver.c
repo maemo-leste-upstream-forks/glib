@@ -59,7 +59,8 @@
 
 #define G_DBUS_SERVER_FLAGS_ALL \
   (G_DBUS_SERVER_FLAGS_RUN_IN_THREAD | \
-   G_DBUS_SERVER_FLAGS_AUTHENTICATION_ALLOW_ANONYMOUS)
+   G_DBUS_SERVER_FLAGS_AUTHENTICATION_ALLOW_ANONYMOUS | \
+   G_DBUS_SERVER_FLAGS_AUTHENTICATION_REQUIRE_SAME_USER)
 
 /**
  * SECTION:gdbusserver
@@ -75,13 +76,15 @@
  * To just export an object on a well-known name on a message bus, such as the
  * session or system bus, you should instead use g_bus_own_name().
  *
- * An example of peer-to-peer communication with G-DBus can be found
+ * An example of peer-to-peer communication with GDBus can be found
  * in [gdbus-example-peer.c](https://git.gnome.org/browse/glib/tree/gio/tests/gdbus-example-peer.c).
  *
  * Note that a minimal #GDBusServer will accept connections from any
  * peer. In many use-cases it will be necessary to add a #GDBusAuthObserver
  * that only accepts connections that have successfully authenticated
- * as the same user that is running the #GDBusServer.
+ * as the same user that is running the #GDBusServer. Since GLib 2.68 this can
+ * be achieved more simply by passing the
+ * %G_DBUS_SERVER_FLAGS_AUTHENTICATION_REQUIRE_SAME_USER flag to the server.
  */
 
 /**
@@ -1037,6 +1040,8 @@ on_run (GSocketService    *service,
     G_DBUS_CONNECTION_FLAGS_DELAY_MESSAGE_PROCESSING;
   if (server->flags & G_DBUS_SERVER_FLAGS_AUTHENTICATION_ALLOW_ANONYMOUS)
     connection_flags |= G_DBUS_CONNECTION_FLAGS_AUTHENTICATION_ALLOW_ANONYMOUS;
+  if (server->flags & G_DBUS_SERVER_FLAGS_AUTHENTICATION_REQUIRE_SAME_USER)
+    connection_flags |= G_DBUS_CONNECTION_FLAGS_AUTHENTICATION_REQUIRE_SAME_USER;
 
   connection = g_dbus_connection_new_sync (G_IO_STREAM (socket_connection),
                                            server->guid,

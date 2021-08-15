@@ -5,8 +5,6 @@
 #include <glib-object.h>
 #include <stdlib.h>
 
-#include "gstrfuncsprivate.h"
-
 static void
 test_param_value (void)
 {

@@ -23,7 +23,6 @@
 #include "glibintl.h"
 
 #include "gioenumtypes.h"
-#include "gstrfuncsprivate.h"
 #include "gtlspassword.h"
 
 #include <string.h>

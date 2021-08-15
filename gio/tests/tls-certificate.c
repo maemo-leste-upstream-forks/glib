@@ -201,6 +201,38 @@ pem_parser_handles_chain (const Reference *ref)
 }
 
 static void
+pem_parser_no_sentinel (void)
+{
+  GTlsCertificate *cert;
+  gchar *pem;
+  gsize pem_len = 0;
+  gchar *pem_copy;
+  GError *error = NULL;
+
+  /* Check certificate from not-nul-terminated PEM */
+  g_file_get_contents (g_test_get_filename (G_TEST_DIST, "cert-tests", "cert1.pem", NULL), &pem, &pem_len, &error);
+  g_assert_no_error (error);
+  g_assert_nonnull (pem);
+  g_assert_cmpuint (pem_len, >=, 10);
+
+  pem_copy = g_new (char, pem_len);
+  /* Do not copy the terminating nul: */
+  memmove (pem_copy, pem, pem_len);
+  g_free (pem);
+
+  /* Check whether the parser respects the @length parameter.
+   * pem_copy is allocated exactly pem_len bytes, so accessing memory
+   * outside its bounds will be detected by, for example, valgrind or
+   * asan. */
+  cert = g_tls_certificate_new_from_pem (pem_copy, pem_len, &error);
+  g_assert_no_error (error);
+  g_assert_nonnull (cert);
+
+  g_free (pem_copy);
+  g_object_unref (cert);
+}
+
+static void
 from_file (const Reference *ref)
 {
   GTlsCertificate *cert;
@@ -398,6 +430,38 @@ list_from_file (const Reference *ref)
   g_assert_cmpint (g_list_length (list), ==, 0);
 }
 
+static void
+from_pkcs11_uri (void)
+{
+  GError *error = NULL;
+  GTlsCertificate *cert;
+  gchar *pkcs11_uri = NULL;
+
+  cert = g_tls_certificate_new_from_pkcs11_uris ("pkcs11:model=p11-kit-trust;manufacturer=PKCS%2311%20Kit;serial=1;token=ca-bundle.crt", NULL, &error);
+  g_assert_no_error (error);
+  g_assert_nonnull (cert);
+
+  g_object_get (cert, "pkcs11-uri", &pkcs11_uri, NULL);
+  g_assert_cmpstr ("pkcs11:model=p11-kit-trust;manufacturer=PKCS%2311%20Kit;serial=1;token=ca-bundle.crt", ==, pkcs11_uri);
+  g_free (pkcs11_uri);
+
+  g_object_unref (cert);
+}
+
+static void
+from_unsupported_pkcs11_uri (void)
+{
+  GError *error = NULL;
+  GTlsCertificate *cert;
+
+  /* This is a magic value in gtesttlsbackend.c simulating an unsupported backend */
+  cert = g_tls_certificate_new_from_pkcs11_uris ("unsupported", NULL, &error);
+  g_assert_error (error, G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED);
+  g_assert_null (cert);
+
+  g_clear_error (&error);
+}
+
 int
 main (int   argc,
       char *argv[])
@@ -464,6 +528,12 @@ main (int   argc,
                         &ref, (GTestDataFunc)from_files_pkcs8enc);
   g_test_add_data_func ("/tls-certificate/list_from_file",
                         &ref, (GTestDataFunc)list_from_file);
+  g_test_add_func ("/tls-certificate/pkcs11-uri",
+                   from_pkcs11_uri);
+  g_test_add_func ("/tls-certificate/pkcs11-uri-unsupported",
+                   from_unsupported_pkcs11_uri);
+  g_test_add_func ("/tls-certificate/pem-parser-no-sentinel",
+                   pem_parser_no_sentinel);
 
   rtv = g_test_run();
 

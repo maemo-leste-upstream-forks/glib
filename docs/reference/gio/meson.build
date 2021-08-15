@@ -1,7 +1,5 @@
 if get_option('gtk_doc')
-  if installed_tests_enabled
-    subdir('gdbus-object-manager-example')
-  endif
+  subdir('gdbus-object-manager-example')
   subdir('xml')
 
   ignore_headers = [
@@ -87,8 +85,15 @@ if get_option('gtk_doc')
     'gunixvolume.h',
     'gunixvolumemonitor.h',
     'gwin32networkmonitor.h',
+    'gwin32api-application-activation-manager.h',
+    'gwin32api-iterator.h',
+    'gwin32api-misc.h',
+    'gwin32api-package.h',
+    'gwin32api-storage.h',
     'gwin32appinfo.h',
+    'gwin32file-sync-stream.h',
     'gwin32mount.h',
+    'gwin32packageparser.h',
     'gwin32resolver.h',
     'gwin32volumemonitor.h',
     'thumbnail-verify.h',
@@ -178,13 +183,11 @@ if get_option('gtk_doc')
     'gdbus-codegen.xml',
   ]
 
-  if installed_tests_enabled
-    content_files += [
-      gdbus_example_objectmanager_xml,
-      gdbus_example_objectmanager_sources,
-      gdbus_object_manager_example_doc
-    ]
-  endif
+  content_files += [
+    gdbus_example_objectmanager_xml,
+    gdbus_example_objectmanager_sources,
+    gdbus_object_manager_example_doc
+  ]
 
   gnome.gtkdoc('gio',
     main_xml : 'gio-docs.xml',
