@@ -1,3 +1,27 @@
+glib2.0 (2.68.3-2) UNRELEASED; urgency=medium
+
+  * Merge from experimental branch
+  * Changes relative to 2.68.3-1 in experimental:
+    - d/watch: Only watch for stable (2.even.z) releases
+    - d/p/debian/61_glib-compile-binaries-path.patch: Remove.
+      This patch turns out to be unnecessary, and is harmful for
+      cross-compiling. Thanks to Helmut Grohne (Closes: #982213)
+  * Changes relative to previous version in unstable:
+    - New upstream stable release branch 2.68.x
+    - Fix maintainer scripts' handling of /usr/lib/MULTIARCH/gio/modules
+      (Closes: #987913, see 2.68.1-2 changelog)
+    - Mark dbus as <!nocheck> <!noinsttest>.
+      Several of the installed-tests won't be built unless dbus-daemon is
+      available, so <!nocheck> is insufficient.
+    - Move test-dependencies to Build-Depends-Arch.
+      We don't run the majority of the tests when we're only building the
+      documentation.
+    - Remove an unused Lintian override
+    - Add more Lintian overrides for test data
+    - Use d/tests/run-with-locales for better locale-sensitive test coverage
+
+ -- Simon McVittie <smcv@debian.org>  Sun, 15 Aug 2021 10:54:42 +0100
+
 glib2.0 (2.68.3-1) experimental; urgency=medium
 
   * New upstream release 2.68.3, fixing bugs:
