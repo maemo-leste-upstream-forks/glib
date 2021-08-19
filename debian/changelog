@@ -1,3 +1,16 @@
+glib2.0 (2.68.4-1) UNRELEASED; urgency=medium
+
+  * New upstream release
+    - Avoid a deadlock while finalizing a GLocalFileMonitor
+    - Correctly use 3 parameters for close_range(), fixing build with
+      glibc 2.34
+    - Fix global trash directory detection
+    - Make g_string_replace() with empty search string behave sensibly
+      (matching Python str.replace())
+    - Translation updates: oc, zh_CN, zh_TW
+
+ -- Simon McVittie <smcv@debian.org>  Thu, 19 Aug 2021 19:59:05 +0100
+
 glib2.0 (2.68.3-2) unstable; urgency=medium
 
   * Merge from experimental branch
