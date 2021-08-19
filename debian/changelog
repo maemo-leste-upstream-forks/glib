@@ -8,8 +8,11 @@ glib2.0 (2.68.4-1) UNRELEASED; urgency=medium
     - Make g_string_replace() with empty search string behave sensibly
       (matching Python str.replace())
     - Translation updates: oc, zh_CN, zh_TW
+  * tests: Specify charset for generated locales to fix FTBFS with new glibc.
+    glibc 2.31-14 dropped support for all non-UTF-8 locales, so we can't
+    use /usr/share/i18n/SUPPORTED to choose a suitable charset any more.
 
- -- Simon McVittie <smcv@debian.org>  Thu, 19 Aug 2021 19:59:05 +0100
+ -- Simon McVittie <smcv@debian.org>  Fri, 20 Aug 2021 00:20:40 +0100
 
 glib2.0 (2.68.3-2) unstable; urgency=medium
 
