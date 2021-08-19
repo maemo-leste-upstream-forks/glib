@@ -3,7 +3,8 @@
 # Run a wrapped command with at least the requested locales available.
 # Requires a dependency on locales | locales-all.
 # The requested locales must be of the form foo_FOO.utf8, or special-cased
-# in generate(), or listed in /usr/share/i18n/SUPPORTED.
+# in generate(), or listed in /usr/share/i18n/SUPPORTED, or specify the
+# locale in the form locale=charset.
 #
 # Copyright 2016-2021 Simon McVittie
 # Copyright 2017-2018 Collabora Ltd.
@@ -57,13 +58,18 @@ unset getopt_temp
 
 generate () {
     local locale="$1"
-    local charset
+    local charset=""
     local source
     local output
 
     echo "$me: $locale..." >&2
 
     case "$locale" in
+        (*=*)
+            source="${locale%=*}"
+            output="$source"
+            ;;
+
         (*.*)
             source="${locale%.*}"
             output="$source.$(
@@ -90,25 +96,21 @@ generate () {
     fi
 
     case "$locale" in
+        (*=*)
+            charset="${locale##*=}"
+            ;;
+
         (*.utf8 | *.UTF-8)
             charset="UTF-8"
             ;;
 
-        (ja_JP)
-            charset="EUC-JP"
-            ;;
-
-        (*.ISO-8859-2)
-            charset="ISO-8859-2"
-            ;;
-
-        (*)
-            charset=$(sed -ne "s/^$locale //p" /usr/share/i18n/SUPPORTED)
+        (*.*)
+            charset="${locale##*.}"
             ;;
     esac
 
     if [ -z "$charset" ]; then
-        echo "$me: $locale not found in /usr/share/i18n/SUPPORTED" >&2
+        echo "$me: $locale charset not known" >&2
         exit 1
     fi
 
