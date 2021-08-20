@@ -295,6 +295,14 @@ endif
 override_dh_dwz:
 	dh_dwz -Nlibglib2.0-udeb
 
+# debhelper >= 13.4 makes all of /usr/libexec executable, which is not
+# quite right for installed-tests
+override_dh_fixperms:
+	dh_fixperms -Xusr/libexec/installed-tests
+ifneq ($(filter %-tests,$(binaries)),)
+	chmod --recursive --changes a+rX,u+w,og-w debian/libglib2.0-tests/usr/libexec/installed-tests
+endif
+
 override_dh_missing:
 	dh_missing --sourcedir=debian/install/deb --fail-missing
 ifneq ($(filter %-udeb,$(binaries)),)
