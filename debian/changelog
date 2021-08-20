@@ -1,3 +1,16 @@
+glib2.0 (2.68.4-2) UNRELEASED; urgency=medium
+
+  * d/rules: Make shared objects in installed-tests non-executable
+  * Remove shebang from taptestrunner.py differently
+    - Remove shebang from installed file using sed.
+      This avoids missing the fact that there are two copies in the source,
+      of which we only patched one.
+    - d/p/debian/taptestrunner-Stop-looking-like-an-executable-script.patch:
+      Drop, no longer necessary
+  * Add Lintian override for #970275
+
+ -- Simon McVittie <smcv@debian.org>  Fri, 20 Aug 2021 13:46:17 +0100
+
 glib2.0 (2.68.4-1) unstable; urgency=medium
 
   * New upstream release
