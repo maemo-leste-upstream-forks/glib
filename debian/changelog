@@ -1,4 +1,4 @@
-glib2.0 (2.68.4-1) UNRELEASED; urgency=medium
+glib2.0 (2.68.4-1) unstable; urgency=medium
 
   * New upstream release
     - Avoid a deadlock while finalizing a GLocalFileMonitor
@@ -11,8 +11,10 @@ glib2.0 (2.68.4-1) UNRELEASED; urgency=medium
   * tests: Specify charset for generated locales to fix FTBFS with new glibc.
     glibc 2.31-14 dropped support for all non-UTF-8 locales, so we can't
     use /usr/share/i18n/SUPPORTED to choose a suitable charset any more.
+  * d/rules: Override dh_fixperms to set correct permissions on /usr/libexec.
+    Making everything executable is not quite right for installed-tests.
 
- -- Simon McVittie <smcv@debian.org>  Fri, 20 Aug 2021 00:20:40 +0100
+ -- Simon McVittie <smcv@debian.org>  Fri, 20 Aug 2021 10:31:42 +0100
 
 glib2.0 (2.68.3-2) unstable; urgency=medium
 
