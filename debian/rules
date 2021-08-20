@@ -300,6 +300,8 @@ override_dh_dwz:
 override_dh_fixperms:
 	dh_fixperms -Xusr/libexec/installed-tests
 ifneq ($(filter %-tests,$(binaries)),)
+	chmod --changes u=rw,og=r debian/libglib2.0-tests/usr/libexec/installed-tests/*/*.so
+	chmod --changes u=rw,og=r debian/libglib2.0-tests/usr/libexec/installed-tests/*/*/*.so
 	chmod --recursive --changes a+rX,u+w,og-w debian/libglib2.0-tests/usr/libexec/installed-tests
 endif
 
