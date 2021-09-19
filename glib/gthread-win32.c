@@ -307,19 +307,29 @@ static CRITICAL_SECTION g_private_lock;
 static DWORD
 g_private_get_impl (GPrivate *key)
 {
-  DWORD impl = (DWORD) key->p;
+  DWORD impl = (DWORD) GPOINTER_TO_UINT(key->p);
 
   if G_UNLIKELY (impl == 0)
     {
       EnterCriticalSection (&g_private_lock);
-      impl = (DWORD) key->p;
+      impl = (UINT_PTR) key->p;
       if (impl == 0)
         {
           GPrivateDestructor *destructor;
 
           impl = TlsAlloc ();
 
-          if (impl == TLS_OUT_OF_INDEXES)
+          if G_UNLIKELY (impl == 0)
+            {
+              /* Ignore TLS index 0 temporarily (as 0 is the indicator that we
+               * haven't allocated TLS yet) and alloc again;
+               * See https://gitlab.gnome.org/GNOME/glib/-/issues/2058 */
+              DWORD impl2 = TlsAlloc ();
+              TlsFree (impl);
+              impl = impl2;
+            }
+
+          if (impl == TLS_OUT_OF_INDEXES || impl == 0)
             g_thread_abort (0, "TlsAlloc");
 
           if (key->notify != NULL)
@@ -593,7 +603,7 @@ SetThreadName (DWORD  dwThreadID,
    if ((!IsDebuggerPresent ()) && (SetThreadName_VEH_handle == NULL))
      return;
 
-   RaiseException (EXCEPTION_SET_THREAD_NAME, 0, infosize, (DWORD *) &info);
+   RaiseException (EXCEPTION_SET_THREAD_NAME, 0, infosize, (const ULONG_PTR *) &info);
 #endif
 }
 

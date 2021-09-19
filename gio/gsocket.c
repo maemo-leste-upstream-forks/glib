@@ -4114,7 +4114,7 @@ socket_source_new (GSocket      *socket,
   condition |= G_IO_HUP | G_IO_ERR | G_IO_NVAL;
 
   source = g_source_new (&socket_source_funcs, sizeof (GSocketSource));
-  g_source_set_name (source, "GSocket");
+  g_source_set_static_name (source, "GSocket");
   socket_source = (GSocketSource *)source;
 
   socket_source->socket = g_object_ref (socket);
@@ -4795,9 +4795,7 @@ g_socket_send_message (GSocket                *socket,
 
   if (num_vectors != -1)
     {
-      gint i;
-
-      for (i = 0; i < num_vectors; i++)
+      for (gint i = 0; i < num_vectors; i++)
         {
           /* No wrap-around for vectors_size */
           if (vectors_size > vectors_size + vectors[i].size)
@@ -4813,9 +4811,7 @@ g_socket_send_message (GSocket                *socket,
     }
   else
     {
-      gsize i;
-
-      for (i = 0; vectors[i].buffer != NULL; i++)
+      for (gsize i = 0; vectors[i].buffer != NULL; i++)
         {
           /* No wrap-around for vectors_size */
           if (vectors_size > vectors_size + vectors[i].size)

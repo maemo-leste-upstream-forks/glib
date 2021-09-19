@@ -233,7 +233,7 @@ test_exit1_cancel (void)
   GSubprocess *proc;
   TestExit1CancelData data = { 0 };
 
-  g_test_bug ("786456");
+  g_test_bug ("https://bugzilla.gnome.org/show_bug.cgi?id=786456");
 
   args = get_test_subprocess_args ("exit1", NULL);
   proc = g_subprocess_newv ((const gchar * const *) args->pdata, G_SUBPROCESS_FLAGS_NONE, error);
@@ -288,7 +288,7 @@ test_exit1_cancel_in_cb (void)
   GSubprocess *proc;
   TestExit1CancelData data = { 0 };
 
-  g_test_bug ("786456");
+  g_test_bug ("https://bugzilla.gnome.org/show_bug.cgi?id=786456");
 
   args = get_test_subprocess_args ("exit1", NULL);
   proc = g_subprocess_newv ((const gchar * const *) args->pdata, G_SUBPROCESS_FLAGS_NONE, error);
@@ -611,7 +611,7 @@ on_subprocess_exited (GObject         *object,
           g_propagate_error (&data->error, error);
         }
     }
-  g_spawn_check_exit_status (g_subprocess_get_exit_status (subprocess), &error);
+  g_spawn_check_wait_status (g_subprocess_get_status (subprocess), &error);
   g_assert_no_error (error);
   data->events_pending--;
   if (data->events_pending == 0)
@@ -771,7 +771,7 @@ test_communicate_async (gconstpointer test_data)
   GSubprocessFlags flags = GPOINTER_TO_INT (test_data);
   GError *error = NULL;
   GPtrArray *args;
-  TestAsyncCommunicateData data = { flags, 0, };
+  TestAsyncCommunicateData data = { flags, 0, 0, NULL };
   GSubprocess *proc;
   GCancellable *cancellable = NULL;
   GBytes *input;
@@ -1022,7 +1022,7 @@ test_communicate_utf8_async (gconstpointer test_data)
   GSubprocessFlags flags = GPOINTER_TO_INT (test_data);
   GError *error = NULL;
   GPtrArray *args;
-  TestAsyncCommunicateData data = { flags, 0, };
+  TestAsyncCommunicateData data = { flags, 0, 0, NULL };
   GSubprocess *proc;
   GCancellable *cancellable = NULL;
 
@@ -1055,7 +1055,7 @@ test_communicate_utf8_cancelled_async (gconstpointer test_data)
   GSubprocessFlags flags = GPOINTER_TO_INT (test_data);
   GError *error = NULL;
   GPtrArray *args;
-  TestAsyncCommunicateData data = { flags, 0, };
+  TestAsyncCommunicateData data = { flags, 0, 0, NULL };
   GSubprocess *proc;
   GCancellable *cancellable = NULL;
 
@@ -1199,7 +1199,7 @@ test_communicate_utf8_async_invalid (void)
   GSubprocessFlags flags = G_SUBPROCESS_FLAGS_STDOUT_PIPE;
   GError *error = NULL;
   GPtrArray *args;
-  TestAsyncCommunicateData data = { flags, 0, };
+  TestAsyncCommunicateData data = { flags, 0, 0, NULL };
   GSubprocess *proc;
   GCancellable *cancellable = NULL;
 
@@ -1281,7 +1281,7 @@ on_request_quit_exited (GObject        *object,
   g_assert_true (g_subprocess_get_if_signaled (subprocess));
   g_assert_cmpint (g_subprocess_get_term_sig (subprocess), ==, 9);
 #endif
-  g_spawn_check_exit_status (g_subprocess_get_status (subprocess), &error);
+  g_spawn_check_wait_status (g_subprocess_get_status (subprocess), &error);
   g_assert_nonnull (error);
   g_clear_error (&error);
 
@@ -1812,7 +1812,6 @@ main (int argc, char **argv)
   gsize i;
 
   g_test_init (&argc, &argv, NULL);
-  g_test_bug_base ("https://bugzilla.gnome.org/");
 
   g_test_add_func ("/gsubprocess/noop", test_noop);
   g_test_add_func ("/gsubprocess/noop-all-to-null", test_noop_all_to_null);

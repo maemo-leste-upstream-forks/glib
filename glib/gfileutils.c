@@ -502,15 +502,16 @@ G_DEFINE_QUARK (g-file-error-quark, g_file_error)
  * @err_no: an "errno" value
  * 
  * Gets a #GFileError constant based on the passed-in @err_no.
+ *
  * For example, if you pass in `EEXIST` this function returns
- * #G_FILE_ERROR_EXIST. Unlike `errno` values, you can portably
+ * %G_FILE_ERROR_EXIST. Unlike `errno` values, you can portably
  * assume that all #GFileError values will exist.
  *
  * Normally a #GFileError value goes into a #GError returned
  * from a function that manipulates files. So you would use
  * g_file_error_from_errno() when constructing a #GError.
  * 
- * Returns: #GFileError corresponding to the given @errno
+ * Returns: #GFileError corresponding to the given @err_no
  **/
 GFileError
 g_file_error_from_errno (gint err_no)
@@ -1208,14 +1209,6 @@ write_to_file (const gchar  *contents,
   return TRUE;
 }
 
-static inline int
-steal_fd (int *fd_ptr)
-{
-  int fd = *fd_ptr;
-  *fd_ptr = -1;
-  return fd;
-}
-
 /**
  * g_file_set_contents:
  * @filename: (type filename): name of a file to write @contents to, in the GLib file name
@@ -1369,7 +1362,7 @@ g_file_set_contents_full (const gchar            *filename,
         }
 
       do_fsync = fd_should_be_fsynced (fd, filename, flags);
-      if (!write_to_file (contents, length, steal_fd (&fd), tmp_filename, do_fsync, error))
+      if (!write_to_file (contents, length, g_steal_fd (&fd), tmp_filename, do_fsync, error))
         {
           g_unlink (tmp_filename);
           retval = FALSE;
@@ -1479,7 +1472,7 @@ consistent_out:
         }
 
       do_fsync = fd_should_be_fsynced (direct_fd, filename, flags);
-      if (!write_to_file (contents, length, steal_fd (&direct_fd), filename,
+      if (!write_to_file (contents, length, g_steal_fd (&direct_fd), filename,
                           do_fsync, error))
         return FALSE;
     }
