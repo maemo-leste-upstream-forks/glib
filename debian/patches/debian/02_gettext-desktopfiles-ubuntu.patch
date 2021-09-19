@@ -12,10 +12,10 @@ Forwarded: no
  1 file changed, 20 insertions(+)
 
 diff --git a/glib/gkeyfile.c b/glib/gkeyfile.c
-index c60180d..1f24633 100644
+index 5e6c3fc..efcada9 100644
 --- a/glib/gkeyfile.c
 +++ b/glib/gkeyfile.c
-@@ -898,6 +898,16 @@ g_key_file_load_from_fd (GKeyFile       *key_file,
+@@ -899,6 +899,16 @@ g_key_file_load_from_fd (GKeyFile       *key_file,
                                                      G_KEY_FILE_DESKTOP_GROUP,
                                                      G_KEY_FILE_DESKTOP_KEY_GETTEXT_DOMAIN,
                                                      NULL);
@@ -32,7 +32,7 @@ index c60180d..1f24633 100644
  
    return TRUE;
  }
-@@ -1015,6 +1025,16 @@ g_key_file_load_from_data (GKeyFile       *key_file,
+@@ -1016,6 +1026,16 @@ g_key_file_load_from_data (GKeyFile       *key_file,
                                                      G_KEY_FILE_DESKTOP_GROUP,
                                                      G_KEY_FILE_DESKTOP_KEY_GETTEXT_DOMAIN,
                                                      NULL);
