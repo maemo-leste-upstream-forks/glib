@@ -1,4 +1,4 @@
-glib2.0 (2.70.0-1) UNRELEASED; urgency=medium
+glib2.0 (2.70.0-1) unstable; urgency=medium
 
   * New upstream release
   * d/rules: Make shared objects in installed-tests non-executable
@@ -11,8 +11,10 @@ glib2.0 (2.70.0-1) UNRELEASED; urgency=medium
   * Add Lintian override for #970275
   * d/copyright, d/libglib2.0-0.symbols: Update
   * d/gbp.conf: Switch upstream branch
+  * Unfuzz patch series
+  * Standards-Version: 4.6.0 (no changes required)
 
- -- Simon McVittie <smcv@debian.org>  Sun, 19 Sep 2021 16:51:23 +0100
+ -- Simon McVittie <smcv@debian.org>  Sun, 19 Sep 2021 17:11:43 +0100
 
 glib2.0 (2.68.4-1) unstable; urgency=medium
 
