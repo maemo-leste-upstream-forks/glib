@@ -102,7 +102,7 @@
  *   { "verbose", 'v', 0, G_OPTION_ARG_NONE, &verbose, "Be verbose", NULL },
  *   { "beep", 'b', 0, G_OPTION_ARG_NONE, &beep, "Beep when done", NULL },
  *   { "rand", 0, 0, G_OPTION_ARG_NONE, &randomize, "Randomize the data", NULL },
- *   { NULL }
+ *   G_OPTION_ENTRY_NULL
  * };
  *
  * int
@@ -1543,22 +1543,13 @@ parse_short_option (GOptionContext *context,
 
               if (idx < *argc - 1)
                 {
-                  if (!OPTIONAL_ARG (&group->entries[j]))
+                  if (OPTIONAL_ARG (&group->entries[j]) && ((*argv)[idx + 1][0] == '-'))
+                    value = NULL;
+                  else
                     {
                       value = (*argv)[idx + 1];
                       add_pending_null (context, &((*argv)[idx + 1]), NULL);
                       *new_idx = idx + 1;
-                    }
-                  else
-                    {
-                      if ((*argv)[idx + 1][0] == '-')
-                        value = NULL;
-                      else
-                        {
-                          value = (*argv)[idx + 1];
-                          add_pending_null (context, &((*argv)[idx + 1]), NULL);
-                          *new_idx = idx + 1;
-                        }
                     }
                 }
               else if (idx >= *argc - 1 && OPTIONAL_ARG (&group->entries[j]))

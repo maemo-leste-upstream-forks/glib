@@ -104,16 +104,15 @@ g_string_maybe_expand (GString *string,
 }
 
 /**
- * g_string_sized_new:
- * @dfl_size: the default size of the space allocated to
- *     hold the string
+ * g_string_sized_new: (constructor)
+ * @dfl_size: the default size of the space allocated to hold the string
  *
  * Creates a new #GString, with enough space for @dfl_size
  * bytes. This is useful if you are going to add a lot of
  * text to the string and don't want it to be reallocated
  * too often.
  *
- * Returns: the new #GString
+ * Returns: (transfer full): the new #GString
  */
 GString *
 g_string_sized_new (gsize dfl_size)
@@ -131,13 +130,13 @@ g_string_sized_new (gsize dfl_size)
 }
 
 /**
- * g_string_new:
+ * g_string_new: (constructor)
  * @init: (nullable): the initial text to copy into the string, or %NULL to
- * start with an empty string
+ *   start with an empty string
  *
  * Creates a new #GString, initialized with the given string.
  *
- * Returns: the new #GString
+ * Returns: (transfer full): the new #GString
  */
 GString *
 g_string_new (const gchar *init)
@@ -160,7 +159,7 @@ g_string_new (const gchar *init)
 }
 
 /**
- * g_string_new_len:
+ * g_string_new_len: (constructor)
  * @init: initial contents of the string
  * @len: length of @init to use
  *
@@ -172,7 +171,7 @@ g_string_new (const gchar *init)
  * responsibility to ensure that @init has at least @len addressable
  * bytes.
  *
- * Returns: a new #GString
+ * Returns: (transfer full): a new #GString
  */
 GString *
 g_string_new_len (const gchar *init,
@@ -963,8 +962,8 @@ g_string_erase (GString *string,
  *
  * Replaces the string @find with the string @replace in a #GString up to
  * @limit times. If the number of instances of @find in the #GString is
- * less than @limit, all instances are replaced. If the number of
- * instances is `0`, all instances of @find are replaced.
+ * less than @limit, all instances are replaced. If @limit is `0`,
+ * all instances of @find are replaced.
  *
  * If @find is the empty string, since versions 2.69.1 and 2.68.4 the
  * replacement will be inserted no more than once per possible position
@@ -983,7 +982,7 @@ g_string_replace (GString     *string,
 {
   gsize f_len, r_len, pos;
   gchar *cur, *next;
-  gint n = 0;
+  guint n = 0;
 
   g_return_val_if_fail (string != NULL, 0);
   g_return_val_if_fail (find != NULL, 0);

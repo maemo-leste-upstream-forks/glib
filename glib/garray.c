@@ -188,7 +188,7 @@ g_array_new (gboolean zero_terminated,
 /**
  * g_array_steal:
  * @array: a #GArray.
- * @len: (optional) (out caller-allocates): pointer to retrieve the number of
+ * @len: (optional) (out): pointer to retrieve the number of
  *    elements of the original array
  *
  * Frees the data in the array and resets the size to zero, while
@@ -298,6 +298,27 @@ g_array_sized_new (gboolean zero_terminated,
  * Note that in contrast with other uses of #GDestroyNotify
  * functions, @clear_func is expected to clear the contents of
  * the array element it is given, but not free the element itself.
+ *
+ * |[<!-- language="C" -->
+ * typedef struct
+ * {
+ *   gchar *str;
+ *   GObject *obj;
+ * } ArrayElement;
+ *
+ * static void
+ * array_element_clear (ArrayElement *element)
+ * {
+ *   g_clear_pointer (&element->str, g_free);
+ *   g_clear_object (&element->obj);
+ * }
+ *
+ * // main code
+ * GArray *garray = g_array_new (FALSE, FALSE, sizeof (ArrayElement));
+ * g_array_set_clear_func (garray, (GDestroyNotify) array_element_clear);
+ * // assign data to the structure
+ * g_array_free (garray, TRUE);
+ * ]|
  *
  * Since: 2.32
  */
@@ -867,7 +888,7 @@ g_array_sort_with_data (GArray           *farray,
  * @array: a #GArray.
  * @target: a pointer to the item to look up.
  * @compare_func: A #GCompareFunc used to locate @target.
- * @out_match_index: (optional) (out caller-allocates): return location
+ * @out_match_index: (optional) (out): return location
  *    for the index of the element, if found.
  *
  * Checks whether @target exists in @array by performing a binary
@@ -1114,7 +1135,7 @@ g_ptr_array_new (void)
 /**
  * g_ptr_array_steal:
  * @array: a #GPtrArray.
- * @len: (optional) (out caller-allocates): pointer to retrieve the number of
+ * @len: (optional) (out): pointer to retrieve the number of
  *    elements of the original array
  *
  * Frees the data in the array and resets the size to zero, while
@@ -2099,7 +2120,7 @@ g_ptr_array_foreach (GPtrArray *array,
  * g_ptr_array_find: (skip)
  * @haystack: pointer array to be searched
  * @needle: pointer to look for
- * @index_: (optional) (out caller-allocates): return location for the index of
+ * @index_: (optional) (out): return location for the index of
  *    the element, if found
  *
  * Checks whether @needle exists in @haystack. If the element is found, %TRUE is
@@ -2128,7 +2149,7 @@ g_ptr_array_find (GPtrArray     *haystack,
  * @equal_func: (nullable): the function to call for each element, which should
  *    return %TRUE when the desired element is found; or %NULL to use pointer
  *    equality
- * @index_: (optional) (out caller-allocates): return location for the index of
+ * @index_: (optional) (out): return location for the index of
  *    the element, if found
  *
  * Checks whether @needle exists in @haystack, using the given @equal_func.
@@ -2234,7 +2255,7 @@ g_byte_array_new (void)
 /**
  * g_byte_array_steal:
  * @array: a #GByteArray.
- * @len: (optional) (out caller-allocates): pointer to retrieve the number of
+ * @len: (optional) (out): pointer to retrieve the number of
  *    elements of the original array
  *
  * Frees the data in the array and resets the size to zero, while

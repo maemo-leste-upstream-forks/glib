@@ -66,15 +66,18 @@
  * claimed to be "owned" by any code portion. The main motivation for
  * providing floating references is C convenience. In particular, it
  * allows code to be written as:
+ * 
  * |[<!-- language="C" --> 
  * container = create_container ();
  * container_add_child (container, create_child());
  * ]|
+ * 
  * If container_add_child() calls g_object_ref_sink() on the passed-in child,
  * no reference of the newly created child is leaked. Without floating
  * references, container_add_child() can only g_object_ref() the new child,
  * so to implement this code without reference leaks, it would have to be
  * written as:
+ *
  * |[<!-- language="C" --> 
  * Child *child;
  * container = create_container ();
@@ -82,6 +85,7 @@
  * container_add_child (container, child);
  * g_object_unref (child);
  * ]|
+ *
  * The floating reference can be converted into an ordinary reference by
  * calling g_object_ref_sink(). For already sunken objects (objects that
  * don't have a floating reference anymore), g_object_ref_sink() is equivalent
@@ -537,11 +541,13 @@ g_object_do_class_init (GObjectClass *class)
    * This signal is typically used to obtain change notification for a
    * single property, by specifying the property name as a detail in the
    * g_signal_connect() call, like this:
+   *
    * |[<!-- language="C" --> 
    * g_signal_connect (text_view->buffer, "notify::paste-target-list",
    *                   G_CALLBACK (gtk_text_view_target_list_notify),
    *                   text_view)
    * ]|
+   *
    * It is important to note that you must use
    * [canonical parameter names][canonical-parameter-names] as
    * detail strings for the notify signal.
@@ -3186,6 +3192,62 @@ gpointer
 }
 
 /**
+ * g_object_take_ref: (skip)
+ * @object: (type GObject.Object): a #GObject
+ *
+ * If @object is floating, sink it.  Otherwise, do nothing.
+ *
+ * In other words, this function will convert a floating reference (if
+ * present) into a full reference.
+ *
+ * Typically you want to use g_object_ref_sink() in order to
+ * automatically do the correct thing with respect to floating or
+ * non-floating references, but there is one specific scenario where
+ * this function is helpful.
+ *
+ * The situation where this function is helpful is when creating an API
+ * that allows the user to provide a callback function that returns a
+ * GObject. We certainly want to allow the user the flexibility to
+ * return a non-floating reference from this callback (for the case
+ * where the object that is being returned already exists).
+ *
+ * At the same time, the API style of some popular GObject-based
+ * libraries (such as Gtk) make it likely that for newly-created GObject
+ * instances, the user can be saved some typing if they are allowed to
+ * return a floating reference.
+ *
+ * Using this function on the return value of the user's callback allows
+ * the user to do whichever is more convenient for them. The caller will
+ * alway receives exactly one full reference to the value: either the
+ * one that was returned in the first place, or a floating reference
+ * that has been converted to a full reference.
+ *
+ * This function has an odd interaction when combined with
+ * g_object_ref_sink() running at the same time in another thread on
+ * the same #GObject instance. If g_object_ref_sink() runs first then
+ * the result will be that the floating reference is converted to a hard
+ * reference. If g_object_take_ref() runs first then the result will be
+ * that the floating reference is converted to a hard reference and an
+ * additional reference on top of that one is added. It is best to avoid
+ * this situation.
+ *
+ * Since: 2.70
+ *
+ * Returns: (type GObject.Object) (transfer full): @object
+ */
+gpointer
+g_object_take_ref (gpointer _object)
+{
+  GObject *object = _object;
+  g_return_val_if_fail (G_IS_OBJECT (object), object);
+  g_return_val_if_fail (g_atomic_int_get (&object->ref_count) >= 1, object);
+
+  floating_flag_handler (object, -1);
+
+  return object;
+}
+
+/**
  * g_object_force_floating:
  * @object: a #GObject
  *
@@ -3319,7 +3381,8 @@ g_object_add_toggle_ref (GObject       *object,
  * @notify: a function to call when this reference is the
  *  last reference to the object, or is no longer
  *  the last reference.
- * @data: data to pass to @notify
+ * @data: (nullable): data to pass to @notify, or %NULL to
+ *  match any toggle refs with the @notify argument.
  *
  * Removes a reference added with g_object_add_toggle_ref(). The
  * reference count of the object is decreased by one.
@@ -3345,7 +3408,7 @@ g_object_remove_toggle_ref (GObject       *object,
 
       for (i = 0; i < tstack->n_toggle_refs; i++)
 	if (tstack->toggle_refs[i].notify == notify &&
-	    tstack->toggle_refs[i].data == data)
+	    (tstack->toggle_refs[i].data == data || data == NULL))
 	  {
 	    found_one = TRUE;
 	    tstack->n_toggle_refs -= 1;
@@ -4473,11 +4536,12 @@ g_initially_unowned_class_init (GInitiallyUnownedClass *klass)
 /**
  * GWeakRef:
  *
- * A structure containing a weak reference to a #GObject.  It can either
- * be empty (i.e. point to %NULL), or point to an object for as long as
- * at least one "strong" reference to that object exists. Before the
- * object's #GObjectClass.dispose method is called, every #GWeakRef
- * associated with becomes empty (i.e. points to %NULL).
+ * A structure containing a weak reference to a #GObject.
+ *
+ * A `GWeakRef` can either be empty (i.e. point to %NULL), or point to an
+ * object for as long as at least one "strong" reference to that object
+ * exists. Before the object's #GObjectClass.dispose method is called,
+ * every #GWeakRef associated with becomes empty (i.e. points to %NULL).
  *
  * Like #GValue, #GWeakRef can be statically allocated, stack- or
  * heap-allocated, or embedded in larger structures.
