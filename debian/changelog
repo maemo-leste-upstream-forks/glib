@@ -9,8 +9,10 @@ glib2.0 (2.70.0-1) UNRELEASED; urgency=medium
     - d/p/debian/taptestrunner-Stop-looking-like-an-executable-script.patch:
       Drop, no longer necessary
   * Add Lintian override for #970275
+  * d/copyright, d/libglib2.0-0.symbols: Update
+  * d/gbp.conf: Switch upstream branch
 
- -- Simon McVittie <smcv@debian.org>  Sun, 19 Sep 2021 16:11:48 +0100
+ -- Simon McVittie <smcv@debian.org>  Sun, 19 Sep 2021 16:51:23 +0100
 
 glib2.0 (2.68.4-1) unstable; urgency=medium
 
