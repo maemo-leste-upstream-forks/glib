@@ -1,3 +1,9 @@
+glib2.0 (2.66.8-1+leste1) unstable; urgency=medium
+
+  * fix-wrong-info-desktop-id.patch
+
+ -- Merlijn Wajer <merlijn@wizzup.org>  Sun, 27 Nov 2022 12:30:44 +0100
+
 glib2.0 (2.66.8-1) unstable; urgency=medium
 
   * d/watch: Only watch for 2.66.x versions.
