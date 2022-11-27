@@ -57,14 +57,6 @@ endif
 		$(DEB_CONFIGURE_EXTRA_FLAGS) \
 		$(DEB_CONFIGURE_FLAGS_deb) \
 		$(NULL)
-ifneq ($(filter %-udeb,$(binaries)),)
-	dh_auto_configure \
-		--builddirectory=debian/build/udeb \
-		-- \
-		$(DEB_CONFIGURE_EXTRA_FLAGS) \
-		$(DEB_CONFIGURE_FLAGS_udeb) \
-		$(NULL)
-endif
 
 override_dh_clean:
 	rm -rf $(CURDIR)/debian/build \
@@ -75,7 +67,7 @@ override_dh_clean:
 
 override_dh_makeshlibs:
 	dh_makeshlibs -plibglib2.0-tests -n
-	dh_makeshlibs --remaining-packages --add-udeb=libglib2.0-udeb -Xlibgiofam.so -- -c4
+	dh_makeshlibs --remaining-packages -Xlibgiofam.so -- -c4
 
 # (Ubuntu-specific)
 # Don't strip translations from the installed tests; makes them environment dependent.
@@ -205,21 +197,9 @@ else
 DEB_CONFIGURE_FLAGS_deb += -Dgtk_doc=false
 endif
 
-DEB_CONFIGURE_FLAGS_udeb := \
-	--default-library shared \
-	-Dgtk_doc=false \
-	-Dinstalled_tests=false \
-	-Dlibmount=disabled \
-	-Dselinux=disabled \
-	-Dxattr=$(have_non_stub_xattr) \
-	$(NULL)
-
 override_dh_auto_build:
 	mkdir -p debian/tmp-xdg-runtime-dir
 	dh_auto_build --builddirectory=debian/build/deb
-ifneq ($(filter %-udeb,$(binaries)),)
-	dh_auto_build --builddirectory=debian/build/udeb
-endif
 
 override_dh_auto_install:
 	set -e; for script in postinst postrm triggers; do \
@@ -228,9 +208,6 @@ override_dh_auto_install:
 		    debian/libglib2.0-0.$$script.in \
 		    > debian/libglib2.0-0.$$script ; \
 	done
-ifneq ($(filter %-udeb,$(binaries)),)
-	dh_auto_install -plibglib2.0-udeb --builddirectory=debian/build/udeb --destdir=debian/install/udeb
-endif
 	dh_auto_install --remaining-packages --builddirectory=debian/build/deb --destdir=debian/install/deb
 
 override_dh_python3:
@@ -243,26 +220,9 @@ override_dh_python3:
 override_dh_install:
 	# Unwanted bits from the .deb build
 	rm -fr debian/install/deb/usr/share/glib-2.0/codegen/__pycache__
-ifneq ($(filter %-udeb,$(binaries)),)
-	# Unwanted bits from the .udeb build
-	rm -f debian/install/udeb/usr/lib/*/*.so
-	rm -fr debian/install/udeb/usr/share/gdb
-	rm -fr debian/install/udeb/usr/share/gettext/its
-	rm -fr debian/install/udeb/usr/share/glib-2.0/codegen
-	rm -fr debian/install/udeb/usr/share/glib-2.0/gdb
-	rm -fr debian/install/udeb/usr/share/glib-2.0/valgrind
-	rm -fr debian/install/udeb/usr/share/man
-	dh_install -plibglib2.0-udeb --sourcedir=debian/install/udeb
-endif
 	dh_install --remaining-packages --sourcedir=debian/install/deb
 	install -D -t debian/libglib2.0-0/usr/share/glib-2.0/ debian/clean-up-unmanaged-libraries
 	install -D -t debian/libglib2.0-0/usr/lib/${DEB_HOST_MULTIARCH}/glib-2.0/ debian/gio-launch-desktop
 
-override_dh_dwz:
-	dh_dwz -Nlibglib2.0-udeb
-
 override_dh_missing:
 	dh_missing --sourcedir=debian/install/deb --fail-missing
-ifneq ($(filter %-udeb,$(binaries)),)
-	dh_missing --sourcedir=debian/install/udeb --fail-missing
-endif
